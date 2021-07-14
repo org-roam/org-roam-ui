@@ -6,7 +6,7 @@
  */
 import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, GraphScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -24,6 +24,7 @@ export type PrimaryParamList = {
   welcome: undefined
   demo: undefined
   demoList: undefined
+  graph: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -37,14 +38,15 @@ export function MainNavigator() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
+        <Stack.Screen name="graph" component={GraphScreen}/>
     </Stack.Navigator>
   )
 }
 
 /**
+      <Stack.Screen name="welcome" component={WelcomeScreen} />
+      <Stack.Screen name="demo" component={DemoScreen} />
+      <Stack.Screen name="demoList" component={DemoListScreen} />
  * A list of routes from which we're allowed to leave the app when
  * the user presses the back button on Android.
  *
