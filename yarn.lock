@@ -7138,6 +7138,15 @@ d3-binarytree@^0.2.0:
     d3-quadtree "1 - 3"
     d3-timer "1 - 3"
 
+d3-force@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-3.0.0.tgz#3e2ba1a61e70888fe3d9194e30d6d14eece155c4"
+  integrity sha512-zxV/SsA+U4yte8051P4ECydjD/S+qeYtnaIyAs9tgHCqfguma/aAQDjo85A9Z6EKhBirHRJHXIgJUlffT4wdLg==
+  dependencies:
+    d3-dispatch "1 - 3"
+    d3-quadtree "1 - 3"
+    d3-timer "1 - 3"
+
 "d3-format@1 - 3":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-3.0.1.tgz#e41b81b2ab79277141ec1404aa5d05001da64084"
@@ -15935,6 +15944,15 @@ react-focus-lock@^2.1.0:
     react-clientside-effect "^1.2.5"
     use-callback-ref "^1.2.5"
     use-sidecar "^1.0.5"
+
+react-force-graph-2d@^1.23.8:
+  version "1.23.8"
+  resolved "https://registry.yarnpkg.com/react-force-graph-2d/-/react-force-graph-2d-1.23.8.tgz#28a6e0d4221f1338f8af896eedd06b73fd23a6f8"
+  integrity sha512-ON0vYxZY1PNoEi5RqGtyl5nmUlln6tbTcWdoLbRd9AEC3wCsaDjOQymF77U6DLRuqhqrjaC0SbjH+rAn9np8Lg==
+  dependencies:
+    force-graph "^1.42"
+    prop-types "^15.7"
+    react-kapsule "^2.2"
 
 react-force-graph@^1.41.7:
   version "1.41.7"
