@@ -3,10 +3,7 @@
 :END:
 #+TITLE: Readme
 
-* Look :ATTACH:
-
-[[attachment:_20210714_173526screenshot.png]]
-
+[[./screenshot.png]]
 * Install
 
 #+begin_src shell
