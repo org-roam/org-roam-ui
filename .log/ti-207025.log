@@ -1,0 +1,26 @@
+[16:02:14.803] Global cache location '/home/thomas/.cache/typescript/4.2', safe file path '/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/typingSafeList.json', types map path /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/typesMap.json
+[16:02:14.804] Processing cache location '/home/thomas/.cache/typescript/4.2'
+[16:02:14.804] Trying to find '/home/thomas/.cache/typescript/4.2/package.json'...
+[16:02:14.805] Loaded content of '/home/thomas/.cache/typescript/4.2/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.549"},"devDependencies":{"@types/component-emitter":"^1.2.10","@types/cytoscape":"^3.14.14","@types/heap":"^0.2.28","@types/lodash.debounce":"^4.0.6","@types/md5":"^2.3.0","@types/react":"^17.0.3","@types/react-dom":"^17.0.2"}}
+[16:02:14.805] Loaded content of '/home/thomas/.cache/typescript/4.2/package-lock.json'
+[16:02:14.815] Adding entry into typings cache: 'component-emitter' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/component-emitter/index.d.ts'
+[16:02:14.818] Adding entry into typings cache: 'cytoscape' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/cytoscape/index.d.ts'
+[16:02:14.821] Adding entry into typings cache: 'heap' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/heap/index.d.ts'
+[16:02:14.823] Adding entry into typings cache: 'lodash.debounce' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/lodash.debounce/index.d.ts'
+[16:02:14.825] Adding entry into typings cache: 'md5' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/md5/index.d.ts'
+[16:02:14.831] Adding entry into typings cache: 'react' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/react/index.d.ts'
+[16:02:14.834] Adding entry into typings cache: 'react-dom' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/react-dom/index.d.ts'
+[16:02:14.834] Finished processing cache location '/home/thomas/.cache/typescript/4.2'
+[16:02:14.835] Process id: 207032
+[16:02:14.835] NPM location: /home/thomas/.local/share/nvm/v15.12.0/bin/npm (explicit '--npmLocation' not  provided)
+[16:02:14.835] validateDefaultNpmLocation: false
+[16:02:14.835] Npm config file: /home/thomas/.cache/typescript/4.2/package.json
+[16:02:14.835] Updating types-registry npm package...
+[16:02:14.835] Exec: /home/thomas/.local/share/nvm/v15.12.0/bin/npm install --ignore-scripts types-registry@latest
+[16:02:15.808]     Succeeded. stdout:
+    
+    up to date, audited 14 packages in 820ms
+
+found 0 vulnerabilities
+
+[16:02:15.808] Updated types-registry npm package

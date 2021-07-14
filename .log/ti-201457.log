@@ -1,0 +1,43 @@
+[15:25:00.945] Global cache location '/home/thomas/.cache/typescript/4.2', safe file path '/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/typingSafeList.json', types map path /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/typesMap.json
+[15:25:00.946] Processing cache location '/home/thomas/.cache/typescript/4.2'
+[15:25:00.946] Trying to find '/home/thomas/.cache/typescript/4.2/package.json'...
+[15:25:00.947] Loaded content of '/home/thomas/.cache/typescript/4.2/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.543"},"devDependencies":{"@types/component-emitter":"^1.2.10","@types/cytoscape":"^3.14.14","@types/heap":"^0.2.28","@types/lodash.debounce":"^4.0.6","@types/md5":"^2.3.0","@types/react":"^17.0.3","@types/react-dom":"^17.0.2"}}
+[15:25:00.948] Loaded content of '/home/thomas/.cache/typescript/4.2/package-lock.json'
+[15:25:00.961] Adding entry into typings cache: 'component-emitter' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/component-emitter/index.d.ts'
+[15:25:00.964] Adding entry into typings cache: 'cytoscape' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/cytoscape/index.d.ts'
+[15:25:00.967] Adding entry into typings cache: 'heap' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/heap/index.d.ts'
+[15:25:00.969] Adding entry into typings cache: 'lodash.debounce' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/lodash.debounce/index.d.ts'
+[15:25:00.971] Adding entry into typings cache: 'md5' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/md5/index.d.ts'
+[15:25:00.976] Adding entry into typings cache: 'react' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/react/index.d.ts'
+[15:25:00.979] Adding entry into typings cache: 'react-dom' => '/home/thomas/.cache/typescript/4.2/node_modules/@types/react-dom/index.d.ts'
+[15:25:00.979] Finished processing cache location '/home/thomas/.cache/typescript/4.2'
+[15:25:00.980] Process id: 201464
+[15:25:00.980] NPM location: /home/thomas/.local/share/nvm/v15.12.0/bin/npm (explicit '--npmLocation' not  provided)
+[15:25:00.980] validateDefaultNpmLocation: false
+[15:25:00.980] Npm config file: /home/thomas/.cache/typescript/4.2/package.json
+[15:25:00.980] Updating types-registry npm package...
+[15:25:00.980] Exec: /home/thomas/.local/share/nvm/v15.12.0/bin/npm install --ignore-scripts types-registry@latest
+[15:25:01.885]     Succeeded. stdout:
+    
+    changed 1 package, and audited 14 packages in 769ms
+
+found 0 vulnerabilities
+
+[15:25:01.886] Updated types-registry npm package
+[15:41:19.858] Got install request {"projectName":"/dev/null/inferredProject1*","fileNames":[],"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true},"typeAcquisition":{"enable":true,"include":[],"exclude":[]},"unresolvedImports":[],"projectRootPath":"/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data","kind":"discover"}
+[15:41:19.892] Loaded safelist from types map file '/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/typesMap.json'
+[15:41:19.893] Explicitly included types: []
+[15:41:19.894] Inferred typings from unresolved imports: []
+[15:41:19.894] Result: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/bower_components","/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/node_modules"]}
+[15:41:19.894] Finished typings discovery: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/bower_components","/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/node_modules"]}
+[15:41:19.899] DirectoryWatcher:: Added:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/bower_components
+[15:41:19.900] DirectoryWatcher:: Added:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/bower_components 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[15:41:19.905] Elapsed:: 5.105758994817734ms DirectoryWatcher:: Added:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/bower_components 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[15:41:19.905] DirectoryWatcher:: Added:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/node_modules
+[15:41:19.906] DirectoryWatcher:: Added:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/node_modules 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[15:41:19.906] Elapsed:: 0.19689100980758667ms DirectoryWatcher:: Added:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/data/node_modules 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[15:41:19.907] Sending response:
+    {"projectName":"/dev/null/inferredProject1*","typeAcquisition":{"enable":true,"include":[],"exclude":[]},"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true},"typings":[],"unresolvedImports":[],"kind":"action::set"}
+[15:41:19.908] Response has been sent.
+[15:41:19.909] No new typings were requested as a result of typings discovery
+[15:59:43.803] Parent process has exited, shutting down...
