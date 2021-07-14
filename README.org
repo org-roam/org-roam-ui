@@ -1,0 +1,20 @@
+#+TITLE: Readme
+
+
+
+* Install
+
+#+begin_src shell
+yarn install
+#+end_src
+
+Might need to switch to nvm 14 due to some issues with ignite
+* Run
+
+#+begin_src shell
+yarn start
+#+end_src
+or
+#+begin_src shell
+expo start
+#+end_src
