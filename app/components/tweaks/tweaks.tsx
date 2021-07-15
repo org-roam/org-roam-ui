@@ -254,7 +254,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#111111',
+        backgroundColor: 'rgb(20,20,20)',
         position: "absolute",
         zIndex: 100,
         left: 50,
@@ -263,6 +263,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderStyle: "solid",
         maxHeight: "70%",
+        paddingBottom: 20,
     },
     title: {
         textAlign: 'left',
@@ -285,6 +286,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 20,
+        paddingLeft: 60,
         backgroundColor: '#000000',
     },
     active: {

@@ -216,6 +216,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           linkDirectionalParticleWidth={physics.particleWidth}
+          backgroundColor="#1d1d1d"
         />
       )}
     </View>
