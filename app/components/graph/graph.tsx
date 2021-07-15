@@ -192,6 +192,10 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           nodeLabel={(node) => "label"}
           // nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
           //d3VelocityDecay={visco}
+          linkWidth={physics.linkWidth}
+          linkOpacity={physics.linkOpacity}
+          nodeRelSize={physics.nodeRel}
+          linkDirectionalParticleWidth={physics.particleWidth}
         />
       ) : (
         <ForceGraph3D
@@ -207,8 +211,11 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           }
           onNodeClick={!physics.collapse ? null : handleNodeClick}
           nodeVal={(node) => node.childLinks.length + 1}
-          linkOpacity={0.8}
         //d3VelocityDecay={visco}
+          linkWidth={physics.linkWidth}
+          linkOpacity={physics.linkOpacity}
+          nodeRelSize={physics.nodeRel}
+          linkDirectionalParticleWidth={physics.particleWidth}
         />
       )}
     </View>
