@@ -8,6 +8,7 @@ import Slider from "@react-native-community/slider"
 import { useState } from "react"
 import Accordion from 'react-native-collapsible/Accordion'
 import * as Animatable from 'react-native-animatable'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const CONTAINER: ViewStyle = {
     justifyContent: "center",
@@ -139,7 +140,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             <View style={{height: 30, width: "100%", backgroundColor: "rgb(20,20,20)"}}>
             <TouchableOpacity style={{width: 30, color: "#ffffff", textAlign: "center", marginLeft: "auto", padding: 5}}
             onPress={()=>{setTweaks(false)}}>
-            X
+                    <Icon name="close-circle" color="#ffffff" size={20}/>
             </TouchableOpacity>
             </View>
         <ScrollView>
@@ -163,7 +164,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                 <TouchableOpacity
                 onPress={()=>{setTweaks(true)}}
                 style={{position: "absolute", top: 50, left: 50, width: 30, color: "#ffffff", zIndex: 100}}>
-                O
+                    <Icon name="cog" color="#ffffff" size={30}/>
                 </TouchableOpacity>
             )
         }
@@ -230,6 +231,8 @@ const styles = StyleSheet.create ({
     left: 50,
     top: 50,
     width: 300,
+    borderRadius: 5,
+    borderStyle: "solid",
   },
   title: {
     textAlign: 'left',
