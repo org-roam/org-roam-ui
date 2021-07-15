@@ -58,3 +58,4 @@ found 0 vulnerabilities
     {"projectName":"/dev/null/inferredProject2*","typeAcquisition":{"enable":true,"include":[],"exclude":[]},"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true,"maxNodeModuleJsDepth":2},"typings":[],"unresolvedImports":[],"kind":"action::set"}
 [13:52:38.132] Response has been sent.
 [13:52:38.132] No new typings were requested as a result of typings discovery
+[14:42:57.008] Parent process has exited, shutting down...

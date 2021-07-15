@@ -34,29 +34,45 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps) {
     const styles = flatten([CONTAINER, style])
 
     return (
-        <>
-            <Slider style={{ position: "absolute", top: 50,  zIndex: 100, width: "20%", height: 40 }}
-                minimumValue={-100}
+        <View style={{position: "absolute", top: 50, left: 50, zIndex: 100, width: "20%"}}>
+        <Text preset="fieldLabel" text={"Repulsive force: " + physics.charge}/>
+            <Slider style={{height: 40 , width: "90%"}}
+                minimumValue={-400}
                 maximumValue={0}
         onValueChange={(value) => { setPhysics({...physics, charge: value}) }}
                 value={physics.charge}
                 step={1}/>
-            <Slider style={{ position: "absolute", top: 100,  zIndex: 100, width: "20%", height: 40 }}
+        <Text preset="fieldLabel" text={"Link Force: " + physics.linkStrength}/>
+            <Slider style={{height: 40 , width: "90%"}}
                 minimumValue={0}
-                maximumValue={10}
+                maximumValue={2}
                     onValueChange={(value) => { setPhysics({...physics, linkStrength: value}) }}
                 value={physics.linkStrength}
-                step={1}/>
-            <Slider style={{ position: "absolute", top: 150,  zIndex: 100, width: "20%", height: 40 }}
+                step={0.1}
+                />
+            <Text preset="fieldLabel" text={"'Link Iterations': " + physics.linkIts}/>
+            <Slider style={{ height: 40 , width: "90%"}}
                 minimumValue={1}
-                maximumValue={5}
+                maximumValue={10}
                     onValueChange={(value) => { setPhysics({...physics, linkIts: value}) }}
                 value={physics.linkIts}
                 step={1}/>
-            <Switch style={{ position: "absolute", top: 200,  zIndex: 100, width: "5", height: 40 }}
+            <Text preset="fieldLabel" text="Collision"/>
+            <Switch style={{width: "5", height: 20 }}
                 value={physics.collision}
                     onValueChange={()=>{setPhysics({...physics, collision: !physics.collision})}}
                 />
-        </>
+
+            <Text preset="fieldLabel" text="Expandable Graph"/>
+            <Switch style={{width: "5", height: 20 }}
+                value={physics.collapse}
+                    onValueChange={()=>{setPhysics({...physics, collapse: !physics.collapse})}}
+                />
+            <Text preset="fieldLabel" text="3D"/>
+            <Switch style={{width: "5", height: 20 }}
+                value={physics.threedim}
+                    onValueChange={()=>{setPhysics({...physics, threedim: !physics.threedim})}}
+                />
+        </View>
     )
 })

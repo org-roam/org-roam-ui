@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, typography } from "../../theme"
@@ -8,7 +8,9 @@ import { flatten } from "ramda"
 
 //import data from "../../data/miserables.json"
 //import genRandomTree from "../../data/randomdata";
-import rando from "../../data/rando.json"
+//import rando from "../../data/rando.json"
+import rando from "../../data/randorev.json"
+
 
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-force-graph';
 import * as d3 from "d3-force";
@@ -58,17 +60,72 @@ export const Graph = observer(function Graph(props: GraphProps) {
         fg.d3Force('charge').strength(physics.charge);
   });
 
+    const rootId = 0;
+
+    const nodesById = useMemo(() => {
+      const nodesById = Object.fromEntries(rando.nodes.map(node => [node.id, node]));
+
+      // link parent/children
+      rando.nodes.forEach(node => {
+        node.collapsed = node.id !== rootId;
+        node.childLinks = [];
+      });
+      rando.links.forEach(link => nodesById[link.source].childLinks.push(link));
+
+      return nodesById;
+    }, [rando]);
+
+    const getPrunedTree = useCallback(() => {
+      const visibleNodes = [];
+      const visibleLinks = [];
+      (function traverseTree(node = nodesById[rootId]) {
+        visibleNodes.push(node);
+        if (node.collapsed) return;
+        visibleLinks.push(...node.childLinks);
+        node.childLinks
+          .map(link => ((typeof link.target) === 'object') ? link.target : nodesById[link.target]) // get child node
+          .forEach(traverseTree);
+      })();
+
+      return { nodes: visibleNodes, links: visibleLinks };
+    }, [nodesById]);
+
+    const [prunedTree, setPrunedTree] = useState(getPrunedTree());
+
+    const handleNodeClick = useCallback(node => {
+      node.collapsed = !node.collapsed; // toggle collapse state
+      setPrunedTree(getPrunedTree())
+    }, []);
+
     return (
     <View>
+    {!physics.threedim ?
     <ForceGraph2D
       ref={fgRef}
-      graphData={rando}
-      nodeAutoColorBy={d => d.id%GROUPS}
+      graphData={physics.collapse ? prunedTree : rando}
+     // nodeAutoColorBy={d => d.id%GROUPS}
       linkAutoColorBy={d => rando.nodes[d.source].id%GROUPS}
       linkColor={"#ffffff"}
       linkWidth={2}
+      linkDirectionalParticles={2}
+     nodeColor={node => !node.childLinks.length ? 'green' : node.collapsed ? 'red' : 'yellow'}
+      onNodeClick={handleNodeClick}
       //d3VelocityDecay={visco}
       />
+        :
+    <ForceGraph3D
+      ref={fgRef}
+      graphData={physics.collapse ? prunedTree : rando}
+     // nodeAutoColorBy={d => d.id%GROUPS}
+      linkAutoColorBy={d => rando.nodes[d.source].id%GROUPS}
+      linkColor={"#ffffff"}
+      linkWidth={2}
+      linkDirectionalParticles={2}
+     nodeColor={node => !node.childLinks.length ? 'green' : node.collapsed ? 'red' : 'yellow'}
+      onNodeClick={handleNodeClick}
+      //d3VelocityDecay={visco}
+      />
+    }
     </View>
   )
 })

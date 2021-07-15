@@ -32,7 +32,9 @@ export const GraphScreen = observer(function GraphScreen() {
       charge: -30,
       collision: false,
       linkStrength: 1,
-      linkIts: 1
+      linkIts: 1,
+      collapse: false,
+      threedim: false
   });
 
     const gData = genRandomTree();
