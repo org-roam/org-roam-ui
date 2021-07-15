@@ -2316,3 +2316,1032 @@ Info 2146 [15:33:44.258] Different program with same set of files:: structureIsR
 Info 2147 [15:33:47.502] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
 Info 2148 [15:33:47.545] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 296 structureChanged: false Elapsed: 42.84007200598717ms
 Info 2149 [15:33:47.545] Different program with same set of files:: structureIsReused:: 2
+Info 2150 [15:35:03.558] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2151 [15:35:03.612] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 297 structureChanged: false Elapsed: 54.234186977148056ms
+Info 2152 [15:35:03.612] Different program with same set of files:: structureIsReused:: 2
+Info 2153 [15:35:03.613] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2154 [15:35:03.661] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 298 structureChanged: false Elapsed: 47.83041599392891ms
+Info 2155 [15:35:03.661] Different program with same set of files:: structureIsReused:: 2
+Info 2156 [15:35:04.546] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2157 [15:35:04.607] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 299 structureChanged: false Elapsed: 60.79923099279404ms
+Info 2158 [15:35:04.607] Different program with same set of files:: structureIsReused:: 2
+Info 2159 [15:35:04.609] getCompletionData: Get current token: 0.04767599701881409
+Info 2160 [15:35:04.609] getCompletionData: Is inside comment: 0.010871976613998413
+Info 2161 [15:35:04.609] getCompletionData: Get previous token 1: 0.11261099576950073
+Info 2162 [15:35:04.609] getCompletionsAtPosition: isCompletionListBlocker: 0.005301982164382935
+Info 2163 [15:35:04.611] getCompletionData: Semantic work: 1.3224050104618073
+Info 2164 [15:35:04.972] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2165 [15:35:05.004] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2166 [15:35:05.004] forEachExternalModuleToImportFrom autoImportProvider: 31.22775000333786
+Info 2167 [15:35:05.005] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2168 [15:35:05.056] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 300 structureChanged: false Elapsed: 50.88578701019287ms
+Info 2169 [15:35:05.057] Different program with same set of files:: structureIsReused:: 2
+Info 2170 [15:35:05.057] getCompletionData: Get current token: 0.05273601412773132
+Info 2171 [15:35:05.057] getCompletionData: Is inside comment: 0.007669001817703247
+Info 2172 [15:35:05.058] getCompletionData: Get previous token 1: 0.18477901816368103
+Info 2173 [15:35:05.058] getCompletionData: Get previous token 2: 0.13587501645088196
+Info 2174 [15:35:05.058] getCompletionsAtPosition: isCompletionListBlocker: 0.007884979248046875
+Info 2175 [15:35:05.059] getCompletionData: Semantic work: 1.4809289872646332
+Info 2176 [15:35:05.060] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2177 [15:35:05.098] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 301 structureChanged: false Elapsed: 37.74829399585724ms
+Info 2178 [15:35:05.098] Different program with same set of files:: structureIsReused:: 2
+Info 2179 [15:35:05.098] getCompletionData: Get current token: 0.01874801516532898
+Info 2180 [15:35:05.098] getCompletionData: Is inside comment: 0.0039370059967041016
+Info 2181 [15:35:05.098] getCompletionData: Get previous token 1: 0.06448802351951599
+Info 2182 [15:35:05.099] getCompletionData: Get previous token 2: 0.047575026750564575
+Info 2183 [15:35:05.099] getCompletionsAtPosition: isCompletionListBlocker: 0.005316019058227539
+Info 2184 [15:35:05.099] getCompletionData: Semantic work: 0.7704109847545624
+Info 2185 [15:35:05.176] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2186 [15:35:05.202] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 302 structureChanged: false Elapsed: 26.25831499695778ms
+Info 2187 [15:35:05.202] Different program with same set of files:: structureIsReused:: 2
+Info 2188 [15:35:05.203] getCompletionData: Get current token: 0.02945801615715027
+Info 2189 [15:35:05.203] getCompletionData: Is inside comment: 0.005943000316619873
+Info 2190 [15:35:05.203] getCompletionData: Get previous token 1: 0.1254580020904541
+Info 2191 [15:35:05.203] getCompletionData: Get previous token 2: 0.08451998233795166
+Info 2192 [15:35:05.203] getCompletionsAtPosition: isCompletionListBlocker: 0.006040006875991821
+Info 2193 [15:35:05.205] getCompletionData: Semantic work: 1.288021981716156
+Info 2194 [15:35:05.205] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2195 [15:35:05.237] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 303 structureChanged: false Elapsed: 31.495368987321854ms
+Info 2196 [15:35:05.237] Different program with same set of files:: structureIsReused:: 2
+Info 2197 [15:35:05.238] getCompletionData: Get current token: 0.052980005741119385
+Info 2198 [15:35:05.238] getCompletionData: Is inside comment: 0.008255988359451294
+Info 2199 [15:35:05.238] getCompletionData: Get previous token 1: 0.16662999987602234
+Info 2200 [15:35:05.238] getCompletionData: Get previous token 2: 0.13739299774169922
+Info 2201 [15:35:05.238] getCompletionsAtPosition: isCompletionListBlocker: 0.006962001323699951
+Info 2202 [15:35:05.240] getCompletionData: Semantic work: 1.5027270019054413
+Info 2203 [15:35:05.243] getCompletionData: Get current token: 0.04376301169395447
+Info 2204 [15:35:05.243] getCompletionData: Is inside comment: 0.006736010313034058
+Info 2205 [15:35:05.243] getCompletionData: Get previous token 1: 0.12634500861167908
+Info 2206 [15:35:05.243] getCompletionData: Get previous token 2: 0.12329402565956116
+Info 2207 [15:35:05.243] getCompletionsAtPosition: isCompletionListBlocker: 0.010623008012771606
+Info 2208 [15:35:05.244] getCompletionData: Semantic work: 0.6048990190029144
+Info 2209 [15:35:05.246] getCompletionData: Get current token: 0.04500401020050049
+Info 2210 [15:35:05.246] getCompletionData: Is inside comment: 0.006948977708816528
+Info 2211 [15:35:05.246] getCompletionData: Get previous token 1: 0.11756598949432373
+Info 2212 [15:35:05.246] getCompletionData: Get previous token 2: 0.12564900517463684
+Info 2213 [15:35:05.246] getCompletionsAtPosition: isCompletionListBlocker: 0.00839000940322876
+Info 2214 [15:35:05.247] getCompletionData: Semantic work: 0.5843479931354523
+Info 2215 [15:35:05.488] getCompletionData: Get current token: 0.015333980321884155
+Info 2216 [15:35:05.488] getCompletionData: Is inside comment: 0.0055879950523376465
+Info 2217 [15:35:05.488] getCompletionData: Get previous token 1: 0.05720299482345581
+Info 2218 [15:35:05.488] getCompletionData: Get previous token 2: 0.04435500502586365
+Info 2219 [15:35:05.488] getCompletionsAtPosition: isCompletionListBlocker: 0.005347996950149536
+Info 2220 [15:35:05.489] getCompletionData: Semantic work: 0.8306240141391754
+Info 2221 [15:35:05.491] getCompletionData: Get current token: 0.014453977346420288
+Info 2222 [15:35:05.491] getCompletionData: Is inside comment: 0.004047989845275879
+Info 2223 [15:35:05.491] getCompletionData: Get previous token 1: 0.05029800534248352
+Info 2224 [15:35:05.492] getCompletionData: Get previous token 2: 0.054343998432159424
+Info 2225 [15:35:05.492] getCompletionsAtPosition: isCompletionListBlocker: 0.003989994525909424
+Info 2226 [15:35:05.492] getCompletionData: Semantic work: 0.22565501928329468
+Info 2227 [15:35:05.493] getCompletionData: Get current token: 0.01624801754951477
+Info 2228 [15:35:05.493] getCompletionData: Is inside comment: 0.007032990455627441
+Info 2229 [15:35:05.493] getCompletionData: Get previous token 1: 0.053602010011672974
+Info 2230 [15:35:05.493] getCompletionData: Get previous token 2: 0.05742001533508301
+Info 2231 [15:35:05.493] getCompletionsAtPosition: isCompletionListBlocker: 0.005434989929199219
+Info 2232 [15:35:05.494] getCompletionData: Semantic work: 0.5306270122528076
+Info 2233 [15:35:05.704] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2234 [15:35:05.742] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 304 structureChanged: false Elapsed: 37.95645499229431ms
+Info 2235 [15:35:05.742] Different program with same set of files:: structureIsReused:: 2
+Info 2236 [15:35:05.743] getCompletionData: Get current token: 0.01843401789665222
+Info 2237 [15:35:05.743] getCompletionData: Is inside comment: 0.00637701153755188
+Info 2238 [15:35:05.743] getCompletionData: Get previous token 1: 0.1248289942741394
+Info 2239 [15:35:05.744] getCompletionData: Get previous token 2: 0.08533599972724915
+Info 2240 [15:35:05.744] getCompletionsAtPosition: isCompletionListBlocker: 0.0067720115184783936
+Info 2241 [15:35:05.745] getCompletionData: Semantic work: 1.0684040188789368
+Info 2242 [15:35:05.747] getCompletionData: Get current token: 0.01654300093650818
+Info 2243 [15:35:05.747] getCompletionData: Is inside comment: 0.006141006946563721
+Info 2244 [15:35:05.747] getCompletionData: Get previous token 1: 0.08790099620819092
+Info 2245 [15:35:05.747] getCompletionData: Get previous token 2: 0.0828079879283905
+Info 2246 [15:35:05.747] getCompletionsAtPosition: isCompletionListBlocker: 0.005804985761642456
+Info 2247 [15:35:05.748] getCompletionData: Semantic work: 0.4156990051269531
+Info 2248 [15:35:05.749] getCompletionData: Get current token: 0.01579698920249939
+Info 2249 [15:35:05.749] getCompletionData: Is inside comment: 0.005006998777389526
+Info 2250 [15:35:05.750] getCompletionData: Get previous token 1: 0.07635000348091125
+Info 2251 [15:35:05.750] getCompletionData: Get previous token 2: 0.07031100988388062
+Info 2252 [15:35:05.750] getCompletionsAtPosition: isCompletionListBlocker: 0.004601001739501953
+Info 2253 [15:35:05.752] getCompletionData: Semantic work: 1.807426005601883
+Info 2254 [15:35:06.063] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2255 [15:35:06.074] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2256 [15:35:06.074] forEachExternalModuleToImportFrom autoImportProvider: 10.571062982082367
+Info 2257 [15:35:06.077] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2258 [15:35:06.102] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 305 structureChanged: false Elapsed: 25.508448004722595ms
+Info 2259 [15:35:06.103] Different program with same set of files:: structureIsReused:: 2
+Info 2260 [15:35:06.316] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2261 [15:35:06.344] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 306 structureChanged: false Elapsed: 28.246477991342545ms
+Info 2262 [15:35:06.344] Different program with same set of files:: structureIsReused:: 2
+Info 2263 [15:35:06.345] getCompletionData: Get current token: 0.031442999839782715
+Info 2264 [15:35:06.345] getCompletionData: Is inside comment: 0.006480008363723755
+Info 2265 [15:35:06.345] getCompletionData: Get previous token 1: 0.08702898025512695
+Info 2266 [15:35:06.345] getCompletionData: Get previous token 2: 0.05927899479866028
+Info 2267 [15:35:06.346] getCompletionsAtPosition: isCompletionListBlocker: 0.005492985248565674
+Info 2268 [15:35:06.346] getCompletionData: Semantic work: 0.8259740173816681
+Info 2269 [15:35:06.943] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2270 [15:35:06.957] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2271 [15:35:06.958] forEachExternalModuleToImportFrom autoImportProvider: 13.578103005886078
+Info 2272 [15:35:06.959] getCompletionData: Get current token: 0.012632012367248535
+Info 2273 [15:35:06.959] getCompletionData: Is inside comment: 0.0033200085163116455
+Info 2274 [15:35:06.959] getCompletionData: Get previous token 1: 0.03804701566696167
+Info 2275 [15:35:06.959] getCompletionData: Get previous token 2: 0.03601601719856262
+Info 2276 [15:35:06.959] getCompletionsAtPosition: isCompletionListBlocker: 0.003219008445739746
+Info 2277 [15:35:06.959] getCompletionData: Semantic work: 0.22634398937225342
+Info 2278 [15:35:06.959] getCompletionData: Get current token: 0.021513015031814575
+Info 2279 [15:35:06.959] getCompletionData: Is inside comment: 0.004658997058868408
+Info 2280 [15:35:06.960] getCompletionData: Get previous token 1: 0.047267019748687744
+Info 2281 [15:35:06.960] getCompletionData: Get previous token 2: 0.03413701057434082
+Info 2282 [15:35:06.960] getCompletionsAtPosition: isCompletionListBlocker: 0.00238800048828125
+Info 2283 [15:35:06.960] getCompletionData: Semantic work: 0.1809540092945099
+Info 2284 [15:35:06.960] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2285 [15:35:06.979] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 307 structureChanged: false Elapsed: 19.322926998138428ms
+Info 2286 [15:35:06.980] Different program with same set of files:: structureIsReused:: 2
+Info 2287 [15:35:06.980] getCompletionData: Get current token: 0.015908002853393555
+Info 2288 [15:35:06.980] getCompletionData: Is inside comment: 0.0033960044384002686
+Info 2289 [15:35:06.980] getCompletionData: Get previous token 1: 0.057880014181137085
+Info 2290 [15:35:06.980] getCompletionData: Get previous token 2: 0.048802971839904785
+Info 2291 [15:35:06.980] getCompletionsAtPosition: isCompletionListBlocker: 0.005485981702804565
+Info 2292 [15:35:06.981] getCompletionData: Semantic work: 0.6605870127677917
+Info 2293 [15:35:07.206] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2294 [15:35:07.218] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2295 [15:35:07.219] forEachExternalModuleToImportFrom autoImportProvider: 12.905713021755219
+Info 2296 [15:35:07.341] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2297 [15:35:07.355] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2298 [15:35:07.355] forEachExternalModuleToImportFrom autoImportProvider: 13.710783004760742
+Info 2299 [15:35:07.360] getCompletionData: Get current token: 0.024396002292633057
+Info 2300 [15:35:07.360] getCompletionData: Is inside comment: 0.009199976921081543
+Info 2301 [15:35:07.361] getCompletionData: Get previous token 1: 0.08951300382614136
+Info 2302 [15:35:07.361] getCompletionData: Get previous token 2: 0.07053899765014648
+Info 2303 [15:35:07.361] getCompletionsAtPosition: isCompletionListBlocker: 0.0051940083503723145
+Info 2304 [15:35:07.361] getCompletionData: Semantic work: 0.35833001136779785
+Info 2305 [15:35:07.389] getCompletionData: Get current token: 0.0234529972076416
+Info 2306 [15:35:07.389] getCompletionData: Is inside comment: 0.006931006908416748
+Info 2307 [15:35:07.389] getCompletionData: Get previous token 1: 0.055151015520095825
+Info 2308 [15:35:07.389] getCompletionData: Get previous token 2: 0.061700016260147095
+Info 2309 [15:35:07.389] getCompletionsAtPosition: isCompletionListBlocker: 0.006953001022338867
+Info 2310 [15:35:07.390] getCompletionData: Semantic work: 0.29617899656295776
+Info 2311 [15:35:09.299] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2312 [15:35:09.331] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 308 structureChanged: false Elapsed: 31.7170430123806ms
+Info 2313 [15:35:09.331] Different program with same set of files:: structureIsReused:: 2
+Info 2314 [15:35:14.746] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2315 [15:35:14.778] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 309 structureChanged: false Elapsed: 31.709697008132935ms
+Info 2316 [15:35:14.778] Different program with same set of files:: structureIsReused:: 2
+Info 2317 [15:35:14.952] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2318 [15:35:14.994] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 310 structureChanged: false Elapsed: 42.063394993543625ms
+Info 2319 [15:35:14.994] Different program with same set of files:: structureIsReused:: 2
+Info 2320 [15:35:15.287] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2321 [15:35:15.334] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 311 structureChanged: false Elapsed: 46.686104983091354ms
+Info 2322 [15:35:15.334] Different program with same set of files:: structureIsReused:: 2
+Info 2323 [15:35:15.932] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2324 [15:35:15.958] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 312 structureChanged: false Elapsed: 25.132422000169754ms
+Info 2325 [15:35:15.958] Different program with same set of files:: structureIsReused:: 2
+Info 2326 [15:35:16.229] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2327 [15:35:16.241] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2328 [15:35:16.241] forEachExternalModuleToImportFrom autoImportProvider: 11.727277010679245
+Info 2329 [15:35:16.327] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2330 [15:35:16.360] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 313 structureChanged: false Elapsed: 33.375799000263214ms
+Info 2331 [15:35:16.360] Different program with same set of files:: structureIsReused:: 2
+Info 2332 [15:35:16.593] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2333 [15:35:16.618] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 314 structureChanged: false Elapsed: 24.501069009304047ms
+Info 2334 [15:35:16.618] Different program with same set of files:: structureIsReused:: 2
+Info 2335 [15:35:24.897] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2336 [15:35:24.931] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 315 structureChanged: false Elapsed: 34.17915400862694ms
+Info 2337 [15:35:24.931] Different program with same set of files:: structureIsReused:: 2
+Info 2338 [15:35:26.269] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2339 [15:35:26.308] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 316 structureChanged: false Elapsed: 38.93298900127411ms
+Info 2340 [15:35:26.308] Different program with same set of files:: structureIsReused:: 2
+Info 2341 [15:35:26.309] getCompletionData: Get current token: 0.04168999195098877
+Info 2342 [15:35:26.309] getCompletionData: Is inside comment: 0.006359010934829712
+Info 2343 [15:35:26.309] getCompletionData: Get previous token 1: 0.16037800908088684
+Info 2344 [15:35:26.310] getCompletionData: Get previous token 2: 0.2149839997291565
+Info 2345 [15:35:26.310] getCompletionsAtPosition: isCompletionListBlocker: 0.36504098773002625
+Info 2346 [15:35:26.346] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2347 [15:35:26.393] getCompletionData: Semantic work: 82.33705198764801
+Info 2348 [15:35:26.403] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 9.63577401638031
+Info 2349 [15:35:26.588] getCompletionData: Get current token: 0.04193800687789917
+Info 2350 [15:35:26.588] getCompletionData: Is inside comment: 0.007583022117614746
+Info 2351 [15:35:26.588] getCompletionData: Get previous token 1: 0.17311501502990723
+Info 2352 [15:35:26.588] getCompletionData: Get previous token 2: 0.1245800256729126
+Info 2353 [15:35:26.588] getCompletionsAtPosition: isCompletionListBlocker: 0.016359984874725342
+Info 2354 [15:35:26.604] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2355 [15:35:26.611] getCompletionData: Semantic work: 22.54085600376129
+Info 2356 [15:35:26.623] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 12.351873010396957
+Info 2357 [15:35:26.628] getCompletionData: Get current token: 0.016110986471176147
+Info 2358 [15:35:26.628] getCompletionData: Is inside comment: 0.003667980432510376
+Info 2359 [15:35:26.628] getCompletionData: Get previous token 1: 0.04763001203536987
+Info 2360 [15:35:26.628] getCompletionData: Get previous token 2: 0.06435301899909973
+Info 2361 [15:35:26.628] getCompletionsAtPosition: isCompletionListBlocker: 0.058737993240356445
+Info 2362 [15:35:26.637] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2363 [15:35:26.650] getCompletionData: Semantic work: 21.245909988880157
+Info 2364 [15:35:26.665] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 15.36589801311493
+Info 2365 [15:35:26.683] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2366 [15:35:26.713] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 317 structureChanged: false Elapsed: 30.070426017045975ms
+Info 2367 [15:35:26.714] Different program with same set of files:: structureIsReused:: 2
+Info 2368 [15:35:26.783] getCompletionData: Get current token: 0.025999009609222412
+Info 2369 [15:35:26.783] getCompletionData: Is inside comment: 0.00644800066947937
+Info 2370 [15:35:26.784] getCompletionData: Get previous token 1: 0.08124101161956787
+Info 2371 [15:35:26.784] getCompletionsAtPosition: isCompletionListBlocker: 0.0072879791259765625
+Info 2372 [15:35:26.785] getCompletionData: Semantic work: 1.057118982076645
+Info 2373 [15:35:26.949] getCompletionData: Get current token: 0.04064500331878662
+Info 2374 [15:35:26.949] getCompletionData: Is inside comment: 0.00636899471282959
+Info 2375 [15:35:26.949] getCompletionData: Get previous token 1: 0.08115100860595703
+Info 2376 [15:35:26.949] getCompletionsAtPosition: isCompletionListBlocker: 0.00472298264503479
+Info 2377 [15:35:26.949] getCompletionData: Semantic work: 0.5411149859428406
+Info 2378 [15:35:26.950] getCompletionData: Get current token: 0.03257599472999573
+Info 2379 [15:35:26.950] getCompletionData: Is inside comment: 0.006534993648529053
+Info 2380 [15:35:26.950] getCompletionData: Get previous token 1: 0.07839599251747131
+Info 2381 [15:35:26.951] getCompletionsAtPosition: isCompletionListBlocker: 0.004759013652801514
+Info 2382 [15:35:26.951] getCompletionData: Semantic work: 0.5643669962882996
+Info 2383 [15:35:26.954] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2384 [15:35:26.985] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 318 structureChanged: false Elapsed: 29.77260398864746ms
+Info 2385 [15:35:26.985] Different program with same set of files:: structureIsReused:: 2
+Info 2386 [15:35:27.820] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2387 [15:35:27.855] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 319 structureChanged: false Elapsed: 34.79693099856377ms
+Info 2388 [15:35:27.855] Different program with same set of files:: structureIsReused:: 2
+Info 2389 [15:35:27.856] getCompletionData: Get current token: 0.03627800941467285
+Info 2390 [15:35:27.856] getCompletionData: Is inside comment: 0.007705003023147583
+Info 2391 [15:35:27.857] getCompletionData: Get previous token 1: 0.8521189987659454
+Info 2392 [15:35:27.857] getCompletionData: Get previous token 2: 0.37140101194381714
+Info 2393 [15:35:27.857] getCompletionsAtPosition: isCompletionListBlocker: 0.008911997079849243
+Info 2394 [15:35:27.859] getCompletionData: Semantic work: 1.7458190023899078
+Info 2395 [15:35:27.860] getCompletionData: Get current token: 0.02042698860168457
+Info 2396 [15:35:27.860] getCompletionData: Is inside comment: 0.012005984783172607
+Info 2397 [15:35:27.860] getCompletionData: Get previous token 1: 0.14531800150871277
+Info 2398 [15:35:27.860] getCompletionData: Get previous token 2: 0.09613499045372009
+Info 2399 [15:35:27.861] getCompletionsAtPosition: isCompletionListBlocker: 0.016737014055252075
+Info 2400 [15:35:27.862] getCompletionData: Semantic work: 0.8108420073986053
+Info 2401 [15:35:27.862] getCompletionData: Get current token: 0.019656002521514893
+Info 2402 [15:35:27.862] getCompletionData: Is inside comment: 0.009130001068115234
+Info 2403 [15:35:27.863] getCompletionData: Get previous token 1: 0.10776001214981079
+Info 2404 [15:35:27.863] getCompletionData: Get previous token 2: 0.08560100197792053
+Info 2405 [15:35:27.863] getCompletionsAtPosition: isCompletionListBlocker: 0.006083011627197266
+Info 2406 [15:35:27.863] getCompletionData: Semantic work: 0.4103669822216034
+Info 2407 [15:35:28.026] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2408 [15:35:28.050] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 320 structureChanged: false Elapsed: 24.202995002269745ms
+Info 2409 [15:35:28.050] Different program with same set of files:: structureIsReused:: 2
+Info 2410 [15:35:28.053] getCompletionData: Get current token: 0.01816001534461975
+Info 2411 [15:35:28.053] getCompletionData: Is inside comment: 0.006235986948013306
+Info 2412 [15:35:28.053] getCompletionData: Get previous token 1: 0.11912298202514648
+Info 2413 [15:35:28.053] getCompletionData: Get previous token 2: 0.08530598878860474
+Info 2414 [15:35:28.053] getCompletionsAtPosition: isCompletionListBlocker: 0.006574004888534546
+Info 2415 [15:35:28.054] getCompletionData: Semantic work: 0.912412017583847
+Info 2416 [15:35:28.211] getCompletionData: Get current token: 0.01435399055480957
+Info 2417 [15:35:28.212] getCompletionData: Is inside comment: 0.005852013826370239
+Info 2418 [15:35:28.212] getCompletionData: Get previous token 1: 0.045114994049072266
+Info 2419 [15:35:28.212] getCompletionData: Get previous token 2: 0.04952600598335266
+Info 2420 [15:35:28.212] getCompletionsAtPosition: isCompletionListBlocker: 0.0048220157623291016
+Info 2421 [15:35:28.212] getCompletionData: Semantic work: 0.28219398856163025
+Info 2422 [15:35:28.213] getCompletionData: Get current token: 0.0217759907245636
+Info 2423 [15:35:28.213] getCompletionData: Is inside comment: 0.004913002252578735
+Info 2424 [15:35:28.213] getCompletionData: Get previous token 1: 0.04414299130439758
+Info 2425 [15:35:28.213] getCompletionData: Get previous token 2: 0.04398199915885925
+Info 2426 [15:35:28.213] getCompletionsAtPosition: isCompletionListBlocker: 0.004218995571136475
+Info 2427 [15:35:28.213] getCompletionData: Semantic work: 0.23562100529670715
+Info 2428 [15:35:28.213] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2429 [15:35:28.256] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 321 structureChanged: false Elapsed: 43.02204802632332ms
+Info 2430 [15:35:28.256] Different program with same set of files:: structureIsReused:: 2
+Info 2431 [15:35:28.466] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2432 [15:35:28.516] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 322 structureChanged: false Elapsed: 49.89874902367592ms
+Info 2433 [15:35:28.517] Different program with same set of files:: structureIsReused:: 2
+Info 2434 [15:35:29.202] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2435 [15:35:29.248] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 323 structureChanged: false Elapsed: 45.959696024656296ms
+Info 2436 [15:35:29.248] Different program with same set of files:: structureIsReused:: 2
+Info 2437 [15:35:29.960] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2438 [15:35:30.000] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 324 structureChanged: false Elapsed: 39.23221501708031ms
+Info 2439 [15:35:30.000] Different program with same set of files:: structureIsReused:: 2
+Info 2440 [15:35:30.198] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2441 [15:35:30.221] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 325 structureChanged: false Elapsed: 22.931695014238358ms
+Info 2442 [15:35:30.221] Different program with same set of files:: structureIsReused:: 2
+Info 2443 [15:35:30.502] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2444 [15:35:30.553] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 326 structureChanged: false Elapsed: 51.16109901666641ms
+Info 2445 [15:35:30.553] Different program with same set of files:: structureIsReused:: 2
+Info 2446 [15:35:30.999] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2447 [15:35:31.022] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 327 structureChanged: false Elapsed: 21.967772990465164ms
+Info 2448 [15:35:31.022] Different program with same set of files:: structureIsReused:: 2
+Info 2449 [15:35:31.023] getCompletionData: Get current token: 0.017268002033233643
+Info 2450 [15:35:31.023] getCompletionData: Is inside comment: 0.005960017442703247
+Info 2451 [15:35:31.023] getCompletionData: Get previous token 1: 0.07330101728439331
+Info 2452 [15:35:31.024] getCompletionsAtPosition: isCompletionListBlocker: 0.01742801070213318
+Info 2453 [15:35:31.024] Returning an empty list because completion was requested in an invalid position.
+Info 2454 [15:35:31.030] getCompletionData: Get current token: 0.03247898817062378
+Info 2455 [15:35:31.030] getCompletionData: Is inside comment: 0.006803005933761597
+Info 2456 [15:35:31.031] getCompletionData: Get previous token 1: 0.10679000616073608
+Info 2457 [15:35:31.031] getCompletionsAtPosition: isCompletionListBlocker: 0.013199001550674438
+Info 2458 [15:35:31.031] Returning an empty list because completion was requested in an invalid position.
+Info 2459 [15:35:31.196] getCompletionData: Get current token: 0.017150014638900757
+Info 2460 [15:35:31.196] getCompletionData: Is inside comment: 0.011722981929779053
+Info 2461 [15:35:31.196] getCompletionData: Get previous token 1: 0.0720369815826416
+Info 2462 [15:35:31.196] getCompletionsAtPosition: isCompletionListBlocker: 0.01635497808456421
+Info 2463 [15:35:31.196] Returning an empty list because completion was requested in an invalid position.
+Info 2464 [15:35:31.207] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2465 [15:35:31.248] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 328 structureChanged: false Elapsed: 40.496044993400574ms
+Info 2466 [15:35:31.248] Different program with same set of files:: structureIsReused:: 2
+Info 2467 [15:35:31.354] getCompletionData: Get current token: 0.015576988458633423
+Info 2468 [15:35:31.354] getCompletionData: Is inside comment: 0.01329699158668518
+Info 2469 [15:35:31.354] getCompletionData: Get previous token 1: 0.10051697492599487
+Info 2470 [15:35:31.355] getCompletionsAtPosition: isCompletionListBlocker: 0.01647600531578064
+Info 2471 [15:35:31.355] Returning an empty list because completion was requested in an invalid position.
+Info 2472 [15:35:31.359] getCompletionData: Get current token: 0.019551008939743042
+Info 2473 [15:35:31.360] getCompletionData: Is inside comment: 0.02298802137374878
+Info 2474 [15:35:31.360] getCompletionData: Get previous token 1: 0.11758601665496826
+Info 2475 [15:35:31.360] getCompletionsAtPosition: isCompletionListBlocker: 0.018922001123428345
+Info 2476 [15:35:31.361] Returning an empty list because completion was requested in an invalid position.
+Info 2477 [15:35:31.384] getCompletionData: Get current token: 0.3199840188026428
+Info 2478 [15:35:31.385] getCompletionData: Is inside comment: 0.01419597864151001
+Info 2479 [15:35:31.385] getCompletionData: Get previous token 1: 0.08219000697135925
+Info 2480 [15:35:31.402] getCompletionsAtPosition: isCompletionListBlocker: 0.01874399185180664
+Info 2481 [15:35:31.402] Returning an empty list because completion was requested in an invalid position.
+Info 2482 [15:35:35.626] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2483 [15:35:35.663] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 329 structureChanged: false Elapsed: 36.99948999285698ms
+Info 2484 [15:35:35.663] Different program with same set of files:: structureIsReused:: 2
+Info 2485 [15:35:35.664] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2486 [15:35:35.694] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 330 structureChanged: false Elapsed: 29.921674996614456ms
+Info 2487 [15:35:35.694] Different program with same set of files:: structureIsReused:: 2
+Info 2488 [15:35:40.083] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2489 [15:35:40.129] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 331 structureChanged: false Elapsed: 45.25781300663948ms
+Info 2490 [15:35:40.129] Different program with same set of files:: structureIsReused:: 2
+Info 2491 [15:35:40.132] getCompletionData: Get current token: 0.034660011529922485
+Info 2492 [15:35:40.133] getCompletionData: Is inside comment: 0.11620599031448364
+Info 2493 [15:35:40.133] getCompletionData: Get previous token 1: 0.07972201704978943
+Info 2494 [15:35:40.133] getCompletionData: Get previous token 2: 0.13567200303077698
+Info 2495 [15:35:40.133] getCompletionsAtPosition: isCompletionListBlocker: 0.033340007066726685
+Info 2496 [15:35:40.159] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2497 [15:35:40.189] getCompletionData: Semantic work: 56.16606602072716
+Info 2498 [15:35:40.233] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.807782977819443
+Info 2499 [15:35:40.747] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2500 [15:35:40.783] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 332 structureChanged: false Elapsed: 35.73189398646355ms
+Info 2501 [15:35:40.783] Different program with same set of files:: structureIsReused:: 2
+Info 2502 [15:35:41.255] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2503 [15:35:41.281] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 333 structureChanged: false Elapsed: 25.83245199918747ms
+Info 2504 [15:35:41.281] Different program with same set of files:: structureIsReused:: 2
+Info 2505 [15:35:41.450] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2506 [15:35:41.474] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 334 structureChanged: false Elapsed: 23.147374987602234ms
+Info 2507 [15:35:41.474] Different program with same set of files:: structureIsReused:: 2
+Info 2508 [15:35:42.608] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2509 [15:35:42.642] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 335 structureChanged: false Elapsed: 34.34723499417305ms
+Info 2510 [15:35:42.642] Different program with same set of files:: structureIsReused:: 2
+Info 2511 [15:35:42.643] getCompletionData: Get current token: 0.016406983137130737
+Info 2512 [15:35:42.643] getCompletionData: Is inside comment: 0.054933011531829834
+Info 2513 [15:35:42.643] getCompletionData: Get previous token 1: 0.05902099609375
+Info 2514 [15:35:42.643] getCompletionData: Get previous token 2: 0.046083003282547
+Info 2515 [15:35:42.643] getCompletionsAtPosition: isCompletionListBlocker: 0.017024993896484375
+Info 2516 [15:35:42.657] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2517 [15:35:42.727] getCompletionData: Semantic work: 83.61637300252914
+Info 2518 [15:35:42.776] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 15.576815992593765
+Info 2519 [15:37:59.425] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2520 [15:37:59.473] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 336 structureChanged: false Elapsed: 47.19067698717117ms
+Info 2521 [15:37:59.473] Different program with same set of files:: structureIsReused:: 2
+Info 2522 [15:38:00.517] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2523 [15:38:00.542] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 337 structureChanged: false Elapsed: 25.163305014371872ms
+Info 2524 [15:38:00.542] Different program with same set of files:: structureIsReused:: 2
+Info 2525 [15:38:00.543] getCompletionData: Get current token: 0.01080399751663208
+Info 2526 [15:38:00.543] getCompletionData: Is inside comment: 0.04952099919319153
+Info 2527 [15:38:00.543] getCompletionData: Get previous token 1: 0.037168025970458984
+Info 2528 [15:38:00.543] getCompletionsAtPosition: isCompletionListBlocker: 0.011601001024246216
+Info 2529 [15:38:00.557] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2530 [15:38:00.637] getCompletionData: Semantic work: 93.77112099528313
+Info 2531 [15:38:00.671] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 34.6260059773922
+Info 2532 [15:38:00.932] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2533 [15:38:00.978] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 338 structureChanged: false Elapsed: 45.96054598689079ms
+Info 2534 [15:38:00.978] Different program with same set of files:: structureIsReused:: 2
+Info 2535 [15:38:01.381] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2536 [15:38:01.403] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 339 structureChanged: false Elapsed: 22.600763976573944ms
+Info 2537 [15:38:01.403] Different program with same set of files:: structureIsReused:: 2
+Info 2538 [15:38:02.123] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2539 [15:38:02.166] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 340 structureChanged: false Elapsed: 43.146012008190155ms
+Info 2540 [15:38:02.166] Different program with same set of files:: structureIsReused:: 2
+Info 2541 [15:38:03.021] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2542 [15:38:03.072] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 341 structureChanged: false Elapsed: 51.1061489880085ms
+Info 2543 [15:38:03.072] Different program with same set of files:: structureIsReused:: 2
+Info 2544 [15:38:03.367] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2545 [15:38:03.399] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 342 structureChanged: false Elapsed: 32.68054401874542ms
+Info 2546 [15:38:03.400] Different program with same set of files:: structureIsReused:: 2
+Info 2547 [15:38:03.400] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2548 [15:38:03.455] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 343 structureChanged: false Elapsed: 54.95448300242424ms
+Info 2549 [15:38:03.455] Different program with same set of files:: structureIsReused:: 2
+Info 2550 [15:38:03.754] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2551 [15:38:03.781] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 344 structureChanged: false Elapsed: 27.276957988739014ms
+Info 2552 [15:38:03.781] Different program with same set of files:: structureIsReused:: 2
+Info 2553 [15:38:03.782] getCompletionData: Get current token: 0.014676004648208618
+Info 2554 [15:38:03.782] getCompletionData: Is inside comment: 0.05730000138282776
+Info 2555 [15:38:03.782] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2556 [15:38:03.784] getCompletionData: Get current token: 0.01279798150062561
+Info 2557 [15:38:03.785] getCompletionData: Is inside comment: 0.10320600867271423
+Info 2558 [15:38:03.785] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2559 [15:38:03.787] getCompletionData: Get current token: 0.018629014492034912
+Info 2560 [15:38:03.788] getCompletionData: Is inside comment: 0.0756080150604248
+Info 2561 [15:38:03.788] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2562 [15:38:04.269] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2563 [15:38:04.298] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 345 structureChanged: false Elapsed: 28.339899986982346ms
+Info 2564 [15:38:04.298] Different program with same set of files:: structureIsReused:: 2
+Info 2565 [15:38:04.299] getCompletionData: Get current token: 0.010717988014221191
+Info 2566 [15:38:04.299] getCompletionData: Is inside comment: 0.06766501069068909
+Info 2567 [15:38:04.299] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2568 [15:38:04.349] getCompletionData: Get current token: 0.010444998741149902
+Info 2569 [15:38:04.349] getCompletionData: Is inside comment: 0.044804006814956665
+Info 2570 [15:38:04.349] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2571 [15:38:04.350] getCompletionData: Get current token: 0.01612401008605957
+Info 2572 [15:38:04.350] getCompletionData: Is inside comment: 0.057256996631622314
+Info 2573 [15:38:04.350] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2574 [15:38:04.542] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2575 [15:38:04.568] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 346 structureChanged: false Elapsed: 26.15024498105049ms
+Info 2576 [15:38:04.569] Different program with same set of files:: structureIsReused:: 2
+Info 2577 [15:38:04.569] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2578 [15:38:04.600] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 347 structureChanged: false Elapsed: 30.993142992258072ms
+Info 2579 [15:38:04.600] Different program with same set of files:: structureIsReused:: 2
+Info 2580 [15:38:04.791] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2581 [15:38:04.815] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 348 structureChanged: false Elapsed: 24.354252994060516ms
+Info 2582 [15:38:04.815] Different program with same set of files:: structureIsReused:: 2
+Info 2583 [15:38:04.816] getCompletionData: Get current token: 0.016631990671157837
+Info 2584 [15:38:04.816] getCompletionData: Is inside comment: 0.03150099515914917
+Info 2585 [15:38:04.816] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2586 [15:38:04.817] getCompletionData: Get current token: 0.009627014398574829
+Info 2587 [15:38:04.818] getCompletionData: Is inside comment: 0.05037200450897217
+Info 2588 [15:38:04.818] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2589 [15:38:04.893] getCompletionData: Get current token: 0.05309101939201355
+Info 2590 [15:38:04.894] getCompletionData: Is inside comment: 0.18802601099014282
+Info 2591 [15:38:04.894] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2592 [15:38:06.529] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2593 [15:38:06.562] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 349 structureChanged: false Elapsed: 33.198000997304916ms
+Info 2594 [15:38:06.562] Different program with same set of files:: structureIsReused:: 2
+Info 2595 [15:38:06.563] getCompletionData: Get current token: 0.02571702003479004
+Info 2596 [15:38:06.563] getCompletionData: Is inside comment: 0.07608899474143982
+Info 2597 [15:38:06.563] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2598 [15:38:06.638] getCompletionData: Get current token: 0.010048985481262207
+Info 2599 [15:38:06.638] getCompletionData: Is inside comment: 0.040036022663116455
+Info 2600 [15:38:06.638] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2601 [15:38:06.640] getCompletionData: Get current token: 0.009626001119613647
+Info 2602 [15:38:06.640] getCompletionData: Is inside comment: 0.04703700542449951
+Info 2603 [15:38:06.640] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 2604 [15:38:07.979] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2605 [15:38:08.004] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 350 structureChanged: false Elapsed: 25.150508999824524ms
+Info 2606 [15:38:08.005] Different program with same set of files:: structureIsReused:: 2
+Info 2607 [15:38:08.694] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2608 [15:38:08.724] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 351 structureChanged: false Elapsed: 30.24456000328064ms
+Info 2609 [15:38:08.724] Different program with same set of files:: structureIsReused:: 2
+Info 2610 [15:38:13.967] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2611 [15:38:13.980] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2612 [15:38:13.980] forEachExternalModuleToImportFrom autoImportProvider: 12.528068989515305
+Info 2613 [15:38:14.269] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2614 [15:38:14.283] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2615 [15:38:14.283] forEachExternalModuleToImportFrom autoImportProvider: 14.652120977640152
+Info 2616 [15:38:15.221] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2617 [15:38:15.280] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 352 structureChanged: false Elapsed: 58.151784002780914ms
+Info 2618 [15:38:15.280] Different program with same set of files:: structureIsReused:: 2
+Info 2619 [15:38:15.467] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2620 [15:38:15.493] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 353 structureChanged: false Elapsed: 25.439614981412888ms
+Info 2621 [15:38:15.493] Different program with same set of files:: structureIsReused:: 2
+Info 2622 [15:38:15.905] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2623 [15:38:15.926] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 354 structureChanged: false Elapsed: 21.73691201210022ms
+Info 2624 [15:38:15.927] Different program with same set of files:: structureIsReused:: 2
+Info 2625 [15:38:15.929] getCompletionData: Get current token: 0.042602986097335815
+Info 2626 [15:38:15.929] getCompletionData: Is inside comment: 0.18080002069473267
+Info 2627 [15:38:15.929] getCompletionData: Get previous token 1: 0.1712760031223297
+Info 2628 [15:38:15.930] getCompletionData: Get previous token 2: 0.1548750102519989
+Info 2629 [15:38:15.930] getCompletionsAtPosition: isCompletionListBlocker: 0.007396012544631958
+Info 2630 [15:38:15.930] Returning an empty list because completion was requested in an invalid position.
+Info 2631 [15:38:16.163] getCompletionData: Get current token: 0.02088397741317749
+Info 2632 [15:38:16.164] getCompletionData: Is inside comment: 0.4390459954738617
+Info 2633 [15:38:16.164] getCompletionData: Get previous token 1: 0.08807501196861267
+Info 2634 [15:38:16.164] getCompletionData: Get previous token 2: 0.09228000044822693
+Info 2635 [15:38:16.164] getCompletionsAtPosition: isCompletionListBlocker: 0.004799008369445801
+Info 2636 [15:38:16.164] Returning an empty list because completion was requested in an invalid position.
+Info 2637 [15:38:16.165] getCompletionData: Get current token: 0.020713001489639282
+Info 2638 [15:38:16.165] getCompletionData: Is inside comment: 0.10623002052307129
+Info 2639 [15:38:16.165] getCompletionData: Get previous token 1: 0.07092702388763428
+Info 2640 [15:38:16.165] getCompletionData: Get previous token 2: 0.07313200831413269
+Info 2641 [15:38:16.165] getCompletionsAtPosition: isCompletionListBlocker: 0.004520982503890991
+Info 2642 [15:38:16.165] Returning an empty list because completion was requested in an invalid position.
+Info 2643 [15:38:16.166] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2644 [15:38:16.206] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 355 structureChanged: false Elapsed: 40.83802002668381ms
+Info 2645 [15:38:16.207] Different program with same set of files:: structureIsReused:: 2
+Info 2646 [15:38:16.254] getCompletionData: Get current token: 0.011508017778396606
+Info 2647 [15:38:16.255] getCompletionData: Is inside comment: 0.11794900894165039
+Info 2648 [15:38:16.255] getCompletionData: Get previous token 1: 0.07378697395324707
+Info 2649 [15:38:16.255] getCompletionData: Get previous token 2: 0.0754149854183197
+Info 2650 [15:38:16.255] getCompletionsAtPosition: isCompletionListBlocker: 0.005683988332748413
+Info 2651 [15:38:16.255] Returning an empty list because completion was requested in an invalid position.
+Info 2652 [15:38:16.257] getCompletionData: Get current token: 0.012043982744216919
+Info 2653 [15:38:16.257] getCompletionData: Is inside comment: 0.08654901385307312
+Info 2654 [15:38:16.257] getCompletionData: Get previous token 1: 0.07740399241447449
+Info 2655 [15:38:16.257] getCompletionData: Get previous token 2: 0.0764470100402832
+Info 2656 [15:38:16.257] getCompletionsAtPosition: isCompletionListBlocker: 0.004314005374908447
+Info 2657 [15:38:16.257] Returning an empty list because completion was requested in an invalid position.
+Info 2658 [15:38:16.258] getCompletionData: Get current token: 0.012194991111755371
+Info 2659 [15:38:16.258] getCompletionData: Is inside comment: 0.08832800388336182
+Info 2660 [15:38:16.259] getCompletionData: Get previous token 1: 0.08844602108001709
+Info 2661 [15:38:16.259] getCompletionData: Get previous token 2: 0.08308601379394531
+Info 2662 [15:38:16.259] getCompletionsAtPosition: isCompletionListBlocker: 0.0040589869022369385
+Info 2663 [15:38:16.259] Returning an empty list because completion was requested in an invalid position.
+Info 2664 [15:38:18.426] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2665 [15:38:18.443] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2666 [15:38:18.443] forEachExternalModuleToImportFrom autoImportProvider: 16.70874997973442
+Info 2667 [15:38:19.412] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2668 [15:38:19.423] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2669 [15:38:19.423] forEachExternalModuleToImportFrom autoImportProvider: 11.412384986877441
+Info 2670 [15:38:20.110] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2671 [15:38:20.131] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2672 [15:38:20.131] forEachExternalModuleToImportFrom autoImportProvider: 20.856040984392166
+Info 2673 [15:38:27.754] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2674 [15:38:27.777] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 356 structureChanged: false Elapsed: 22.008844017982483ms
+Info 2675 [15:38:27.777] Different program with same set of files:: structureIsReused:: 2
+Info 2676 [15:38:27.998] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2677 [15:38:28.016] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2678 [15:38:28.016] forEachExternalModuleToImportFrom autoImportProvider: 17.883450984954834
+Info 2679 [15:38:29.475] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2680 [15:38:29.492] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 357 structureChanged: false Elapsed: 16.767262995243073ms
+Info 2681 [15:38:29.492] Different program with same set of files:: structureIsReused:: 2
+Err 2682  [15:38:29.806] Exception on executing command {"command":"getCodeFixes","seq":2998,"type":"request","arguments":{"file":"/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/components/graph/graph.tsx","startLine":105,"startOffset":9,"endLine":105,"endOffset":9,"errorCodes":[7044]}}:
+
+    Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+
+    Error: Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+        at Object.cast (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:1500:25)
+        at doChange (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140964:40)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:109
+        at Function.ChangeTracker.with (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:134317:17)
+        at Object.getCodeActions (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:64)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:77
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:23)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149557:35
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149555:23)
+        at IOSession.Session.getCodeFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160663:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:159335:61)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:88
+        at IOSession.Session.executeWithRequestId (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160954:28)
+        at IOSession.Session.executeCommand (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:33)
+        at IOSession.Session.onMessage (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160989:35)
+        at Interface.<anonymous> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:163650:31)
+        at Interface.emit (node:events:369:20)
+        at Interface._onLine (node:readline:418:10)
+        at Interface._normalWrite (node:readline:572:12)
+        at Socket.ondata (node:readline:240:10)
+        at Socket.emit (node:events:369:20)
+        at addChunk (node:internal/streams/readable:313:12)
+        at readableAddChunk (node:internal/streams/readable:288:9)
+        at Socket.Readable.push (node:internal/streams/readable:227:10)
+        at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+Err 2683  [15:38:30.533] Exception on executing command {"command":"getCodeFixes","seq":3002,"type":"request","arguments":{"file":"/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/components/graph/graph.tsx","startLine":105,"startOffset":9,"endLine":105,"endOffset":9,"errorCodes":[7044]}}:
+
+    Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+
+    Error: Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+        at Object.cast (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:1500:25)
+        at doChange (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140964:40)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:109
+        at Function.ChangeTracker.with (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:134317:17)
+        at Object.getCodeActions (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:64)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:77
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:23)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149557:35
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149555:23)
+        at IOSession.Session.getCodeFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160663:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:159335:61)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:88
+        at IOSession.Session.executeWithRequestId (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160954:28)
+        at IOSession.Session.executeCommand (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:33)
+        at IOSession.Session.onMessage (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160989:35)
+        at Interface.<anonymous> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:163650:31)
+        at Interface.emit (node:events:369:20)
+        at Interface._onLine (node:readline:418:10)
+        at Interface._normalWrite (node:readline:572:12)
+        at Socket.ondata (node:readline:240:10)
+        at Socket.emit (node:events:369:20)
+        at addChunk (node:internal/streams/readable:313:12)
+        at readableAddChunk (node:internal/streams/readable:288:9)
+        at Socket.Readable.push (node:internal/streams/readable:227:10)
+        at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+Info 2684 [15:38:31.155] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2685 [15:38:31.199] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 358 structureChanged: false Elapsed: 43.426420986652374ms
+Info 2686 [15:38:31.199] Different program with same set of files:: structureIsReused:: 2
+Info 2687 [15:38:31.329] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2688 [15:38:31.360] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 359 structureChanged: false Elapsed: 31.078694999217987ms
+Info 2689 [15:38:31.360] Different program with same set of files:: structureIsReused:: 2
+Info 2690 [15:38:31.943] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2691 [15:38:31.971] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 360 structureChanged: false Elapsed: 28.5069639980793ms
+Info 2692 [15:38:31.971] Different program with same set of files:: structureIsReused:: 2
+Info 2693 [15:38:31.972] getCompletionData: Get current token: 0.013651996850967407
+Info 2694 [15:38:31.973] getCompletionData: Is inside comment: 0.0059230029582977295
+Info 2695 [15:38:31.973] getCompletionData: Get previous token 1: 0.137457013130188
+Info 2696 [15:38:31.973] getCompletionData: Get previous token 2: 0.06834399700164795
+Info 2697 [15:38:31.973] getCompletionsAtPosition: isCompletionListBlocker: 0.009871989488601685
+Info 2698 [15:38:31.988] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2699 [15:38:32.053] getCompletionData: Semantic work: 80.39415901899338
+Info 2700 [15:38:32.082] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 10.427061021327972
+Info 2701 [15:38:35.395] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2702 [15:38:35.413] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 361 structureChanged: false Elapsed: 18.377848982810974ms
+Info 2703 [15:38:35.413] Different program with same set of files:: structureIsReused:: 2
+Info 2704 [15:38:36.273] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2705 [15:38:36.312] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 362 structureChanged: false Elapsed: 38.56949698925018ms
+Info 2706 [15:38:36.312] Different program with same set of files:: structureIsReused:: 2
+Info 2707 [15:38:36.313] getCompletionData: Get current token: 0.016402989625930786
+Info 2708 [15:38:36.313] getCompletionData: Is inside comment: 0.005463987588882446
+Info 2709 [15:38:36.313] getCompletionData: Get previous token 1: 0.1331460177898407
+Info 2710 [15:38:36.314] getCompletionData: Get previous token 2: 0.1037139892578125
+Info 2711 [15:38:36.314] getCompletionsAtPosition: isCompletionListBlocker: 0.01519399881362915
+Info 2712 [15:38:36.323] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2713 [15:38:36.377] getCompletionData: Semantic work: 63.60547998547554
+Info 2714 [15:38:36.388] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 10.392796993255615
+Info 2715 [15:38:38.450] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2716 [15:38:38.470] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 363 structureChanged: false Elapsed: 19.639331996440887ms
+Info 2717 [15:38:38.470] Different program with same set of files:: structureIsReused:: 2
+Info 2718 [15:38:38.615] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2719 [15:38:38.648] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 364 structureChanged: false Elapsed: 33.65220299363136ms
+Info 2720 [15:38:38.648] Different program with same set of files:: structureIsReused:: 2
+Info 2721 [15:38:39.230] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2722 [15:38:39.264] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 365 structureChanged: false Elapsed: 33.85114499926567ms
+Info 2723 [15:38:39.264] Different program with same set of files:: structureIsReused:: 2
+Info 2724 [15:38:44.075] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2725 [15:38:44.117] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 366 structureChanged: false Elapsed: 41.43641400337219ms
+Info 2726 [15:38:44.117] Different program with same set of files:: structureIsReused:: 2
+Info 2727 [15:38:44.322] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2728 [15:38:44.360] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 367 structureChanged: false Elapsed: 38.71019098162651ms
+Info 2729 [15:38:44.361] Different program with same set of files:: structureIsReused:: 2
+Info 2730 [15:38:44.438] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2731 [15:38:44.568] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 368 structureChanged: false Elapsed: 125.08864998817444ms
+Info 2732 [15:38:44.572] Different program with same set of files:: structureIsReused:: 2
+Info 2733 [15:38:44.807] getCompletionData: Get current token: 0.018037021160125732
+Info 2734 [15:38:44.807] getCompletionData: Is inside comment: 0.004424989223480225
+Info 2735 [15:38:44.807] getCompletionData: Get previous token 1: 0.08338400721549988
+Info 2736 [15:38:44.807] getCompletionData: Get previous token 2: 0.05941000580787659
+Info 2737 [15:38:44.808] getCompletionsAtPosition: isCompletionListBlocker: 0.016060978174209595
+Info 2738 [15:38:44.823] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2739 [15:38:45.047] getCompletionData: Semantic work: 239.75284001231194
+Info 2740 [15:38:45.062] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 11.026435017585754
+Info 2741 [15:38:45.205] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2742 [15:38:45.228] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 369 structureChanged: false Elapsed: 22.761984020471573ms
+Info 2743 [15:38:45.228] Different program with same set of files:: structureIsReused:: 2
+Info 2744 [15:38:45.228] getCompletionData: Get current token: 0.02016499638557434
+Info 2745 [15:38:45.228] getCompletionData: Is inside comment: 0.0055519938468933105
+Info 2746 [15:38:45.229] getCompletionData: Get previous token 1: 0.14458701014518738
+Info 2747 [15:38:45.229] getCompletionData: Get previous token 2: 0.07026499509811401
+Info 2748 [15:38:45.229] getCompletionsAtPosition: isCompletionListBlocker: 0.016196995973587036
+Info 2749 [15:38:45.244] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2750 [15:38:45.308] getCompletionData: Semantic work: 54.90550801157951
+Info 2751 [15:38:45.327] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 15.730340003967285
+Info 2752 [15:38:45.340] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2753 [15:38:45.384] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 370 structureChanged: false Elapsed: 44.028645008802414ms
+Info 2754 [15:38:45.385] Different program with same set of files:: structureIsReused:: 2
+Info 2755 [15:38:45.385] getCompletionData: Get current token: 0.021740972995758057
+Info 2756 [15:38:45.385] getCompletionData: Is inside comment: 0.004584997892379761
+Info 2757 [15:38:45.385] getCompletionData: Get previous token 1: 0.09981900453567505
+Info 2758 [15:38:45.385] getCompletionData: Get previous token 2: 0.0724790096282959
+Info 2759 [15:38:45.385] getCompletionsAtPosition: isCompletionListBlocker: 0.013689994812011719
+Info 2760 [15:38:45.396] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2761 [15:38:45.446] getCompletionData: Semantic work: 60.29357600212097
+Info 2762 [15:38:45.460] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 11.714433014392853
+Info 2763 [15:38:45.468] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2764 [15:38:45.503] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 371 structureChanged: false Elapsed: 35.01040202379227ms
+Info 2765 [15:38:45.503] Different program with same set of files:: structureIsReused:: 2
+Info 2766 [15:38:45.504] getCompletionData: Get current token: 0.037887006998062134
+Info 2767 [15:38:45.504] getCompletionData: Is inside comment: 0.011017024517059326
+Info 2768 [15:38:45.507] getCompletionData: Get previous token 1: 2.5900650024414062
+Info 2769 [15:38:45.507] getCompletionData: Get previous token 2: 0.0807659924030304
+Info 2770 [15:38:45.507] getCompletionsAtPosition: isCompletionListBlocker: 0.021694988012313843
+Info 2771 [15:38:45.518] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2772 [15:38:45.552] getCompletionData: Semantic work: 44.684228003025055
+Info 2773 [15:38:45.560] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.959437012672424
+Info 2774 [15:39:12.290] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2775 [15:39:12.339] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 372 structureChanged: false Elapsed: 48.58933198451996ms
+Info 2776 [15:39:12.339] Different program with same set of files:: structureIsReused:: 2
+Info 2777 [15:39:14.944] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2778 [15:39:14.972] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 373 structureChanged: false Elapsed: 28.472530007362366ms
+Info 2779 [15:39:14.972] Different program with same set of files:: structureIsReused:: 2
+Info 2780 [15:39:15.236] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2781 [15:39:15.268] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 374 structureChanged: false Elapsed: 31.00101900100708ms
+Info 2782 [15:39:15.268] Different program with same set of files:: structureIsReused:: 2
+Err 2783  [15:39:20.701] Exception on executing command {"command":"getCodeFixes","seq":3163,"type":"request","arguments":{"file":"/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/components/graph/graph.tsx","startLine":143,"startOffset":12,"endLine":143,"endOffset":12,"errorCodes":[6133,7044]}}:
+
+    Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+
+    Error: Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+        at Object.cast (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:1500:25)
+        at doChange (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140964:40)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:109
+        at Function.ChangeTracker.with (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:134317:17)
+        at Object.getCodeActions (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:64)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:77
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:23)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149557:35
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149555:23)
+        at IOSession.Session.getCodeFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160663:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:159335:61)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:88
+        at IOSession.Session.executeWithRequestId (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160954:28)
+        at IOSession.Session.executeCommand (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:33)
+        at IOSession.Session.onMessage (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160989:35)
+        at Interface.<anonymous> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:163650:31)
+        at Interface.emit (node:events:369:20)
+        at Interface._onLine (node:readline:418:10)
+        at Interface._normalWrite (node:readline:572:12)
+        at Socket.ondata (node:readline:240:10)
+        at Socket.emit (node:events:369:20)
+        at addChunk (node:internal/streams/readable:313:12)
+        at readableAddChunk (node:internal/streams/readable:288:9)
+        at Socket.Readable.push (node:internal/streams/readable:227:10)
+        at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+Err 2784  [15:39:21.094] Exception on executing command {"command":"getCodeFixes","seq":3165,"type":"request","arguments":{"file":"/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/components/graph/graph.tsx","startLine":143,"startOffset":13,"endLine":143,"endOffset":13,"errorCodes":[6133,7044]}}:
+
+    Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+
+    Error: Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+        at Object.cast (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:1500:25)
+        at doChange (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140964:40)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:109
+        at Function.ChangeTracker.with (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:134317:17)
+        at Object.getCodeActions (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:64)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:77
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:23)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149557:35
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149555:23)
+        at IOSession.Session.getCodeFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160663:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:159335:61)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:88
+        at IOSession.Session.executeWithRequestId (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160954:28)
+        at IOSession.Session.executeCommand (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:33)
+        at IOSession.Session.onMessage (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160989:35)
+        at Interface.<anonymous> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:163650:31)
+        at Interface.emit (node:events:369:20)
+        at Interface._onLine (node:readline:418:10)
+        at Interface._normalWrite (node:readline:572:12)
+        at Socket.ondata (node:readline:240:10)
+        at Socket.emit (node:events:369:20)
+        at addChunk (node:internal/streams/readable:313:12)
+        at readableAddChunk (node:internal/streams/readable:288:9)
+        at Socket.Readable.push (node:internal/streams/readable:227:10)
+        at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+Err 2785  [15:39:21.393] Exception on executing command {"command":"getCodeFixes","seq":3167,"type":"request","arguments":{"file":"/home/thomas/Projects/emacs/OrgRoamForceGraphReact/app/components/graph/graph.tsx","startLine":143,"startOffset":13,"endLine":143,"endOffset":13,"errorCodes":[6133,7044]}}:
+
+    Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+
+    Error: Debug Failure. Invalid cast. The supplied value [object Object] did not pass the test 'isParameter'.
+        at Object.cast (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:1500:25)
+        at doChange (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140964:40)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:109
+        at Function.ChangeTracker.with (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:134317:17)
+        at Object.getCodeActions (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:140860:64)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:77
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:135491:23)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149557:35
+        at Object.flatMap (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:149555:23)
+        at IOSession.Session.getCodeFixes (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160663:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:159335:61)
+        at /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:88
+        at IOSession.Session.executeWithRequestId (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160954:28)
+        at IOSession.Session.executeCommand (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160963:33)
+        at IOSession.Session.onMessage (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:160989:35)
+        at Interface.<anonymous> (/home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/typescript/lib/tsserver.js:163650:31)
+        at Interface.emit (node:events:369:20)
+        at Interface._onLine (node:readline:418:10)
+        at Interface._normalWrite (node:readline:572:12)
+        at Socket.ondata (node:readline:240:10)
+        at Socket.emit (node:events:369:20)
+        at addChunk (node:internal/streams/readable:313:12)
+        at readableAddChunk (node:internal/streams/readable:288:9)
+        at Socket.Readable.push (node:internal/streams/readable:227:10)
+        at Pipe.onStreamRead (node:internal/stream_base_commons:190:23)
+Info 2786 [15:40:04.602] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2787 [15:40:04.690] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 375 structureChanged: false Elapsed: 88.57497999072075ms
+Info 2788 [15:40:04.690] Different program with same set of files:: structureIsReused:: 2
+Info 2789 [15:40:04.693] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2790 [15:40:04.728] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 376 structureChanged: false Elapsed: 34.87795400619507ms
+Info 2791 [15:40:04.728] Different program with same set of files:: structureIsReused:: 2
+Info 2792 [15:40:05.077] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2793 [15:40:05.128] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 377 structureChanged: false Elapsed: 51.24075999855995ms
+Info 2794 [15:40:05.128] Different program with same set of files:: structureIsReused:: 2
+Info 2795 [15:40:09.843] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2796 [15:40:09.884] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 378 structureChanged: false Elapsed: 40.65558099746704ms
+Info 2797 [15:40:09.884] Different program with same set of files:: structureIsReused:: 2
+Info 2798 [15:40:26.549] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2799 [15:40:26.575] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 379 structureChanged: false Elapsed: 25.965230017900467ms
+Info 2800 [15:40:26.575] Different program with same set of files:: structureIsReused:: 2
+Info 2801 [15:40:28.125] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2802 [15:40:28.174] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 380 structureChanged: false Elapsed: 48.50872999429703ms
+Info 2803 [15:40:28.174] Different program with same set of files:: structureIsReused:: 2
+Info 2804 [15:40:28.538] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2805 [15:40:28.555] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2806 [15:40:28.555] forEachExternalModuleToImportFrom autoImportProvider: 16.435927003622055
+Info 2807 [15:40:28.637] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2808 [15:40:28.648] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2809 [15:40:28.648] forEachExternalModuleToImportFrom autoImportProvider: 10.830921977758408
+Info 2810 [15:40:28.656] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2811 [15:40:28.688] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 381 structureChanged: false Elapsed: 31.56317201256752ms
+Info 2812 [15:40:28.688] Different program with same set of files:: structureIsReused:: 2
+Info 2813 [15:40:28.771] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2814 [15:40:28.792] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 382 structureChanged: false Elapsed: 21.019805997610092ms
+Info 2815 [15:40:28.792] Different program with same set of files:: structureIsReused:: 2
+Info 2816 [15:40:29.809] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2817 [15:40:29.841] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 383 structureChanged: false Elapsed: 31.54560598731041ms
+Info 2818 [15:40:29.841] Different program with same set of files:: structureIsReused:: 2
+Info 2819 [15:40:30.003] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2820 [15:40:30.058] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 384 structureChanged: false Elapsed: 54.79959100484848ms
+Info 2821 [15:40:30.058] Different program with same set of files:: structureIsReused:: 2
+Info 2822 [15:40:40.400] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2823 [15:40:40.433] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 385 structureChanged: false Elapsed: 33.25229200720787ms
+Info 2824 [15:40:40.434] Different program with same set of files:: structureIsReused:: 2
+Info 2825 [15:40:41.093] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2826 [15:40:41.130] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 386 structureChanged: false Elapsed: 37.273822993040085ms
+Info 2827 [15:40:41.130] Different program with same set of files:: structureIsReused:: 2
+Info 2828 [15:40:41.436] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2829 [15:40:41.492] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 387 structureChanged: false Elapsed: 55.38337200880051ms
+Info 2830 [15:40:41.492] Different program with same set of files:: structureIsReused:: 2
+Info 2831 [15:40:41.729] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2832 [15:40:41.914] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 388 structureChanged: false Elapsed: 184.38119000196457ms
+Info 2833 [15:40:41.914] Different program with same set of files:: structureIsReused:: 2
+Info 2834 [15:40:41.917] getCompletionData: Get current token: 0.02636498212814331
+Info 2835 [15:40:41.917] getCompletionData: Is inside comment: 0.06889301538467407
+Info 2836 [15:40:41.917] getCompletionData: Get previous token 1: 0.04103899002075195
+Info 2837 [15:40:41.917] getCompletionData: Get previous token 2: 0.0756639838218689
+Info 2838 [15:40:41.934] getCompletionsAtPosition: isCompletionListBlocker: 16.54987198114395
+Info 2839 [15:40:41.989] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2840 [15:40:42.050] getCompletionData: Semantic work: 115.83879998326302
+Info 2841 [15:40:42.069] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 18.08764100074768
+Info 2842 [15:40:42.110] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2843 [15:40:42.142] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 389 structureChanged: false Elapsed: 32.28192800283432ms
+Info 2844 [15:40:42.142] Different program with same set of files:: structureIsReused:: 2
+Info 2845 [15:40:43.184] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2846 [15:40:43.208] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 390 structureChanged: false Elapsed: 23.854822993278503ms
+Info 2847 [15:40:43.208] Different program with same set of files:: structureIsReused:: 2
+Info 2848 [15:40:43.209] getCompletionData: Get current token: 0.013992011547088623
+Info 2849 [15:40:43.209] getCompletionData: Is inside comment: 0.05954501032829285
+Info 2850 [15:40:43.209] getCompletionData: Get previous token 1: 0.06030699610710144
+Info 2851 [15:40:43.210] getCompletionData: Get previous token 2: 0.04942601919174194
+Info 2852 [15:40:43.210] getCompletionsAtPosition: isCompletionListBlocker: 0.003984987735748291
+Info 2853 [15:40:43.210] Returning an empty list because completion was requested in an invalid position.
+Info 2854 [15:40:43.258] getCompletionData: Get current token: 0.015406996011734009
+Info 2855 [15:40:43.258] getCompletionData: Is inside comment: 0.06687501072883606
+Info 2856 [15:40:43.258] getCompletionData: Get previous token 1: 0.049286991357803345
+Info 2857 [15:40:43.258] getCompletionData: Get previous token 2: 0.04521799087524414
+Info 2858 [15:40:43.259] getCompletionsAtPosition: isCompletionListBlocker: 0.0059489905834198
+Info 2859 [15:40:43.259] Returning an empty list because completion was requested in an invalid position.
+Info 2860 [15:40:43.282] getCompletionData: Get current token: 0.029388010501861572
+Info 2861 [15:40:43.282] getCompletionData: Is inside comment: 0.11056599020957947
+Info 2862 [15:40:43.283] getCompletionData: Get previous token 1: 0.08090099692344666
+Info 2863 [15:40:43.283] getCompletionData: Get previous token 2: 0.0769830048084259
+Info 2864 [15:40:43.283] getCompletionsAtPosition: isCompletionListBlocker: 0.005318999290466309
+Info 2865 [15:40:43.283] Returning an empty list because completion was requested in an invalid position.
+Info 2866 [15:40:43.554] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2867 [15:40:43.574] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 391 structureChanged: false Elapsed: 20.45041099190712ms
+Info 2868 [15:40:43.575] Different program with same set of files:: structureIsReused:: 2
+Info 2869 [15:40:43.709] getCompletionData: Get current token: 0.01171797513961792
+Info 2870 [15:40:43.709] getCompletionData: Is inside comment: 0.05090498924255371
+Info 2871 [15:40:43.709] getCompletionData: Get previous token 1: 0.04197901487350464
+Info 2872 [15:40:43.709] getCompletionData: Get previous token 2: 0.0432949960231781
+Info 2873 [15:40:43.709] getCompletionsAtPosition: isCompletionListBlocker: 0.0053910017013549805
+Info 2874 [15:40:43.710] Returning an empty list because completion was requested in an invalid position.
+Info 2875 [15:40:43.711] getCompletionData: Get current token: 0.01193198561668396
+Info 2876 [15:40:43.712] getCompletionData: Is inside comment: 0.10670199990272522
+Info 2877 [15:40:43.712] getCompletionData: Get previous token 1: 0.07794898748397827
+Info 2878 [15:40:43.712] getCompletionData: Get previous token 2: 0.08527898788452148
+Info 2879 [15:40:43.712] getCompletionsAtPosition: isCompletionListBlocker: 0.005647003650665283
+Info 2880 [15:40:43.712] Returning an empty list because completion was requested in an invalid position.
+Info 2881 [15:40:43.715] getCompletionData: Get current token: 0.011441022157669067
+Info 2882 [15:40:43.715] getCompletionData: Is inside comment: 0.07912099361419678
+Info 2883 [15:40:43.715] getCompletionData: Get previous token 1: 0.04834601283073425
+Info 2884 [15:40:43.715] getCompletionData: Get previous token 2: 0.04938700795173645
+Info 2885 [15:40:43.715] getCompletionsAtPosition: isCompletionListBlocker: 0.0036379992961883545
+Info 2886 [15:40:43.715] Returning an empty list because completion was requested in an invalid position.
+Info 2887 [15:40:44.362] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2888 [15:40:44.402] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 392 structureChanged: false Elapsed: 39.19962698221207ms
+Info 2889 [15:40:44.402] Different program with same set of files:: structureIsReused:: 2
+Info 2890 [15:40:44.403] getCompletionData: Get current token: 0.02491900324821472
+Info 2891 [15:40:44.403] getCompletionData: Is inside comment: 0.09321901202201843
+Info 2892 [15:40:44.403] getCompletionData: Get previous token 1: 0.07347998023033142
+Info 2893 [15:40:44.403] getCompletionData: Get previous token 2: 0.07145699858665466
+Info 2894 [15:40:44.403] getCompletionsAtPosition: isCompletionListBlocker: 0.004767000675201416
+Info 2895 [15:40:44.403] Returning an empty list because completion was requested in an invalid position.
+Info 2896 [15:40:44.533] getCompletionData: Get current token: 0.009157001972198486
+Info 2897 [15:40:44.533] getCompletionData: Is inside comment: 0.04364100098609924
+Info 2898 [15:40:44.534] getCompletionData: Get previous token 1: 0.04104200005531311
+Info 2899 [15:40:44.534] getCompletionData: Get previous token 2: 0.06399601697921753
+Info 2900 [15:40:44.535] getCompletionsAtPosition: isCompletionListBlocker: 0.004759997129440308
+Info 2901 [15:40:44.535] Returning an empty list because completion was requested in an invalid position.
+Info 2902 [15:40:44.593] getCompletionData: Get current token: 0.009404003620147705
+Info 2903 [15:40:44.593] getCompletionData: Is inside comment: 0.031062990427017212
+Info 2904 [15:40:44.593] getCompletionData: Get previous token 1: 0.023462027311325073
+Info 2905 [15:40:44.593] getCompletionData: Get previous token 2: 0.03454199433326721
+Info 2906 [15:40:44.593] getCompletionsAtPosition: isCompletionListBlocker: 0.0030309855937957764
+Info 2907 [15:40:44.593] Returning an empty list because completion was requested in an invalid position.
+Info 2908 [15:40:44.842] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2909 [15:40:44.863] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 393 structureChanged: false Elapsed: 20.105463981628418ms
+Info 2910 [15:40:44.863] Different program with same set of files:: structureIsReused:: 2
+Info 2911 [15:40:45.013] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2912 [15:40:45.044] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 394 structureChanged: false Elapsed: 30.244383990764618ms
+Info 2913 [15:40:45.044] Different program with same set of files:: structureIsReused:: 2
+Info 2914 [15:40:45.745] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2915 [15:40:45.790] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 395 structureChanged: false Elapsed: 45.03768798708916ms
+Info 2916 [15:40:45.791] Different program with same set of files:: structureIsReused:: 2
+Info 2917 [15:40:45.791] getCompletionData: Get current token: 0.015213996171951294
+Info 2918 [15:40:45.791] getCompletionData: Is inside comment: 0.06647500395774841
+Info 2919 [15:40:45.792] getCompletionData: Get previous token 1: 0.03459998965263367
+Info 2920 [15:40:45.792] getCompletionData: Get previous token 2: 0.0386120080947876
+Info 2921 [15:40:45.792] getCompletionsAtPosition: isCompletionListBlocker: 0.004482001066207886
+Info 2922 [15:40:45.803] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2923 [15:40:45.860] getCompletionData: Semantic work: 67.88823398947716
+Info 2924 [15:40:45.869] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 9.195116996765137
+Info 2925 [15:40:46.203] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2926 [15:40:46.251] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 396 structureChanged: false Elapsed: 48.40248000621796ms
+Info 2927 [15:40:46.251] Different program with same set of files:: structureIsReused:: 2
+Info 2928 [15:40:46.252] getCompletionData: Get current token: 0.02152499556541443
+Info 2929 [15:40:46.252] getCompletionData: Is inside comment: 0.08429500460624695
+Info 2930 [15:40:46.252] getCompletionData: Get previous token 1: 0.04932600259780884
+Info 2931 [15:40:46.252] getCompletionData: Get previous token 2: 0.051286011934280396
+Info 2932 [15:40:46.252] getCompletionsAtPosition: isCompletionListBlocker: 0.005257010459899902
+Info 2933 [15:40:46.265] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2934 [15:40:46.331] getCompletionData: Semantic work: 78.4426599740982
+Info 2935 [15:40:46.346] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 14.650921016931534
+Info 2936 [15:40:46.356] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2937 [15:40:46.387] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 397 structureChanged: false Elapsed: 31.024906992912292ms
+Info 2938 [15:40:46.387] Different program with same set of files:: structureIsReused:: 2
+Info 2939 [15:40:46.389] getCompletionData: Get current token: 0.03270697593688965
+Info 2940 [15:40:46.389] getCompletionData: Is inside comment: 0.14172998070716858
+Info 2941 [15:40:46.389] getCompletionData: Get previous token 1: 0.07094702124595642
+Info 2942 [15:40:46.389] getCompletionData: Get previous token 2: 0.07812201976776123
+Info 2943 [15:40:46.389] getCompletionsAtPosition: isCompletionListBlocker: 0.005394011735916138
+Info 2944 [15:40:46.408] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2945 [15:40:46.513] getCompletionData: Semantic work: 124.15358999371529
+Info 2946 [15:40:46.520] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.302474021911621
+Info 2947 [15:40:46.539] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2948 [15:40:46.567] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 398 structureChanged: false Elapsed: 27.597981989383698ms
+Info 2949 [15:40:46.567] Different program with same set of files:: structureIsReused:: 2
+Info 2950 [15:40:46.567] getCompletionData: Get current token: 0.018031001091003418
+Info 2951 [15:40:46.567] getCompletionData: Is inside comment: 0.05620899796485901
+Info 2952 [15:40:46.567] getCompletionData: Get previous token 1: 0.04211297631263733
+Info 2953 [15:40:46.567] getCompletionData: Get previous token 2: 0.04378700256347656
+Info 2954 [15:40:46.567] getCompletionsAtPosition: isCompletionListBlocker: 0.004417002201080322
+Info 2955 [15:40:46.577] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2956 [15:40:46.641] getCompletionData: Semantic work: 73.26641798019409
+Info 2957 [15:40:46.651] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 10.39657998085022
+Info 2958 [15:40:46.658] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2959 [15:40:46.696] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 399 structureChanged: false Elapsed: 37.869363993406296ms
+Info 2960 [15:40:46.696] Different program with same set of files:: structureIsReused:: 2
+Info 2961 [15:40:46.697] getCompletionData: Get current token: 0.025411993265151978
+Info 2962 [15:40:46.697] getCompletionData: Is inside comment: 0.08127498626708984
+Info 2963 [15:40:46.697] getCompletionData: Get previous token 1: 0.063757985830307
+Info 2964 [15:40:46.697] getCompletionData: Get previous token 2: 0.07114499807357788
+Info 2965 [15:40:46.697] getCompletionsAtPosition: isCompletionListBlocker: 0.005398005247116089
+Info 2966 [15:40:46.708] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2967 [15:40:46.786] getCompletionData: Semantic work: 88.57059100270271
+Info 2968 [15:40:46.798] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 12.163461983203888
+Info 2969 [15:40:47.830] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2970 [15:40:47.865] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 400 structureChanged: false Elapsed: 35.251314997673035ms
+Info 2971 [15:40:47.866] Different program with same set of files:: structureIsReused:: 2
+Info 2972 [15:40:47.866] getCompletionData: Get current token: 0.011463016271591187
+Info 2973 [15:40:47.866] getCompletionData: Is inside comment: 0.06715700030326843
+Info 2974 [15:40:47.866] getCompletionData: Get previous token 1: 0.0493139922618866
+Info 2975 [15:40:47.866] getCompletionData: Get previous token 2: 0.06248602271080017
+Info 2976 [15:40:47.867] getCompletionsAtPosition: isCompletionListBlocker: 0.005553990602493286
+Info 2977 [15:40:47.874] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2978 [15:40:47.930] getCompletionData: Semantic work: 63.637952983379364
+Info 2979 [15:40:47.947] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 16.31461799144745
+Info 2980 [15:40:47.964] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2981 [15:40:47.998] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 401 structureChanged: false Elapsed: 33.48379799723625ms
+Info 2982 [15:40:47.998] Different program with same set of files:: structureIsReused:: 2
+Info 2983 [15:40:47.998] getCompletionData: Get current token: 0.033430010080337524
+Info 2984 [15:40:47.999] getCompletionData: Is inside comment: 0.06897297501564026
+Info 2985 [15:40:47.999] getCompletionData: Get previous token 1: 0.05333501100540161
+Info 2986 [15:40:47.999] getCompletionData: Get previous token 2: 0.05289900302886963
+Info 2987 [15:40:47.999] getCompletionsAtPosition: isCompletionListBlocker: 0.006430000066757202
+Info 2988 [15:40:48.011] getSymbolsFromOtherSourceFileExports: Using cached list
+Info 2989 [15:40:48.064] getCompletionData: Semantic work: 64.64796701073647
+Info 2990 [15:40:48.084] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 19.852148979902267
+Info 2991 [15:40:48.114] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2992 [15:40:48.145] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 402 structureChanged: false Elapsed: 31.64623200893402ms
+Info 2993 [15:40:48.145] Different program with same set of files:: structureIsReused:: 2
+Info 2994 [15:40:48.424] forEachExternalModuleToImportFrom: filtered out 1155 modules by package.json contents
+Info 2995 [15:40:48.456] forEachExternalModuleToImportFrom: filtered out 191 modules by package.json contents
+Info 2996 [15:40:48.456] forEachExternalModuleToImportFrom autoImportProvider: 31.343561977148056
+Info 2997 [15:40:48.482] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 2998 [15:40:48.506] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 403 structureChanged: false Elapsed: 23.79509299993515ms
+Info 2999 [15:40:48.506] Different program with same set of files:: structureIsReused:: 2
+Info 3000 [15:40:48.781] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 3001 [15:40:48.813] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 404 structureChanged: false Elapsed: 31.643876016139984ms
+Info 3002 [15:40:48.813] Different program with same set of files:: structureIsReused:: 2
+Info 3003 [15:40:48.866] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 3004 [15:40:48.886] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 405 structureChanged: false Elapsed: 19.949680984020233ms
+Info 3005 [15:40:48.886] Different program with same set of files:: structureIsReused:: 2
+Info 3006 [15:40:49.178] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 3007 [15:40:49.225] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 406 structureChanged: false Elapsed: 46.63024699687958ms
+Info 3008 [15:40:49.225] Different program with same set of files:: structureIsReused:: 2
+Info 3009 [15:40:49.806] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 3010 [15:40:49.826] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 407 structureChanged: false Elapsed: 20.266274005174637ms
+Info 3011 [15:40:49.826] Different program with same set of files:: structureIsReused:: 2
+Info 3012 [15:43:01.201] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 3013 [15:43:01.252] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 408 structureChanged: false Elapsed: 50.713192999362946ms
+Info 3014 [15:43:01.252] Different program with same set of files:: structureIsReused:: 2
+Info 3015 [15:43:01.253] getCompletionData: Get current token: 0.026440024375915527
+Info 3016 [15:43:01.253] getCompletionData: Is inside comment: 0.06139299273490906
+Info 3017 [15:43:01.253] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 3018 [15:43:01.477] getCompletionData: Get current token: 0.01697400212287903
+Info 3019 [15:43:01.477] getCompletionData: Is inside comment: 0.03128400444984436
+Info 3020 [15:43:01.477] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.
+Info 3021 [15:43:01.477] getCompletionData: Get current token: 0.013029009103775024
+Info 3022 [15:43:01.477] getCompletionData: Is inside comment: 0.039745986461639404
+Info 3023 [15:43:01.477] Returning an empty list because completion was inside a regular comment or plain text part of a JsDoc comment.

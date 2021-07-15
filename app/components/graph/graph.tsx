@@ -43,6 +43,7 @@ export const Graph = observer(function Graph(props: GraphProps) {
   const fgRef = useRef()
 
   const GROUPS: number = 12
+  const NODE_R: number = 8
   //const gData = genRandomTree(200);
 
   //const [charge, setCharge] = useState(-30);
@@ -98,6 +99,69 @@ export const Graph = observer(function Graph(props: GraphProps) {
     setPrunedTree(getPrunedTree())
   }, [])
 
+
+  // Highlight Graph
+const data = useMemo(() => {
+        // cross-link node objects
+        rando.links.forEach(link => {
+          const a = rando.nodes[link.source];
+          const b = rando.nodes[link.target];
+          !a.neighbors && (a.neighbors = []);
+          !b.neighbors && (b.neighbors = []);
+          a.neighbors.push(b);
+          b.neighbors.push(a);
+
+          !a.links && (a.links = []);
+          !b.links && (b.links = []);
+          a.links.push(link);
+          b.links.push(link);
+        });
+
+        return rando;
+      }, []);
+const [highlightNodes, setHighlightNodes] = useState(new Set());
+      const [highlightLinks, setHighlightLinks] = useState(new Set());
+      const [hoverNode, setHoverNode] = useState(null);
+
+      const updateHighlight = () => {
+        setHighlightNodes(highlightNodes);
+        setHighlightLinks(highlightLinks);
+      };
+
+      const handleNodeHover = node => {
+        highlightNodes.clear();
+        highlightLinks.clear();
+        if (node) {
+          highlightNodes.add(node);
+          node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
+          node.links.forEach(link => highlightLinks.add(link));
+        }
+
+        setHoverNode(node || null);
+        updateHighlight();
+      };
+
+      const handleLinkHover = link => {
+        highlightNodes.clear();
+        highlightLinks.clear();
+
+        if (link) {
+          highlightLinks.add(link);
+          highlightNodes.add(link.source);
+          highlightNodes.add(link.target);
+        }
+
+        updateHighlight();
+      };
+
+      const paintRing = useCallback((node, ctx) => {
+        // add ring just for highlighted nodes
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, NODE_R * 1.4, 0, 2 * Math.PI, false);
+        ctx.fillStyle = node === hoverNode ? 'red' : 'orange';
+        ctx.fill();
+      }, [hoverNode]);
+
   return (
     <View>
       {!physics.threedim ? (
@@ -107,15 +171,23 @@ export const Graph = observer(function Graph(props: GraphProps) {
           // nodeAutoColorBy={d => d.id%GROUPS}
           linkAutoColorBy={(d) => rando.nodes[d.source].id % GROUPS}
           linkColor={"#ffffff"}
-          linkWidth={2}
           linkDirectionalParticles={2}
           nodeColor={(node) =>
             !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           }
-          onNodeClick={handleNodeClick}
+          onNodeClick={!physics.collapse? null : handleNodeClick}
           nodeLabel={(node) => "label"}
-            nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
+           // nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
           //d3VelocityDecay={visco}
+        autoPauseRedraw={false}
+        linkWidth={link => highlightLinks.has(link) ? 5 : 1}
+        linkDirectionalParticles={4}
+        linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
+        nodeCanvasObjectMode={node => highlightNodes.has(node) ? 'before' : undefined}
+        nodeCanvasObject={paintRing}
+        onNodeHover={handleNodeHover}
+        onLinkHover={handleLinkHover}
+                nodeRelSize={NODE_R}
         />
       ) : (
         <ForceGraph3D
@@ -129,7 +201,7 @@ export const Graph = observer(function Graph(props: GraphProps) {
           nodeColor={(node) =>
             !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           }
-          onNodeClick={handleNodeClick}
+          onNodeClick={!physics.collapse ? null : handleNodeClick }
             nodeVal ={(node)=> node.childLinks.length + 1}
         linkOpacity={0.8}
           //d3VelocityDecay={visco}
