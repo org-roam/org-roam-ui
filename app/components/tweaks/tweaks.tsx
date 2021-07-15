@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ScrollView, StyleProp, Switch, TextStyle, TouchableOpacity, View, ViewStyle, StyleSheet } from "react-native"
+import { ScrollView, StyleProp, Switch, TextStyle, TouchableOpacity, View, ViewStyle, StyleSheet, Button } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, typography } from "../../theme"
 import { Text } from "../"
@@ -131,10 +131,18 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
       </Animatable.View>
     );
   }
+    const [tweaks, setTweaks] = useState(true);
     if (true) {
+        if(tweaks){
         return(
              <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
+            <View style={{height: 30, width: "100%", backgroundColor: "rgb(20,20,20)"}}>
+            <TouchableOpacity style={{width: 30, color: "#ffffff", textAlign: "center", marginLeft: "auto", padding: 5}}
+            onPress={()=>{setTweaks(false)}}>
+            X
+            </TouchableOpacity>
+            </View>
+        <ScrollView>
             <Accordion
             activeSections={activeSections}
             sections={content}
@@ -149,7 +157,16 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             />
             </ScrollView>
             </View>
-        )
+        );
+        } else {
+            return(
+                <TouchableOpacity
+                onPress={()=>{setTweaks(true)}}
+                style={{position: "absolute", top: 50, left: 50, width: 30, color: "#ffffff", zIndex: 100}}>
+                O
+                </TouchableOpacity>
+            )
+        }
     } else {
     return (
         <View style={{position: "absolute", top: "5%", left: "5%", zIndex: 100, width: 300, backgroundColor: "#000000", padding: 20}}>
@@ -207,8 +224,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
 const styles = StyleSheet.create ({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
-    paddingTop: 10,
+    backgroundColor: '#111111',
     position: "absolute",
     zIndex: 100,
     left: 50,
@@ -223,8 +239,9 @@ const styles = StyleSheet.create ({
     paddingLeft: 20,
   },
   header: {
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#111111',
     padding: 10,
+    paddingBottom: 20,
     textAlign: "left",
   },
   headerText: {
@@ -235,13 +252,13 @@ const styles = StyleSheet.create ({
   },
   content: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#000000',
   },
   active: {
-    backgroundColor: 'rgba(255,255,255,1)',
+    backgroundColor: 'rgba(0,0,0,1)',
   },
   inactive: {
-    backgroundColor: 'rgba(245,252,255,1)',
+    backgroundColor: 'rgba(20,20,20,1)',
   },
   selectors: {
     marginBottom: 10,
@@ -249,7 +266,7 @@ const styles = StyleSheet.create ({
     justifyContent: 'center',
   },
   selector: {
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#111111',
     padding: 10,
   },
   activeSelector: {
