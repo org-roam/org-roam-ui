@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { Screen, Text } from "../../components"
@@ -7,6 +7,9 @@ import { Screen, Text } from "../../components"
 import { color } from "../../theme"
 
 import { Graph } from "../../components"
+import { Tweaks } from "../../components"
+
+import genRandomTree from "../../data/randomdata";
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
@@ -19,10 +22,32 @@ export const GraphScreen = observer(function GraphScreen() {
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
+  const [charge, setCharge] = useState(-30);
+  const [collision, setCollision] = useState(false);
+  const [linkStrength, setLinkStrength] = useState(1);
+  const [linkIts, setLinkIts] = useState(1);
+
+  const [physics, setPhysics] = useState(
+  {
+      charge: -30,
+      collision: false,
+      linkStrength: 1,
+      linkIts: 1
+  });
+
+    const gData = genRandomTree();
+
   return (
     <Screen style={ROOT} preset="scroll">
       <Text preset="header" text="Graph" />
-      <Graph/>
+      <Tweaks
+        physics={physics}
+        setPhysics={setPhysics}
+      />
+      <Graph
+        physics={physics}
+        gData = {gData}
+      />
     </Screen>
-  )
-})
+  );
+});
