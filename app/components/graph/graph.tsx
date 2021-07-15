@@ -61,6 +61,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     fg.d3Force("charge").strength(physics.charge)
   })
 
+  // For the expandable version of the graph
   const rootId = 0
 
   const nodesById = useMemo(() => {
@@ -183,7 +184,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           // nodeAutoColorBy={d => d.id%GROUPS}
           linkAutoColorBy={(d) => rando.nodes[d.source].id % GROUPS}
           linkColor={"#ffffff"}
-          linkDirectionalParticles={2}
+          linkDirectionalParticles={physics.particles}
           nodeColor={(node) =>
             !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           }
@@ -200,7 +201,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           linkAutoColorBy={(d) => rando.nodes[d.source].id % GROUPS}
           linkColor={"#ffffff"}
           linkWidth={2}
-          linkDirectionalParticles={2}
+          linkDirectionalParticles={physics.particles}
           nodeColor={(node) =>
             !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           }

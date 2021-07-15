@@ -30,6 +30,7 @@
   "dependencies": {
     "@expo/webpack-config": "^0.12.71",
     "@react-native-async-storage/async-storage": "^1.14.1",
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/slider": "^3.0.3",
     "@react-navigation/native": "5.9.3",

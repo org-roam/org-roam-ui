@@ -11,6 +11,7 @@ import { Tweaks } from "../../components"
 
 import genRandomTree from "../../data/randomdata";
 
+
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
   flex: 1,
@@ -34,7 +35,8 @@ export const GraphScreen = observer(function GraphScreen() {
       linkStrength: 1,
       linkIts: 1,
       collapse: false,
-      threedim: false
+      threedim: false,
+      particles: 2,
   });
 
     const gData = genRandomTree();
