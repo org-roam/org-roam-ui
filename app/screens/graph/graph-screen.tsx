@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { Screen, Text } from "../../components"
@@ -11,6 +11,7 @@ import { Tweaks } from "../../components"
 
 import genRandomTree from "../../data/randomdata";
 
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
@@ -28,18 +29,62 @@ export const GraphScreen = observer(function GraphScreen() {
   const [linkStrength, setLinkStrength] = useState(1);
   const [linkIts, setLinkIts] = useState(1);
 
-  const [physics, setPhysics] = useState(
-  {
-      charge: -30,
-      collision: false,
-      linkStrength: 1,
-      linkIts: 1,
-      collapse: false,
-      threedim: false,
-      particles: 2,
-  });
+    const [physics, setPhysics] = useState({});
 
-    const gData = genRandomTree();
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@physics')
+      if (value !== null) {
+          return JSON.parse(value);
+      } else {
+        return (
+          {
+            charge: -30,
+            collision: false,
+            linkStrength: 1,
+            linkIts: 1,
+            collapse: false,
+            threedim: false,
+            particles: 2,
+          });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+    useEffect(() => {
+        getData()
+        .then(data => setPhysics(data));
+    }, []);
+
+        const storeData = async (value) => {
+            try {
+              const jsonValue = JSON.stringify(value);
+              await AsyncStorage.setItem('@physics', jsonValue);
+              console.log("Writing " + jsonValue);
+            } catch(e) {
+                console.log(e);
+            }
+        }
+  /* const [physics, setPhysics] = useState(
+*     {
+*         charge: -30,
+*         collision: false,
+*         linkStrength: 1,
+*         linkIts: 1,
+*         collapse: false,
+*         threedim: false,
+*         particles: 2,
+*       }); */
+    useEffect(() => {
+      console.log("Physics changed");
+      storeData(physics);
+      const test = getData();
+      console.log(test);
+    }, [physics]);
+
+  const gData = genRandomTree();
 
   return (
     <Screen style={ROOT} preset="scroll">
@@ -50,7 +95,7 @@ export const GraphScreen = observer(function GraphScreen() {
       />
       <Graph
         physics={physics}
-        gData = {gData}
+        gData={gData}
       />
     </Screen>
   );
