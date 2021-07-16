@@ -13,6 +13,8 @@ import genRandomTree from "../../data/randomdata"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
+import axios from "axios";
+
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
   flex: 1,
@@ -24,10 +26,6 @@ export const GraphScreen = observer(function GraphScreen() {
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
-  const [charge, setCharge] = useState(-30)
-  const [collision, setCollision] = useState(false)
-  const [linkStrength, setLinkStrength] = useState(1)
-  const [linkIts, setLinkIts] = useState(1)
 
   const [physics, setPhysics] = useState({})
   const physicsInit = {
@@ -43,13 +41,16 @@ export const GraphScreen = observer(function GraphScreen() {
     particleWidth: 1,
     nodeRel: 1,
   }
+
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem("@physics")
-      if (value !== null || keys(value) === keys(physicsInit)) {
-        return JSON.parse(value)
+      const value: string = await AsyncStorage.getItem("@physics");
+      if (value !== null ) {
+          const valueJson = JSON.parse(value);
+              if ( Object.keys(valueJson).length === Object.keys(physicsInit).length) {
+        return valueJson;
+        } else { return physicsInit };
       } else {
-        console.log(physicsInit)
         return physicsInit
       }
     } catch (e) {
@@ -57,36 +58,36 @@ export const GraphScreen = observer(function GraphScreen() {
     }
   }
 
+  //"ComponentOnMount"
+  // Get previous settings and the data from the org-roam-server
   useEffect(() => {
-    getData().then((data) => setPhysics(data))
+    getData().then((data) => setPhysics(data));
+    //  axios.get('/roamData')
+    //       .then(()=>console.log("Whoo got data"))
+    //.catch((e)=>{
+    //    console.log(e);
+    //    console.log("Couldn't get data.");
+    //});
   }, [])
 
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem("@physics", jsonValue)
+      await AsyncStorage.mergeItem("@physics", jsonValue)
       console.log("Writing " + jsonValue)
     } catch (e) {
       console.log(e)
     }
   }
-  /* const [physics, setPhysics] = useState(
-   *     {
-   *         charge: -30,
-   *         collision: false,
-   *         linkStrength: 1,
-   *         linkIts: 1,
-   *         collapse: false,
-   *         threedim: false,
-   *         particles: 2,
-   *       }); */
+
+  // hook to save the current configuration of the physics tweaks
+  // after it is updated
   useEffect(() => {
     if (timer) {
       clearTimeout(timer)
-      console.log("clear timer")
     }
+    // set timer so the thing doesn't run every single slider tick
     const timer = setTimeout(() => {
-      console.log("Physics changed")
       storeData(physics)
       const test = getData()
       console.log(test)
