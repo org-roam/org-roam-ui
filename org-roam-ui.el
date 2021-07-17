@@ -1,6 +1,9 @@
 (require 'json)
 (require 'simple-httpd)
 
+(setq org-roam-ui/root-dir (file-name-directory load-file-name))
+(setq org-roam-ui/app-build-dir (expand-file-name "./" org-roam-ui/root-dir))
+
 (define-minor-mode
   org-roam-ui-mode
   "Start the http API for org-roam-ui."
@@ -15,6 +18,7 @@
    (t
     (httpd-stop))))
 
+
 (defservlet* graph application/json ()
   (let* (
     (nodes-db-rows (org-roam-db-query `[:select [*] :from nodes]))
@@ -25,6 +29,9 @@
       (progn
         (insert response)
         (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))))
+
+(httpd-def-file-servlet app org-roam-ui/app-build-dir)
+
 
 (defun nodes-row-to-cons (row)
   (list
