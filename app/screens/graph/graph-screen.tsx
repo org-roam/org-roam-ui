@@ -56,6 +56,7 @@ export const GraphScreen = observer(function GraphScreen() {
     hover: true,
     colorful: true,
     galaxy: true,
+    rootId: 0,
   }
 
   const getData = async () => {
@@ -101,7 +102,7 @@ export const GraphScreen = observer(function GraphScreen() {
   // Get previous settings and the data from the org-roam-server
   const sanitizeGraph = (data, nodeIds: string[]) => {
     const cleanLinks = [];
-    data.links.forEach((link) => {
+    data.links.forEach((link, j) => {
       let target;
       let source;
       for (let i = 0; i < nodeIds.length; i++) {
@@ -114,7 +115,7 @@ export const GraphScreen = observer(function GraphScreen() {
           //a.neighbors.push(a);
           a.links.push(link);
           target = [a, i];
-          cleanLinks.push(link);
+          link.target===link.source ? null : cleanLinks.push(link);
         } else if (link.source === nodeIds[i]) {
           //let a = data.nodes[i];
           //!a.neighbors && (a.neighbors = []);
@@ -122,10 +123,12 @@ export const GraphScreen = observer(function GraphScreen() {
           a.links.push(link);
           source = [a, i];
         };
-      };
+        };
       if (target && source) {
         data.nodes[target[1]].neighbors.push(source[0]);
         data.nodes[source[1]].neighbors.push(target[0]);
+        link.sourceIndex=source[1];
+        link.targetIndex=target[1];
       }
     });
     console.log(cleanLinks);
@@ -135,8 +138,13 @@ export const GraphScreen = observer(function GraphScreen() {
 
   const getNodesById = (data) => {
     let temp = [];
-    data.nodes.forEach(node => temp.push(node.id));
+      data.nodes.forEach((node, i) => {
+          temp.push(node.id);
+          node.index=i;
+      }
+      );
     setNodeIds(temp);
+
     return temp;
   };
 

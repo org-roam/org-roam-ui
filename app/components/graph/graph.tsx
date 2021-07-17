@@ -82,44 +82,45 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
   })
 
   // For the expandable version of the graph
-  const rootId = 0
+
+
 
   const nodesById = useMemo(() => {
-    const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.id, node]))
 
+    const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.index, node]))
+      console.log(nodesById);
     // link parent/children
     gData.nodes.forEach((node) => {
-      node.collapsed = node.id !== rootId
+        (((typeof physics.rootId) === "number") ? node.collapsed = node.index !== physics.rootId
+                                                     : node.collapsed = node.id !== physics.rootId)
       node.childLinks = []
-      node.parentLink = []
     })
-    gData.links.forEach((link) => nodesById[link.source].childLinks.push(link))
+      gData.links.forEach((link) => nodesById[link.sourceIndex].childLinks.push(link));
+        return nodesById;
+  }, [gData]);
+ const getPrunedTree = useCallback(() => {
+   const visibleNodes = [];
+   const visibleLinks = [];
+   (function traverseTree(node = nodesById[physics.rootId]) {
+     visibleNodes.push(node);
+     if (node.collapsed) return
+     visibleLinks.push(...node.childLinks)
+     node.childLinks
+                 .map(link => ((typeof link.targetIndex) === "object") ? link.targetIndex : nodesById[link.targetIndex]) // get child node
+       .forEach(traverseTree);
+   })();
 
-    return nodesById
-  }, [gData])
+   return { nodes: visibleNodes, links: visibleLinks }
+ }, [nodesById])
 
-  /* const getPrunedTree = useCallback(() => {
-*   const visibleNodes = [];
-*   const visibleLinks = [];
-*   (function traverseTree(node = nodesById[rootId]) {
-*     visibleNodes.push(node);
-*     if (node.collapsed) return
-*     visibleLinks.push(...node.childLinks)
-*     node.childLinks
-*       .map((link) => (typeof link.target === "object" ? link.target : nodesById[link.target])) // get child node
-*       .forEach(traverseTree)
-*   })()
+ const [prunedTree, setPrunedTree] = useState(getPrunedTree())
 
-*   return { nodes: visibleNodes, links: visibleLinks }
-* }, [nodesById])
+ const handleNodeClick = useCallback((node) => {
+   node.collapsed = !node.collapsed // toggle collapse state
+   setPrunedTree(getPrunedTree())
+ }, []);
 
-* const [prunedTree, setPrunedTree] = useState(getPrunedTree())
-
-* const handleNodeClick = useCallback((node) => {
-*   node.collapsed = !node.collapsed // toggle collapse state
-*   setPrunedTree(getPrunedTree())
-* }, []);
- */
+  //highlighting
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
   const [hoverNode, setHoverNode] = useState(null);
@@ -184,8 +185,8 @@ onLinkHover={handleLinkHover}
         <ForceGraph2D
           ref={fgRef}
           autoPauseRedraw={false}
-          graphData={gData}
-          //graphData={physics.collapse ? prunedTree : gData}
+          //graphData={gData}
+          graphData={physics.collapse ? prunedTree : gData}
           nodeAutoColorBy={physics.colorful ? "id" : undefined}
           nodeColor={
             !physics.colorful ? (
@@ -215,7 +216,7 @@ onLinkHover={handleLinkHover}
             //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           }
           linkDirectionalParticles={physics.particles}
-          //onNodeClick={!physics.collapse ? null : handleNodeClick}
+          onNodeClick={!physics.collapse ? undefined : handleNodeClick}
           nodeLabel={(node) => node.title}
           //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
           //d3VelocityDecay={visco}

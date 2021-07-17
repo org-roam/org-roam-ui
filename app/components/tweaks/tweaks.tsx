@@ -181,6 +181,13 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                         value={physics.collapse}
                         onValueChange={() => { setPhysics({ ...physics, collapse: !physics.collapse }) }}
                     />
+                    <Text preset="fieldLabel" text={"Change starting point: " + physics.rootId} />
+                    <Slider style={{ height: 40, width: "90%" }}
+                        minimumValue={0}
+                        maximumValue={600}
+                        onValueChange={(value) => { setPhysics({ ...physics, rootId: value }) }}
+                        value={physics.rootId}
+                        step={1} />
                     <Text preset="fieldLabel" text="3D" />
                     <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
                         value={physics.threedim}
