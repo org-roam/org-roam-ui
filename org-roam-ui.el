@@ -22,7 +22,9 @@
     (response (json-encode (list
       (cons 'nodes (mapcar 'nodes-row-to-cons nodes-db-rows))
       (cons 'links (mapcar 'links-row-to-cons links-db-rows))))))
-    (insert response)))
+      (progn
+        (insert response)
+        (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))))
 
 (defun nodes-row-to-cons (row)
   (list
