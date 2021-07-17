@@ -62,22 +62,22 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
   })
 
   // For the expandable version of the graph
-  /* const rootId = 0
+    const rootId = 0
 
-*   const nodesById = useMemo(() => {
-*   const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.id, node]))
- */
+  const nodesById = useMemo(() => {
+    const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.id, node]))
+
     // link parent/children
-      /* gData.nodes.forEach((node) => {
-  *   node.collapsed = node.id !== rootId
-  *   node.childLinks = []
-  *   node.parentLink = []
-  * })
-  * gData.links.forEach((link) => nodesById[link.source].childLinks.push(link))
+      gData.nodes.forEach((node) => {
+      node.collapsed = node.id !== rootId
+      node.childLinks = []
+      node.parentLink = []
+    })
+    gData.links.forEach((link) => nodesById[link.source].childLinks.push(link))
 
-  * return nodesById
-    }, [gData])
-   */
+    return nodesById
+  }, [gData])
+
   /* const getPrunedTree = useCallback(() => {
 *   const visibleNodes = [];
 *   const visibleLinks = [];
@@ -175,6 +175,9 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
         onLinkHover={handleLinkHover}
                 nodeRelSize={NODE_R} */
 
+          //nodeColor={(node) =>
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+          //}
   return (
     <View>
       {!physics.threedim ? (
@@ -182,13 +185,11 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           ref={fgRef}
           graphData={gData}
           //graphData={physics.collapse ? prunedTree : gData}
-          // nodeAutoColorBy={d => d.id%GROUPS}
+          nodeAutoColorBy="id"
+          linkAutoColorBy="target"
           //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
           linkColor="#ffffff"
           linkDirectionalParticles={physics.particles}
-          //nodeColor={(node) =>
-          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          //}
           //onNodeClick={!physics.collapse ? null : handleNodeClick}
             nodeLabel={(node) => node.title}
           //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
@@ -197,12 +198,12 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           linkDirectionalParticleWidth={physics.particleWidth}
-            backgroundColor={"#ffffff"}
         />
       ) : (
         <ForceGraph3D
           ref={fgRef}
           graphData={gData}
+          nodeAutoColorBy="group"
           //graphData={physics.collapse ? prunedTree : gData}
           // nodeAutoColorBy={d => d.id%GROUPS}
           //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
