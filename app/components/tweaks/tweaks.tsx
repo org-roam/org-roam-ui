@@ -109,6 +109,18 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                         onValueChange={(value) => { setPhysics({ ...physics, particleWidth: value }) }}
                         value={physics.particleWidth}
                         step={.1} />
+                    <Text preset="fieldLabel" text="Labels" />
+                    <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
+                        value={physics.labels}
+                        onValueChange={() => { setPhysics({ ...physics, labels: !physics.labels }) }}
+                    />
+                    <Text preset="fieldLabel" text={"Scale when labels become visible: " + physics.labelScale} />
+                    <Slider style={{ height: 40, width: "90%" }}
+                        minimumValue={0.1}
+                        maximumValue={5}
+                        onValueChange={(value) => { setPhysics({ ...physics, labelScale: value }) }}
+                        value={physics.labelScale}
+                        step={.1} />
                 </View>,
         },
         {

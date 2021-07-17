@@ -201,7 +201,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           nodeCanvasObject={(node, ctx, globalScale) => {
           if(physics.labels){
             if(globalScale > physics.labelScale ) {
-            const label = node.title;
+            const label = node.title.substring(0, Math.min(node.title.length, 30));
             const fontSize = 12/globalScale;
             ctx.font = `${fontSize}px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
@@ -212,11 +212,10 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = node.color;
+            ctx.fillStyle = "#ffffff"; //node.color;
             ctx.fillText(label, node.x, node.y);
 
             node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
-            console.log(globalScale);
             }
         }
           }}
