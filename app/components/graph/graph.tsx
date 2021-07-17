@@ -12,6 +12,8 @@ import { flatten } from "ramda"
 
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from "react-force-graph"
 import * as d3 from "d3-force-3d"
+import * as three from "three";
+import SpriteText from "three-spritetext"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
@@ -324,8 +326,19 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           d3AlphaDecay={physics.alphaDecay}
           d3AlphaMin={physics.alphaTarget}
           d3VelocityDecay={physics.velocityDecay}
+          nodeThreeObject={
+              !physics.labels ? undefined
+              : ((node) => {
+              console.log(node.title)
+              const sprite = new SpriteText(node.title.substring(0, 30));
+              console.log("didnt crash here 2")
+            sprite.color = "#ffffff";
+            sprite.textHeight = 8;
+                  return sprite;
+              } )}
+          nodeThreeObjectExtend={true}
         />
       )}
     </View>
-  )
+  );
 })
