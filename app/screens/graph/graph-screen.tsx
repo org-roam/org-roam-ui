@@ -94,50 +94,72 @@ export const GraphScreen = observer(function GraphScreen() {
   // Get previous settings and the data from the org-roam-server
   const sanitizeGraph = (data, nodeIds: string[]) => {
     const cleanLinks = [];
-    data.links.forEach((link, i) => {
-        for (i=0; i<=nodeIds.length; i++){
-        if (link.target === nodeIds[i]) {
+    data.links.forEach((link) => {
+        let target;
+        let source;
+      for (let i = 0; i < nodeIds.length; i++) {
+            let a = data.nodes[i];
+            !a.neighbors && (a.neighbors = []);
+            !a.links && (a.links = []);
+          if (link.target === nodeIds[i]) {
+            //let a = data.nodes[i];
+            //!a.neighbors && (a.neighbors = []);
+            //a.neighbors.push(a);
+            a.links.push(link);
+            target=[a, i];
           cleanLinks.push(link);
-          break;
-        };
+          } else if (link.source === nodeIds[i]) {
+            //let a = data.nodes[i];
+            //!a.neighbors && (a.neighbors = []);
+            //a.neighbors.push(a);
+            a.links.push(link);
+            source=[a, i];
+          };
       };
+        if (target && source) {
+            console.log(link);
+            console.log("target" + target);
+            console.log("source" + source);
+           data.nodes[target[1]].neighbors.push(source[0]);
+           data.nodes[source[1]].neighbors.push(target[0]);
+        }
     });
-      console.log(cleanLinks);
-      data.links = cleanLinks;
-      return data;
-    };
+    console.log(cleanLinks);
+    data.links = cleanLinks;
+    return data;
+  };
 
-    const getNodesById = (data) => {
-        let temp = [];
-        data.nodes.forEach(node => temp.push(node.id));
-        setNodeIds(temp);
-        return temp;
-    };
+  const getNodesById = (data) => {
+    let temp = [];
+    data.nodes.forEach(node => temp.push(node.id));
+    setNodeIds(temp);
+    return temp;
+  };
 
-    useEffect(() => {
-      getData().then((data) => setPhysics(data));
-      axios.get("http://localhost:35901/graph")
-        .then((dataa) => {
-          let nods = getNodesById(dataa.data);
-          setNodeIds(nods);
-          console.log(nodeIds);
-          let cleanData = sanitizeGraph(dataa.data, nods);
-          console.log(cleanData)
-          setGraphData(cleanData);
-        })
-        .catch((e) => {
-          console.log(e);
-          console.log("Couldn't get data.");
-          //setGraphData(rando);
-        });
-    }, [])
-    if (!graphData) { return null }
-    else {
-      return (
-        <Screen style={ROOT} preset="scroll">
-          <Tweaks physics={physics} setPhysics={setPhysics} />
-          <Graph physics={physics} gData={graphData} nodeIds={nodeIds}/>
-        </Screen>
-      )
-    }
-  })
+  useEffect(() => {
+    getData().then((data) => setPhysics(data));
+    axios.get("http://localhost:35901/graph")
+      .then((dataa) => {
+        let nods = getNodesById(dataa.data);
+        setNodeIds(nods);
+        console.log(nodeIds);
+        let cleanData = sanitizeGraph(dataa.data, nods);
+        console.log(cleanData)
+        setGraphData(cleanData);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log("Couldn't get data.");
+        //setGraphData(rando);
+      });
+  }, [])
+  if (!graphData) { return null }
+  else {
+    return (
+      <Screen style={ROOT} preset="scroll">
+        <Tweaks physics={physics} setPhysics={setPhysics} />
+        <Graph physics={physics} gData={graphData} nodeIds={nodeIds} />
+      </Screen>
+    )
+  }
+})
