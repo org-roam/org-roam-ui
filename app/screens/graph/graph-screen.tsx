@@ -55,6 +55,7 @@ export const GraphScreen = observer(function GraphScreen() {
     gravityOn: true,
     hover: true,
     colorful: true,
+    galaxy: true,
   }
 
   const getData = async () => {

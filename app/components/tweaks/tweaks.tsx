@@ -102,6 +102,11 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                         onValueChange={(value) => { setPhysics({ ...physics, velocityDecay: value }) }}
                         value={physics.velocityDecay}
                         step={0.01} />
+                    <Text preset="fieldLabel" text={"Galaxy Mode (3D-only)"} />
+                    <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
+                        value={physics.galaxy}
+                        onValueChange={() => { setPhysics({ ...physics, galaxy: !physics.galaxy }) }}
+                    />
                 </View>,
         },
         {

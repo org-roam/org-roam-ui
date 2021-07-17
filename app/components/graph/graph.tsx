@@ -55,8 +55,17 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     if(physics.gravityOn){
       fg.d3Force("x", d3.forceX().strength(physics.gravity));
       fg.d3Force("y", d3.forceY().strength(physics.gravity));
-      physics.threedim ? fg.d3Force("z", d3.forceZ().strength(physics.gravity)) : null;
+        if (physics.threedim) {
+      if(physics.galaxy){
+          fg.d3Force("y",  d3.forceY().strength(physics.gravity / 5));
+      fg.d3Force("z",  d3.forceZ().strength(physics.gravity / 5));
       } else {
+      fg.d3Force("y", d3.forceY().strength(physics.gravity));
+       fg.d3Force("z", d3.forceZ().strength(physics.gravity));
+      }  } else {
+       fg.d3Force("z",  null);
+      };
+    } else {
       fg.d3Force("x", null);
       fg.d3Force("y", null);
           physics.threedim ? fg.d3Force("z",  null) : null;
@@ -269,32 +278,49 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
       ) : (
         <ForceGraph3D
           ref={fgRef}
+          autoPauseRedraw={false}
           graphData={gData}
           //graphData={physics.collapse ? prunedTree : gData}
-          // nodeAutoColorBy={d => d.id%GROUPS}
-          linkWidth={physics.linkWidth}
+          nodeAutoColorBy={physics.colorful ? "id" : undefined}
+          nodeColor={
+              !physics.colorful ? (
+              (node) => {
+                  if(highlightNodes.size === 0) {
+                      return "rgb(100, 100, 100, 1)"
+                  } else {
+              return highlightNodes.has(node) ? "purple" : "rgb(50, 50, 50, 0.5)"
+                  }
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+              }) : undefined
+          }
+          linkAutoColorBy={physics.colorful ? "target" : undefined}
+          //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
+          linkColor={
+              !physics.colorful ? (
+            (link) => {
+                  if(highlightLinks.size === 0) {
+                      return "rgb(50, 50, 50, 0.8)"
+                  } else {
+              return highlightLinks.has(link) ? "purple" : "rgb(50, 50, 50, 0.2)"
+                  }
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+              }
+              ) : undefined
+              //highlightLinks.has(link) ? "purple" : "grey"
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+          }
           linkDirectionalParticles={physics.particles}
-          nodeColor={(node) =>
-              highlightNodes.has(node) ? "purple" : "grey"
-          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          }
-          linkColor={(link) =>
-              highlightLinks.has(link) ? "purple" : "grey"
-          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          }
           //onNodeClick={!physics.collapse ? null : handleNodeClick}
-          nodeLabel={node => node.title}
-          //nodeVal={(node) => node.childLinks.length + 1}
-        //d3VelocityDecay={visco}
-          //linkWidth={link => highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth}
-          //linkWidth={link => highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth}
+            nodeLabel={(node) => node.title}
+          //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
+          //d3VelocityDecay={visco}
+            linkWidth={link => highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth}
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
-          //nodeVal={node => highlightNodes.has(node) ? 10 : 5}
+          nodeVal={node => highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3}
           linkDirectionalParticleWidth={physics.particleWidth}
-          backgroundColor="#1d1d1d"
           onNodeHover={physics.hover ? handleNodeHover : null}
-          onLinkHover={physics.hover ? handleLinkHover : null}
+          //onLinkHover={physics.hover ? handleLinkHover : null}
           d3AlphaDecay={physics.alphaDecay}
           d3AlphaMin={physics.alphaTarget}
           d3VelocityDecay={physics.velocityDecay}
