@@ -198,6 +198,34 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           linkDirectionalParticleWidth={physics.particleWidth}
+          nodeCanvasObject={(node, ctx, globalScale) => {
+          if(physics.labels){
+            if(globalScale > physics.labelScale ) {
+            const label = node.title;
+            const fontSize = 12/globalScale;
+            ctx.font = `${fontSize}px Sans-Serif`;
+            const textWidth = ctx.measureText(label).width;
+            const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+            ctx.fillStyle = 'rgba(20, 20, 20, 0.8)';
+            ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = node.color;
+            ctx.fillText(label, node.x, node.y);
+
+            node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+            console.log(globalScale);
+            }
+        }
+          }}
+          nodePointerAreaPaint={(node, color, ctx) => {
+            ctx.fillStyle = color;
+            const bckgDimensions = node.__bckgDimensions;
+            bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+          }}
+            nodeCanvasObjectMode={()=>'after'}
         />
       ) : (
         <ForceGraph3D

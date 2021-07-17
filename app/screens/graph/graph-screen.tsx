@@ -46,6 +46,8 @@ export const GraphScreen = observer(function GraphScreen() {
     linkWidth: 1,
     particleWidth: 1,
     nodeRel: 1,
+    labels: true,
+    labelScale: 1,
   }
 
   const getData = async () => {
