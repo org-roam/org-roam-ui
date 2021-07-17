@@ -207,12 +207,12 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
             const textWidth = ctx.measureText(label).width;
             const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
 
-            ctx.fillStyle = 'rgba(20, 20, 20, 0.8)';
+        ctx.fillStyle = 'rgba(20, 20, 20, ' + Math.min((globalScale - physics.labelScale)/physics.labelScale, 1) + ')';
             ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = "#ffffff"; //node.color;
+            ctx.fillStyle = 'rgb(255, 255, 255, ' + Math.min(4*(globalScale - physics.labelScale)/physics.labelScale, 1) + ')';
             ctx.fillText(label, node.x, node.y);
 
             node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
