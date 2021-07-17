@@ -1,8 +1,15 @@
 (require 'json)
 (require 'simple-httpd)
 
+(defvar org-roam-ui-root
+  (concat (file-name-directory
+           (f-full (or
+                    load-file-name
+                    buffer-file-name)))
+          "."))
+
 (setq org-roam-ui/root-dir (file-name-directory load-file-name))
-(setq org-roam-ui/app-build-dir (expand-file-name "./" org-roam-ui/root-dir))
+(setq org-roam-ui/app-build-dir (expand-file-name "./web-build/" org-roam-ui-root))
 
 (define-minor-mode
   org-roam-ui-mode
@@ -14,6 +21,7 @@
   (cond
    (org-roam-ui-mode
     (setq-local httpd-port 35901)
+    (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start))
    (t
     (httpd-stop))))
