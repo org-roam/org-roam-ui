@@ -1,15 +1,15 @@
+(require 'f)
 (require 'json)
 (require 'simple-httpd)
 
-(defvar org-roam-ui-root
-  (concat (file-name-directory
-           (f-full (or
-                    load-file-name
-                    buffer-file-name)))
-          "."))
+(defvar org-roam-ui/root-dir
+  (concat
+   (file-name-directory
+    (f-full (or
+             load-file-name
+             buffer-file-name))) "."))
 
-(setq org-roam-ui/root-dir (file-name-directory load-file-name))
-(setq org-roam-ui/app-build-dir (expand-file-name "./web-build/" org-roam-ui-root))
+(setq org-roam-ui/app-build-dir (expand-file-name "./web-build/" org-roam-ui/root-dir))
 
 (define-minor-mode
   org-roam-ui-mode
@@ -37,8 +37,6 @@
       (progn
         (insert response)
         (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))))
-
-(httpd-def-file-servlet app org-roam-ui/app-build-dir)
 
 
 (defun nodes-row-to-cons (row)
