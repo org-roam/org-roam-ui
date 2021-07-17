@@ -44,7 +44,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                     <Text preset="fieldLabel" text="Gravity" />
                     <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
                         value={physics.gravityOn}
-                        onValueChange={() => { setPhysics({ ...physics, gravityOn: !physics.gravityOn })}}
+                        onValueChange={() => { setPhysics({ ...physics, gravityOn: !physics.gravityOn }) }}
                     />
                     <Text preset="fieldLabel" text={"Gravity: " + physics.gravity} />
                     <Slider style={{ height: 40, width: "90%" }}
@@ -116,12 +116,12 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                     <Text preset="fieldLabel" text="Colorful" />
                     <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
                         value={physics.colorful}
-                        onValueChange={() => { setPhysics({ ...physics, colorful: !physics.colorful })}}
+                        onValueChange={() => { setPhysics({ ...physics, colorful: !physics.colorful }) }}
                     />
                     <Text preset="fieldLabel" text="Hover highlight" />
                     <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
                         value={physics.hover}
-                        onValueChange={() => { setPhysics({ ...physics, hover: !physics.hover })}}
+                        onValueChange={() => { setPhysics({ ...physics, hover: !physics.hover }) }}
                     />
                     <Text preset="fieldLabel" text={"Line Opacity: " + physics.linkOpacity} />
                     <Slider style={{ height: 40, width: "90%" }}

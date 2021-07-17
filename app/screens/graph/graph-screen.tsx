@@ -63,6 +63,7 @@ export const GraphScreen = observer(function GraphScreen() {
       const value: string = await AsyncStorage.getItem("@physics");
       if (value !== null) {
         const valueJson = JSON.parse(value);
+        console.log(Object.keys(valueJson).length + " is not " + Object.keys(physicsInit).length)
         if (Object.keys(valueJson).length === Object.keys(physicsInit).length) {
           return valueJson;
         } else { return physicsInit };
@@ -75,8 +76,9 @@ export const GraphScreen = observer(function GraphScreen() {
   }
   const storeData = async (value) => {
     try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.mergeItem("@physics", jsonValue)
+      let jsonVal = JSON.stringify(value)
+      console.log(jsonVal + " " + value);
+      await AsyncStorage.setItem("@physics", jsonVal)
     } catch (e) {
       console.log(e)
     }
@@ -91,7 +93,6 @@ export const GraphScreen = observer(function GraphScreen() {
     // set timer so the thing doesn't run every single slider tick
     const timer = setTimeout(() => {
       storeData(physics)
-      const test = getData()
     }, 1000)
     return () => clearTimeout(timer)
   }, [physics]);
@@ -101,31 +102,31 @@ export const GraphScreen = observer(function GraphScreen() {
   const sanitizeGraph = (data, nodeIds: string[]) => {
     const cleanLinks = [];
     data.links.forEach((link) => {
-        let target;
-        let source;
+      let target;
+      let source;
       for (let i = 0; i < nodeIds.length; i++) {
-            let a = data.nodes[i];
-            !a.neighbors && (a.neighbors = []);
-            !a.links && (a.links = []);
-          if (link.target === nodeIds[i]) {
-            //let a = data.nodes[i];
-            //!a.neighbors && (a.neighbors = []);
-            //a.neighbors.push(a);
-            a.links.push(link);
-            target=[a, i];
+        let a = data.nodes[i];
+        !a.neighbors && (a.neighbors = []);
+        !a.links && (a.links = []);
+        if (link.target === nodeIds[i]) {
+          //let a = data.nodes[i];
+          //!a.neighbors && (a.neighbors = []);
+          //a.neighbors.push(a);
+          a.links.push(link);
+          target = [a, i];
           cleanLinks.push(link);
-          } else if (link.source === nodeIds[i]) {
-            //let a = data.nodes[i];
-            //!a.neighbors && (a.neighbors = []);
-            //a.neighbors.push(a);
-            a.links.push(link);
-            source=[a, i];
-          };
+        } else if (link.source === nodeIds[i]) {
+          //let a = data.nodes[i];
+          //!a.neighbors && (a.neighbors = []);
+          //a.neighbors.push(a);
+          a.links.push(link);
+          source = [a, i];
+        };
       };
-        if (target && source) {
-           data.nodes[target[1]].neighbors.push(source[0]);
-           data.nodes[source[1]].neighbors.push(target[0]);
-        }
+      if (target && source) {
+        data.nodes[target[1]].neighbors.push(source[0]);
+        data.nodes[source[1]].neighbors.push(target[0]);
+      }
     });
     console.log(cleanLinks);
     data.links = cleanLinks;
