@@ -41,6 +41,18 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             title: "Physics",
             content:
                 <View>
+                    <Text preset="fieldLabel" text="Gravity" />
+                    <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
+                        value={physics.gravityOn}
+                        onValueChange={() => { setPhysics({ ...physics, gravityOn: !physics.gravityOn })}}
+                    />
+                    <Text preset="fieldLabel" text={"Gravity: " + physics.gravity} />
+                    <Slider style={{ height: 40, width: "90%" }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        onValueChange={(value) => { setPhysics({ ...physics, gravity: value }) }}
+                        value={physics.gravity}
+                        step={0.01} />
                     <Text preset="fieldLabel" text={"Repulsive force: " + physics.charge} />
                     <Slider style={{ height: 40, width: "90%" }}
                         minimumValue={-400}
@@ -68,12 +80,44 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                         value={physics.collision}
                         onValueChange={() => { setPhysics({ ...physics, collision: !physics.collision }) }}
                     />
+                    <Text preset="fieldLabel" text={"Alhpa Decay: " + physics.alphaDecay} />
+                    <Slider style={{ height: 40, width: "90%" }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        onValueChange={(value) => { setPhysics({ ...physics, alphaDecay: value }) }}
+                        value={physics.alphaDecay}
+                        step={.01} />
+                    <Text preset="fieldLabel" text={"Alhpa Target: " + physics.alphaTarget} />
+                    <Slider style={{ height: 40, width: "90%" }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        onValueChange={(value) => { setPhysics({ ...physics, alphaTarget: value }) }}
+                        value={physics.alphaTarget}
+                        step={0.1}
+                    />
+                    <Text preset="fieldLabel" text={"Viscosity: " + physics.velocityDecay} />
+                    <Slider style={{ height: 40, width: "90%" }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        onValueChange={(value) => { setPhysics({ ...physics, velocityDecay: value }) }}
+                        value={physics.velocityDecay}
+                        step={0.01} />
                 </View>,
         },
         {
             title: 'Visual',
             content:
                 <View>
+                    <Text preset="fieldLabel" text="Colorful" />
+                    <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
+                        value={physics.colorful}
+                        onValueChange={() => { setPhysics({ ...physics, colorful: !physics.colorful })}}
+                    />
+                    <Text preset="fieldLabel" text="Hover highlight" />
+                    <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
+                        value={physics.hover}
+                        onValueChange={() => { setPhysics({ ...physics, hover: !physics.hover })}}
+                    />
                     <Text preset="fieldLabel" text={"Line Opacity: " + physics.linkOpacity} />
                     <Slider style={{ height: 40, width: "90%" }}
                         minimumValue={0}

@@ -11,7 +11,7 @@ import { flatten } from "ramda"
 //import rando from "../../data/rando.json"
 
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from "react-force-graph"
-import * as d3 from "d3-force"
+import * as d3 from "d3-force-3d"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
@@ -51,8 +51,16 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
 
   useEffect(() => {
     const fg = fgRef.current
-
     //fg.d3Force('center').strength(0.05);
+    if(physics.gravityOn){
+      fg.d3Force("x", d3.forceX().strength(physics.gravity));
+      fg.d3Force("y", d3.forceY().strength(physics.gravity));
+      physics.threedim ? fg.d3Force("z", d3.forceZ().strength(physics.gravity)) : null;
+      } else {
+      fg.d3Force("x", null);
+      fg.d3Force("y", null);
+          physics.threedim ? fg.d3Force("z",  null) : null;
+      };
     fg.d3Force("link").strength(physics.linkStrength)
     fg.d3Force("link").iterations(physics.linkIts)
     physics.collision
@@ -132,6 +140,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
        };
 
        const handleNodeHover = node => {
+        console.log("hover");
          highlightNodes.clear();
          highlightLinks.clear();
          if (node) {
@@ -187,10 +196,34 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           autoPauseRedraw={false}
           graphData={gData}
           //graphData={physics.collapse ? prunedTree : gData}
-          nodeAutoColorBy="id"
-          linkAutoColorBy="target"
+          nodeAutoColorBy={physics.colorful ? "id" : undefined}
+          nodeColor={
+              !physics.colorful ? (
+              (node) => {
+                  if(highlightNodes.size === 0) {
+                      return "rgb(100, 100, 100, 1)"
+                  } else {
+              return highlightNodes.has(node) ? "purple" : "rgb(50, 50, 50, 0.5)"
+                  }
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+              }) : undefined
+          }
+          linkAutoColorBy={physics.colorful ? "target" : undefined}
           //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
-          linkColor="#ffffff"
+          linkColor={
+              !physics.colorful ? (
+            (link) => {
+                  if(highlightLinks.size === 0) {
+                      return "rgb(50, 50, 50, 0.8)"
+                  } else {
+              return highlightLinks.has(link) ? "purple" : "rgb(50, 50, 50, 0.2)"
+                  }
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+              }
+              ) : undefined
+              //highlightLinks.has(link) ? "purple" : "grey"
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+          }
           linkDirectionalParticles={physics.particles}
           //onNodeClick={!physics.collapse ? null : handleNodeClick}
             nodeLabel={(node) => node.title}
@@ -199,24 +232,27 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
             linkWidth={link => highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth}
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
-          nodeVal={node => highlightNodes.has(node) ? 10 : 5}
+          nodeVal={node => highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3}
           linkDirectionalParticleWidth={physics.particleWidth}
           nodeCanvasObject={
               (node, ctx, globalScale) => {
                   if(physics.labels) {
-            if(globalScale > physics.labelScale ) {
+            if(globalScale > physics.labelScale || highlightNodes.has(node)) {
             const label = node.title.substring(0, Math.min(node.title.length, 30));
             const fontSize = 12/globalScale;
             ctx.font = `${fontSize}px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
-            const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+            const bckgDimensions = [textWidth * 1.1, fontSize].map(n => n + fontSize * 0.5); // some padding
+            const fadeFactor = Math.min(3*(globalScale - physics.labelScale)/physics.labelScale, 1);
 
-        ctx.fillStyle = 'rgba(20, 20, 20, ' + Math.min((globalScale - physics.labelScale)/physics.labelScale, 1) + ')';
+                ctx.fillStyle = 'rgba(20, 20, 20, ' +
+                                 (highlightNodes.size === 0 ? .5 * fadeFactor :  (highlightNodes.has(node) ? 0.5 : 0.15 * fadeFactor)) + ')';
             ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = 'rgb(255, 255, 255, ' + Math.min(3*(globalScale - physics.labelScale)/physics.labelScale, 1) + ')';
+            ctx.fillStyle = 'rgb(255, 255, 255, ' +
+                                 (highlightNodes.size === 0 ? fadeFactor :  (highlightNodes.has(node) ? 1 : 0.3 * fadeFactor)) + ')';
             ctx.fillText(label, node.x, node.y);
 
             node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
@@ -224,32 +260,44 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
         };
           }}
           nodeCanvasObjectMode={()=> 'after'}
-          onNodeHover={handleNodeHover}
-          onLinkHover={handleLinkHover}
+          onNodeHover={physics.hover ? handleNodeHover : null}
+          //onLinkHover={physics.hover ? handleLinkHover : null}
+          d3AlphaDecay={physics.alphaDecay}
+          d3AlphaMin={physics.alphaTarget}
+          d3VelocityDecay={physics.velocityDecay}
         />
       ) : (
         <ForceGraph3D
           ref={fgRef}
           graphData={gData}
-          nodeAutoColorBy="group"
           //graphData={physics.collapse ? prunedTree : gData}
           // nodeAutoColorBy={d => d.id%GROUPS}
-          //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
-          linkColor="#ffffff"
-          linkWidth={2}
+          linkWidth={physics.linkWidth}
           linkDirectionalParticles={physics.particles}
-          //nodeColor={(node) =>
+          nodeColor={(node) =>
+              highlightNodes.has(node) ? "purple" : "grey"
           //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          //}
+          }
+          linkColor={(link) =>
+              highlightLinks.has(link) ? "purple" : "grey"
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+          }
           //onNodeClick={!physics.collapse ? null : handleNodeClick}
           nodeLabel={node => node.title}
           //nodeVal={(node) => node.childLinks.length + 1}
         //d3VelocityDecay={visco}
-          linkWidth={physics.linkWidth}
+          //linkWidth={link => highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth}
+          //linkWidth={link => highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth}
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
+          //nodeVal={node => highlightNodes.has(node) ? 10 : 5}
           linkDirectionalParticleWidth={physics.particleWidth}
           backgroundColor="#1d1d1d"
+          onNodeHover={physics.hover ? handleNodeHover : null}
+          onLinkHover={physics.hover ? handleLinkHover : null}
+          d3AlphaDecay={physics.alphaDecay}
+          d3AlphaMin={physics.alphaTarget}
+          d3VelocityDecay={physics.velocityDecay}
         />
       )}
     </View>

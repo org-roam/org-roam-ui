@@ -35,19 +35,26 @@ export const GraphScreen = observer(function GraphScreen() {
   const [nodeIds, setNodeIds] = useState([]);
   //  { "nodes": [{ "id": 1 }, { "id": 2 }], "links": [{ "target": 1, "source": 2 }] });
   const physicsInit = {
-    charge: -30,
-    collision: false,
-    linkStrength: 1,
+    charge: -350,
+    collision: true,
+    linkStrength: .1,
     linkIts: 1,
     collapse: false,
     threedim: false,
     particles: 2,
     linkOpacity: 1,
     linkWidth: 1,
-    particleWidth: 1,
-    nodeRel: 1,
+    particleWidth: 4,
+    nodeRel: 4,
     labels: true,
-    labelScale: 1,
+    labelScale: 1.5,
+    alphaDecay: 0.16,
+    alphaTarget: 0.01,
+    velocityDecay: 0.25,
+    gravity: 0.5,
+    gravityOn: true,
+    hover: true,
+    colorful: true,
   }
 
   const getData = async () => {
@@ -69,7 +76,6 @@ export const GraphScreen = observer(function GraphScreen() {
     try {
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.mergeItem("@physics", jsonValue)
-      console.log("Writing " + jsonValue)
     } catch (e) {
       console.log(e)
     }
@@ -85,7 +91,6 @@ export const GraphScreen = observer(function GraphScreen() {
     const timer = setTimeout(() => {
       storeData(physics)
       const test = getData()
-      console.log(test)
     }, 1000)
     return () => clearTimeout(timer)
   }, [physics]);
@@ -117,9 +122,6 @@ export const GraphScreen = observer(function GraphScreen() {
           };
       };
         if (target && source) {
-            console.log(link);
-            console.log("target" + target);
-            console.log("source" + source);
            data.nodes[target[1]].neighbors.push(source[0]);
            data.nodes[source[1]].neighbors.push(target[0]);
         }
