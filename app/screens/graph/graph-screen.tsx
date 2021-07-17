@@ -32,6 +32,7 @@ export const GraphScreen = observer(function GraphScreen() {
 
   const [physics, setPhysics] = useState({})
   const [graphData, setGraphData] = useState();
+  const [nodeIds, setNodeIds] = useState([]);
   //  { "nodes": [{ "id": 1 }, { "id": 2 }], "links": [{ "target": 1, "source": 2 }] });
   const physicsInit = {
     charge: -30,
@@ -105,18 +106,20 @@ export const GraphScreen = observer(function GraphScreen() {
     };
 
     const getNodesById = (data) => {
-      const nodeIds: string[] = [];
-      data.nodes.forEach(node => nodeIds.push(node.id));
-      return nodeIds;
+        let temp = [];
+        data.nodes.forEach(node => temp.push(node.id));
+        setNodeIds(temp);
+        return temp;
     };
 
     useEffect(() => {
       getData().then((data) => setPhysics(data));
       axios.get("http://localhost:35901/graph")
         .then((dataa) => {
-          const nodeIds = getNodesById(dataa.data);
+          let nods = getNodesById(dataa.data);
+          setNodeIds(nods);
           console.log(nodeIds);
-          const cleanData = sanitizeGraph(dataa.data, nodeIds);
+          let cleanData = sanitizeGraph(dataa.data, nods);
           console.log(cleanData)
           setGraphData(cleanData);
         })
@@ -131,7 +134,7 @@ export const GraphScreen = observer(function GraphScreen() {
       return (
         <Screen style={ROOT} preset="scroll">
           <Tweaks physics={physics} setPhysics={setPhysics} />
-          <Graph physics={physics} gData={graphData} />
+          <Graph physics={physics} gData={graphData} nodeIds={nodeIds}/>
         </Screen>
       )
     }

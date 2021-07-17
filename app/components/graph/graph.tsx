@@ -30,13 +30,14 @@ export interface GraphProps {
   style?: StyleProp<ViewStyle>
   physics
   gData
+  nodeIds: string[]
 }
 
 /**
  * Describe your component here
  */
 export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
-  const { style, physics, gData } = props
+  const { style, physics, gData, nodeIds } = props
   const styles = flatten([CONTAINER, style])
 
   const fgRef = useRef()
