@@ -76,7 +76,7 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
-web-build/
+#web-build/
 
 # Configurations
 app/config/env.*.js
