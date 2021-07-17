@@ -212,6 +212,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
           //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           //}
           //onNodeClick={!physics.collapse ? null : handleNodeClick}
+          nodeLabel={node => node.title}
           //nodeVal={(node) => node.childLinks.length + 1}
         //d3VelocityDecay={visco}
           linkWidth={physics.linkWidth}
