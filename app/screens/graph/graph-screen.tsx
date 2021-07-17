@@ -15,6 +15,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import axios from "axios";
 
+import rando from "../../data/rando.json"
+
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
   flex: 1,
@@ -27,7 +29,10 @@ export const GraphScreen = observer(function GraphScreen() {
   // Pull in navigation via hook
   // const navigation = useNavigation()
 
+
   const [physics, setPhysics] = useState({})
+  const [graphData, setGraphData] = useState();
+  //  { "nodes": [{ "id": 1 }, { "id": 2 }], "links": [{ "target": 1, "source": 2 }] });
   const physicsInit = {
     charge: -30,
     collision: false,
@@ -45,10 +50,10 @@ export const GraphScreen = observer(function GraphScreen() {
   const getData = async () => {
     try {
       const value: string = await AsyncStorage.getItem("@physics");
-      if (value !== null ) {
-          const valueJson = JSON.parse(value);
-              if ( Object.keys(valueJson).length === Object.keys(physicsInit).length) {
-        return valueJson;
+      if (value !== null) {
+        const valueJson = JSON.parse(value);
+        if (Object.keys(valueJson).length === Object.keys(physicsInit).length) {
+          return valueJson;
         } else { return physicsInit };
       } else {
         return physicsInit
@@ -57,19 +62,6 @@ export const GraphScreen = observer(function GraphScreen() {
       console.log(e)
     }
   }
-
-  //"ComponentOnMount"
-  // Get previous settings and the data from the org-roam-server
-  useEffect(() => {
-    getData().then((data) => setPhysics(data));
-    //  axios.get('/roamData')
-    //       .then(()=>console.log("Whoo got data"))
-    //.catch((e)=>{
-    //    console.log(e);
-    //    console.log("Couldn't get data.");
-    //});
-  }, [])
-
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
@@ -93,14 +85,54 @@ export const GraphScreen = observer(function GraphScreen() {
       console.log(test)
     }, 1000)
     return () => clearTimeout(timer)
-  }, [physics])
+  }, [physics]);
 
-  const gData = genRandomTree()
+  //"ComponentOnMount"
+  // Get previous settings and the data from the org-roam-server
+  const sanitizeGraph = (data, nodeIds: string[]) => {
+    const cleanLinks = [];
+    data.links.forEach((link, i) => {
+        for (i=0; i<=nodeIds.length; i++){
+        if (link.target === nodeIds[i]) {
+          cleanLinks.push(link);
+          break;
+        };
+      };
+    });
+      console.log(cleanLinks);
+      data.links = cleanLinks;
+      return data;
+    };
 
-  return (
-    <Screen style={ROOT} preset="scroll">
-      <Tweaks physics={physics} setPhysics={setPhysics} />
-      <Graph physics={physics} gData={gData} />
-    </Screen>
-  )
-})
+    const getNodesById = (data) => {
+      const nodeIds: string[] = [];
+      data.nodes.forEach(node => nodeIds.push(node.id));
+      return nodeIds;
+    };
+
+    useEffect(() => {
+      getData().then((data) => setPhysics(data));
+      axios.get("http://localhost:35901/graph")
+        .then((dataa) => {
+          const nodeIds = getNodesById(dataa.data);
+          console.log(nodeIds);
+          const cleanData = sanitizeGraph(dataa.data, nodeIds);
+          console.log(cleanData)
+          setGraphData(cleanData);
+        })
+        .catch((e) => {
+          console.log(e);
+          console.log("Couldn't get data.");
+          //setGraphData(rando);
+        });
+    }, [])
+    if (!graphData) { return null }
+    else {
+      return (
+        <Screen style={ROOT} preset="scroll">
+          <Tweaks physics={physics} setPhysics={setPhysics} />
+          <Graph physics={physics} gData={graphData} />
+        </Screen>
+      )
+    }
+  })

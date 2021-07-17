@@ -33,6 +33,6 @@
 (defun links-row-to-cons (row)
   (list
    (cons 'source (elt row 1))
-   (cons 'dest (elt row 2))))
+   (cons 'target (elt row 2))))
 
 (provide 'org-roam-ui)

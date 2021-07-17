@@ -9,7 +9,6 @@ import { flatten } from "ramda"
 //import data from "../../data/miserables.json"
 //import genRandomTree from "../../data/randomdata";
 //import rando from "../../data/rando.json"
-import rando from "../../data/randorev.json"
 
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from "react-force-graph"
 import * as d3 from "d3-force"
@@ -62,44 +61,44 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
   })
 
   // For the expandable version of the graph
-  const rootId = 0
+  /* const rootId = 0
 
-  const nodesById = useMemo(() => {
-    const nodesById = Object.fromEntries(rando.nodes.map((node) => [node.id, node]))
-
+*   const nodesById = useMemo(() => {
+*   const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.id, node]))
+ */
     // link parent/children
-    rando.nodes.forEach((node) => {
-      node.collapsed = node.id !== rootId
-      node.childLinks = []
-      node.parentLink = []
-    })
-    rando.links.forEach((link) => nodesById[link.source].childLinks.push(link))
+      /* gData.nodes.forEach((node) => {
+  *   node.collapsed = node.id !== rootId
+  *   node.childLinks = []
+  *   node.parentLink = []
+  * })
+  * gData.links.forEach((link) => nodesById[link.source].childLinks.push(link))
 
-    return nodesById
-  }, [rando])
+  * return nodesById
+    }, [gData])
+   */
+  /* const getPrunedTree = useCallback(() => {
+*   const visibleNodes = [];
+*   const visibleLinks = [];
+*   (function traverseTree(node = nodesById[rootId]) {
+*     visibleNodes.push(node);
+*     if (node.collapsed) return
+*     visibleLinks.push(...node.childLinks)
+*     node.childLinks
+*       .map((link) => (typeof link.target === "object" ? link.target : nodesById[link.target])) // get child node
+*       .forEach(traverseTree)
+*   })()
 
-  const getPrunedTree = useCallback(() => {
-    const visibleNodes = []
-    const visibleLinks = []
-      ; (function traverseTree(node = nodesById[rootId]) {
-        visibleNodes.push(node)
-        if (node.collapsed) return
-        visibleLinks.push(...node.childLinks)
-        node.childLinks
-          .map((link) => (typeof link.target === "object" ? link.target : nodesById[link.target])) // get child node
-          .forEach(traverseTree)
-      })()
+*   return { nodes: visibleNodes, links: visibleLinks }
+* }, [nodesById])
 
-    return { nodes: visibleNodes, links: visibleLinks }
-  }, [nodesById])
+* const [prunedTree, setPrunedTree] = useState(getPrunedTree())
 
-  const [prunedTree, setPrunedTree] = useState(getPrunedTree())
-
-  const handleNodeClick = useCallback((node) => {
-    node.collapsed = !node.collapsed // toggle collapse state
-    setPrunedTree(getPrunedTree())
-  }, []);
-
+* const handleNodeClick = useCallback((node) => {
+*   node.collapsed = !node.collapsed // toggle collapse state
+*   setPrunedTree(getPrunedTree())
+* }, []);
+ */
 
   // Highlight Graph
   /**
@@ -180,37 +179,40 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
       {!physics.threedim ? (
         <ForceGraph2D
           ref={fgRef}
-          graphData={physics.collapse ? prunedTree : rando}
+          graphData={gData}
+          //graphData={physics.collapse ? prunedTree : gData}
           // nodeAutoColorBy={d => d.id%GROUPS}
-          linkAutoColorBy={(d) => rando.nodes[d.source].id % GROUPS}
-          linkColor={"#ffffff"}
+          //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
+          linkColor="#ffffff"
           linkDirectionalParticles={physics.particles}
-          nodeColor={(node) =>
-            !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          }
-          onNodeClick={!physics.collapse ? null : handleNodeClick}
-          nodeLabel={(node) => "label"}
-          // nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
+          //nodeColor={(node) =>
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+          //}
+          //onNodeClick={!physics.collapse ? null : handleNodeClick}
+            nodeLabel={(node) => node.title}
+          //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
           //d3VelocityDecay={visco}
           linkWidth={physics.linkWidth}
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           linkDirectionalParticleWidth={physics.particleWidth}
+            backgroundColor={"#ffffff"}
         />
       ) : (
         <ForceGraph3D
           ref={fgRef}
-          graphData={physics.collapse ? prunedTree : rando}
+          graphData={gData}
+          //graphData={physics.collapse ? prunedTree : gData}
           // nodeAutoColorBy={d => d.id%GROUPS}
-          linkAutoColorBy={(d) => rando.nodes[d.source].id % GROUPS}
-          linkColor={"#ffffff"}
+          //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
+          linkColor="#ffffff"
           linkWidth={2}
           linkDirectionalParticles={physics.particles}
-          nodeColor={(node) =>
-            !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          }
-          onNodeClick={!physics.collapse ? null : handleNodeClick}
-          nodeVal={(node) => node.childLinks.length + 1}
+          //nodeColor={(node) =>
+          //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
+          //}
+          //onNodeClick={!physics.collapse ? null : handleNodeClick}
+          //nodeVal={(node) => node.childLinks.length + 1}
         //d3VelocityDecay={visco}
           linkWidth={physics.linkWidth}
           linkOpacity={physics.linkOpacity}
