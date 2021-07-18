@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TouchableOpacity, ViewStyle } from "react-native"
+import { TouchableOpacity, View, ViewStyle } from "react-native"
 import { Screen, Text } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -22,6 +22,8 @@ const ROOT: ViewStyle = {
   flex: 1,
 }
 
+import { LocalButton } from "../../components/"
+import { GraphUi } from "../../components/graph-ui/graph-ui"
 export const GraphScreen = observer(function GraphScreen() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
@@ -169,9 +171,14 @@ export const GraphScreen = observer(function GraphScreen() {
     return null
   } else {
     return (
-      <Screen style={ROOT} preset="scroll">
+      <Screen style={ROOT} preset="fixed">
+        <View style={{flex:1, flexDirection: "row", height: "100%", width: "100%",position: "absolute", zIndex:150}}>
         <Tweaks physics={physics} setPhysics={setPhysics} />
-        <Graph setPhysics={setPhysics} physics={physics} gData={graphData} nodeIds={nodeIds} />
+        <LocalButton style={{marginLeft: "auto", marginRight:"3%", marginTop: "3%", zIndex: 5, position: "relative"}}  physics={physics} setPhysics={setPhysics} />
+        <Graph
+        style={{position: "absolute"}}
+            setPhysics={setPhysics} physics={physics} gData={graphData} nodeIds={nodeIds} />
+        </View>
       </Screen>
     )
   }

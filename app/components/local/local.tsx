@@ -1,9 +1,10 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, typography } from "../../theme"
 import { Text } from "../"
 import { flatten } from "ramda"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
@@ -25,13 +26,13 @@ export interface LocalProps {
 /**
  * Describe your component here
  */
-export const Local = observer(function Local(props: LocalProps) {
+export const LocalButton = observer(function LocalButton(props: LocalProps): boolean {
   const { style } = props
   const styles = flatten([CONTAINER, style])
 
   return (
-    <View style={styles}>
-      <Text style={TEXT}>Hello</Text>
-    </View>
+      <Icon color="#a99f1f" name="graph"
+          style={{position:"absolute", zIndex: 100, width: 500}}
+      />
   )
 })

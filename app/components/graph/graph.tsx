@@ -271,7 +271,7 @@ onLinkHover={handleLinkHover}
   }
 
   return (
-    <View>
+    <View style={style}>
       {!physics.threedim ? (
         <ForceGraph2D
           ref={fgRef}

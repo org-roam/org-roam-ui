@@ -133,10 +133,12 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
               setPhysics({ ...physics, collision: !physics.collision })
             }}
           />
-          <Text preset="fieldLabel" text={"Alhpa Decay: " + physics.alphaDecay} />
+          <Text preset="fieldLabel" text={"Alpha Decay: " + physics.alphaDecay} />
           <Slider
+            style={styles.slider}
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
+            thumbTintColor="#a991f1"
             minimumValue={0}
             maximumValue={1}
             onValueChange={(value) => {
@@ -585,16 +587,19 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     backgroundColor: "#2a2e38",
-    position: "absolute",
-    zIndex: 100,
-    left: 50,
-    top: 50,
-    width: 250,
-    borderRadius: 5,
+    position: "relative",
+    zIndex: 5,
+    marginLeft: "3%",
+    marginTop: "3%",
+    maxWidth: 275,
+    borderRadius: 10,
     borderStyle: "solid",
-    maxHeight: "70%",
+    borderWidth: 10,
+    borderColor: "#2a2e38",
+      height: "25%",
+    maxHeight: "80%",
     paddingBottom: 20,
   },
   title: {
@@ -602,7 +607,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "300",
     marginBottom: 20,
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
   header: {
     backgroundColor: "#2a2e38",
