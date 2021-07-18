@@ -130,8 +130,17 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     setHighlightLinks(highlightLinks);
   };
 
+    const handleBackgroundClick = (event) => {
+    highlightNodes.clear();
+    highlightLinks.clear();
+
+    setSelectedNode(null);
+    updateHighlight();
+    }
+
   const handleNodeHover = node => {
     console.log("hover");
+    if(!selectedNode){
     highlightNodes.clear();
     highlightLinks.clear();
     if (node) {
@@ -142,6 +151,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
 
     setHoverNode(node || null);
     updateHighlight();
+    }
   };
 
   const handleLinkHover = link => {
@@ -157,6 +167,11 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     updateHighlight();
   };
 
+    // Normally the graph doesn't update when you just change the physics parameters
+    // This forces the graph to make a small update when you do
+    useEffect(()=>{
+        fgRef.current.d3ReheatSimulation();
+    }, [physics]);
   /* const paintRing = useCallback((node, ctx) => {
 *   // add ring just for highlighted nodes
 *   ctx.beginPath();
@@ -179,6 +194,29 @@ onLinkHover={handleLinkHover}
   //nodeColor={(node) =>
   //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
   //}
+
+  const [selectedNode, setSelectedNode] = useState({});
+
+    //shitty handler to check for doubleClicks
+    const [doubleClick, setDoubleClick] = useState(0)
+  const selectClick = (node, event) => {
+    highlightNodes.clear();
+    highlightLinks.clear();
+    if(event.timeStamp - doubleClick < 400){
+
+    }
+
+    if (node) {
+      highlightNodes.add(node);
+      node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
+      node.links.forEach(link => highlightLinks.add(link));
+    }
+
+    setSelectedNode(node || null);
+    updateHighlight();
+    setDoubleClick(event.timeStamp);
+  }
+
   return (
     <View>
       {!physics.threedim ? (
@@ -216,7 +254,7 @@ onLinkHover={handleLinkHover}
             //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
           }
           linkDirectionalParticles={physics.particles}
-          onNodeClick={!physics.collapse ? undefined : handleNodeClick}
+          onNodeClick={!physics.collapse ? selectClick : handleNodeClick}
           nodeLabel={(node) => node.title}
           //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
           //d3VelocityDecay={visco}
@@ -256,6 +294,7 @@ onLinkHover={handleLinkHover}
           d3AlphaDecay={physics.alphaDecay}
           d3AlphaMin={physics.alphaTarget}
           d3VelocityDecay={physics.velocityDecay}
+        onBackgroundClick={handleBackgroundClick}
         />
       ) : (
         <ForceGraph3D
