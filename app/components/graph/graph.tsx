@@ -169,9 +169,9 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
 
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
-  //useEffect(() => {
-  //  fgRef.current.d3ReheatSimulation()
-  //}, [physics])
+  useEffect(() => {
+    !physics.threedim && fgRef.current.d3ReheatSimulation()
+  }, [physics])
   /* const paintRing = useCallback((node, ctx) => {
    *   // add ring just for highlighted nodes
    *   ctx.beginPath();
@@ -211,7 +211,7 @@ onLinkHover={handleLinkHover}
     let g = localGraphData
     console.log(g.nodes)
     if (!node.local) {
-    g = {nodes: [], links: []}
+      g = { nodes: [], links: [] }
       console.log("length is 0")
       node.local = true //keep track of these boys
       g.nodes.push(node) //only add the clicked node if its the first
@@ -278,23 +278,73 @@ onLinkHover={handleLinkHover}
           //autoPauseRedraw={false}
           //graphData={gData}
           graphData={physics.local ? localGraphData : gData}
-          nodeAutoColorBy={physics.colorful ? (node)=>node.index%GROUPS : undefined}
-          nodeColor={!physics.colorful ? ((node) => {
+          //nodeAutoColorBy={physics.colorful ? (node)=>node.index%GROUPS : undefined}
+          nodeColor={
+            !physics.colorful
+              ? (node) => {
                   if (highlightNodes.size === 0) {
                     return "rgb(100, 100, 100, 1)"
                   } else {
                     return highlightNodes.has(node) ? "purple" : "rgb(50, 50, 50, 0.5)"
                   }
-              }) : undefined
+                }
+              : (node) => {
+                  if (node.neighbors.length === 1 || node.neighbors.length === 2) {
+                    return [
+                      "#ff665c",
+                      "#e69055",
+                      "#7bc275",
+                      "#4db5bd",
+                      "#FCCE7B",
+                      "#51afef",
+                      "#1f5582",
+                      "#C57BDB",
+                      "#a991f1",
+                      "#5cEfFF",
+                      "#6A8FBF",
+                    ][node.neighbors[0].index % 11]
+                  } else {
+                    return [
+                      "#ff665c",
+                      "#e69055",
+                      "#7bc275",
+                      "#4db5bd",
+                      "#FCCE7B",
+                      "#51afef",
+                      "#1f5582",
+                      "#C57BDB",
+                      "#a991f1",
+                      "#5cEfFF",
+                      "#6A8FBF",
+                    ][node.index % 11]
+                  }
+                }
           }
-          linkAutoColorBy={physics.colorful ? ((d) => gData.nodes[d.sourceIndex].id % GROUPS) : undefined}
-          linkColor={!physics.colorful  ? ((link) => {
+          //linkAutoColorBy={physics.colorful ? ((d) => gData.nodes[d.sourceIndex].id % GROUPS) : undefined}
+          linkColor={
+            !physics.colorful
+              ? (link) => {
                   if (highlightLinks.size === 0) {
                     return "rgb(50, 50, 50, 0.8)"
                   } else {
                     return highlightLinks.has(link) ? "purple" : "rgb(50, 50, 50, 0.2)"
                   }
-          })  : undefined}
+                }
+              : (link) =>
+                  [
+                    "#ff665c",
+                    "#e69055",
+                    "#7bc275",
+                    "#4db5bd",
+                    "#FCCE7B",
+                    "#51afef",
+                    "#1f5582",
+                    "#C57BDB",
+                    "#a991f1",
+                    "#5cEfFF",
+                    "#6A8FBF",
+                  ][gData.nodes[link.sourceIndex].index % 11]
+          }
           linkDirectionalParticles={physics.particles}
           onNodeClick={selectClick}
           nodeLabel={(node) => node.title}
@@ -303,11 +353,9 @@ onLinkHover={handleLinkHover}
           }
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
-          nodeVal={(node) =>
-            {
-                  return highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
-              }
-          }
+          nodeVal={(node) => {
+            return highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
+          }}
           linkDirectionalParticleWidth={physics.particleWidth}
           nodeCanvasObject={(node, ctx, globalScale) => {
             if (physics.labels) {
@@ -363,7 +411,7 @@ onLinkHover={handleLinkHover}
       ) : (
         <ForceGraph3D
           ref={fgRef}
-          graphData={!physics.local ? gData : localGraphData }
+          graphData={!physics.local ? gData : localGraphData}
           //graphData={gData}
           nodeAutoColorBy={physics.colorful ? "id" : undefined}
           nodeColor={
@@ -423,6 +471,7 @@ onLinkHover={handleLinkHover}
           }
           nodeThreeObjectExtend={true}
           onNodeClick={selectClick}
+          onBackgroundClick={handleBackgroundClick}
         />
       )}
     </View>
