@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { TouchableOpacity, ViewStyle } from "react-native"
 import { Screen, Text } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -13,7 +13,7 @@ import genRandomTree from "../../data/randomdata"
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-import axios from "axios";
+import axios from "axios"
 
 import rando from "../../data/rando.json"
 
@@ -29,15 +29,14 @@ export const GraphScreen = observer(function GraphScreen() {
   // Pull in navigation via hook
   // const navigation = useNavigation()
 
-
   const [physics, setPhysics] = useState({})
-  const [graphData, setGraphData] = useState();
-  const [nodeIds, setNodeIds] = useState([]);
+  const [graphData, setGraphData] = useState()
+  const [nodeIds, setNodeIds] = useState([])
   //  { "nodes": [{ "id": 1 }, { "id": 2 }], "links": [{ "target": 1, "source": 2 }] });
   const physicsInit = {
     charge: -350,
     collision: true,
-    linkStrength: .1,
+    linkStrength: 0.1,
     linkIts: 1,
     collapse: false,
     threedim: false,
@@ -57,17 +56,20 @@ export const GraphScreen = observer(function GraphScreen() {
     colorful: true,
     galaxy: true,
     rootId: 0,
+      local: false,
   }
 
   const getData = async () => {
     try {
-      const value: string = await AsyncStorage.getItem("@physics");
+      const value: string = await AsyncStorage.getItem("@physics")
       if (value !== null) {
-        const valueJson = JSON.parse(value);
+        const valueJson = JSON.parse(value)
         console.log(Object.keys(valueJson).length + " is not " + Object.keys(physicsInit).length)
         if (Object.keys(valueJson).length === Object.keys(physicsInit).length) {
-          return valueJson;
-        } else { return physicsInit };
+          return valueJson
+        } else {
+          return physicsInit
+        }
       } else {
         return physicsInit
       }
@@ -78,7 +80,7 @@ export const GraphScreen = observer(function GraphScreen() {
   const storeData = async (value) => {
     try {
       let jsonVal = JSON.stringify(value)
-      console.log(jsonVal + " " + value);
+      console.log(jsonVal + " " + value)
       await AsyncStorage.setItem("@physics", jsonVal)
     } catch (e) {
       console.log(e)
@@ -96,81 +98,80 @@ export const GraphScreen = observer(function GraphScreen() {
       storeData(physics)
     }, 1000)
     return () => clearTimeout(timer)
-  }, [physics]);
+  }, [physics])
 
   //"ComponentOnMount"
   // Get previous settings and the data from the org-roam-server
   const sanitizeGraph = (data, nodeIds: string[]) => {
-    const cleanLinks = [];
+    const cleanLinks = []
     data.links.forEach((link, j) => {
-      let target;
-      let source;
+      let target
+      let source
       for (let i = 0; i < nodeIds.length; i++) {
-        let a = data.nodes[i];
-        !a.neighbors && (a.neighbors = []);
-        !a.links && (a.links = []);
+        let a = data.nodes[i]
+        !a.neighbors && (a.neighbors = [])
+        !a.links && (a.links = [])
+        // the first time around,
+        // index the node as not a part of the local graph
+          !j && (a.local=false);
         if (link.target === nodeIds[i]) {
-          //let a = data.nodes[i];
-          //!a.neighbors && (a.neighbors = []);
-          //a.neighbors.push(a);
-          a.links.push(link);
-          target = [a, i];
-          link.target===link.source ? null : cleanLinks.push(link);
+          a.links.push(link)
+          target = [a, i]
+          link.target === link.source ? null : cleanLinks.push(link)
         } else if (link.source === nodeIds[i]) {
-          //let a = data.nodes[i];
-          //!a.neighbors && (a.neighbors = []);
-          //a.neighbors.push(a);
-          a.links.push(link);
-          source = [a, i];
-        };
-        };
-      if (target && source) {
-        data.nodes[target[1]].neighbors.push(source[0]);
-        data.nodes[source[1]].neighbors.push(target[0]);
-        link.sourceIndex=source[1];
-        link.targetIndex=target[1];
+          a.links.push(link)
+          source = [a, i]
+        }
       }
-    });
-    console.log(cleanLinks);
+      if (target && source) {
+        data.nodes[target[1]].neighbors.push(source[0])
+        data.nodes[source[1]].neighbors.push(target[0])
+        link.sourceIndex = source[1]
+        link.targetIndex = target[1]
+        link.index = [j]
+        link.local = false;
+      }
+    })
     data.links = cleanLinks;
     return data;
-  };
+  }
 
   const getNodesById = (data) => {
-    let temp = [];
-      data.nodes.forEach((node, i) => {
-          temp.push(node.id);
-          node.index=i;
-      }
-      );
-    setNodeIds(temp);
+    let temp = []
+    data.nodes.forEach((node, i) => {
+      temp.push(node.id)
+      node.index = i
+    })
+    setNodeIds(temp)
 
-    return temp;
-  };
+    return temp
+  }
 
   useEffect(() => {
-    getData().then((data) => setPhysics(data));
-    axios.get("http://localhost:35901/graph")
+    getData().then((data) => setPhysics(data))
+    axios
+      .get("http://localhost:35901/graph")
       .then((dataa) => {
-        let nods = getNodesById(dataa.data);
-        setNodeIds(nods);
-        console.log(nodeIds);
-        let cleanData = sanitizeGraph(dataa.data, nods);
+        let nods = getNodesById(dataa.data)
+        setNodeIds(nods)
+        console.log(nodeIds)
+        let cleanData = sanitizeGraph(dataa.data, nods)
         console.log(cleanData)
-        setGraphData(cleanData);
+        setGraphData(cleanData)
       })
       .catch((e) => {
-        console.log(e);
-        console.log("Couldn't get data.");
+        console.log(e)
+        console.log("Couldn't get data.")
         //setGraphData(rando);
-      });
+      })
   }, [])
-  if (!graphData) { return null }
-  else {
+  if (!graphData) {
+    return null
+  } else {
     return (
       <Screen style={ROOT} preset="scroll">
         <Tweaks physics={physics} setPhysics={setPhysics} />
-        <Graph physics={physics} gData={graphData} nodeIds={nodeIds} />
+        <Graph setPhysics={setPhysics} physics={physics} gData={graphData} nodeIds={nodeIds} />
       </Screen>
     )
   }

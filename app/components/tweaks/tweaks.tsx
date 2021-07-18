@@ -193,6 +193,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                         value={physics.threedim}
                         onValueChange={() => { setPhysics({ ...physics, threedim: !physics.threedim }) }}
                     />
+                    <Switch style={{ width: "5", height: 20, marginVertical: 10 }}
+                        value={physics.local}
+                        onValueChange={() => { setPhysics({ ...physics, local: !physics.local }) }}
+                    />
                 </View>
         },
     ];
