@@ -8,11 +8,11 @@ import { flatten } from "ramda"
 
 //import data from "../../data/miserables.json"
 //import genRandomTree from "../../data/randomdata";
-//import rando from "../../data/rando.json"
+import rando from "../../data/rando.json"
 
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from "react-force-graph"
 import * as d3 from "d3-force-3d"
-import * as three from "three"
+//import * as three from "three"
 import SpriteText from "three-spritetext"
 
 const CONTAINER: ViewStyle = {
@@ -278,47 +278,35 @@ onLinkHover={handleLinkHover}
           autoPauseRedraw={false}
           //graphData={gData}
           graphData={physics.local ? localGraphData : gData}
-          nodeAutoColorBy={physics.colorful ? "id" : undefined}
-          nodeColor={
-            !physics.colorful
-              ? (node) => {
+          nodeAutoColorBy={physics.colorful ? (node)=>node.index%GROUPS : undefined}
+          nodeColor={!physics.colorful ? ((node) => {
                   if (highlightNodes.size === 0) {
                     return "rgb(100, 100, 100, 1)"
                   } else {
                     return highlightNodes.has(node) ? "purple" : "rgb(50, 50, 50, 0.5)"
                   }
-                  //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-                }
-              : undefined
+              }) : undefined
           }
-          linkAutoColorBy={physics.colorful ? "target" : undefined}
-          //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
-          linkColor={
-            !physics.colorful
-              ? (link) => {
+          linkAutoColorBy={physics.colorful ? ((d) => gData.nodes[d.sourceIndex].id % GROUPS) : undefined}
+          linkColor={!physics.colorful  ? ((link) => {
                   if (highlightLinks.size === 0) {
                     return "rgb(50, 50, 50, 0.8)"
                   } else {
                     return highlightLinks.has(link) ? "purple" : "rgb(50, 50, 50, 0.2)"
                   }
-                  //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-                }
-              : undefined
-            //highlightLinks.has(link) ? "purple" : "grey"
-            //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          }
+          })  : undefined}
           linkDirectionalParticles={physics.particles}
-          onNodeClick={!physics.collapse ? selectClick : handleNodeClick}
+          onNodeClick={selectClick}
           nodeLabel={(node) => node.title}
-          //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
-          //d3VelocityDecay={visco}
           linkWidth={(link) =>
             highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth
           }
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           nodeVal={(node) =>
-            highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
+            {
+                  return highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
+              }
           }
           linkDirectionalParticleWidth={physics.particleWidth}
           nodeCanvasObject={(node, ctx, globalScale) => {
@@ -374,75 +362,8 @@ onLinkHover={handleLinkHover}
         />
       ) : (
         <ForceGraph3D
-          ref={fgRef}
-          autoPauseRedraw={false}
-          graphData={gData}
-          //graphData={physics.collapse ? prunedTree : gData}
-          nodeAutoColorBy={physics.colorful ? "id" : undefined}
-          nodeColor={
-            !physics.colorful
-              ? (node) => {
-                  if (highlightNodes.size === 0) {
-                    return "rgb(100, 100, 100, 1)"
-                  } else {
-                    return highlightNodes.has(node) ? "purple" : "rgb(50, 50, 50, 0.5)"
-                  }
-                  //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-                }
-              : undefined
-          }
-          linkAutoColorBy={physics.colorful ? "target" : undefined}
-          //linkAutoColorBy={(d) => gData.nodes[d.source].id % GROUPS}
-          linkColor={
-            !physics.colorful
-              ? (link) => {
-                  if (highlightLinks.size === 0) {
-                    return "rgb(50, 50, 50, 0.8)"
-                  } else {
-                    return highlightLinks.has(link) ? "purple" : "rgb(50, 50, 50, 0.2)"
-                  }
-                  //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-                }
-              : undefined
-            //highlightLinks.has(link) ? "purple" : "grey"
-            //  !node.childLinks.length ? "green" : node.collapsed ? "red" : "yellow"
-          }
-          linkDirectionalParticles={physics.particles}
-          //onNodeClick={!physics.collapse ? null : handleNodeClick}
-          nodeLabel={(node) => node.title}
-          //nodeVal ={(node)=> node.childLinks.length * 0.5 + 1}
-          //d3VelocityDecay={visco}
-          linkWidth={(link) =>
-            highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth
-          }
-          linkOpacity={physics.linkOpacity}
-          nodeRelSize={physics.nodeRel}
-          nodeVal={(node) =>
-            highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
-          }
-          linkDirectionalParticleWidth={physics.particleWidth}
-          onNodeHover={physics.hover ? handleNodeHover : null}
-          //onLinkHover={physics.hover ? handleLinkHover : null}
-          d3AlphaDecay={physics.alphaDecay}
-          d3AlphaMin={physics.alphaTarget}
-          d3VelocityDecay={physics.velocityDecay}
-          nodeThreeObject={
-            !physics.labels
-              ? undefined
-              : (node) => {
-                  if (highlightNodes.has(node)) {
-                    console.log(node.title)
-                    const sprite = new SpriteText(node.title.substring(0, 30))
-                    console.log("didnt crash here 2")
-                    sprite.color = "#ffffff"
-                    sprite.textHeight = 8
-                    return sprite
-                  } else {
-                    return undefined
-                  }
-                }
-          }
-          nodeThreeObjectExtend={true}
+        ref={fgRef}
+        graphData={rando}
         />
       )}
     </View>
