@@ -309,13 +309,16 @@ onLinkHover={handleLinkHover}
           nodeThreeObject={
             !physics.labels ? undefined
               : ((node) => {
+                  if (highlightNodes.has(node)) {
                 console.log(node.title)
                 const sprite = new SpriteText(node.title.substring(0, 30));
                 console.log("didnt crash here 2")
                 sprite.color = "#ffffff";
                 sprite.textHeight = 8;
                 return sprite;
-              })}
+                } else { return undefined };
+              })
+          }
           nodeThreeObjectExtend={true}
         />
       )}
