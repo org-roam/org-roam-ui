@@ -32,6 +32,7 @@ export interface GraphProps {
   style?: StyleProp<ViewStyle>
   physics
   gData
+  setPhysics
   nodeIds: string[]
 }
 
@@ -39,7 +40,7 @@ export interface GraphProps {
  * Describe your component here
  */
 export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
-  const { style, physics, gData, nodeIds } = props
+  const { style, physics, setPhysics, gData, nodeIds } = props
   const styles = flatten([CONTAINER, style])
 
   const fgRef = useRef()
@@ -96,6 +97,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     gData.links.forEach((link) => nodesById[link.sourceIndex].childLinks.push(link))
     return nodesById
   }, [gData])
+
   const getPrunedTree = useCallback(() => {
     const visibleNodes = []
     const visibleLinks = []
@@ -201,34 +203,53 @@ onLinkHover={handleLinkHover}
   const [doubleClick, setDoubleClick] = useState(0)
   const [localGraphData, setLocalGraphData] = useState({ nodes: [], links: [] })
 
-  const updateLocalGraph = (node) => {
+  useEffect(() => {
+    !physics.local && setPhysics({ ...physics, local: true })
+  }, [localGraphData])
+
+  const getLocalGraphData = (node) => {
     console.log(localGraphData)
     localGraphData.nodes.length ? setLocalGraphData({ nodes: [], links: [] }) : null
     let g = localGraphData
     console.log(g.nodes)
-    g.nodes.length ? null : g.nodes.push(node) //only add the clicked node if its the first
-    node.neighbors.forEach((neighbor) => {
-      if (neighbor !== node) {
-        const newNode: boolean = g.nodes.every((existingNode) => {
-          if (existingNode === neighbor) {
-            return false
-          } else {
-            return true
+    if (!node.local) {
+      console.log("length is 0")
+      node.local = true //keep track of these boys
+      g.nodes.push(node) //only add the clicked node if its the first
+    }
+    node.links.length &&
+      node.links.forEach((neighborLink) => {
+        if (!neighborLink.local) {
+          console.log("0")
+          neighborLink.local = true
+          g.links.push(neighborLink)
+          console.log(neighborLink)
+          const targetNode = gData.nodes[neighborLink.targetIndex]
+          const sourceNode = gData.nodes[neighborLink.sourceIndex]
+          if (targetNode.id !== sourceNode.id) {
+            if (targetNode.id === node.id) {
+              console.log("1. I am the target, the source is ")
+              console.log(sourceNode)
+              if (!sourceNode.local) {
+                console.log("2. The source is not local")
+                sourceNode.local = true
+                g.nodes.push(sourceNode)
+              } else {
+                console.log("2.5 The source is already local")
+              }
+            } else {
+              console.log("3. I am the source")
+              if (!targetNode.local) {
+                console.log("4. The target is not local.")
+                targetNode.local = true
+                g.nodes.push(targetNode)
+              } else {
+                console.log("The target is already local")
+              }
+            }
           }
-        })
-        newNode && g.nodes.push(neighbor)
-      }
-    })
-    node.links.forEach((neighborLink) => {
-      const newLink: boolean = g.links.every((existingLink) => {
-        if (existingLink === neighborLink) {
-          return false
-        } else {
-          return true
         }
       })
-      newLink && g.links.push(neighborLink)
-    })
     setLocalGraphData(g)
   }
 
@@ -237,13 +258,14 @@ onLinkHover={handleLinkHover}
     highlightLinks.clear()
     console.log(localGraphData)
     if (event.timeStamp - doubleClick < 400) {
-      updateLocalGraph(node)
+      getLocalGraphData(node)
     }
     if (node) {
       highlightNodes.add(node)
       node.neighbors.forEach((neighbor) => highlightNodes.add(neighbor))
       node.links.forEach((link) => highlightLinks.add(link))
     }
+
     setSelectedNode(node || null)
     updateHighlight()
     setDoubleClick(event.timeStamp)
@@ -256,9 +278,7 @@ onLinkHover={handleLinkHover}
           ref={fgRef}
           autoPauseRedraw={false}
           //graphData={gData}
-          graphData={
-            localGraphData.nodes.length ? localGraphData : physics.collapse ? prunedTree : gData
-          }
+          graphData={physics.local ? localGraphData : physics.collapse ? prunedTree : gData}
           nodeAutoColorBy={physics.colorful ? "id" : undefined}
           nodeColor={
             !physics.colorful
