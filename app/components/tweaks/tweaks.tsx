@@ -62,11 +62,11 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
                         step={1} />
                     <Text preset="fieldLabel" text={"Link Force: " + physics.linkStrength} />
                     <Slider style={{ height: 40, width: "90%" }}
-                        minimumValue={-2}
+                        minimumValue={0}
                         maximumValue={2}
                         onValueChange={(value) => { setPhysics({ ...physics, linkStrength: value }) }}
                         value={physics.linkStrength}
-                        step={0.1}
+                        step={0.01}
                     />
                     <Text preset="fieldLabel" text={"'Link Iterations': " + physics.linkIts} />
                     <Slider style={{ height: 40, width: "90%" }}

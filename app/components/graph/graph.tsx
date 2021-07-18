@@ -84,39 +84,37 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
 
   // For the expandable version of the graph
 
-  const nodesById = useMemo(() => {
-    const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.index, node]))
-    console.log(nodesById)
-    // link parent/children
-    gData.nodes.forEach((node) => {
-      typeof physics.rootId === "number"
-        ? (node.collapsed = node.index !== physics.rootId)
-        : (node.collapsed = node.id !== physics.rootId)
-      node.childLinks = []
-    })
-    gData.links.forEach((link) => nodesById[link.sourceIndex].childLinks.push(link))
-    return nodesById
-  }, [gData])
+  /* const nodesById = useMemo(() => {
+     *   const nodesById = Object.fromEntries(gData.nodes.map((node) => [node.index, node]))
+     *   console.log(nodesById)
+     *   // link parent/children
+     *   gData.nodes.forEach((node) => {
+     *     typeof physics.rootId === "number"
+     *       ? (node.collapsed = node.index !== physics.rootId)
+     *       : (node.collapsed = node.id !== physics.rootId)
+     *     node.childLinks = []
+     *   })
+     *   gData.links.forEach((link) => nodesById[link.sourceIndex].childLinks.push(link))
+     *   return nodesById
+     * }, [gData])
+     * const getPrunedTree = useCallback(() => {
+     *   const visibleNodes = []
+     *   const visibleLinks = []
+     *   ;(function traverseTree(node = nodesById[physics.rootId]) {
+     *     visibleNodes.push(node)
+     *     if (node.collapsed) return
+     *     visibleLinks.push(...node.childLinks)
+     *     node.childLinks
+     *       .map((link) =>
+     *         typeof link.targetIndex === "object" ? link.targetIndex : nodesById[link.targetIndex],
+     *       ) // get child node
+     *       .forEach(traverseTree)
+     *   })()
 
-  const getPrunedTree = useCallback(() => {
-    const visibleNodes = []
-    const visibleLinks = []
-    ;(function traverseTree(node = nodesById[physics.rootId]) {
-      visibleNodes.push(node)
-      if (node.collapsed) return
-      visibleLinks.push(...node.childLinks)
-      node.childLinks
-        .map((link) =>
-          typeof link.targetIndex === "object" ? link.targetIndex : nodesById[link.targetIndex],
-        ) // get child node
-        .forEach(traverseTree)
-    })()
-
-    return { nodes: visibleNodes, links: visibleLinks }
-  }, [nodesById])
-
-  const [prunedTree, setPrunedTree] = useState(getPrunedTree())
-
+     *   return { nodes: visibleNodes, links: visibleLinks }
+     * }, [nodesById])
+     * const [prunedTree, setPrunedTree] = useState(getPrunedTree())
+     */
   const handleNodeClick = useCallback((node) => {
     node.collapsed = !node.collapsed // toggle collapse state
     setPrunedTree(getPrunedTree())
@@ -204,7 +202,7 @@ onLinkHover={handleLinkHover}
   const [localGraphData, setLocalGraphData] = useState({ nodes: [], links: [] })
 
   useEffect(() => {
-    !physics.local && setPhysics({ ...physics, local: true })
+    localGraphData.nodes.length && !physics.local && setPhysics({ ...physics, local: true })
   }, [localGraphData])
 
   const getLocalGraphData = (node) => {
@@ -213,6 +211,7 @@ onLinkHover={handleLinkHover}
     let g = localGraphData
     console.log(g.nodes)
     if (!node.local) {
+    g = {nodes: [], links: []}
       console.log("length is 0")
       node.local = true //keep track of these boys
       g.nodes.push(node) //only add the clicked node if its the first
@@ -278,7 +277,7 @@ onLinkHover={handleLinkHover}
           ref={fgRef}
           autoPauseRedraw={false}
           //graphData={gData}
-          graphData={physics.local ? localGraphData : physics.collapse ? prunedTree : gData}
+          graphData={physics.local ? localGraphData : gData}
           nodeAutoColorBy={physics.colorful ? "id" : undefined}
           nodeColor={
             !physics.colorful

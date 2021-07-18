@@ -48,7 +48,7 @@ export const GraphScreen = observer(function GraphScreen() {
     labels: true,
     labelScale: 1.5,
     alphaDecay: 0.16,
-    alphaTarget: 0.01,
+    alphaTarget: 0,
     velocityDecay: 0.25,
     gravity: 0.5,
     gravityOn: true,
@@ -64,8 +64,8 @@ export const GraphScreen = observer(function GraphScreen() {
       const value: string = await AsyncStorage.getItem("@physics")
       if (value !== null) {
         const valueJson = JSON.parse(value)
-        console.log(Object.keys(valueJson).length + " is not " + Object.keys(physicsInit).length)
         if (Object.keys(valueJson).length === Object.keys(physicsInit).length) {
+          valueJson.local=false;
           return valueJson
         } else {
           return physicsInit
@@ -102,23 +102,23 @@ export const GraphScreen = observer(function GraphScreen() {
 
   //"ComponentOnMount"
   // Get previous settings and the data from the org-roam-server
-  const sanitizeGraph = (data, nodeIds: string[]) => {
+  const sanitizeGraph = (data) => {
     const cleanLinks = []
     data.links.forEach((link, j) => {
       let target
       let source
-      for (let i = 0; i < nodeIds.length; i++) {
+      for (let i = 0; i < data.nodes.length; i++) {
         let a = data.nodes[i]
         !a.neighbors && (a.neighbors = [])
         !a.links && (a.links = [])
         // the first time around,
         // index the node as not a part of the local graph
           !j && (a.local=false);
-        if (link.target === nodeIds[i]) {
+        if (link.target === data.nodes[i].id) {
           a.links.push(link)
           target = [a, i]
           link.target === link.source ? null : cleanLinks.push(link)
-        } else if (link.source === nodeIds[i]) {
+        } else if (link.source === data.nodes[i].id) {
           a.links.push(link)
           source = [a, i]
         }
@@ -155,7 +155,7 @@ export const GraphScreen = observer(function GraphScreen() {
         let nods = getNodesById(dataa.data)
         setNodeIds(nods)
         console.log(nodeIds)
-        let cleanData = sanitizeGraph(dataa.data, nods)
+        let cleanData = sanitizeGraph(dataa.data)
         console.log(cleanData)
         setGraphData(cleanData)
       })
