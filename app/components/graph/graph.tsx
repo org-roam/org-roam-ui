@@ -34,13 +34,17 @@ export interface GraphProps {
   gData
   setPhysics
   nodeIds: string[]
+  threeDim
+    setThreeDim
+    local
+    setLocal
 }
 
 /**
  * Describe your component here
  */
 export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
-  const { style, physics, setPhysics, gData, nodeIds } = props
+  const { style, physics, setPhysics, gData, threeDim, setThreeDim, local, setLocal } = props
   const styles = flatten([CONTAINER, style])
 
   const fgRef = useRef()
@@ -58,12 +62,12 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     if (physics.gravityOn) {
       fg.d3Force("x", d3.forceX().strength(physics.gravity))
       fg.d3Force("y", d3.forceY().strength(physics.gravity))
-      if (physics.threedim) {
+      if (threeDim) {
         if (physics.galaxy) {
-          fg.d3Force("y", d3.forceY().strength(physics.gravity / 5))
+          fg.d3Force("x", d3.forceX().strength(physics.gravity / 5))
           fg.d3Force("z", d3.forceZ().strength(physics.gravity / 5))
         } else {
-          fg.d3Force("y", d3.forceY().strength(physics.gravity))
+          fg.d3Force("x", d3.forceX().strength(physics.gravity))
           fg.d3Force("z", d3.forceZ().strength(physics.gravity))
         }
       } else {
@@ -72,7 +76,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     } else {
       fg.d3Force("x", null)
       fg.d3Force("y", null)
-      physics.threedim ? fg.d3Force("z", null) : null
+      threeDim ? fg.d3Force("z", null) : null
     }
     fg.d3Force("link").strength(physics.linkStrength)
     fg.d3Force("link").iterations(physics.linkIts)
@@ -170,7 +174,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
   useEffect(() => {
-    !physics.threedim && fgRef.current.d3ReheatSimulation()
+    fgRef.current.d3ReheatSimulation()
   }, [physics])
   /* const paintRing = useCallback((node, ctx) => {
    *   // add ring just for highlighted nodes
@@ -202,7 +206,7 @@ onLinkHover={handleLinkHover}
   const [localGraphData, setLocalGraphData] = useState({ nodes: [], links: [] })
 
   useEffect(() => {
-    localGraphData.nodes.length && !physics.local && setPhysics({ ...physics, local: true })
+    localGraphData.nodes.length && !local && setLocal(true)
   }, [localGraphData])
 
   const getLocalGraphData = (node) => {
@@ -270,14 +274,19 @@ onLinkHover={handleLinkHover}
     setDoubleClick(event.timeStamp)
   }
 
+    useEffect(()=>{
+       if(local && selectedNode) {
+         getLocalGraphData(selectedNode)
+       }
+    }, [local])
   return (
     <View style={style}>
-      {!physics.threedim ? (
+      {!threeDim ? (
         <ForceGraph2D
           ref={fgRef}
           //autoPauseRedraw={false}
           //graphData={gData}
-          graphData={physics.local ? localGraphData : gData}
+          graphData={local ? localGraphData : gData}
           //nodeAutoColorBy={physics.colorful ? (node)=>node.index%GROUPS : undefined}
           nodeColor={
             !physics.colorful
@@ -412,7 +421,7 @@ onLinkHover={handleLinkHover}
       ) : (
         <ForceGraph3D
           ref={fgRef}
-          graphData={!physics.local ? gData : localGraphData}
+          graphData={!local ? gData : localGraphData}
           //graphData={gData}
           nodeColor={
             !physics.colorful

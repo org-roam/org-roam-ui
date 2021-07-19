@@ -24,6 +24,7 @@ const ROOT: ViewStyle = {
 
 import { LocalButton } from "../../components/"
 import { GraphUi } from "../../components/graph-ui/graph-ui"
+import { Switch } from "react-native-elements"
 export const GraphScreen = observer(function GraphScreen() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
@@ -40,10 +41,8 @@ export const GraphScreen = observer(function GraphScreen() {
     collision: true,
     linkStrength: 0.1,
     linkIts: 1,
-    collapse: false,
-    threedim: false,
     particles: 2,
-    linkOpacity: 1,
+    linkOpacity: 0.4,
     linkWidth: 1,
     particleWidth: 4,
     nodeRel: 4,
@@ -58,7 +57,6 @@ export const GraphScreen = observer(function GraphScreen() {
     colorful: true,
     galaxy: true,
     rootId: 0,
-      local: false,
   }
 
   const getData = async () => {
@@ -167,17 +165,43 @@ export const GraphScreen = observer(function GraphScreen() {
         //setGraphData(rando);
       })
   }, [])
+
+  const [threeDim, setThreeDim] = useState(false);
+    const [local, setLocal] = useState(false);
+
   if (!graphData) {
     return null
   } else {
     return (
       <Screen style={ROOT} preset="fixed">
-        <View style={{flex:1, flexDirection: "row", height: "100%", width: "100%",position: "absolute", zIndex:150}}>
+        <View style={{display: "flex", flexDirection: "row", height: "100%", width: "100%",position: "absolute", zIndex:150}}>
         <Tweaks physics={physics} setPhysics={setPhysics} />
-        <LocalButton style={{marginLeft: "auto", marginRight:"3%", marginTop: "3%", zIndex: 5, position: "relative"}}  physics={physics} setPhysics={setPhysics} />
+        <View style={{marginLeft: "auto", marginRight:"2%", marginTop: "2%", zIndex: 5, position: "relative", height: "15%" }}>
+        <LocalButton  local={local} setLocal={setLocal} />
+        <View style={{display: "flex", flexDirection: "row", alignItems: "center",justifyContent: "center", paddingTop: "2%"}}>
+        <Text preset="header" text="3D" style={{marginLeft: 10}} />
+                    <Switch
+            color="#a991f1"
+            trackColor={{
+                false: "#62686E",
+                true: "#a991f1"
+            }}
+            style={{
+    height: 25,
+                        marginVertical: 10,
+            marginLeft: 20}}
+            value={threeDim}
+            onValueChange={() => {
+              setThreeDim(!threeDim)
+            }}
+          />
+        </View>
+        </View>
         <Graph
         style={{position: "absolute"}}
-            setPhysics={setPhysics} physics={physics} gData={graphData} nodeIds={nodeIds} />
+            setPhysics={setPhysics} physics={physics} gData={graphData} nodeIds={nodeIds}
+        threeDim={threeDim} setThreeDim={setThreeDim}
+        local={local} setLocal={setLocal}/>
         </View>
       </Screen>
     )

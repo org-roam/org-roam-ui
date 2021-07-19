@@ -328,58 +328,6 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
       title: "Modes",
       content: (
         <View>
-          <Text preset="fieldLabel" text="Expandable Graph" />
-                    <Switch
-            color="#a991f1"
-            trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
-            }}
-            style={styles.switch}
-            value={physics.collapse}
-            onValueChange={() => {
-              setPhysics({ ...physics, collapse: !physics.collapse })
-            }}
-          />
-          <Text preset="fieldLabel" text={"Change starting point: " + physics.rootId} />
-          <Slider
-            minimumTrackTintColor="#a991f1"
-            maximumTrackTintColor="#242730"
-            thumbTintColor="#a991f1"
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={600}
-            onValueChange={(value) => {
-              setPhysics({ ...physics, rootId: value })
-            }}
-            value={physics.rootId}
-            step={1}
-          />
-          <Text preset="fieldLabel" text="3D" />
-                    <Switch
-            color="#a991f1"
-            trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
-            }}
-            style={styles.switch}
-            value={physics.threedim}
-            onValueChange={() => {
-              setPhysics({ ...physics, threedim: !physics.threedim })
-            }}
-          />
-                    <Switch
-            color="#a991f1"
-            trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
-            }}
-            style={styles.switch}
-            value={physics.local}
-            onValueChange={() => {
-              setPhysics({ ...physics, local: !physics.local })
-            }}
-          />
         </View>
       ),
     },
@@ -587,19 +535,18 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    display: "flex",
     backgroundColor: "#2a2e38",
-    position: "relative",
+    position: "absolute",
     zIndex: 5,
-    marginLeft: "3%",
-    marginTop: "3%",
+    marginLeft: "2%",
+    marginTop: "2%",
     maxWidth: 275,
     borderRadius: 10,
     borderStyle: "solid",
     borderWidth: 10,
     borderColor: "#2a2e38",
-      height: "25%",
-    maxHeight: "80%",
+      maxHeight: "80%",
     paddingBottom: 20,
   },
   title: {
