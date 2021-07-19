@@ -38,7 +38,6 @@
         (insert response)
         (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))))
 
-
 (defun nodes-row-to-cons (row)
   (list
    (cons 'id (elt row 0))
@@ -49,5 +48,17 @@
   (list
    (cons 'source (elt row 1))
    (cons 'target (elt row 2))))
+
+(defservlet* theme application/json ()
+  (when 'doom-themes--colors
+      (let*
+            ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25)))
+             ui-theme (list nil))
+      (progn
+        (dolist (color colors)
+          (push (cons (car color) (car (cdr color))) ui-theme))
+        (insert (json-encode  ui-theme))
+        (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))))
+
 
 (provide 'org-roam-ui)

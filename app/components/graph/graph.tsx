@@ -8,7 +8,7 @@ import { flatten } from "ramda"
 
 //import data from "../../data/miserables.json"
 //import genRandomTree from "../../data/randomdata";
-import rando from "../../data/rando.json"
+//import gData from "../../data/rando.json"
 
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from "react-force-graph"
 import * as d3 from "d3-force-3d"

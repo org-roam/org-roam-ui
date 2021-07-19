@@ -3,7 +3,7 @@ import { AutoImage as Image } from "../auto-image/auto-image"
 import { presets } from "./wallpaper.presets"
 import { WallpaperProps } from "./wallpaper.props"
 
-const defaultImage = require("./bg.png")
+//const defaultImage = require("./bg.png")
 
 /**
  * For your text displaying needs.
@@ -19,7 +19,7 @@ export function Wallpaper(props: WallpaperProps) {
   const styles = [presetToUse, styleOverride]
 
   // figure out which image to use
-  const source = backgroundImage || defaultImage
+  //const source = backgroundImage || defaultImage
 
-  return <Image source={source} style={styles} />
+  return null//<Image source={source} style={styles} />
 }
