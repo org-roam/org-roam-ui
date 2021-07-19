@@ -1,4 +1,4 @@
-import { palette } from "./palette"
+import { palette } from './palette'
 
 /**
  * Roles for colors.  Prefer using these over the palette.  It makes it easier
@@ -19,7 +19,7 @@ export const color = {
    * can cause older Android devices to slow down due to the excessive compositing required
    * by their under-powered GPUs.
    */
-  transparent: "rgba(0, 0, 0, 0)",
+  transparent: 'rgba(0, 0, 0, 0)',
   /**
    * The screen background.
    */

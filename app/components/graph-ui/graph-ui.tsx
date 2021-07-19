@@ -1,12 +1,12 @@
-import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, typography } from "../../theme"
-import { LocalButton, Text, Tweaks } from "../"
-import { flatten } from "ramda"
+import * as React from 'react'
+import { StyleProp, TextStyle, View, ViewStyle } from 'react-native'
+import { observer } from 'mobx-react-lite'
+import { color, typography } from '../../theme'
+import { LocalButton, Text, Tweaks } from '../'
+import { flatten } from 'ramda'
 
 const CONTAINER: ViewStyle = {
-  justifyContent: "center",
+  justifyContent: 'center',
 }
 
 const TEXT: TextStyle = {
@@ -20,8 +20,8 @@ export interface GraphUiProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-    physics
-    setPhysics
+  physics
+  setPhysics
 }
 
 /**
@@ -32,9 +32,17 @@ export const GraphUi = observer(function GraphUi(props: GraphUiProps) {
   const styles = flatten([CONTAINER, style])
 
   return (
-      <View style={{height: "100%", width: "100%", borderStyle: "solid", borderWidth: 5,position:"relative"}}>
-        <Tweaks physics={physics} setPhysics={setPhysics} />
-        <LocalButton physics={physics} setPhysics={setPhysics}/>
+    <View
+      style={{
+        height: '100%',
+        width: '100%',
+        borderStyle: 'solid',
+        borderWidth: 5,
+        position: 'relative',
+      }}
+    >
+      <Tweaks physics={physics} setPhysics={setPhysics} />
+      <LocalButton physics={physics} setPhysics={setPhysics} />
     </View>
   )
 })

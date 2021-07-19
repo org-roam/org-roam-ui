@@ -1,26 +1,37 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-native/no-color-literals */
 
-import * as React from "react"
-import { View, ViewStyle } from "react-native"
-import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
-import { Checkbox } from "./checkbox"
-import { Toggle } from "react-powerplug"
+import * as React from 'react'
+import { View, ViewStyle } from 'react-native'
+import { storiesOf } from '@storybook/react-native'
+import { StoryScreen, Story, UseCase } from '../../../storybook/views'
+import { Checkbox } from './checkbox'
+import { Toggle } from 'react-powerplug'
 
 declare let module
 
-const arrayStyle: ViewStyle[] = [{ paddingVertical: 40 }, { alignSelf: "flex-end" }]
-const arrayOutlineStyle: ViewStyle[] = [{ borderColor: "#b443c9" }, { borderWidth: 25 }]
-const arrayFillStyle: ViewStyle[] = [{ backgroundColor: "#55e0ff" }]
+const arrayStyle: ViewStyle[] = [
+  { paddingVertical: 40 },
+  { alignSelf: 'flex-end' },
+]
+const arrayOutlineStyle: ViewStyle[] = [
+  { borderColor: '#b443c9' },
+  { borderWidth: 25 },
+]
+const arrayFillStyle: ViewStyle[] = [{ backgroundColor: '#55e0ff' }]
 
-storiesOf("Checkbox", module)
+storiesOf('Checkbox', module)
   .addDecorator((fn) => <StoryScreen>{fn()}</StoryScreen>)
-  .add("Behaviour", () => (
+  .add('Behaviour', () => (
     <Story>
-      <UseCase text="The Checkbox" usage="Use the checkbox to represent on/off states.">
+      <UseCase
+        text="The Checkbox"
+        usage="Use the checkbox to represent on/off states."
+      >
         <Toggle initial={false}>
-          {({ on, toggle }) => <Checkbox value={on} onToggle={toggle} text="Toggle me" />}
+          {({ on, toggle }) => (
+            <Checkbox value={on} onToggle={toggle} text="Toggle me" />
+          )}
         </Toggle>
       </UseCase>
       <UseCase text="value = true" usage="This is permanently on.">
@@ -31,7 +42,7 @@ storiesOf("Checkbox", module)
       </UseCase>
     </Story>
   ))
-  .add("Styling", () => (
+  .add('Styling', () => (
     <Story>
       <UseCase text="multiline = true" usage="For really really long text">
         <Toggle initial={false}>
@@ -55,7 +66,7 @@ storiesOf("Checkbox", module)
                 text="Hello there!"
                 value={on}
                 style={{
-                  backgroundColor: "purple",
+                  backgroundColor: 'purple',
                   marginLeft: 40,
                   paddingVertical: 30,
                   paddingLeft: 60,
@@ -74,7 +85,7 @@ storiesOf("Checkbox", module)
                 text="Outline is the box frame"
                 value={on}
                 outlineStyle={{
-                  borderColor: "green",
+                  borderColor: 'green',
                   borderRadius: 10,
                   borderWidth: 4,
                   width: 60,
@@ -93,7 +104,7 @@ storiesOf("Checkbox", module)
               <Checkbox
                 text="Fill er up"
                 value={on}
-                fillStyle={{ backgroundColor: "red", borderRadius: 8 }}
+                fillStyle={{ backgroundColor: 'red', borderRadius: 8 }}
                 onToggle={toggle}
               />
             </View>

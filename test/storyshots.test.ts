@@ -1,6 +1,6 @@
-import initStoryshots from "@storybook/addon-storyshots"
+import initStoryshots from '@storybook/addon-storyshots'
 
 initStoryshots({
-  configPath: "./storybook",
-  framework: "react-native",
+  configPath: './storybook',
+  framework: 'react-native',
 })

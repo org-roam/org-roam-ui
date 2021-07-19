@@ -1,7 +1,12 @@
-import React from "react"
-import { ViewStyle, Animated, Easing, TouchableWithoutFeedback } from "react-native"
-import { color } from "../../theme"
-import { SwitchProps } from "./switch.props"
+import React from 'react'
+import {
+  ViewStyle,
+  Animated,
+  Easing,
+  TouchableWithoutFeedback,
+} from 'react-native'
+import { color } from '../../theme'
+import { SwitchProps } from './switch.props'
 
 // dimensions
 const THUMB_SIZE = 30
@@ -15,7 +20,7 @@ const BORDER_RADIUS = (THUMB_SIZE * 3) / 4
 const ON_COLOR = color.primary
 const OFF_COLOR = color.palette.offWhite
 const BORDER_ON_COLOR = ON_COLOR
-const BORDER_OFF_COLOR = "rgba(0, 0, 0, 0.1)"
+const BORDER_OFF_COLOR = 'rgba(0, 0, 0, 0.1)'
 
 // animation
 const DURATION = 250
@@ -31,7 +36,7 @@ const TRACK = {
 
 // the thumb always has these props
 const THUMB: ViewStyle = {
-  position: "absolute",
+  position: 'absolute',
   width: THUMB_SIZE,
   height: THUMB_SIZE,
   borderColor: BORDER_OFF_COLOR,
@@ -71,10 +76,10 @@ export function Switch(props: SwitchProps) {
     }
   }, [props.value])
 
-  const handlePress = React.useMemo(() => () => props.onToggle && props.onToggle(!props.value), [
-    props.onToggle,
-    props.value,
-  ])
+  const handlePress = React.useMemo(
+    () => () => props.onToggle && props.onToggle(!props.value),
+    [props.onToggle, props.value],
+  )
 
   if (!timer) {
     return null

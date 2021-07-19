@@ -131,9 +131,8 @@
     ]
   },
   "prettier": {
-    "printWidth": 100,
     "semi": false,
-    "singleQuote": false,
+    "singleQuote": true,
     "trailingComma": "all"
   },
   "detox": {

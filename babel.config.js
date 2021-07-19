@@ -1,15 +1,15 @@
 module.exports = {
-  presets: ["babel-preset-expo"],
+  presets: ['babel-preset-expo'],
   env: {
     production: {},
   },
   plugins: [
     [
-      "@babel/plugin-proposal-decorators",
+      '@babel/plugin-proposal-decorators',
       {
         legacy: true,
       },
     ],
-    ["@babel/plugin-proposal-optional-catch-binding"],
+    ['@babel/plugin-proposal-optional-catch-binding'],
   ],
 }

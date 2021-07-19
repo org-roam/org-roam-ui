@@ -4,11 +4,14 @@
  * and a "main" flow (which is contained in your MainNavigator) which the user
  * will use once logged in.
  */
-import React from "react"
-import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
-import { MainNavigator } from "./main-navigator"
-import { color } from "../theme"
+import React from 'react'
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { MainNavigator } from './main-navigator'
+import { color } from '../theme'
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -56,4 +59,4 @@ export const RootNavigator = React.forwardRef<
   )
 })
 
-RootNavigator.displayName = "RootNavigator"
+RootNavigator.displayName = 'RootNavigator'

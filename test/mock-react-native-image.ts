@@ -1,7 +1,7 @@
-import * as ReactNative from "react-native"
-import mockFile from "./mock-file"
+import * as ReactNative from 'react-native'
+import mockFile from './mock-file'
 
-jest.doMock("react-native", () => {
+jest.doMock('react-native', () => {
   // Extend ReactNative
   return Object.setPrototypeOf(
     {

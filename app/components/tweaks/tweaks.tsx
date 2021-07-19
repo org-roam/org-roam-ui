@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react'
 import {
   ScrollView,
   StyleProp,
@@ -8,20 +8,20 @@ import {
   ViewStyle,
   StyleSheet,
   Button,
-} from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, typography } from "../../theme"
-import { Text } from "../"
-import { flatten } from "ramda"
-import Slider from "@react-native-community/slider"
-import { useState } from "react"
-import Accordion from "react-native-collapsible/Accordion"
-import * as Animatable from "react-native-animatable"
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
-import {Switch} from "react-native-elements"
+} from 'react-native'
+import { observer } from 'mobx-react-lite'
+import { color, typography } from '../../theme'
+import { Text } from '../'
+import { flatten } from 'ramda'
+import Slider from '@react-native-community/slider'
+import { useState } from 'react'
+import Accordion from 'react-native-collapsible/Accordion'
+import * as Animatable from 'react-native-animatable'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Switch } from 'react-native-elements'
 
 const CONTAINER: ViewStyle = {
-  justifyContent: "center",
+  justifyContent: 'center',
 }
 
 const TEXT: TextStyle = {
@@ -42,21 +42,23 @@ export interface TweaksProps {
 /**
  * Describe your component here
  */
-export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element {
+export const Tweaks = observer(function Tweaks(
+  props: TweaksProps,
+): JSX.Element {
   const { style, physics, setPhysics } = props
   //    const styles = flatten([CONTAINER, style])
 
   const content = [
     {
-      title: "Physics",
+      title: 'Physics',
       content: (
         <View>
           <Text preset="fieldLabel" text="Gravity" />
           <Switch
             color="#a991f1"
             trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
+              false: '#62686E',
+              true: '#a991f1',
             }}
             style={styles.switch}
             value={physics.gravityOn}
@@ -64,7 +66,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
               setPhysics({ ...physics, gravityOn: !physics.gravityOn })
             }}
           />
-          <Text preset="fieldLabel" text={"Gravity: " + physics.gravity} />
+          <Text preset="fieldLabel" text={'Gravity: ' + physics.gravity} />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -78,7 +80,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.gravity}
             step={0.01}
           />
-          <Text preset="fieldLabel" text={"Repulsive force: " + physics.charge} />
+          <Text
+            preset="fieldLabel"
+            text={'Repulsive force: ' + physics.charge}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -92,7 +97,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.charge}
             step={1}
           />
-          <Text preset="fieldLabel" text={"Link Force: " + physics.linkStrength} />
+          <Text
+            preset="fieldLabel"
+            text={'Link Force: ' + physics.linkStrength}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -106,7 +114,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.linkStrength}
             step={0.01}
           />
-          <Text preset="fieldLabel" text={"'Link Iterations': " + physics.linkIts} />
+          <Text
+            preset="fieldLabel"
+            text={"'Link Iterations': " + physics.linkIts}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -121,11 +132,11 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             step={1}
           />
           <Text preset="fieldLabel" text="Collision" />
-                    <Switch
+          <Switch
             color="#a991f1"
             trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
+              false: '#62686E',
+              true: '#a991f1',
             }}
             style={styles.switch}
             value={physics.collision}
@@ -133,7 +144,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
               setPhysics({ ...physics, collision: !physics.collision })
             }}
           />
-          <Text preset="fieldLabel" text={"Alpha Decay: " + physics.alphaDecay} />
+          <Text
+            preset="fieldLabel"
+            text={'Alpha Decay: ' + physics.alphaDecay}
+          />
           <Slider
             style={styles.slider}
             minimumTrackTintColor="#a991f1"
@@ -147,7 +161,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.alphaDecay}
             step={0.01}
           />
-          <Text preset="fieldLabel" text={"Alhpa Target: " + physics.alphaTarget} />
+          <Text
+            preset="fieldLabel"
+            text={'Alhpa Target: ' + physics.alphaTarget}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -161,7 +178,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.alphaTarget}
             step={0.1}
           />
-          <Text preset="fieldLabel" text={"Viscosity: " + physics.velocityDecay} />
+          <Text
+            preset="fieldLabel"
+            text={'Viscosity: ' + physics.velocityDecay}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -175,12 +195,12 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.velocityDecay}
             step={0.01}
           />
-          <Text preset="fieldLabel" text={"Galaxy Mode (3D-only)"} />
-                    <Switch
+          <Text preset="fieldLabel" text={'Galaxy Mode (3D-only)'} />
+          <Switch
             color="#a991f1"
             trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
+              false: '#62686E',
+              true: '#a991f1',
             }}
             style={styles.switch}
             value={physics.galaxy}
@@ -192,15 +212,15 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
       ),
     },
     {
-      title: "Visual",
+      title: 'Visual',
       content: (
         <View>
           <Text preset="fieldLabel" text="Colorful" />
-                    <Switch
+          <Switch
             color="#a991f1"
             trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
+              false: '#62686E',
+              true: '#a991f1',
             }}
             style={styles.switch}
             value={physics.colorful}
@@ -209,11 +229,11 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             }}
           />
           <Text preset="fieldLabel" text="Hover highlight" />
-                    <Switch
+          <Switch
             color="#a991f1"
             trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
+              false: '#62686E',
+              true: '#a991f1',
             }}
             style={styles.switch}
             value={physics.hover}
@@ -221,7 +241,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
               setPhysics({ ...physics, hover: !physics.hover })
             }}
           />
-          <Text preset="fieldLabel" text={"Line Opacity: " + physics.linkOpacity} />
+          <Text
+            preset="fieldLabel"
+            text={'Line Opacity: ' + physics.linkOpacity}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -235,7 +258,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.linkOpacity}
             step={0.01}
           />
-          <Text preset="fieldLabel" text={"Line width: " + physics.linkWidth} />
+          <Text preset="fieldLabel" text={'Line width: ' + physics.linkWidth} />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -249,7 +272,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.linkWidth}
             step={0.1}
           />
-          <Text preset="fieldLabel" text={"Node size: " + physics.nodeRel} />
+          <Text preset="fieldLabel" text={'Node size: ' + physics.nodeRel} />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -263,7 +286,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.nodeRel}
             step={0.01}
           />
-          <Text preset="fieldLabel" text={"Particles: " + physics.particles} />
+          <Text preset="fieldLabel" text={'Particles: ' + physics.particles} />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -277,7 +300,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             value={physics.particles}
             step={1}
           />
-          <Text preset="fieldLabel" text={"Particle Size: " + physics.particleWidth} />
+          <Text
+            preset="fieldLabel"
+            text={'Particle Size: ' + physics.particleWidth}
+          />
           <Slider
             minimumTrackTintColor="#a991f1"
             maximumTrackTintColor="#242730"
@@ -292,11 +318,11 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             step={0.1}
           />
           <Text preset="fieldLabel" text="Labels" />
-                    <Switch
+          <Switch
             color="#a991f1"
             trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
+              false: '#62686E',
+              true: '#a991f1',
             }}
             style={styles.switch}
             value={physics.labels}
@@ -306,7 +332,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
           />
           <Text
             preset="fieldLabel"
-            text={"Scale when labels become visible: " + physics.labelScale}
+            text={'Scale when labels become visible: ' + physics.labelScale}
           />
           <Slider
             minimumTrackTintColor="#a991f1"
@@ -325,11 +351,8 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
       ),
     },
     {
-      title: "Modes",
-      content: (
-        <View>
-        </View>
-      ),
+      title: 'Modes',
+      content: <View></View>,
     },
   ]
 
@@ -367,13 +390,15 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
     if (tweaks) {
       return (
         <View style={styles.container}>
-          <View style={{ height: 30, width: "100%", backgroundColor: "#2a2e38" }}>
+          <View
+            style={{ height: 30, width: '100%', backgroundColor: '#2a2e38' }}
+          >
             <TouchableOpacity
               style={{
                 width: 30,
-                color: "#a991f1",
-                textAlign: "center",
-                marginLeft: "auto",
+                color: '#a991f1',
+                textAlign: 'center',
+                marginLeft: 'auto',
                 padding: 5,
               }}
               onPress={() => {
@@ -405,11 +430,11 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
             setTweaks(true)
           }}
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 50,
             left: 50,
             width: 30,
-            color: "#ffffff",
+            color: '#ffffff',
             zIndex: 100,
           }}
         >
@@ -421,17 +446,17 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
     return (
       <View
         style={{
-          position: "absolute",
-          top: "5%",
-          left: "5%",
+          position: 'absolute',
+          top: '5%',
+          left: '5%',
           zIndex: 100,
           width: 300,
-          backgroundColor: "#000000",
+          backgroundColor: '#000000',
           padding: 20,
         }}
       >
         <Text preset="bold" text="Physics" />
-        <Text preset="fieldLabel" text={"Repulsive force: " + physics.charge} />
+        <Text preset="fieldLabel" text={'Repulsive force: ' + physics.charge} />
         <Slider
           minimumTrackTintColor="#a991f1"
           maximumTrackTintColor="#242730"
@@ -445,7 +470,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
           value={physics.charge}
           step={1}
         />
-        <Text preset="fieldLabel" text={"Link Force: " + physics.linkStrength} />
+        <Text
+          preset="fieldLabel"
+          text={'Link Force: ' + physics.linkStrength}
+        />
         <Slider
           minimumTrackTintColor="#a991f1"
           maximumTrackTintColor="#242730"
@@ -459,7 +487,10 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
           value={physics.linkStrength}
           step={0.1}
         />
-        <Text preset="fieldLabel" text={"'Link Iterations': " + physics.linkIts} />
+        <Text
+          preset="fieldLabel"
+          text={"'Link Iterations': " + physics.linkIts}
+        />
         <Slider
           minimumTrackTintColor="#a991f1"
           maximumTrackTintColor="#242730"
@@ -474,12 +505,12 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
           step={1}
         />
         <Text preset="fieldLabel" text="Collision" />
-                  <Switch
-            color="#a991f1"
-            trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
-            }}
+        <Switch
+          color="#a991f1"
+          trackColor={{
+            false: '#62686E',
+            true: '#a991f1',
+          }}
           style={styles.switch}
           value={physics.collision}
           onValueChange={() => {
@@ -487,7 +518,7 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
           }}
         />
         <Text preset="bold" text="Visual" />
-        <Text preset="fieldLabel" text={"Particles: " + physics.particles} />
+        <Text preset="fieldLabel" text={'Particles: ' + physics.particles} />
         <Slider
           minimumTrackTintColor="#a991f1"
           maximumTrackTintColor="#242730"
@@ -503,12 +534,12 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
         />
         <Text preset="bold" text="Modes" />
         <Text preset="fieldLabel" text="Expandable Graph" />
-                  <Switch
-            color="#a991f1"
-            trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
-            }}
+        <Switch
+          color="#a991f1"
+          trackColor={{
+            false: '#62686E',
+            true: '#a991f1',
+          }}
           style={styles.switch}
           value={physics.collapse}
           onValueChange={() => {
@@ -516,12 +547,12 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
           }}
         />
         <Text preset="fieldLabel" text="3D" />
-                  <Switch
-            color="#a991f1"
-            trackColor={{
-                false: "#62686E",
-                true: "#a991f1"
-            }}
+        <Switch
+          color="#a991f1"
+          trackColor={{
+            false: '#62686E',
+            true: '#a991f1',
+          }}
           style={styles.switch}
           value={physics.threedim}
           onValueChange={() => {
@@ -535,85 +566,85 @@ export const Tweaks = observer(function Tweaks(props: TweaksProps): JSX.Element 
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    backgroundColor: "#2a2e38",
-    position: "absolute",
+    display: 'flex',
+    backgroundColor: '#2a2e38',
+    position: 'absolute',
     zIndex: 5,
-    marginLeft: "2%",
-    marginTop: "2%",
+    marginLeft: '2%',
+    marginTop: '2%',
     maxWidth: 275,
     borderRadius: 10,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 10,
-    borderColor: "#2a2e38",
-      maxHeight: "80%",
+    borderColor: '#2a2e38',
+    maxHeight: '80%',
     paddingBottom: 20,
   },
   title: {
-    textAlign: "left",
+    textAlign: 'left',
     fontSize: 22,
-    fontWeight: "300",
+    fontWeight: '300',
     marginBottom: 20,
     paddingLeft: 10,
   },
   header: {
-    backgroundColor: "#2a2e38",
+    backgroundColor: '#2a2e38',
     padding: 10,
     paddingBottom: 20,
-    textAlign: "left",
+    textAlign: 'left',
   },
   headerText: {
-    textAlign: "left",
+    textAlign: 'left',
     paddingLeft: 30,
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   content: {
     padding: 20,
     paddingLeft: 60,
-    backgroundColor: "#000000",
+    backgroundColor: '#000000',
   },
   active: {
-    backgroundColor: "#2a2e38",
+    backgroundColor: '#2a2e38',
   },
   inactive: {
-    backgroundColor: "#2a2e38",
+    backgroundColor: '#2a2e38',
   },
   selectors: {
     marginBottom: 10,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   selector: {
-    backgroundColor: "#2a2e38",
+    backgroundColor: '#2a2e38',
     padding: 10,
   },
   activeSelector: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   selectTitle: {
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: '500',
     padding: 10,
   },
   multipleToggle: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginVertical: 30,
-    alignItems: "center",
+    alignItems: 'center',
   },
   multipleToggle__title: {
     fontSize: 16,
     marginRight: 8,
   },
   slider: {
-    minimumTrackTintColor: "#a991f1",
-    thumbTintColor: "#a991f1",
+    minimumTrackTintColor: '#a991f1',
+    thumbTintColor: '#a991f1',
     height: 40,
-    width: "90%",
+    width: '90%',
   },
   switch: {
-    width: "5",
+    width: '5',
     height: 20,
     marginVertical: 10,
   },

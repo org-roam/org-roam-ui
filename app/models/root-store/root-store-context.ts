@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react"
-import { RootStore } from "./root-store"
+import { createContext, useContext } from 'react'
+import { RootStore } from './root-store'
 
 /**
  * Create a context we can use to

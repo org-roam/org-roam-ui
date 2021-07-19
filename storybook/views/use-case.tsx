@@ -1,33 +1,33 @@
-import * as React from "react"
-import { View, Text, TextStyle, ViewStyle } from "react-native"
+import * as React from 'react'
+import { View, Text, TextStyle, ViewStyle } from 'react-native'
 
-const ROOT: ViewStyle = { backgroundColor: "#eee" }
-const TITLE: TextStyle = { fontWeight: "600", color: "#3d3d3d" }
+const ROOT: ViewStyle = { backgroundColor: '#eee' }
+const TITLE: TextStyle = { fontWeight: '600', color: '#3d3d3d' }
 const TITLE_WRAPPER: ViewStyle = {}
 const USE_CASE_WRAPPER: ViewStyle = {
-  position: "absolute",
+  position: 'absolute',
   top: 0,
   left: 0,
   right: 0,
-  borderTopColor: "#e6e6e6",
+  borderTopColor: '#e6e6e6',
   borderTopWidth: 1,
-  flexDirection: "row",
+  flexDirection: 'row',
 }
 const USE_CASE: TextStyle = {
   fontSize: 10,
-  color: "#666",
+  color: '#666',
   paddingHorizontal: 4,
   paddingBottom: 2,
 }
-const USAGE: TextStyle = { color: "#666", fontSize: 10, paddingTop: 0 }
+const USAGE: TextStyle = { color: '#666', fontSize: 10, paddingTop: 0 }
 const HEADER: ViewStyle = {
   paddingTop: 20,
   paddingBottom: 10,
   paddingHorizontal: 10,
-  borderBottomColor: "#e6e6e6",
+  borderBottomColor: '#e6e6e6',
   borderBottomWidth: 1,
 }
-const COMPONENT: ViewStyle = { backgroundColor: "#fff" }
+const COMPONENT: ViewStyle = { backgroundColor: '#fff' }
 
 export interface UseCaseProps {
   /** The title. */
@@ -48,7 +48,11 @@ export function UseCase(props: UseCaseProps) {
   const style: ViewStyle = {
     ...COMPONENT,
     ...{ padding: props.noPad ? 0 : 10 },
-    ...{ backgroundColor: props.noBackground ? "rgba(0,0,0,0)" : COMPONENT.backgroundColor },
+    ...{
+      backgroundColor: props.noBackground
+        ? 'rgba(0,0,0,0)'
+        : COMPONENT.backgroundColor,
+    },
     ...props.style,
   }
 

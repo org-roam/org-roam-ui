@@ -1,6 +1,11 @@
-import { StyleProp, TextStyle, TouchableOpacityProps, ViewStyle } from "react-native"
-import { ButtonPresetNames } from "./button.presets"
-import { TxKeyPath } from "../../i18n"
+import {
+  StyleProp,
+  TextStyle,
+  TouchableOpacityProps,
+  ViewStyle,
+} from 'react-native'
+import { ButtonPresetNames } from './button.presets'
+import { TxKeyPath } from '../../i18n'
 
 export interface ButtonProps extends TouchableOpacityProps {
   /**

@@ -4,9 +4,14 @@
  *
  * You'll likely spend most of your time in this file.
  */
-import React from "react"
-import { createStackNavigator } from "@react-navigation/stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen, GraphScreen } from "../screens"
+import React from 'react'
+import { createStackNavigator } from '@react-navigation/stack'
+import {
+  WelcomeScreen,
+  DemoScreen,
+  DemoListScreen,
+  GraphScreen,
+} from '../screens'
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -34,11 +39,11 @@ export function MainNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: "transparent" },
+        cardStyle: { backgroundColor: 'transparent' },
         headerShown: false,
       }}
     >
-        <Stack.Screen name="graph" component={GraphScreen}/>
+      <Stack.Screen name="graph" component={GraphScreen} />
     </Stack.Navigator>
   )
 }
@@ -55,5 +60,5 @@ export function MainNavigator() {
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome"]
+const exitRoutes = ['welcome']
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import * as QueryString from "query-string"
+import React, { useState, useEffect } from 'react'
+import * as QueryString from 'query-string'
 
 interface StorybookQueryParams {
   storybook?: boolean
@@ -12,7 +12,7 @@ export const ToggleStorybook = (props) => {
   useEffect(() => {
     if (__DEV__) {
       // Load the storybook UI once
-      setStorybookUIRoot(() => require("./storybook").StorybookUIRoot)
+      setStorybookUIRoot(() => require('./storybook').StorybookUIRoot)
     }
   }, [])
 

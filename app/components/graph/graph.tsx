@@ -1,22 +1,27 @@
-import * as React from "react"
-import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, typography } from "../../theme"
-import { Text } from "../"
-import { flatten } from "ramda"
+import * as React from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { StyleProp, TextStyle, View, ViewStyle } from 'react-native'
+import { observer } from 'mobx-react-lite'
+import { color, typography } from '../../theme'
+import { Text } from '../'
+import { flatten } from 'ramda'
 
 //import data from "../../data/miserables.json"
 //import genRandomTree from "../../data/randomdata";
 //import gData from "../../data/rando.json"
 
-import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from "react-force-graph"
-import * as d3 from "d3-force-3d"
+import {
+  ForceGraph2D,
+  ForceGraph3D,
+  ForceGraphVR,
+  ForceGraphAR,
+} from 'react-force-graph'
+import * as d3 from 'd3-force-3d'
 //import * as three from "three"
-import SpriteText from "three-spritetext"
+import SpriteText from 'three-spritetext'
 
 const CONTAINER: ViewStyle = {
-  justifyContent: "center",
+  justifyContent: 'center',
 }
 
 const TEXT: TextStyle = {
@@ -35,16 +40,25 @@ export interface GraphProps {
   setPhysics
   nodeIds: string[]
   threeDim
-    setThreeDim
-    local
-    setLocal
+  setThreeDim
+  local
+  setLocal
 }
 
 /**
  * Describe your component here
  */
 export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
-  const { style, physics, setPhysics, gData, threeDim, setThreeDim, local, setLocal } = props
+  const {
+    style,
+    physics,
+    setPhysics,
+    gData,
+    threeDim,
+    setThreeDim,
+    local,
+    setLocal,
+  } = props
   const styles = flatten([CONTAINER, style])
 
   const fgRef = useRef()
@@ -60,30 +74,30 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
     const fg = fgRef.current
     //fg.d3Force('center').strength(0.05);
     if (physics.gravityOn) {
-      fg.d3Force("x", d3.forceX().strength(physics.gravity))
-      fg.d3Force("y", d3.forceY().strength(physics.gravity))
+      fg.d3Force('x', d3.forceX().strength(physics.gravity))
+      fg.d3Force('y', d3.forceY().strength(physics.gravity))
       if (threeDim) {
         if (physics.galaxy) {
-          fg.d3Force("x", d3.forceX().strength(physics.gravity / 5))
-          fg.d3Force("z", d3.forceZ().strength(physics.gravity / 5))
+          fg.d3Force('x', d3.forceX().strength(physics.gravity / 5))
+          fg.d3Force('z', d3.forceZ().strength(physics.gravity / 5))
         } else {
-          fg.d3Force("x", d3.forceX().strength(physics.gravity))
-          fg.d3Force("z", d3.forceZ().strength(physics.gravity))
+          fg.d3Force('x', d3.forceX().strength(physics.gravity))
+          fg.d3Force('z', d3.forceZ().strength(physics.gravity))
         }
       } else {
-        fg.d3Force("z", null)
+        fg.d3Force('z', null)
       }
     } else {
-      fg.d3Force("x", null)
-      fg.d3Force("y", null)
-      threeDim ? fg.d3Force("z", null) : null
+      fg.d3Force('x', null)
+      fg.d3Force('y', null)
+      threeDim ? fg.d3Force('z', null) : null
     }
-    fg.d3Force("link").strength(physics.linkStrength)
-    fg.d3Force("link").iterations(physics.linkIts)
+    fg.d3Force('link').strength(physics.linkStrength)
+    fg.d3Force('link').iterations(physics.linkIts)
     physics.collision
-      ? fg.d3Force("collide", d3.forceCollide().radius(20))
-      : fg.d3Force("collide", null)
-    fg.d3Force("charge").strength(physics.charge)
+      ? fg.d3Force('collide', d3.forceCollide().radius(20))
+      : fg.d3Force('collide', null)
+    fg.d3Force('charge').strength(physics.charge)
   })
 
   // For the expandable version of the graph
@@ -143,7 +157,7 @@ export const Graph = observer(function Graph(props: GraphProps): JSX.Element {
   }
 
   const handleNodeHover = (node) => {
-    console.log("hover")
+    console.log('hover')
     if (!selectedNode) {
       highlightNodes.clear()
       highlightLinks.clear()
@@ -211,19 +225,21 @@ onLinkHover={handleLinkHover}
 
   const getLocalGraphData = (node) => {
     console.log(localGraphData)
-    localGraphData.nodes.length ? setLocalGraphData({ nodes: [], links: [] }) : null
+    localGraphData.nodes.length
+      ? setLocalGraphData({ nodes: [], links: [] })
+      : null
     let g = localGraphData
     console.log(g.nodes)
     if (!node.local) {
       g = { nodes: [], links: [] }
-      console.log("length is 0")
+      console.log('length is 0')
       node.local = true //keep track of these boys
       g.nodes.push(node) //only add the clicked node if its the first
     }
     node.links.length &&
       node.links.forEach((neighborLink) => {
         if (!neighborLink.local) {
-          console.log("0")
+          console.log('0')
           neighborLink.local = true
           g.links.push(neighborLink)
           console.log(neighborLink)
@@ -231,23 +247,23 @@ onLinkHover={handleLinkHover}
           const sourceNode = gData.nodes[neighborLink.sourceIndex]
           if (targetNode.id !== sourceNode.id) {
             if (targetNode.id === node.id) {
-              console.log("1. I am the target, the source is ")
+              console.log('1. I am the target, the source is ')
               console.log(sourceNode)
               if (!sourceNode.local) {
-                console.log("2. The source is not local")
+                console.log('2. The source is not local')
                 sourceNode.local = true
                 g.nodes.push(sourceNode)
               } else {
-                console.log("2.5 The source is already local")
+                console.log('2.5 The source is already local')
               }
             } else {
-              console.log("3. I am the source")
+              console.log('3. I am the source')
               if (!targetNode.local) {
-                console.log("4. The target is not local.")
+                console.log('4. The target is not local.')
                 targetNode.local = true
                 g.nodes.push(targetNode)
               } else {
-                console.log("The target is already local")
+                console.log('The target is already local')
               }
             }
           }
@@ -257,7 +273,7 @@ onLinkHover={handleLinkHover}
   }
 
   const selectClick = (node, event) => {
-      window.open('org-protocol://roam-node?node=' + node.id, '_self');
+    window.open('org-protocol://roam-node?node=' + node.id, '_self')
     highlightNodes.clear()
     highlightLinks.clear()
     console.log(localGraphData)
@@ -275,11 +291,11 @@ onLinkHover={handleLinkHover}
     setDoubleClick(event.timeStamp)
   }
 
-    useEffect(()=>{
-       if(local && selectedNode) {
-         getLocalGraphData(selectedNode)
-       }
-    }, [local])
+  useEffect(() => {
+    if (local && selectedNode) {
+      getLocalGraphData(selectedNode)
+    }
+  }, [local])
   return (
     <View style={style}>
       {!threeDim ? (
@@ -293,39 +309,44 @@ onLinkHover={handleLinkHover}
             !physics.colorful
               ? (node) => {
                   if (highlightNodes.size === 0) {
-                    return "rgb(100, 100, 100, 1)"
+                    return 'rgb(100, 100, 100, 1)'
                   } else {
-                    return highlightNodes.has(node) ? "#a991f1" : "rgb(50, 50, 50, 0.5)"
+                    return highlightNodes.has(node)
+                      ? '#a991f1'
+                      : 'rgb(50, 50, 50, 0.5)'
                   }
                 }
               : (node) => {
-                  if (node.neighbors.length === 1 || node.neighbors.length === 2) {
+                  if (
+                    node.neighbors.length === 1 ||
+                    node.neighbors.length === 2
+                  ) {
                     return [
-                      "#ff665c",
-                      "#e69055",
-                      "#7bc275",
-                      "#4db5bd",
-                      "#FCCE7B",
-                      "#51afef",
-                      "#1f5582",
-                      "#C57BDB",
-                      "#a991f1",
-                      "#5cEfFF",
-                      "#6A8FBF",
+                      '#ff665c',
+                      '#e69055',
+                      '#7bc275',
+                      '#4db5bd',
+                      '#FCCE7B',
+                      '#51afef',
+                      '#1f5582',
+                      '#C57BDB',
+                      '#a991f1',
+                      '#5cEfFF',
+                      '#6A8FBF',
                     ][node.neighbors[0].index % 11]
                   } else {
                     return [
-                      "#ff665c",
-                      "#e69055",
-                      "#7bc275",
-                      "#4db5bd",
-                      "#FCCE7B",
-                      "#51afef",
-                      "#1f5582",
-                      "#C57BDB",
-                      "#a991f1",
-                      "#5cEfFF",
-                      "#6A8FBF",
+                      '#ff665c',
+                      '#e69055',
+                      '#7bc275',
+                      '#4db5bd',
+                      '#FCCE7B',
+                      '#51afef',
+                      '#1f5582',
+                      '#C57BDB',
+                      '#a991f1',
+                      '#5cEfFF',
+                      '#6A8FBF',
                     ][node.index % 11]
                   }
                 }
@@ -335,24 +356,26 @@ onLinkHover={handleLinkHover}
             !physics.colorful
               ? (link) => {
                   if (highlightLinks.size === 0) {
-                    return "rgb(50, 50, 50, 0.8)"
+                    return 'rgb(50, 50, 50, 0.8)'
                   } else {
-                    return highlightLinks.has(link) ? "#a991f1" : "rgb(50, 50, 50, 0.2)"
+                    return highlightLinks.has(link)
+                      ? '#a991f1'
+                      : 'rgb(50, 50, 50, 0.2)'
                   }
                 }
               : (link) =>
                   [
-                    "#ff665c",
-                    "#e69055",
-                    "#7bc275",
-                    "#4db5bd",
-                    "#FCCE7B",
-                    "#51afef",
-                    "#1f5582",
-                    "#C57BDB",
-                    "#a991f1",
-                    "#5cEfFF",
-                    "#6A8FBF",
+                    '#ff665c',
+                    '#e69055',
+                    '#7bc275',
+                    '#4db5bd',
+                    '#FCCE7B',
+                    '#51afef',
+                    '#1f5582',
+                    '#C57BDB',
+                    '#a991f1',
+                    '#5cEfFF',
+                    '#6A8FBF',
                   ][gData.nodes[link.sourceIndex].index % 11]
           }
           linkDirectionalParticles={physics.particles}
@@ -364,60 +387,70 @@ onLinkHover={handleLinkHover}
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           nodeVal={(node) => {
-            return highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
+            return highlightNodes.has(node)
+              ? node.neighbors.length + 5
+              : node.neighbors.length + 3
           }}
           linkDirectionalParticleWidth={physics.particleWidth}
           nodeCanvasObject={(node, ctx, globalScale) => {
             if (physics.labels) {
-              if (globalScale > physics.labelScale || highlightNodes.has(node)) {
-                const label = node.title.substring(0, Math.min(node.title.length, 30))
+              if (
+                globalScale > physics.labelScale ||
+                highlightNodes.has(node)
+              ) {
+                const label = node.title.substring(
+                  0,
+                  Math.min(node.title.length, 30),
+                )
                 const fontSize = 12 / globalScale
                 ctx.font = `${fontSize}px Sans-Serif`
                 const textWidth = ctx.measureText(label).width
-                const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) // some padding
+                const bckgDimensions = [textWidth * 1.1, fontSize].map(
+                  (n) => n + fontSize * 0.5,
+                ) // some padding
                 const fadeFactor = Math.min(
                   (3 * (globalScale - physics.labelScale)) / physics.labelScale,
                   1,
                 )
 
                 ctx.fillStyle =
-                  "rgba(20, 20, 20, " +
+                  'rgba(20, 20, 20, ' +
                   (highlightNodes.size === 0
                     ? 0.5 * fadeFactor
                     : highlightNodes.has(node)
                     ? 0.5
                     : 0.15 * fadeFactor) +
-                  ")"
+                  ')'
                 ctx.fillRect(
                   node.x - bckgDimensions[0] / 2,
                   node.y - bckgDimensions[1] / 2,
                   ...bckgDimensions,
                 )
 
-                ctx.textAlign = "center"
-                ctx.textBaseline = "middle"
+                ctx.textAlign = 'center'
+                ctx.textBaseline = 'middle'
                 ctx.fillStyle =
-                  "rgb(255, 255, 255, " +
+                  'rgb(255, 255, 255, ' +
                   (highlightNodes.size === 0
                     ? fadeFactor
                     : highlightNodes.has(node)
                     ? 1
                     : 0.3 * fadeFactor) +
-                  ")"
+                  ')'
                 ctx.fillText(label, node.x, node.y)
 
                 node.__bckgDimensions = bckgDimensions // to re-use in nodePointerAreaPaint
               }
             }
           }}
-          nodeCanvasObjectMode={() => "after"}
+          nodeCanvasObjectMode={() => 'after'}
           onNodeHover={physics.hover ? handleNodeHover : null}
           //onLinkHover={physics.hover ? handleLinkHover : null}
           d3AlphaDecay={physics.alphaDecay}
           d3AlphaMin={physics.alphaTarget}
           d3VelocityDecay={physics.velocityDecay}
           onBackgroundClick={handleBackgroundClick}
-          backgroundColor={"#242730"}
+          backgroundColor={'#242730'}
         />
       ) : (
         <ForceGraph3D
@@ -428,39 +461,44 @@ onLinkHover={handleLinkHover}
             !physics.colorful
               ? (node) => {
                   if (highlightNodes.size === 0) {
-                    return "rgb(100, 100, 100, 1)"
+                    return 'rgb(100, 100, 100, 1)'
                   } else {
-                    return highlightNodes.has(node) ? "purple" : "rgb(50, 50, 50, 0.5)"
+                    return highlightNodes.has(node)
+                      ? 'purple'
+                      : 'rgb(50, 50, 50, 0.5)'
                   }
                 }
               : (node) => {
-                  if (node.neighbors.length === 1 || node.neighbors.length === 2) {
+                  if (
+                    node.neighbors.length === 1 ||
+                    node.neighbors.length === 2
+                  ) {
                     return [
-                      "#ff665c",
-                      "#e69055",
-                      "#7bc275",
-                      "#4db5bd",
-                      "#FCCE7B",
-                      "#51afef",
-                      "#1f5582",
-                      "#C57BDB",
-                      "#a991f1",
-                      "#5cEfFF",
-                      "#6A8FBF",
+                      '#ff665c',
+                      '#e69055',
+                      '#7bc275',
+                      '#4db5bd',
+                      '#FCCE7B',
+                      '#51afef',
+                      '#1f5582',
+                      '#C57BDB',
+                      '#a991f1',
+                      '#5cEfFF',
+                      '#6A8FBF',
                     ][node.neighbors[0].index % 11]
                   } else {
                     return [
-                      "#ff665c",
-                      "#e69055",
-                      "#7bc275",
-                      "#4db5bd",
-                      "#FCCE7B",
-                      "#51afef",
-                      "#1f5582",
-                      "#C57BDB",
-                      "#a991f1",
-                      "#5cEfFF",
-                      "#6A8FBF",
+                      '#ff665c',
+                      '#e69055',
+                      '#7bc275',
+                      '#4db5bd',
+                      '#FCCE7B',
+                      '#51afef',
+                      '#1f5582',
+                      '#C57BDB',
+                      '#a991f1',
+                      '#5cEfFF',
+                      '#6A8FBF',
                     ][node.index % 11]
                   }
                 }
@@ -470,24 +508,26 @@ onLinkHover={handleLinkHover}
             !physics.colorful
               ? (link) => {
                   if (highlightLinks.size === 0) {
-                    return "rgb(50, 50, 50, 0.8)"
+                    return 'rgb(50, 50, 50, 0.8)'
                   } else {
-                    return highlightLinks.has(link) ? "purple" : "rgb(50, 50, 50, 0.2)"
+                    return highlightLinks.has(link)
+                      ? 'purple'
+                      : 'rgb(50, 50, 50, 0.2)'
                   }
                 }
               : (link) =>
                   [
-                    "#ff665c",
-                    "#e69055",
-                    "#7bc275",
-                    "#4db5bd",
-                    "#FCCE7B",
-                    "#51afef",
-                    "#1f5582",
-                    "#C57BDB",
-                    "#a991f1",
-                    "#5cEfFF",
-                    "#6A8FBF",
+                    '#ff665c',
+                    '#e69055',
+                    '#7bc275',
+                    '#4db5bd',
+                    '#FCCE7B',
+                    '#51afef',
+                    '#1f5582',
+                    '#C57BDB',
+                    '#a991f1',
+                    '#5cEfFF',
+                    '#6A8FBF',
                   ][gData.nodes[link.sourceIndex].index % 11]
           }
           linkDirectionalParticles={physics.particles}
@@ -498,7 +538,9 @@ onLinkHover={handleLinkHover}
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
           nodeVal={(node) =>
-            highlightNodes.has(node) ? node.neighbors.length * 3 : node.neighbors.length * 2
+            highlightNodes.has(node)
+              ? node.neighbors.length * 3
+              : node.neighbors.length * 2
           }
           linkDirectionalParticleWidth={physics.particleWidth}
           onNodeHover={physics.hover ? handleNodeHover : null}
@@ -512,8 +554,8 @@ onLinkHover={handleLinkHover}
                   if (highlightNodes.has(node)) {
                     console.log(node.title)
                     const sprite = new SpriteText(node.title.substring(0, 30))
-                    console.log("didnt crash here 2")
-                    sprite.color = "#ffffff"
+                    console.log('didnt crash here 2')
+                    sprite.color = '#ffffff'
                     sprite.textHeight = 8
                     return sprite
                   } else {
@@ -524,7 +566,7 @@ onLinkHover={handleLinkHover}
           nodeThreeObjectExtend={true}
           onNodeClick={selectClick}
           onBackgroundClick={handleBackgroundClick}
-          backgroundColor={"#242730"}
+          backgroundColor={'#242730'}
         />
       )}
     </View>

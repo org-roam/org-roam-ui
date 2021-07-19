@@ -1,6 +1,10 @@
-import React, { useState, useEffect, useRef } from "react"
-import { BackHandler } from "react-native"
-import { PartialState, NavigationState, NavigationContainerRef } from "@react-navigation/native"
+import React, { useState, useEffect, useRef } from 'react'
+import { BackHandler } from 'react-native'
+import {
+  PartialState,
+  NavigationState,
+  NavigationContainerRef,
+} from '@react-navigation/native'
 
 export const RootNavigation = {
   navigate(name: string) {
@@ -13,7 +17,9 @@ export const RootNavigation = {
   },
 }
 
-export const setRootNavigation = (ref: React.RefObject<NavigationContainerRef>) => {
+export const setRootNavigation = (
+  ref: React.RefObject<NavigationContainerRef>,
+) => {
   for (const method in RootNavigation) {
     RootNavigation[method] = (...args: any) => {
       if (ref.current) {
@@ -26,7 +32,9 @@ export const setRootNavigation = (ref: React.RefObject<NavigationContainerRef>) 
 /**
  * Gets the current screen from any navigation state.
  */
-export function getActiveRouteName(state: NavigationState | PartialState<NavigationState>) {
+export function getActiveRouteName(
+  state: NavigationState | PartialState<NavigationState>,
+) {
   const route = state.routes[state.index]
 
   // Found the active route -- return the name
@@ -79,10 +87,11 @@ export function useBackButtonHandler(
     }
 
     // Subscribe when we come to life
-    BackHandler.addEventListener("hardwareBackPress", onBackPress)
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
 
     // Unsubscribe when we're done
-    return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress)
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress)
   }, [ref])
 }
 
@@ -91,7 +100,9 @@ export function useBackButtonHandler(
  */
 export function useNavigationPersistence(storage: any, persistenceKey: string) {
   const [initialNavigationState, setInitialNavigationState] = useState()
-  const [isRestoringNavigationState, setIsRestoringNavigationState] = useState(true)
+  const [isRestoringNavigationState, setIsRestoringNavigationState] = useState(
+    true,
+  )
 
   const routeNameRef = useRef()
   const onNavigationStateChange = (state) => {

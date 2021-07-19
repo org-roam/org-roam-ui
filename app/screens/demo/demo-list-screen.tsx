@@ -1,10 +1,16 @@
-import React, { useEffect } from "react"
-import { FlatList, TextStyle, View, ViewStyle, ImageStyle } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { observer } from "mobx-react-lite"
-import { Header, Screen, Text, Wallpaper, AutoImage as Image } from "../../components"
-import { color, spacing } from "../../theme"
-import { useStores } from "../../models"
+import React, { useEffect } from 'react'
+import { FlatList, TextStyle, View, ViewStyle, ImageStyle } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { observer } from 'mobx-react-lite'
+import {
+  Header,
+  Screen,
+  Text,
+  Wallpaper,
+  AutoImage as Image,
+} from '../../components'
+import { color, spacing } from '../../theme'
+import { useStores } from '../../models'
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -19,14 +25,14 @@ const HEADER: TextStyle = {
 }
 const HEADER_TITLE: TextStyle = {
   fontSize: 12,
-  fontWeight: "bold",
+  fontWeight: 'bold',
   letterSpacing: 1.5,
   lineHeight: 15,
-  textAlign: "center",
+  textAlign: 'center',
 }
 const LIST_CONTAINER: ViewStyle = {
-  alignItems: "center",
-  flexDirection: "row",
+  alignItems: 'center',
+  flexDirection: 'row',
   padding: 10,
 }
 const IMAGE: ImageStyle = {
@@ -59,7 +65,11 @@ export const DemoListScreen = observer(function DemoListScreen() {
   return (
     <View testID="DemoListScreen" style={FULL}>
       <Wallpaper />
-      <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
+      <Screen
+        style={CONTAINER}
+        preset="fixed"
+        backgroundColor={color.transparent}
+      >
         <Header
           headerTx="demoListScreen.title"
           leftIcon="back"
