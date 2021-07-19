@@ -20,10 +20,19 @@
   :init-value nil
   (cond
    (org-roam-ui-mode
+    (setq org-export-with-broken-links t)
     (setq-local httpd-port 35901)
     (setq httpd-root org-roam-ui/app-build-dir)
-    (httpd-start))
+    (httpd-start)
+    (org-roam-with-temp-buffer nil
+    (let ((nodes (org-roam-db-query
+                  `[:select [id file] :from nodes])))
+      (dotimes (idx (length nodes))
+        (let ((id (car (elt nodes idx)))
+                (file (elt (elt nodes idx) 1)))
+                (eval (org-roam-ui-html-servlet id file)))))))
    (t
+    (setq org-export-with-broken-links nil)
     (httpd-stop))))
 
 
@@ -60,5 +69,14 @@
         (insert (json-encode  ui-theme))
         (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))))
 
+;; Taken from org-roam-server
+(defun org-roam-ui-html-servlet (id file)
+  "Export the FILE to HTML and create a servlet for it."
+  `(defservlet* ,(intern (concat "files/" (concat id ".html"))) text/html ()
+     (let ((html-string))
+       (org-roam-with-temp-buffer ,file
+         (setq-local org-export-with-sub-superscripts nil)
+         (setq html-string (org-export-as 'html)))
+       (insert html-string))))
 
 (provide 'org-roam-ui)
