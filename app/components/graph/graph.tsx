@@ -257,6 +257,7 @@ onLinkHover={handleLinkHover}
   }
 
   const selectClick = (node, event) => {
+      window.open('org-protocol://roam-node?node=' + node.id, '_self');
     highlightNodes.clear()
     highlightLinks.clear()
     console.log(localGraphData)
