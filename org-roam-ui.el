@@ -86,7 +86,8 @@
 
 (defservlet* current-node-data text/event-stream ()
   (insert (format  "data: %s\n\n"
-                       org-roam-ui-current-node)))
+                       org-roam-ui-current-node))
+  (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Headers "*" :Access-Control-Allow-Origin "*"))
 
 (defservlet* current-buffer-data.txt text/event-stream (token)
   (insert (format "data: %s\n\n"
@@ -119,5 +120,5 @@
 
 
 (defvar org-roam-ui-current-buffer)
-(defvar org-roam-ui-current-node)
+(defvar org-roam-ui-current-node nil)
 (provide 'org-roam-ui)
