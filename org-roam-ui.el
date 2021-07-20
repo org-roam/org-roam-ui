@@ -54,7 +54,8 @@
     (if
       (boundp 'doom-themes--colors)
       (let*
-        ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
+        ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25)))
+         (ui-theme (list nil)))
         (progn
           (dolist (color colors)
             (push (cons (car color) (car (cdr color))) ui-theme))
