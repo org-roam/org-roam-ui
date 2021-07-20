@@ -11,5 +11,5 @@ export type OrgRoamNode = {
 
 export type OrgRoamLink = {
   source: string
-  dest: string
+  target: string
 }
