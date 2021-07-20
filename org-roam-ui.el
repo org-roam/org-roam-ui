@@ -30,8 +30,13 @@
       (dotimes (idx (length nodes))
         (let ((id (car (elt nodes idx)))
                 (file (elt (elt nodes idx) 1)))
-                (eval (org-roam-ui-html-servlet id file)))))))
+                (eval (org-roam-ui-html-servlet id file))))))
+   (add-hook 'post-command-hook #'org-roam-ui-check-buffer))
    (t
+    (remove-hook 'post-command-hook #'org-roam-ui-check-buffer)
+    (dolist (buf (org-roam-buffer-list))
+      (with-current-buffer buf
+        (remove-hook 'post-command-hook #'org-roam-ui-node-p t)))
     (setq org-export-with-broken-links nil)
     (httpd-stop))))
 
@@ -79,4 +84,40 @@
          (setq html-string (org-export-as 'html)))
        (insert html-string))))
 
+(defservlet* current-node-data text/event-stream ()
+  (insert (format  "data: %s\n\n"
+                       org-roam-ui-current-node)))
+
+(defservlet* current-buffer-data.txt text/event-stream (token)
+  (insert (format "data: %s\n\n"
+                       (buffer-file-name org-roam-server-current-buffer))
+                      (car (last
+                            (split-string
+                             (org-roam--path-to-slug
+                              (buffer-name org-roam-server-current-buffer))
+                             "/")))
+                    ""))
+
+
+(defun org-roam-ui-update-current-buffer ()
+  "Set the org-roam-ui-current-buffer to the current buffer"
+          (setq org-roam-ui-current-buffer (current-buffer))
+          )
+
+(defun org-roam-ui-check-buffer ()
+  (when (org-roam-buffer-p (current-buffer))
+        (add-hook 'post-command-hook #'org-roam-ui-node-p nil t)
+        (org-roam-ui-update-current-buffer)
+    ))
+
+(defun org-roam-ui-node-p ()
+  (if-let ((current-node (org-roam-node-at-point))
+           (node-id (org-roam-node-id current-node)))
+    ;  (message "%s" node-id)
+      (setq org-roam-ui-current-node node-id)
+      ))
+
+
+(defvar org-roam-ui-current-buffer)
+(defvar org-roam-ui-current-node)
 (provide 'org-roam-ui)
