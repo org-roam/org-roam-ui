@@ -61,6 +61,6 @@
             (push (cons (car color) (car (cdr color))) ui-theme))
           (insert (json-encode  ui-theme))))
       (insert "{}"))
-    (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*")))
+    (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
 
 (provide 'org-roam-ui)
