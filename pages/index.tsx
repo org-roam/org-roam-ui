@@ -7,6 +7,8 @@ import type { ForceGraph2D as TForceGraph2D } from 'react-force-graph'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { GraphData, NodeObject } from 'force-graph'
 
+import { useWindowSize } from '@react-hook/window-size'
+
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -153,6 +155,11 @@ export const Graph = function (props: GraphProps) {
 
   const forceGraphRef = useRef<any>(null)
 
+  // react-force-graph does not track window size
+  // https://github.com/vasturiano/react-force-graph/issues/233
+  // does not work below a certain width
+  const [windowWidth, windowHeight] = useWindowSize()
+
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
   const [selectedNode, setSelectedNode] = useState<NodeObject | null>()
 
@@ -238,6 +245,8 @@ export const Graph = function (props: GraphProps) {
       <ForceGraph2D
         ref={forceGraphRef}
         graphData={local ? localGraphData : graphData}
+        width={windowWidth}
+        height={windowHeight}
         nodeColor={(node) => {
           if (!physics.colorful) {
             if (Object.keys(highlightedNodes).length === 0) {
@@ -265,7 +274,7 @@ export const Graph = function (props: GraphProps) {
           if (node.neighbors.length === 1 || node.neighbors.length === 2) {
             return palette[node.neighbors[0].index % 11]
           }
-          
+
           return palette[node.index % 11]
         }}
         linkColor={(link) => {
