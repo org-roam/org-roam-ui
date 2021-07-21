@@ -89,17 +89,6 @@
                        org-roam-ui-current-node))
   (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Headers "*" :Access-Control-Allow-Origin "*"))
 
-(defservlet* current-buffer-data.txt text/event-stream (token)
-  (insert (format "data: %s\n\n"
-                       (buffer-file-name org-roam-server-current-buffer))
-                      (car (last
-                            (split-string
-                             (org-roam--path-to-slug
-                              (buffer-name org-roam-server-current-buffer))
-                             "/")))
-                    ""))
-
-
 (defun org-roam-ui-update-current-buffer ()
   "Set the org-roam-ui-current-buffer to the current buffer"
           (setq org-roam-ui-current-buffer (current-buffer))
@@ -111,11 +100,9 @@
         (org-roam-ui-update-current-buffer)
     ))
 
-(defun org-roam-ui-node-p ()
-  (if-let ((current-node (org-roam-node-at-point))
-           (node-id (org-roam-node-id current-node)))
-    ;  (message "%s" node-id)
-      (setq org-roam-ui-current-node node-id)
+(defun org-roam-ui-node-id ()
+  (if-let (current-node-id (org-id-get))
+      (setq org-roam-ui-current-node current-node-id)
       ))
 
 
