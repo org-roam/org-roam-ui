@@ -23,7 +23,7 @@ const initialPhysics = {
   collision: true,
   linkStrength: 0.1,
   linkIts: 1,
-  particles: 2,
+  particles: 0,
   linkOpacity: 0.4,
   linkWidth: 1,
   particleWidth: 4,
@@ -289,6 +289,7 @@ export const Graph = function (props: GraphProps) {
           return linkIsHighlighted ? '#a991f1' : 'rgb(50, 50, 50, 0.2)'
         }}
         linkDirectionalParticles={physics.particles}
+        linkDirectionalParticleWidth={physics.particleWidth}
         nodeLabel={(node) => (node as OrgRoamNode).title}
         linkWidth={(link) => {
           const linkIsHighlighted =
@@ -304,7 +305,6 @@ export const Graph = function (props: GraphProps) {
           const highlightSize = highlightedNodes[node.id!] ? 2 : 0
           return basicSize + highlightSize
         }}
-        linkDirectionalParticleWidth={physics.particleWidth}
         nodeCanvasObject={(node, ctx, globalScale) => {
           if (!physics.labels) {
             return
