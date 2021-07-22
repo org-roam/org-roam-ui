@@ -277,7 +277,6 @@ export interface TweakProps {
 }
 export const Tweaks = function (props: TweakProps) {
   const { physics, setPhysics, threeDim } = props
-
   return (
     <Box
       zIndex="overlay"
@@ -440,7 +439,7 @@ export const Tweaks = function (props: TweakProps) {
               <EnableSection
                 label="Directional Particles"
                 value={physics.particles ? true : false}
-                onChange={() => setPhysics({ ...physics, labels: physics.particles ? 0 : 1 })}
+                onChange={() => setPhysics({ ...physics, particles: physics.particles ? 0 : 1 })}
               >
                 <SliderWithInfo
                   label="Particle Number"
