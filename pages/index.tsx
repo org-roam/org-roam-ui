@@ -72,10 +72,11 @@ const initialPhysics = {
   collisionStrength: 0,
   linkStrength: 0.1,
   linkIts: 1,
-  particles: 0,
+  particles: false,
+  particlesNumber: 0,
+  particlesWidth: 4,
   linkOpacity: 0.4,
   linkWidth: 1,
-  particleWidth: 4,
   nodeRel: 4,
   labels: true,
   labelScale: 1.5,
@@ -92,6 +93,9 @@ const initialPhysics = {
   click: 'select',
   doubleClick: 'local',
   iterations: 0,
+  highlight: true,
+  highlightNodeSize: 2,
+  highlightLinkSize: 2,
 }
 
 const initialTheme = {
@@ -448,36 +452,36 @@ export const Tweaks = function (props: TweakProps) {
               </EnableSection>
               <EnableSection
                 label="Directional Particles"
-                value={physics.particles ? true : false}
-                onChange={() => setPhysics({ ...physics, particles: physics.particles ? 0 : 1 })}
+                value={physics.particles}
+                onChange={() => setPhysics({ ...physics, particles: !physics.particles })}
               >
                 <SliderWithInfo
                   label="Particle Number"
-                  value={physics.particles}
+                  value={physics.particlesNumber}
                   max={5}
                   step={1}
-                  onChange={(value) => setPhysics({ ...physics, particles: value })}
+                  onChange={(value) => setPhysics({ ...physics, particlesNumber: value })}
                 />
                 <SliderWithInfo
                   label="Particle Size"
-                  value={physics.particleWidth}
+                  value={physics.particlesWidth}
                   onChange={(value) => setPhysics({ ...physics, particleWidth: value })}
                 />
               </EnableSection>
               <EnableSection
-                label="Hightlight"
-                onChange={() => setPhysics({ ...physics, highlight: !physics.hightligth })}
-                value={physics.hightlight}
+                label="Highlight"
+                onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
+                value={physics.highlight}
               >
                 <SliderWithInfo
                   label="Highlight Link Thickness Multiplier"
-                  value={physics.highlightLink}
-                  onChange={(value) => setPhysics({ ...physics, highlightLink: value })}
+                  value={physics.highlightLinkSize}
+                  onChange={(value) => setPhysics({ ...physics, highlightLinkSize: value })}
                 />
                 <SliderWithInfo
                   label="Highlight Node Size Multiplier"
-                  value={physics.particleWidth}
-                  onChange={(value) => setPhysics({ ...physics, highlightNode: value })}
+                  value={physics.highlightNodeSize}
+                  onChange={(value) => setPhysics({ ...physics, highlightNodeSize: value })}
                 />
                 <Flex justifyContent="space-between">
                   <Text></Text>
@@ -688,8 +692,8 @@ export const Graph = function (props: GraphProps) {
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
       const basicSize = 3 + links.length
-      const highlightSize = highlightedNodes[node.id!] ? 2 : 0
-      return basicSize + highlightSize
+      const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
+      return basicSize * highlightSize
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
@@ -743,7 +747,7 @@ export const Graph = function (props: GraphProps) {
     },
     nodeCanvasObjectMode: () => 'after',
 
-    linkDirectionalParticles: physics.particles,
+    linkDirectionalParticles: physics.particles ? physics.particlesNumber : undefined,
     linkColor: (link) => {
       const linkIsHighlighted =
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
@@ -756,9 +760,9 @@ export const Graph = function (props: GraphProps) {
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
 
-      return linkIsHighlighted ? 2 * physics.linkWidth : physics.linkWidth
+      return linkIsHighlighted ? physics.highlightLinkSize * physics.linkWidth : physics.linkWidth
     },
-    linkDirectionalParticleWidth: physics.particleWidth,
+    linkDirectionalParticleWidth: physics.particlesWidth,
 
     d3AlphaDecay: physics.alphaDecay,
     d3AlphaMin: physics.alphaMin,
