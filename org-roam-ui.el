@@ -36,7 +36,7 @@
       (cons 'links (mapcar 'links-row-to-cons links-db-rows))))))
       (progn
         (insert response)
-        (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))))
+        (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*"))))
 
 (defun nodes-row-to-cons (row)
   (list

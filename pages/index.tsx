@@ -189,94 +189,104 @@ export function GraphPage() {
   )
 }
 
+export interface InfoTooltipProps {
+  infoText?: string | boolean
+}
+export const InfoTooltip = (props: InfoTooltipProps) => {
+  const { infoText } = props
+  return (
+    <Box paddingLeft="1">
+      <Tooltip label={infoText} placement="top" color="gray.100" bg="gray.800" hasArrow>
+        <InfoOutlineIcon />
+      </Tooltip>
+    </Box>
+  )
+}
+export interface SliderWithInfoProps {
+  min?: number
+  max?: number
+  step?: number
+  value: number
+  onChange: (arg0: number) => void
+  label: string
+  infoText?: string
+}
+export const SliderWithInfo = ({
+  min = 0,
+  max = 10,
+  step = 0.1,
+  value = 1,
+  ...rest
+}: SliderWithInfoProps) => {
+  const { onChange, label, infoText } = rest
+  return (
+    <Box>
+      <Box display="flex" alignItems="flex-end">
+        <Text>{label}</Text>
+        {infoText && <InfoTooltip infoText={infoText} />}
+      </Box>
+      <Slider value={value} onChange={onChange} min={min} max={max} step={step}>
+        <SliderTrack>
+          <SliderFilledTrack />
+        </SliderTrack>
+        <Tooltip label={value.toFixed(1)}>
+          <SliderThumb />
+        </Tooltip>
+      </Slider>
+    </Box>
+  )
+}
+
+export interface EnableSliderProps extends SliderWithInfoProps {
+  enableValue: boolean
+  onEnableValueChange: () => void
+  enableLabel: string
+  enableInfoText?: string | boolean
+}
+
+export const EnableSlider = ({ min = 0, max = 10, step = 0.1, ...rest }: EnableSliderProps) => {
+  const {
+    value,
+    onChange,
+    label,
+    infoText,
+    enableValue,
+    onEnableValueChange,
+    enableInfoText,
+    enableLabel,
+  } = rest
+  return (
+    <Box>
+      <Box display="flex" justifyContent="space-between">
+        <Box display="flex" alignItems="center">
+          <Text>{enableLabel}</Text>
+          {enableInfoText && <InfoTooltip infoText={enableInfoText} />}
+        </Box>
+        <Switch isChecked={enableValue} onChange={onEnableValueChange} />
+      </Box>
+      {enableValue && (
+        <SliderWithInfo
+          value={value}
+          onChange={onChange}
+          min={min}
+          max={max}
+          step={step}
+          label={label}
+          infoText={infoText}
+        />
+      )}
+    </Box>
+  )
+}
+
 export interface TweakProps {
   physics: typeof initialPhysics
   setPhysics: any
   threeDim: boolean
   local: boolean
 }
-
 export const Tweaks = function (props: TweakProps) {
   const { physics, setPhysics, threeDim, local } = props
-
-  interface InfoTooltipProps {
-    infoText: string
-  }
-  const InfoTooltip = (props: InfoTooltipProps) => {
-    const { infoText } = props
-    return (
-      <Box paddingLeft="1">
-        <Tooltip label={infoText} placement="top" color="gray.100" bg="gray.800" hasArrow>
-          <InfoOutlineIcon />
-        </Tooltip>
-      </Box>
-    )
-  }
-
-  interface SliderWithInfo {
-    min: number
-    max: number
-    step: number
-    value: number
-    onChange: (arg0: number) => void
-    label: string
-    infoText: string
-  }
-
-  const SliderWithInfo = (props: SliderWithLabel) => {
-    const { min, max, step, value, onChange, label, infoText } = props
-    return (
-      <Box>
-        <Box display="flex" alignItems="center">
-          <Text>{label}</Text>
-          <InfoTooltip infoText={infoText} />
-        </Box>
-        <Slider value={value} onChange={onChange} min={min} max={max} step={step}>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <Tooltip label={value} color="gray.100" bg="gray.800">
-            <SliderThumb />
-          </Tooltip>
-        </Slider>
-      </Box>
-    )
-  }
-
-  interface SliderWithoutInfo {
-    min: number
-    max: number
-    step: number
-    val: number
-    change: (arg0: number) => void
-    label: string
-    physics: typeof initialPhysics
-    setPhysics: any
-  }
-
-  const SliderWithoutInfo = (props: SliderWithoutInfo) => {
-    const { min, max, step, physics, setPhysics, label } = props
-    return (
-      <Box>
-        <Box display="flex">
-          <Text>{label}</Text>
-        </Box>
-        <Slider
-          value={physics.gravity}
-          onChange={(value) => setPhysics({ ...physics, gravity: value })}
-          min={min}
-          max={max}
-          step={step}
-          focusThumbOnChange={false}
-        >
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb />
-        </Slider>
-      </Box>
-    )
-  }
 
   return (
     <Container zIndex="overlay" position="absolute" bg="white" w="xs">
@@ -310,59 +320,21 @@ export const Tweaks = function (props: TweakProps) {
               divider={<StackDivider borderColor="gray.200" />}
               align="stretch"
             >
-              <Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Text>Gravity</Text>
-                  <Switch
-                    id="physicsOn"
-                    onChange={() => setPhysics({ ...physics, gravityOn: !physics.gravityOn })}
-                    isChecked={physics.gravityOn}
-                  />
-                </Box>
-                {physics.gravityOn && (
-                  <Box>
-                    <Text>Strength</Text>
-                    <Slider
-                      value={physics.gravity}
-                      onChange={(value) => setPhysics({ ...physics, gravity: value })}
-                      min={0}
-                      max={1}
-                      step={0.01}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <Tooltip label={physics.gravity}>
-                        <SliderThumb />
-                      </Tooltip>
-                    </Slider>
-                  </Box>
-                )}
-              </Box>
-              <SliderWithoutInfo
-                label="Test"
-                min={0}
-                max={1}
-                step={0.01}
-                physics={physics}
-                setPhysics={setPhysics}
+              <EnableSlider
+                enableLabel="Gravity"
+                enableValue={physics.gravityOn}
+                onEnableValueChange={() =>
+                  setPhysics({ ...physics, gravityOn: !physics.gravityOn })
+                }
+                label="Strength"
+                value={physics.gravity * 10}
+                onChange={(v) => setPhysics({ ...physics, gravity: v / 10 })}
               />
-              <Box>
-                <Text>Repulsive Force</Text>
-                <Slider
-                  value={-physics.charge}
-                  onChange={(value) => setPhysics({ ...physics, charge: -value })}
-                  min={0}
-                  max={1000}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <Tooltip label={physics.charge}>
-                    <SliderThumb />
-                  </Tooltip>
-                </Slider>
-              </Box>
+              <SliderWithInfo
+                value={-physics.charge / 100}
+                onChange={(value) => setPhysics({ ...physics, charge: -100 * value })}
+                label="Repulsive Force"
+              />
               <Box>
                 <Box display="flex" justifyContent="space-between">
                   <Box display="flex" alignItems="center">
@@ -376,79 +348,32 @@ export const Tweaks = function (props: TweakProps) {
                   />
                 </Box>
                 {physics.collision && (
-                  <Box>
-                    <Text>Strength</Text>
-                    <Slider
-                      value={physics.collisionStrength}
-                      onChange={(value) => setPhysics({ ...physics, collisionStrength: value })}
-                      min={0}
-                      max={2}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <Tooltip label={physics.collisionStrength}>
-                        <SliderThumb />
-                      </Tooltip>
-                    </Slider>
-                  </Box>
+                  <SliderWithInfo
+                    value={physics.collisionStrength * 10}
+                    onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
+                    label="Strength"
+                  />
                 )}
               </Box>
-              <Box>
-                <Text>Link Strength</Text>
-                <Slider
-                  value={physics.linkStrength}
-                  onChange={(value) => setPhysics({ ...physics, linkStrength: value })}
-                  min={0}
-                  max={2}
-                  step={0.01}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <Tooltip label={physics.linkStrength}>
-                    <SliderThumb />
-                  </Tooltip>
-                </Slider>
-              </Box>
-              <StackDivider bg="grey.200" />
-              <Box>
-                <Box display="flex" alignItems="center">
-                  <Text>Link Iterations</Text>
-                  <InfoTooltip infoText="How many links down the line the physics of a single node effects (Slow)" />
-                </Box>
-                <Slider
-                  value={physics.linkIts}
-                  onChange={(value) => setPhysics({ ...physics, linkIts: value })}
-                  min={0}
-                  max={6}
-                  step={1}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <Tooltip label={physics.linkIts}>
-                    <SliderThumb />
-                  </Tooltip>
-                </Slider>
-              </Box>
-              <Box>
-                <Text>Viscosity</Text>
-                <Slider
-                  value={physics.velocityDecay}
-                  onChange={(value) => setPhysics({ ...physics, velocityDecay: value })}
-                  min={0}
-                  max={1}
-                  step={0.01}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <Tooltip label={physics.velocityDecay}>
-                    <SliderThumb />
-                  </Tooltip>
-                </Slider>
-              </Box>
+              <SliderWithInfo
+                value={physics.linkStrength * 5}
+                onChange={(value) => setPhysics({ ...physics, linkStrength: value / 5 })}
+                label="Link Force"
+              />
+              <SliderWithInfo
+                label="Link Iterations"
+                value={physics.linkIts}
+                onChange={(value) => setPhysics({ ...physics, linkIts: value })}
+                min={0}
+                max={6}
+                step={1}
+                infoText="How many links down the line the physics of a single node affects (Slow)"
+              />
+              <SliderWithInfo
+                label="Viscosity"
+                value={physics.velocityDecay * 10}
+                onChange={(value) => setPhysics({ ...physics, velocityDecay: value / 10 })}
+              />
             </VStack>
             <Box>
               <Accordion allowToggle>
@@ -464,49 +389,20 @@ export const Tweaks = function (props: TweakProps) {
                       divider={<StackDivider borderColor="gray.200" />}
                       align="stretch"
                     >
-                      <Box>
-                        <Text>Simulation Ticks</Text>
-                        <Slider value={0} min={0} max={1} step={0.01}>
-                          <SliderTrack>
-                            <SliderFilledTrack />
-                          </SliderTrack>
-                          <Tooltip label={physics.ticks}>
-                            <SliderThumb />
-                          </Tooltip>
-                        </Slider>
-                      </Box>
-                      <Box>
-                        <Text>Alpha Decay</Text>
-                        <Slider
-                          value={physics.alphaDecay}
-                          onChange={(value) => setPhysics({ ...physics, alphaDecay: value })}
-                          min={0}
-                          max={1}
-                          step={0.01}
-                        >
-                          <SliderTrack>
-                            <SliderFilledTrack />
-                          </SliderTrack>
-                          <Tooltip label={physics.alphaDecay}>
-                            <SliderThumb />
-                          </Tooltip>
-                        </Slider>
-                      </Box>
-                      <Text>Alpha Minimum</Text>
-                      <Slider
-                        value={physics.alphaMin}
-                        onChange={(value) => setPhysics({ ...physics, alphaMin: value })}
-                        min={0.01}
-                        max={1}
-                        step={0.01}
-                      >
-                        <SliderTrack>
-                          <SliderFilledTrack />
-                        </SliderTrack>
-                        <Tooltip label={physics.alphaMin}>
-                          <SliderThumb />
-                        </Tooltip>
-                      </Slider>
+                      <SliderWithInfo
+                        label="Iterations per tick"
+                        min={1}
+                        max={10}
+                        step={1}
+                        value={physics.iterations}
+                        onChange={(v) => setPhysics({ ...physics, iterations: v })}
+                        infoText="Number of times the physics simulation iterates per simulation step"
+                      />
+                      <SliderWithInfo
+                        label="Stabilization rate"
+                        value={physics.alphaDecay * 50}
+                        onChange={(value) => setPhysics({ ...physics, alphaDecay: value / 50 })}
+                      />
                     </VStack>
                   </AccordionPanel>
                 </AccordionItem>
