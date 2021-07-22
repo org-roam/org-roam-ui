@@ -414,6 +414,48 @@ export const Tweaks = function (props: TweakProps) {
               divider={<StackDivider borderColor="gray.200" />}
               align="stretch"
             >
+              <SliderWithInfo
+                label="Node size"
+                value={physics.nodeRel}
+                onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
+              />
+              <SliderWithInfo
+                label="Link width"
+                value={physics.linkWidth}
+                onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
+              />
+              <EnableSlider
+                enableLabel="Labels"
+                enableValue={physics.labels}
+                onEnableValueChange={() => setPhysics({ ...physics, labels: !physics.labels })}
+                label="Label Appearance Scale"
+                value={physics.labelScale * 5}
+                onChange={(value) => setPhysics({ ...physics, labelScale: value / 5 })}
+              />
+              <Box>
+                <EnableSlider
+                  enableLabel="Directional Particles"
+                  enableValue={physics.particles ? true : false}
+                  onEnableValueChange={() =>
+                    setPhysics({ ...physics, labels: physics.particles ? 0 : 1 })
+                  }
+                  label="Particle Number"
+                  value={physics.particles}
+                  max={5}
+                  step={1}
+                  onChange={(value) => setPhysics({ ...physics, particles: value })}
+                />
+                <SliderWithInfo
+                  label="Particle Size"
+                  value={physics.particleWidth}
+                  onChange={(value) => setPhysics({ ...physics, particleWidth: value })}
+                />
+              </Box>
+              <SliderWithInfo
+                label="Node size"
+                value={physics.nodeRel}
+                onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
+              />
               <Text>Ayyyy</Text>
             </VStack>
           </AccordionPanel>
