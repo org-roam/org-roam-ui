@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
+import React, { ComponentPropsWithoutRef, useEffect, useRef, useState, useMemo } from 'react'
 import { usePersistantState } from '../util/persistant-state'
 const d3promise = import('d3-force-3d')
 
@@ -489,7 +489,10 @@ export const Tweaks = function (props: TweakProps) {
                   onChange={(value) => setPhysics({ ...physics, highlightNodeSize: value })}
                 />
                 <Flex justifyContent="space-between">
-                  <Text></Text>
+                  <Text> Highlight node color </Text>
+                </Flex>
+                <Flex justifyContent="space-between">
+                  <Text> Highlight link color </Text>
                 </Flex>
               </EnableSection>
             </VStack>
@@ -606,13 +609,16 @@ export const Graph = function (props: GraphProps) {
     return scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
   })
 
-  const scopedGraphData =
-    scope.nodeIds.length === 0
-      ? graphData
-      : {
-          nodes: scopedNodes,
-          links: scopedLinks,
-        }
+  const scopedGraphData = useMemo(
+    () =>
+      scope.nodeIds.length === 0
+        ? graphData
+        : {
+            nodes: scopedNodes,
+            links: scopedLinks,
+          },
+    [scope],
+  )
 
   useEffect(() => {
     ;(async () => {
