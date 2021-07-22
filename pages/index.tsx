@@ -10,7 +10,6 @@ import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { GraphData, NodeObject } from 'force-graph'
 
 import { useWindowSize } from '@react-hook/window-size'
-import useConstant from 'use-constant'
 
 import {
   Accordion,
@@ -143,7 +142,7 @@ export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [theme, setTheme] = useState(initialTheme)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
-  const [emacsNode, setEmacsNode] = useState<string>('')
+  const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -152,9 +151,8 @@ export function GraphPage() {
     const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
 
     trackEmacs.addEventListener('message', (e) => {
-      setEmacsNode(e.data)
-      console.log(e.data)
-      console.log(emacsNode)
+      const emacsNodeId = e.data
+      setEmacsNodeId(emacsNodeId)
     })
     fetch('http://localhost:35901/theme')
       .then((res) => res.json())
@@ -205,7 +203,7 @@ export function GraphPage() {
           physics,
           graphData,
           threeDim,
-          emacsNode,
+          emacsNodeId,
         }}
       />
     </div>
@@ -289,7 +287,7 @@ export interface TweakProps {
   setPhysics: any
   threeDim: boolean
 }
-export const Tweaks = function (props: TweakProps) {
+export const Tweaks = function(props: TweakProps) {
   const { physics, setPhysics, threeDim } = props
   return (
     <Box
@@ -534,11 +532,11 @@ export interface GraphProps {
   graphData: GraphData
   physics: typeof initialPhysics
   threeDim: boolean
-  emacsNode: string
+  emacsNodeId: string | null
 }
 
-export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId, emacsNode } = props
+export const Graph = function(props: GraphProps) {
+  const { physics, graphData, threeDim, linksByNodeId, emacsNodeId } = props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
@@ -550,6 +548,16 @@ export const Graph = function (props: GraphProps) {
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
+
+  useEffect(() => {
+    if (!emacsNodeId) {
+      return
+    }
+
+    setScope({
+      nodeIds: [emacsNodeId],
+    })
+  }, [emacsNodeId])
 
   const centralHighlightedNode = hoverNode
   const highlightedNodes = (() => {
@@ -595,12 +603,12 @@ export const Graph = function (props: GraphProps) {
     scope.nodeIds.length === 0
       ? graphData
       : {
-          nodes: scopedNodes,
-          links: scopedLinks,
-        }
+        nodes: scopedNodes,
+        links: scopedLinks,
+      }
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
       if (physics.gravityOn) {
@@ -691,9 +699,13 @@ export const Graph = function (props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
+<<<<<<< variant A
       const basicSize = 3 + links.length
       const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
       return basicSize * highlightSize
+>>>>>>> variant B
+      return 3 + links.length
+======= end
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
@@ -756,6 +768,7 @@ export const Graph = function (props: GraphProps) {
       return linkIsHighlighted ? '#a991f1' : '#666666'
     },
     linkWidth: (link) => {
+      return physics.linkWidth
       const linkIsHighlighted =
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!

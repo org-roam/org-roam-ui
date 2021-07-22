@@ -95,15 +95,15 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     res))
 
 (defservlet* theme application/json ()
-  (when (boundp 'doom-themes--colors)
+  (progn
+    (when (boundp 'doom-themes--colors)
       (let*
-            ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25)))
-             ui-theme (list nil))
-      (progn
-        (dolist (color colors)
-          (push (cons (car color) (car (cdr color))) ui-theme))
-        (insert (json-encode  ui-theme))
-        (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))))
+        ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
+        (progn
+          (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
+          (insert (json-encode  ui-theme)))))
+    (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+
 
 (defservlet* id/:id text/html ()
   (let ((node (org-roam-populate (org-roam-node-create :id id)))
@@ -116,10 +116,9 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     (insert html-string)))
 
 (defservlet* current-node-id text/event-stream ()
-  (insert (format  "data: %s\n\n"
+  (insert (format "data: %s\n\n"
                        org-roam-ui-current-node-id))
-  (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")
-  )
+  (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*"))
 
 (defun org-roam-ui-update ()
   "Track changes within Emacs to update Org-roam UI.
