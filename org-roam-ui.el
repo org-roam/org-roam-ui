@@ -117,30 +117,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 
 (defservlet* current-node-data text/event-stream ()
   (insert (format  "data: %s\n\n"
-<<<<<<< HEAD
-                       org-roam-ui-current-node))
-  (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Headers "*" :Access-Control-Allow-Origin "*"))
-
-(defun org-roam-ui-update-current-buffer ()
-  "Set the org-roam-ui-current-buffer to the current buffer"
-          (setq org-roam-ui-current-buffer (current-buffer))
-          )
-
-(defun org-roam-ui-check-buffer ()
-  (when (org-roam-buffer-p (current-buffer))
-        (add-hook 'post-command-hook #'org-roam-ui-node-p nil t)
-        (org-roam-ui-update-current-buffer)
-    ))
-
-(defun org-roam-ui-node-id ()
-  (if-let (current-node-id (org-id-get))
-      (setq org-roam-ui-current-node current-node-id)
-      ))
-
-
-(defvar org-roam-ui-current-buffer)
-(defvar org-roam-ui-current-node nil)
-=======
                        org-roam-ui-current-node-id)))
 
 (defun org-roam-ui-update ()
@@ -150,6 +126,5 @@ This function is added to `post-command-hook'."
         (or (org-roam-id-at-point)
             org-roam-ui-current-node-id)))
 
->>>>>>> abfc7d6e32b4885c4de7b2b2d67a97362fc60f7f
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here
