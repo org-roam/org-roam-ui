@@ -123,9 +123,10 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 (defun org-roam-ui-update ()
   "Track changes within Emacs to update Org-roam UI.
 This function is added to `post-command-hook'."
+  (when (org-roam-buffer-p (current-buffer))
   (setq org-roam-ui-current-node-id
         (or (org-roam-id-at-point)
-            org-roam-ui-current-node-id)))
+            org-roam-ui-current-node-id))))
 
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here

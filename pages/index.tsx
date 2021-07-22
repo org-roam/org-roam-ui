@@ -287,7 +287,7 @@ export interface TweakProps {
   setPhysics: any
   threeDim: boolean
 }
-export const Tweaks = function(props: TweakProps) {
+export const Tweaks = function (props: TweakProps) {
   const { physics, setPhysics, threeDim } = props
   return (
     <Box
@@ -535,7 +535,7 @@ export interface GraphProps {
   emacsNodeId: string | null
 }
 
-export const Graph = function(props: GraphProps) {
+export const Graph = function (props: GraphProps) {
   const { physics, graphData, threeDim, linksByNodeId, emacsNodeId } = props
 
   const graph2dRef = useRef<any>(null)
@@ -603,12 +603,12 @@ export const Graph = function(props: GraphProps) {
     scope.nodeIds.length === 0
       ? graphData
       : {
-        nodes: scopedNodes,
-        links: scopedLinks,
-      }
+          nodes: scopedNodes,
+          links: scopedLinks,
+        }
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
       if (physics.gravityOn) {
@@ -699,13 +699,9 @@ export const Graph = function(props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
-<<<<<<< variant A
       const basicSize = 3 + links.length
       const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
       return basicSize * highlightSize
->>>>>>> variant B
-      return 3 + links.length
-======= end
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
