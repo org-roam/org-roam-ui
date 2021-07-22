@@ -139,11 +139,19 @@ export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [theme, setTheme] = useState(initialTheme)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
+  const [emacsNode, setEmacsNode] = useState<string>('')
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
 
   useEffect(() => {
+    const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
+
+    trackEmacs.addEventListener('message', (e) => {
+      setEmacsNode(e.data)
+      console.log(e.data)
+      console.log(emacsNode)
+    })
     fetch('http://localhost:35901/theme')
       .then((res) => res.json())
       .then((emacsTheme) => {

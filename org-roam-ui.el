@@ -115,9 +115,11 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
       (setq html-string (org-export-as 'html)))
     (insert html-string)))
 
-(defservlet* current-node-data text/event-stream ()
+(defservlet* current-node-id text/event-stream ()
   (insert (format  "data: %s\n\n"
-                       org-roam-ui-current-node-id)))
+                       org-roam-ui-current-node-id))
+  (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")
+  )
 
 (defun org-roam-ui-update ()
   "Track changes within Emacs to update Org-roam UI.
