@@ -731,15 +731,15 @@ export const Graph = function (props: GraphProps) {
 
       const fadeFactor = Math.min((3 * (globalScale - physics.labelScale)) / physics.labelScale, 1)
 
-      // draw label background
-      ctx.fillStyle =
-        'rgba(20, 20, 20, ' +
-        (highlightedNodes.length === 0
+      const opacity =
+        highlightedNodes.length === 0
           ? 0.5 * fadeFactor
           : highlightedNodes[node.id!]
           ? 0.5
-          : 0.15 * fadeFactor) +
-        ')'
+          : 0.15 * fadeFactor
+
+      // draw label background
+      ctx.fillStyle = `rgba(20, 20, 20, ${opacity})`
       ctx.fillRect(
         node.x! - bckgDimensions[0] / 2,
         node.y! - bckgDimensions[1] / 2,
@@ -770,13 +770,8 @@ export const Graph = function (props: GraphProps) {
 
       return linkIsHighlighted ? '#a991f1' : '#666666'
     },
-    linkWidth: (link) => {
+    linkWidth: () => {
       return physics.linkWidth
-      const linkIsHighlighted =
-        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-        (link.target as NodeObject).id! === centralHighlightedNode?.id!
-
-      return linkIsHighlighted ? physics.highlightLinkSize * physics.linkWidth : physics.linkWidth
     },
     linkDirectionalParticleWidth: physics.particlesWidth,
 
