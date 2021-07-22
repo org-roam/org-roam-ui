@@ -335,26 +335,17 @@ export const Tweaks = function (props: TweakProps) {
                 onChange={(value) => setPhysics({ ...physics, charge: -100 * value })}
                 label="Repulsive Force"
               />
-              <Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Box display="flex" alignItems="center">
-                    <Text>Collision</Text>
-                    <InfoTooltip infoText="This is rather slow, disable if experiencing performance issues" />
-                  </Box>
-                  <Switch
-                    id="physicsCollision"
-                    onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
-                    isChecked={physics.collision}
-                  />
-                </Box>
-                {physics.collision && (
-                  <SliderWithInfo
-                    value={physics.collisionStrength * 10}
-                    onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
-                    label="Strength"
-                  />
-                )}
-              </Box>
+              <EnableSlider
+                value={physics.collisionStrength * 10}
+                onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
+                label="Strength"
+                enableLabel="Collision"
+                enableInfoText="Perfomance sap, disable if slow"
+                enableValue={physics.collision}
+                onEnableValueChange={() =>
+                  setPhysics({ ...physics, collision: !physics.collision })
+                }
+              />
               <SliderWithInfo
                 value={physics.linkStrength * 5}
                 onChange={(value) => setPhysics({ ...physics, linkStrength: value / 5 })}
