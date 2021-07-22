@@ -201,6 +201,7 @@ export function GraphPage() {
           physics,
           graphData,
           threeDim,
+          emacsNode,
         }}
       />
     </div>
@@ -529,10 +530,11 @@ export interface GraphProps {
   graphData: GraphData
   physics: typeof initialPhysics
   threeDim: boolean
+  emacsNode: string
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId } = props
+  const { physics, graphData, threeDim, linksByNodeId, emacsNode } = props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
