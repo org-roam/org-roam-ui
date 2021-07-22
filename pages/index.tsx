@@ -258,8 +258,8 @@ export const SliderWithInfo = ({
 
 export interface EnableSectionProps {
   label: string
-  value: () => void
-  onChange: string
+  value: boolean | number
+  onChange: () => void
   infoText?: string
   children: React.ReactNode
 }
@@ -273,7 +273,7 @@ export const EnableSection = (props: EnableSectionProps) => {
           <Text>{label}</Text>
           {infoText && <InfoTooltip infoText={infoText} />}
         </Box>
-        <Switch isChecked={value} onChange={onChange} />
+        <Switch isChecked={!!value} onChange={onChange} />
       </Box>
       {value && children}
     </Box>
