@@ -44,6 +44,7 @@ import {
   MenuDivider,
   MenuOptionGroup,
   MenuItemOption,
+  Flex,
 } from '@chakra-ui/react'
 
 import { InfoOutlineIcon, RepeatClockIcon, ChevronDownIcon } from '@chakra-ui/icons'
@@ -459,7 +460,19 @@ export const Tweaks = function (props: TweakProps) {
                 onChange={() => setPhysics({ ...physics, highlight: !physics.hightligth })}
                 value={physics.hightlight}
               >
-                <Text>Hi</Text>
+                <SliderWithInfo
+                  label="Highlight Link Thickness Multiplier"
+                  value={physics.highlightLink}
+                  onChange={(value) => setPhysics({ ...physics, highlightLink: value })}
+                />
+                <SliderWithInfo
+                  label="Highlight Node Size Multiplier"
+                  value={physics.particleWidth}
+                  onChange={(value) => setPhysics({ ...physics, highlightNode: value })}
+                />
+                <Flex justifyContent="space-between">
+                  <Text></Text>
+                </Flex>
               </EnableSection>
             </VStack>
           </AccordionPanel>
