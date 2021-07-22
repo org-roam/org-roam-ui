@@ -246,44 +246,26 @@ export const SliderWithInfo = ({
   )
 }
 
-export interface EnableSliderProps extends SliderWithInfoProps {
-  enableValue: boolean
-  onEnableValueChange: () => void
-  enableLabel: string
-  enableInfoText?: string | boolean
+export interface EnableSectionProps {
+  label: string
+  value: () => void
+  onChange: string
+  infoText?: string
+  children: React.ReactNode
 }
 
-export const EnableSlider = ({ min = 0, max = 10, step = 0.1, ...rest }: EnableSliderProps) => {
-  const {
-    value,
-    onChange,
-    label,
-    infoText,
-    enableValue,
-    onEnableValueChange,
-    enableInfoText,
-    enableLabel,
-  } = rest
+export const EnableSection = (props: EnableSectionProps) => {
+  const { value, onChange, label, infoText, children } = props
   return (
     <Box>
       <Box display="flex" justifyContent="space-between">
         <Box display="flex" alignItems="center">
-          <Text>{enableLabel}</Text>
-          {enableInfoText && <InfoTooltip infoText={enableInfoText} />}
+          <Text>{label}</Text>
+          {infoText && <InfoTooltip infoText={infoText} />}
         </Box>
-        <Switch isChecked={enableValue} onChange={onEnableValueChange} />
+        <Switch isChecked={value} onChange={onChange} />
       </Box>
-      {enableValue && (
-        <SliderWithInfo
-          value={value}
-          onChange={onChange}
-          min={min}
-          max={max}
-          step={step}
-          label={label}
-          infoText={infoText}
-        />
-      )}
+      {value && children}
     </Box>
   )
 }
@@ -338,32 +320,34 @@ export const Tweaks = function (props: TweakProps) {
               divider={<StackDivider borderColor="gray.200" />}
               align="stretch"
             >
-              <EnableSlider
-                enableLabel="Gravity"
-                enableValue={physics.gravityOn}
-                onEnableValueChange={() =>
-                  setPhysics({ ...physics, gravityOn: !physics.gravityOn })
-                }
-                label="Strength"
-                value={physics.gravity * 10}
-                onChange={(v) => setPhysics({ ...physics, gravity: v / 10 })}
-              />
+              <EnableSection
+                label="Gravity"
+                value={physics.gravityOn}
+                onChange={() => setPhysics({ ...physics, gravityOn: !physics.gravityOn })}
+              >
+                <SliderWithInfo
+                  label="Strength"
+                  value={physics.gravity * 10}
+                  onChange={(v) => setPhysics({ ...physics, gravity: v / 10 })}
+                />
+              </EnableSection>
               <SliderWithInfo
                 value={-physics.charge / 100}
                 onChange={(value) => setPhysics({ ...physics, charge: -100 * value })}
                 label="Repulsive Force"
               />
-              <EnableSlider
-                value={physics.collisionStrength * 10}
-                onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
-                label="Strength"
-                enableLabel="Collision"
-                enableInfoText="Perfomance sap, disable if slow"
-                enableValue={physics.collision}
-                onEnableValueChange={() =>
-                  setPhysics({ ...physics, collision: !physics.collision })
-                }
-              />
+              <EnableSection
+                label="Collision"
+                infoText="Perfomance sap, disable if slow"
+                value={physics.collision}
+                onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
+              >
+                <SliderWithInfo
+                  value={physics.collisionStrength * 10}
+                  onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
+                  label="Strength"
+                />
+              </EnableSection>
               <SliderWithInfo
                 value={physics.linkStrength * 5}
                 onChange={(value) => setPhysics({ ...physics, linkStrength: value / 5 })}
@@ -442,21 +426,23 @@ export const Tweaks = function (props: TweakProps) {
                 value={physics.linkWidth}
                 onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
               />
-              <EnableSlider
-                enableLabel="Labels"
-                enableValue={physics.labels}
-                onEnableValueChange={() => setPhysics({ ...physics, labels: !physics.labels })}
-                label="Label Appearance Scale"
-                value={physics.labelScale * 5}
-                onChange={(value) => setPhysics({ ...physics, labelScale: value / 5 })}
-              />
-              <Box>
-                <EnableSlider
-                  enableLabel="Directional Particles"
-                  enableValue={physics.particles ? true : false}
-                  onEnableValueChange={() =>
-                    setPhysics({ ...physics, labels: physics.particles ? 0 : 1 })
-                  }
+              <EnableSection
+                label="Labels"
+                value={physics.labels}
+                onChange={() => setPhysics({ ...physics, labels: !physics.labels })}
+              >
+                <SliderWithInfo
+                  label="Label Appearance Scale"
+                  value={physics.labelScale * 5}
+                  onChange={(value) => setPhysics({ ...physics, labelScale: value / 5 })}
+                />
+              </EnableSection>
+              <EnableSection
+                label="Directional Particles"
+                value={physics.particles ? true : false}
+                onChange={() => setPhysics({ ...physics, labels: physics.particles ? 0 : 1 })}
+              >
+                <SliderWithInfo
                   label="Particle Number"
                   value={physics.particles}
                   max={5}
@@ -468,13 +454,14 @@ export const Tweaks = function (props: TweakProps) {
                   value={physics.particleWidth}
                   onChange={(value) => setPhysics({ ...physics, particleWidth: value })}
                 />
-              </Box>
-              <SliderWithInfo
-                label="Node size"
-                value={physics.nodeRel}
-                onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
-              />
-              <Text>Ayyyy</Text>
+              </EnableSection>
+              <EnableSection
+                label="Hightlight"
+                onChange={() => setPhysics({ ...physics, highlight: !physics.hightligth })}
+                value={physics.hightlight}
+              >
+                <Text>Hi</Text>
+              </EnableSection>
             </VStack>
           </AccordionPanel>
         </AccordionItem>
@@ -508,22 +495,6 @@ export const Tweaks = function (props: TweakProps) {
               <Box display="flex" justifyContent="space-between">
                 <Text>Double-click</Text>
               </Box>
-            </VStack>
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionButton>
-            <AccordionIcon />
-            Visual
-          </AccordionButton>
-          <AccordionPanel>
-            <VStack
-              spacing={2}
-              justifyContent="flex-start"
-              divider={<StackDivider borderColor="gray.200" />}
-              align="stretch"
-            >
-              <Text>Ayyyy</Text>
             </VStack>
           </AccordionPanel>
         </AccordionItem>
