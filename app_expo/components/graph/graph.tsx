@@ -282,81 +282,13 @@ onLinkHover={handleLinkHover}
       {!threeDim ? (
         <ForceGraph2D
           ref={fgRef}
-          //autoPauseRedraw={false}
-          //graphData={gData}
           graphData={local ? localGraphData : gData}
-          //nodeAutoColorBy={physics.colorful ? (node)=>node.index%GROUPS : undefined}
-          nodeColor={
-            !physics.colorful
-              ? (node) => {
-                  if (highlightNodes.size === 0) {
-                    return 'rgb(100, 100, 100, 1)'
-                  } else {
-                    return highlightNodes.has(node) ? '#a991f1' : 'rgb(50, 50, 50, 0.5)'
-                  }
-                }
-              : (node) => {
-                  if (node.neighbors.length === 1 || node.neighbors.length === 2) {
-                    return [
-                      '#ff665c',
-                      '#e69055',
-                      '#7bc275',
-                      '#4db5bd',
-                      '#FCCE7B',
-                      '#51afef',
-                      '#1f5582',
-                      '#C57BDB',
-                      '#a991f1',
-                      '#5cEfFF',
-                      '#6A8FBF',
-                    ][node.neighbors[0].index % 11]
-                  } else {
-                    return [
-                      '#ff665c',
-                      '#e69055',
-                      '#7bc275',
-                      '#4db5bd',
-                      '#FCCE7B',
-                      '#51afef',
-                      '#1f5582',
-                      '#C57BDB',
-                      '#a991f1',
-                      '#5cEfFF',
-                      '#6A8FBF',
-                    ][node.index % 11]
-                  }
-                }
-          }
-          //linkAutoColorBy={physics.colorful ? ((d) => gData.nodes[d.sourceIndex].id % GROUPS) : undefined}
-          linkColor={
-            !physics.colorful
-              ? (link) => {
-                  if (highlightLinks.size === 0) {
-                    return 'rgb(50, 50, 50, 0.8)'
-                  } else {
-                    return highlightLinks.has(link) ? '#a991f1' : 'rgb(50, 50, 50, 0.2)'
-                  }
-                }
-              : (link) =>
-                  [
-                    '#ff665c',
-                    '#e69055',
-                    '#7bc275',
-                    '#4db5bd',
-                    '#FCCE7B',
-                    '#51afef',
-                    '#1f5582',
-                    '#C57BDB',
-                    '#a991f1',
-                    '#5cEfFF',
-                    '#6A8FBF',
-                  ][gData.nodes[link.sourceIndex].index % 11]
-          }
+          nodeColor={}
+          linkColor={}
           linkDirectionalParticles={physics.particles}
           onNodeClick={selectClick}
           nodeLabel={(node) => node.title}
           linkWidth={(link) =>
-            highlightLinks.has(link) ? 3 * physics.linkWidth : physics.linkWidth
           }
           linkOpacity={physics.linkOpacity}
           nodeRelSize={physics.nodeRel}
@@ -364,49 +296,7 @@ onLinkHover={handleLinkHover}
             return highlightNodes.has(node) ? node.neighbors.length + 5 : node.neighbors.length + 3
           }}
           linkDirectionalParticleWidth={physics.particleWidth}
-          nodeCanvasObject={(node, ctx, globalScale) => {
-            if (physics.labels) {
-              if (globalScale > physics.labelScale || highlightNodes.has(node)) {
-                const label = node.title.substring(0, Math.min(node.title.length, 30))
-                const fontSize = 12 / globalScale
-                ctx.font = `${fontSize}px Sans-Serif`
-                const textWidth = ctx.measureText(label).width
-                const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) // some padding
-                const fadeFactor = Math.min(
-                  (3 * (globalScale - physics.labelScale)) / physics.labelScale,
-                  1,
-                )
-
-                ctx.fillStyle =
-                  'rgba(20, 20, 20, ' +
-                  (highlightNodes.size === 0
-                    ? 0.5 * fadeFactor
-                    : highlightNodes.has(node)
-                    ? 0.5
-                    : 0.15 * fadeFactor) +
-                  ')'
-                ctx.fillRect(
-                  node.x - bckgDimensions[0] / 2,
-                  node.y - bckgDimensions[1] / 2,
-                  ...bckgDimensions,
-                )
-
-                ctx.textAlign = 'center'
-                ctx.textBaseline = 'middle'
-                ctx.fillStyle =
-                  'rgb(255, 255, 255, ' +
-                  (highlightNodes.size === 0
-                    ? fadeFactor
-                    : highlightNodes.has(node)
-                    ? 1
-                    : 0.3 * fadeFactor) +
-                  ')'
-                ctx.fillText(label, node.x, node.y)
-
-                node.__bckgDimensions = bckgDimensions // to re-use in nodePointerAreaPaint
-              }
-            }
-          }}
+          nodeCanvasObject={}
           nodeCanvasObjectMode={() => 'after'}
           onNodeHover={physics.hover ? handleNodeHover : null}
           //onLinkHover={physics.hover ? handleLinkHover : null}
@@ -420,73 +310,9 @@ onLinkHover={handleLinkHover}
         <ForceGraph3D
           ref={fgRef}
           graphData={!local ? gData : localGraphData}
-          //graphData={gData}
-          nodeColor={
-            !physics.colorful
-              ? (node) => {
-                  if (highlightNodes.size === 0) {
-                    return 'rgb(100, 100, 100, 1)'
-                  } else {
-                    return highlightNodes.has(node) ? 'purple' : 'rgb(50, 50, 50, 0.5)'
-                  }
-                }
-              : (node) => {
-                  if (node.neighbors.length === 1 || node.neighbors.length === 2) {
-                    return [
-                      '#ff665c',
-                      '#e69055',
-                      '#7bc275',
-                      '#4db5bd',
-                      '#FCCE7B',
-                      '#51afef',
-                      '#1f5582',
-                      '#C57BDB',
-                      '#a991f1',
-                      '#5cEfFF',
-                      '#6A8FBF',
-                    ][node.neighbors[0].index % 11]
-                  } else {
-                    return [
-                      '#ff665c',
-                      '#e69055',
-                      '#7bc275',
-                      '#4db5bd',
-                      '#FCCE7B',
-                      '#51afef',
-                      '#1f5582',
-                      '#C57BDB',
-                      '#a991f1',
-                      '#5cEfFF',
-                      '#6A8FBF',
-                    ][node.index % 11]
-                  }
-                }
-          }
+          nodeColor={}
           //linkAutoColorBy={physics.colorful ? ((d) => gData.nodes[d.sourceIndex].id % GROUPS) : undefined}
-          linkColor={
-            !physics.colorful
-              ? (link) => {
-                  if (highlightLinks.size === 0) {
-                    return 'rgb(50, 50, 50, 0.8)'
-                  } else {
-                    return highlightLinks.has(link) ? 'purple' : 'rgb(50, 50, 50, 0.2)'
-                  }
-                }
-              : (link) =>
-                  [
-                    '#ff665c',
-                    '#e69055',
-                    '#7bc275',
-                    '#4db5bd',
-                    '#FCCE7B',
-                    '#51afef',
-                    '#1f5582',
-                    '#C57BDB',
-                    '#a991f1',
-                    '#5cEfFF',
-                    '#6A8FBF',
-                  ][gData.nodes[link.sourceIndex].index % 11]
-          }
+          linkColor={}
           linkDirectionalParticles={physics.particles}
           nodeLabel={(node) => node.title}
           linkWidth={(link) =>

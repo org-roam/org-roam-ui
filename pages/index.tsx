@@ -1,13 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
+import React, { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
 import { usePersistantState } from '../util/persistant-state'
 const d3promise = import('d3-force-3d')
 
-import type { ForceGraph2D as TForceGraph2D } from 'react-force-graph'
+import type {
+  ForceGraph2D as TForceGraph2D,
+  ForceGraph3D as TForceGraph3D,
+} from 'react-force-graph'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { GraphData, NodeObject } from 'force-graph'
 
 import { useWindowSize } from '@react-hook/window-size'
+import useConstant from 'use-constant'
 
 import {
   Accordion,
@@ -51,13 +54,21 @@ const ForceGraph2D = (
   !!global.window ? require('react-force-graph').ForceGraph2D : null
 ) as typeof TForceGraph2D
 
+const ForceGraph3D = (
+  !!global.window ? require('react-force-graph').ForceGraph3D : null
+) as typeof TForceGraph3D
+
 export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
+export type Scope = {
+  nodeIds: string[]
+}
 
 const initialPhysics = {
   enabled: true,
   charge: -350,
   collision: true,
+  collisionStrength: 0,
   linkStrength: 0.1,
   linkIts: 1,
   particles: 0,
@@ -79,6 +90,7 @@ const initialPhysics = {
   hover: 'highlight',
   click: 'select',
   doubleClick: 'local',
+  iterations: 0,
 }
 
 const initialTheme = {
@@ -159,7 +171,6 @@ export function GraphPage() {
   }, [])
 
   const [threeDim, setThreeDim] = useState(false)
-  const [local, setLocal] = useState(false)
 
   if (!graphData) {
     return null
@@ -172,7 +183,6 @@ export function GraphPage() {
           physics,
           setPhysics,
           threeDim,
-          local,
         }}
       />
       <Graph
@@ -182,7 +192,6 @@ export function GraphPage() {
           physics,
           graphData,
           threeDim,
-          local,
         }}
       />
     </div>
@@ -283,13 +292,22 @@ export interface TweakProps {
   physics: typeof initialPhysics
   setPhysics: any
   threeDim: boolean
-  local: boolean
 }
 export const Tweaks = function (props: TweakProps) {
-  const { physics, setPhysics, threeDim, local } = props
+  const { physics, setPhysics, threeDim } = props
 
   return (
-    <Container zIndex="overlay" position="absolute" bg="white" w="xs">
+    <Box
+      zIndex="overlay"
+      position="absolute"
+      bg="white"
+      w="xs"
+      marginTop="2%"
+      marginLeft="2%"
+      borderRadius="md"
+      maxH="80%"
+      overflowY="scroll"
+    >
       <Box display="flex" justifyContent="flex-end">
         <Tooltip label="Reset settings to defaults">
           <IconButton
@@ -510,7 +528,7 @@ export const Tweaks = function (props: TweakProps) {
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-    </Container>
+    </Box>
   )
 }
 
@@ -520,13 +538,13 @@ export interface GraphProps {
   graphData: GraphData
   physics: typeof initialPhysics
   threeDim: boolean
-  local: boolean
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, local, linksByNodeId, nodeById } = props
+  const { physics, graphData, threeDim, linksByNodeId } = props
 
-  const forceGraphRef = useRef<any>(null)
+  const graph2dRef = useRef<any>(null)
+  const graph3dRef = useRef<any>(null)
 
   // react-force-graph does not track window size
   // https://github.com/vasturiano/react-force-graph/issues/233
@@ -534,9 +552,9 @@ export const Graph = function (props: GraphProps) {
   const [windowWidth, windowHeight] = useWindowSize()
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
-  const [selectedNode, setSelectedNode] = useState<NodeObject | null>()
+  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
 
-  const centralHighlightedNode = selectedNode ?? hoverNode
+  const centralHighlightedNode = hoverNode
   const highlightedNodes = (() => {
     if (!centralHighlightedNode) {
       return {}
@@ -555,11 +573,39 @@ export const Graph = function (props: GraphProps) {
     )
   })()
 
+  const scopedNodes = graphData.nodes.filter((node) => {
+    const links = linksByNodeId[node.id as string] ?? []
+    return (
+      scope.nodeIds.includes(node.id as string) ||
+      links.some((link) => {
+        return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
+      })
+    )
+  })
+
+  const scopedNodeIds = scopedNodes.map((node) => node.id as string)
+
+  const scopedLinks = graphData.links.filter((link) => {
+    // we need to cover both because force-graph modifies the original data
+    // but if we supply the original data on each render, the graph will re-render sporadically
+    const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
+    const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+
+    return scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
+  })
+
+  const scopedGraphData =
+    scope.nodeIds.length === 0
+      ? graphData
+      : {
+          nodes: scopedNodes,
+          links: scopedLinks,
+        }
+
   useEffect(() => {
     ;(async () => {
-      const fg = forceGraphRef.current
+      const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
-      //fg.d3Force('center').strength(0.05);
       if (physics.gravityOn) {
         fg.d3Force('x', d3.forceX().strength(physics.gravity))
         fg.d3Force('y', d3.forceY().strength(physics.gravity))
@@ -591,162 +637,166 @@ export const Graph = function (props: GraphProps) {
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
   useEffect(() => {
-    forceGraphRef.current?.d3ReheatSimulation()
+    graph2dRef.current?.d3ReheatSimulation()
   }, [physics])
 
   //shitty handler to check for doubleClicks
-  const [doubleClick, setDoubleClick] = useState(0)
-  const [localGraphData, setLocalGraphData] = useState<any>({
-    nodes: [],
-    links: [],
-  })
+  const lastNodeClickRef = useRef(0)
 
-  const selectClick = (node: NodeObject, event: any) => {
-    window.open('org-protocol://roam-node?node=' + node.id, '_self')
+  const onNodeClick = (node: NodeObject, event: any) => {
+    const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
+    lastNodeClickRef.current = event.timeStamp
 
-    if (event.timeStamp - doubleClick < 400) {
-      // getLocalGraphData(node)
+    if (isDoubleClick) {
+      window.open('org-protocol://roam-node?node=' + node.id, '_self')
+      return
     }
-    // setDoubleClick(event.timeStamp)
-    if (node) {
-      return setSelectedNode(node)
-    }
+
+    setScope((currentScope) => ({
+      ...currentScope,
+      nodeIds: [...currentScope.nodeIds, node.id as string],
+    }))
+    return
+  }
+
+  const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
+    graphData: scopedGraphData,
+    width: windowWidth,
+    height: windowHeight,
+    backgroundColor: '#242730',
+    nodeLabel: (node) => (node as OrgRoamNode).title,
+    nodeColor: (node) => {
+      if (!physics.colorful) {
+        if (Object.keys(highlightedNodes).length === 0) {
+          return 'rgb(100, 100, 100)'
+        }
+        return highlightedNodes[node.id!] ? '#a991f1' : 'rgb(50, 50, 50)'
+      }
+
+      const palette = [
+        '#ff665c',
+        '#e69055',
+        '#7bc275',
+        '#4db5bd',
+        '#FCCE7B',
+        '#51afef',
+        '#1f5582',
+        '#C57BDB',
+        '#a991f1',
+        '#5cEfFF',
+        '#6A8FBF',
+      ]
+
+      return palette[
+        numbereWithinRange(linksByNodeId[node.id!]?.length ?? 0, 0, palette.length - 1)
+      ]
+    },
+    nodeRelSize: physics.nodeRel,
+    nodeVal: (node) => {
+      const links = linksByNodeId[node.id!] ?? []
+      const basicSize = 3 + links.length
+      const highlightSize = highlightedNodes[node.id!] ? 2 : 0
+      return basicSize + highlightSize
+    },
+    nodeCanvasObject: (node, ctx, globalScale) => {
+      if (!physics.labels) {
+        return
+      }
+
+      if (globalScale <= physics.labelScale && !highlightedNodes[node.id!]) {
+        return
+      }
+
+      const nodeTitle = (node as OrgRoamNode).title
+      const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 30))
+      // const label = 'label'
+      const fontSize = 12 / globalScale
+      const textWidth = ctx.measureText(label).width
+      const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
+        number,
+        number,
+      ] // some padding
+
+      const fadeFactor = Math.min((3 * (globalScale - physics.labelScale)) / physics.labelScale, 1)
+
+      // draw label background
+      ctx.fillStyle =
+        'rgba(20, 20, 20, ' +
+        (highlightedNodes.length === 0
+          ? 0.5 * fadeFactor
+          : highlightedNodes[node.id!]
+          ? 0.5
+          : 0.15 * fadeFactor) +
+        ')'
+      ctx.fillRect(
+        node.x! - bckgDimensions[0] / 2,
+        node.y! - bckgDimensions[1] / 2,
+        ...bckgDimensions,
+      )
+
+      // draw label text
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillStyle =
+        'rgb(255, 255, 255, ' +
+        (highlightedNodes.length === 0
+          ? fadeFactor
+          : highlightedNodes[node.id!]
+          ? 1
+          : 0.3 * fadeFactor) +
+        ')'
+      ctx.font = `${fontSize}px Sans-Serif`
+      ctx.fillText(label, node.x!, node.y!)
+    },
+    nodeCanvasObjectMode: () => 'after',
+
+    linkDirectionalParticles: physics.particles,
+    linkColor: (link) => {
+      const linkIsHighlighted =
+        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
+        (link.target as NodeObject).id! === centralHighlightedNode?.id!
+
+      return linkIsHighlighted ? '#a991f1' : '#666666'
+    },
+    linkWidth: (link) => {
+      const linkIsHighlighted =
+        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
+        (link.target as NodeObject).id! === centralHighlightedNode?.id!
+
+      return linkIsHighlighted ? 2 * physics.linkWidth : physics.linkWidth
+    },
+    linkDirectionalParticleWidth: physics.particleWidth,
+
+    d3AlphaDecay: physics.alphaDecay,
+    d3AlphaMin: physics.alphaMin,
+    d3VelocityDecay: physics.velocityDecay,
+
+    onNodeClick: onNodeClick,
+    onBackgroundClick: () => {
+      setScope((currentScope) => ({
+        ...currentScope,
+        nodeIds: [],
+      }))
+    },
+    onNodeHover: (node) => {
+      if (!physics.hover) {
+        return
+      }
+      setHoverNode(node)
+    },
   }
 
   return (
-    <div style={{ position: 'absolute' }}>
-      <ForceGraph2D
-        ref={forceGraphRef}
-        graphData={local ? localGraphData : graphData}
-        width={windowWidth}
-        height={windowHeight}
-        nodeColor={(node) => {
-          if (!physics.colorful) {
-            if (Object.keys(highlightedNodes).length === 0) {
-              return 'rgb(100, 100, 100, 1)'
-            }
-            return highlightedNodes[node.id!] ? '#a991f1' : 'rgb(50, 50, 50, 0.5)'
-          }
-
-          const palette = [
-            '#ff665c',
-            '#e69055',
-            '#7bc275',
-            '#4db5bd',
-            '#FCCE7B',
-            '#51afef',
-            '#1f5582',
-            '#C57BDB',
-            '#a991f1',
-            '#5cEfFF',
-            '#6A8FBF',
-          ]
-
-          // random
-          return palette[0]
-          if (node.neighbors.length === 1 || node.neighbors.length === 2) {
-            return palette[node.neighbors[0].index % 11]
-          }
-
-          return palette[node.index % 11]
-        }}
-        linkColor={(link) => {
-          if (Object.keys(highlightedNodes).length === 0) {
-            return 'rgb(50, 50, 50, 0.8)'
-          }
-
-          const linkIsHighlighted =
-            (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-            (link.target as NodeObject).id! === centralHighlightedNode?.id!
-
-          return linkIsHighlighted ? '#a991f1' : 'rgb(50, 50, 50, 0.2)'
-        }}
-        linkDirectionalParticles={physics.particles}
-        linkDirectionalParticleWidth={physics.particleWidth}
-        nodeLabel={(node) => (node as OrgRoamNode).title}
-        linkWidth={(link) => {
-          const linkIsHighlighted =
-            (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-            (link.target as NodeObject).id! === centralHighlightedNode?.id!
-
-          return linkIsHighlighted ? 3 * physics.linkWidth : physics.linkWidth
-        }}
-        nodeRelSize={physics.nodeRel}
-        nodeVal={(node) => {
-          const links = props.linksByNodeId[node.id!] ?? []
-          const basicSize = 3 + links.length
-          const highlightSize = highlightedNodes[node.id!] ? 2 : 0
-          return basicSize + highlightSize
-        }}
-        nodeCanvasObject={(node, ctx, globalScale) => {
-          if (!physics.labels) {
-            return
-          }
-
-          if (globalScale <= physics.labelScale && !highlightedNodes[node.id!]) {
-            return
-          }
-
-          const nodeTitle = (node as OrgRoamNode).title
-          const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 30))
-          // const label = 'label'
-          const fontSize = 12 / globalScale
-          const textWidth = ctx.measureText(label).width
-          const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
-            number,
-            number,
-          ] // some padding
-
-          const fadeFactor = Math.min(
-            (3 * (globalScale - physics.labelScale)) / physics.labelScale,
-            1,
-          )
-
-          // draw label background
-          ctx.fillStyle =
-            'rgba(20, 20, 20, ' +
-            (highlightedNodes.length === 0
-              ? 0.5 * fadeFactor
-              : highlightedNodes[node.id!]
-              ? 0.5
-              : 0.15 * fadeFactor) +
-            ')'
-          ctx.fillRect(
-            node.x! - bckgDimensions[0] / 2,
-            node.y! - bckgDimensions[1] / 2,
-            ...bckgDimensions,
-          )
-
-          // draw label text
-          ctx.textAlign = 'center'
-          ctx.textBaseline = 'middle'
-          ctx.fillStyle =
-            'rgb(255, 255, 255, ' +
-            (highlightedNodes.length === 0
-              ? fadeFactor
-              : highlightedNodes[node.id!]
-              ? 1
-              : 0.3 * fadeFactor) +
-            ')'
-          ctx.font = `${fontSize}px Sans-Serif`
-          ctx.fillText(label, node.x!, node.y!)
-        }}
-        nodeCanvasObjectMode={() => 'after'}
-        d3AlphaDecay={physics.alphaDecay}
-        d3AlphaMin={physics.alphaMin}
-        d3VelocityDecay={physics.velocityDecay}
-        backgroundColor={'#242730'}
-        onNodeClick={selectClick}
-        onBackgroundClick={() => {
-          setSelectedNode(null)
-        }}
-        onNodeHover={(node) => {
-          if (!physics.hover) {
-            return
-          }
-          setHoverNode(node)
-        }}
-      />
+    <div>
+      {threeDim ? (
+        <ForceGraph3D ref={graph3dRef} {...graphCommonProps} nodeThreeObjectExtend={true} />
+      ) : (
+        <ForceGraph2D ref={graph2dRef} {...graphCommonProps} />
+      )}
     </div>
   )
+}
+
+function numbereWithinRange(num: number, min: number, max: number) {
+  return Math.min(Math.max(num, min), max)
 }
