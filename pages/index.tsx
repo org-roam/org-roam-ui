@@ -182,6 +182,7 @@ export function GraphPage() {
   }, [])
 
   const [threeDim, setThreeDim] = useState(false)
+  const [showTweeks, setShowTweeks] = useState(true)
 
   if (!graphData) {
     return null
@@ -189,13 +190,18 @@ export function GraphPage() {
 
   return (
     <div>
-      <Tweaks
-        {...{
-          physics,
-          setPhysics,
-          threeDim,
-        }}
-      />
+      {showTweeks && (
+        <Tweaks
+          {...{
+            physics,
+            setPhysics,
+            threeDim,
+          }}
+          onClose={() => {
+            setShowTweeks(false)
+          }}
+        />
+      )}
       <Graph
         nodeById={nodeByIdRef.current!}
         linksByNodeId={linksByNodeIdRef.current!}
@@ -286,9 +292,10 @@ export interface TweakProps {
   physics: typeof initialPhysics
   setPhysics: any
   threeDim: boolean
+  onClose: () => void
 }
 export const Tweaks = function (props: TweakProps) {
-  const { physics, setPhysics, threeDim } = props
+  const { physics, setPhysics, threeDim, onClose } = props
   return (
     <Box
       zIndex="overlay"
@@ -309,7 +316,7 @@ export const Tweaks = function (props: TweakProps) {
             onClick={() => setPhysics(initialPhysics)}
           />
         </Tooltip>
-        <CloseButton />
+        <CloseButton onClick={onClose} />
       </Box>
       <Accordion allowMultiple defaultIndex={[0]} allowToggle>
         <AccordionItem>
