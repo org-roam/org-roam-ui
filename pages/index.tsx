@@ -46,7 +46,7 @@ import {
   Flex,
 } from '@chakra-ui/react'
 
-import { InfoOutlineIcon, RepeatClockIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import { InfoOutlineIcon, RepeatClockIcon, ChevronDownIcon, SettingsIcon } from '@chakra-ui/icons'
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -182,7 +182,7 @@ export function GraphPage() {
   }, [])
 
   const [threeDim, setThreeDim] = useState(false)
-  const [showTweeks, setShowTweeks] = useState(true)
+  const [showTweaks, setShowTweaks] = useState(true)
 
   if (!graphData) {
     return null
@@ -190,7 +190,7 @@ export function GraphPage() {
 
   return (
     <div>
-      {showTweeks && (
+      {showTweaks ? (
         <Tweaks
           {...{
             physics,
@@ -198,9 +198,13 @@ export function GraphPage() {
             threeDim,
           }}
           onClose={() => {
-            setShowTweeks(false)
+            setShowTweaks(false)
           }}
         />
+      ) : (
+        <Box position="absolute" zIndex="overlay" marginTop="2%" marginLeft="2%">
+          <IconButton icon={<SettingsIcon />} onClick={() => setShowTweaks(true)} />
+        </Box>
       )}
       <Graph
         nodeById={nodeByIdRef.current!}
@@ -318,7 +322,7 @@ export const Tweaks = function (props: TweakProps) {
         </Tooltip>
         <CloseButton onClick={onClose} />
       </Box>
-      <Accordion allowMultiple defaultIndex={[0]} allowToggle>
+      <Accordion allowMultiple allowToggle>
         <AccordionItem>
           <AccordionButton display="flex" justifyContent="space-between">
             <Box display="flex">
@@ -740,8 +744,8 @@ export const Graph = function (props: GraphProps) {
       // draw label background
       ctx.fillStyle =
         'rgba(20, 20, 20, ' +
-        (highlightedNodes.length === 0
-          ? 0.5 * fadeFactor
+        (Object.keys(highlightedNodes).length === 0
+          ? fadeFactor
           : highlightedNodes[node.id!]
           ? 0.5
           : 0.15 * fadeFactor) +
@@ -757,7 +761,7 @@ export const Graph = function (props: GraphProps) {
       ctx.textBaseline = 'middle'
       ctx.fillStyle =
         'rgb(255, 255, 255, ' +
-        (highlightedNodes.length === 0
+        (Object.keys(highlightedNodes).length === 0
           ? fadeFactor
           : highlightedNodes[node.id!]
           ? 1
