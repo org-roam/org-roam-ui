@@ -674,12 +674,10 @@ export const Graph = function (props: GraphProps) {
         fg.d3Force('y', null)
         threeDim ? fg.d3Force('z', null) : null
       }
-      fg.d3Force('link').strength(physics.linkStrength)
-      fg.d3Force('link').iterations(physics.linkIts)
-      physics.collision
-        ? fg.d3Force('collide', d3.forceCollide().radius(20))
-        : fg.d3Force('collide', null)
-      fg.d3Force('charge').strength(physics.charge)
+      physics.linkStrength && fg.d3Force('link').strength(physics.linkStrength)
+      physics.linkIts && fg.d3Force('link').iterations(physics.linkIts)
+      physics.charge && fg.d3Force('charge').strength(physics.charge)
+      fg.d3Force('collide', physics.collision ? d3.forceCollide().radius(20) : null)
     })()
   })
 
@@ -709,7 +707,6 @@ export const Graph = function (props: GraphProps) {
   }
 
   const theme = useTheme()
-  console.log(theme)
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -733,7 +730,9 @@ export const Graph = function (props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
-      return links.length
+      const basicSize = 3 + links.length
+      const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
+      return basicSize * highlightSize
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
@@ -794,14 +793,20 @@ export const Graph = function (props: GraphProps) {
 
       return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]
     },
-    linkWidth: physics.linkWidth,
+    linkWidth: (link) => {
+      const linkIsHighlighted =
+        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
+        (link.target as NodeObject).id! === centralHighlightedNode?.id!
+
+      return linkIsHighlighted ? physics.highlightLinkSize * physics.linkWidth : physics.linkWidth
+    },
     linkDirectionalParticleWidth: physics.particlesWidth,
 
     d3AlphaDecay: physics.alphaDecay,
     d3AlphaMin: physics.alphaMin,
     d3VelocityDecay: physics.velocityDecay,
 
-    onNodeClick: onNodeClick,
+    onNodeClick,
     onBackgroundClick: () => {
       setScope((currentScope) => ({
         ...currentScope,
