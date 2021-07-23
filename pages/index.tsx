@@ -745,15 +745,15 @@ export const Graph = function (props: GraphProps) {
 
       const fadeFactor = Math.min((3 * (globalScale - physics.labelScale)) / physics.labelScale, 1)
 
-      const opacity =
-        highlightedNodes.length === 0
+      // draw label background
+      const backgroundOpacity =
+        Object.keys(highlightedNodes).length === 0
           ? 0.5 * fadeFactor
           : highlightedNodes[node.id!]
           ? 0.5
           : 0.15 * fadeFactor
 
-      // draw label background
-      ctx.fillStyle = `rgba(20, 20, 20, ${opacity})`
+      ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
       ctx.fillRect(
         node.x! - bckgDimensions[0] / 2,
         node.y! - bckgDimensions[1] / 2,
@@ -761,16 +761,15 @@ export const Graph = function (props: GraphProps) {
       )
 
       // draw label text
+      const textOpacity = (Object.keys(highlightedNodes).length === 0
+        ? fadeFactor
+        : highlightedNodes[node.id!]
+          ? 1
+          : 0.3 * fadeFactor)
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillStyle =
-        'rgb(255, 255, 255, ' +
-        (Object.keys(highlightedNodes).length === 0
-          ? fadeFactor
-          : highlightedNodes[node.id!]
-          ? 1
-          : 0.3 * fadeFactor) +
-        ')'
+        `rgb(255, 255, 255, ${textOpacity})`
       ctx.font = `${fontSize}px Sans-Serif`
       ctx.fillText(label, node.x!, node.y!)
     },
