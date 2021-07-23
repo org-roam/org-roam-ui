@@ -97,6 +97,7 @@ const initialPhysics = {
   highlight: true,
   highlightNodeSize: 2,
   highlightLinkSize: 2,
+  orphans: false,
 }
 
 export default function Home() {
@@ -326,7 +327,21 @@ export const Tweaks = function (props: TweakProps) {
         </Tooltip>
         <CloseButton onClick={onClose} />
       </Box>
-      <Scrollbars autoHeight autoHeightMax={600}>
+      <Scrollbars
+        autoHeight
+        autoHeightMax={600}
+        autoHide
+        renderThumbVertical={({ style, ...props }) => (
+          <Box
+            {...props}
+            style={{
+              ...style,
+              borderRadius: 10,
+            }}
+            bg="purple.500"
+          />
+        )}
+      >
         <Accordion allowMultiple allowToggle colorScheme="purple">
           <AccordionItem>
             <AccordionButton display="flex" justifyContent="space-between" colorScheme="purple">
@@ -490,7 +505,7 @@ export const Tweaks = function (props: TweakProps) {
                   <SliderWithInfo
                     label="Particle Size"
                     value={physics.particlesWidth}
-                    onChange={(value) => setPhysics({ ...physics, particleWidth: value })}
+                    onChange={(value) => setPhysics({ ...physics, particlesWidth: value })}
                   />
                 </EnableSection>
                 <EnableSection
@@ -611,6 +626,9 @@ export const Graph = function (props: GraphProps) {
 
   const scopedNodes = graphData.nodes.filter((node) => {
     const links = linksByNodeId[node.id as string] ?? []
+    if (physics.orphans && links.length === 0) {
+      return false
+    }
     return (
       scope.nodeIds.includes(node.id as string) ||
       links.some((link) => {
