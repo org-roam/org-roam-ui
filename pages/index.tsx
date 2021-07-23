@@ -645,10 +645,31 @@ export const Graph = function (props: GraphProps) {
     ;(async () => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
-      // fg.d3Force('x', null)
-      //   fg.d3Force('y', null)
-      fg.d3Force('collide', d3.forceCollide().radius(10))
-      // fg.d3Force('charge').strength(1)
+      if (physics.gravityOn) {
+        fg.d3Force('x', d3.forceX().strength(physics.gravity))
+        fg.d3Force('y', d3.forceY().strength(physics.gravity))
+        if (threeDim) {
+          if (physics.galaxy) {
+            fg.d3Force('x', d3.forceX().strength(physics.gravity / 5))
+            fg.d3Force('z', d3.forceZ().strength(physics.gravity / 5))
+          } else {
+            fg.d3Force('x', d3.forceX().strength(physics.gravity))
+            fg.d3Force('z', d3.forceZ().strength(physics.gravity))
+          }
+        } else {
+          fg.d3Force('z', null)
+        }
+      } else {
+        fg.d3Force('x', null)
+        fg.d3Force('y', null)
+        threeDim ? fg.d3Force('z', null) : null
+      }
+      fg.d3Force('link').strength(physics.linkStrength)
+      fg.d3Force('link').iterations(physics.linkIts)
+      physics.collision
+        ? fg.d3Force('collide', d3.forceCollide().radius(20))
+        : fg.d3Force('collide', null)
+      fg.d3Force('charge').strength(physics.charge)
     })()
   })
 
@@ -766,9 +787,9 @@ export const Graph = function (props: GraphProps) {
     linkWidth: physics.linkWidth,
     linkDirectionalParticleWidth: physics.particlesWidth,
 
-    // d3AlphaDecay: physics.alphaDecay,
-    // d3AlphaMin: physics.alphaMin,
-    // d3VelocityDecay: physics.velocityDecay,
+    d3AlphaDecay: physics.alphaDecay,
+    d3AlphaMin: physics.alphaMin,
+    d3VelocityDecay: physics.velocityDecay,
 
     onNodeClick: onNodeClick,
     onBackgroundClick: () => {
