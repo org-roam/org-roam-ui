@@ -10,6 +10,7 @@ import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { GraphData, NodeObject } from 'force-graph'
 
 import { useWindowSize } from '@react-hook/window-size'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 
 import {
   Accordion,
@@ -44,6 +45,7 @@ import {
   MenuOptionGroup,
   MenuItemOption,
   Flex,
+  useTheme,
 } from '@chakra-ui/react'
 
 import { InfoOutlineIcon, RepeatClockIcon, ChevronDownIcon, SettingsIcon } from '@chakra-ui/icons'
@@ -97,33 +99,6 @@ const initialPhysics = {
   highlightLinkSize: 2,
 }
 
-const initialTheme = {
-  base1: '#1c1f24',
-  base2: '#21272d',
-  base3: '#23272e',
-  base4: '#484854',
-  base5: '#62686E',
-  base6: '#757B80',
-  base7: '#9ca0a4',
-  base8: '#DFDFDF',
-  bg: '#242730',
-  'bg-alt': '#2a2e38',
-  blue: '#51afef',
-  cyan: '#5cEfFF',
-  'dark-blue': '#1f5582',
-  'dark-cyan': '#6A8FBF',
-  fg: '#bbc2cf',
-  'fg-alt': '#5D656B',
-  green: '#7bc275',
-  grey: '#484854',
-  magenta: '#C57BDB',
-  orange: '#e69055',
-  red: '#ff665c',
-  teal: '#4db5bd',
-  violet: '#a991f1',
-  yellow: '#FCCE7B',
-}
-
 export default function Home() {
   // only render on the client
   const [showPage, setShowPage] = useState(false)
@@ -140,7 +115,7 @@ export default function Home() {
 
 export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
-  const [theme, setTheme] = useState(initialTheme)
+  //  const [theme, setTheme] = useState(initialTheme)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
 
@@ -154,11 +129,11 @@ export function GraphPage() {
       const emacsNodeId = e.data
       setEmacsNodeId(emacsNodeId)
     })
-    fetch('http://localhost:35901/theme')
-      .then((res) => res.json())
-      .then((emacsTheme) => {
-        setTheme(emacsTheme)
-      })
+    /* fetch('http://localhost:35901/theme')
+     *   .then((res) => res.json())
+     *   .then((emacsTheme) => {
+     *     setTheme(emacsTheme)
+     *   }) */
     fetch('http://localhost:35901/graph')
       .then((res) => res.json())
       .then((orgRoamGraphData: OrgRoamGraphReponse) => {
@@ -256,7 +231,14 @@ export const SliderWithInfo = ({
         <Text>{label}</Text>
         {infoText && <InfoTooltip infoText={infoText} />}
       </Box>
-      <Slider value={value} onChange={onChange} min={min} max={max} step={step}>
+      <Slider
+        value={value}
+        onChange={onChange}
+        min={min}
+        max={max}
+        step={step}
+        colorScheme="purple"
+      >
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
@@ -285,13 +267,22 @@ export const EnableSection = (props: EnableSectionProps) => {
           <Text>{label}</Text>
           {infoText && <InfoTooltip infoText={infoText} />}
         </Box>
-        <Switch isChecked={!!value} onChange={onChange} />
+        <Switch isChecked={!!value} onChange={onChange} colorScheme="purple" />
       </Box>
       {value && children}
     </Box>
   )
 }
 
+/* style={{
+ *   position: "absolute",
+ *   zIndex: 2000,
+ *   width: 400,
+ *   maxHeight: "70%",
+ *   background: "alt.100",
+ *   marginTop: "2%",
+ *   marginLeft: "2%"
+ * }} */
 export interface TweakProps {
   physics: typeof initialPhysics
   setPhysics: any
@@ -304,13 +295,14 @@ export const Tweaks = function (props: TweakProps) {
     <Box
       zIndex="overlay"
       position="absolute"
-      bg="white"
+      bg="alt.100"
       w="xs"
       marginTop="2%"
       marginLeft="2%"
       borderRadius="md"
-      maxH="80%"
-      overflowY="scroll"
+      maxH={650}
+      paddingBottom={5}
+      //overflowY="scroll"
     >
       <Box display="flex" justifyContent="flex-end">
         <Tooltip label="Reset settings to defaults">
@@ -318,224 +310,228 @@ export const Tweaks = function (props: TweakProps) {
             aria-label="Reset Defaults"
             icon={<RepeatClockIcon />}
             onClick={() => setPhysics(initialPhysics)}
+            colorScheme="purple"
           />
         </Tooltip>
         <CloseButton onClick={onClose} />
       </Box>
-      <Accordion allowMultiple allowToggle>
-        <AccordionItem>
-          <AccordionButton display="flex" justifyContent="space-between">
-            <Box display="flex">
-              <AccordionIcon />
-              <Text>Physics</Text>
-            </Box>
-            <Switch
-              id="physicsOn"
-              onChange={() => setPhysics({ ...physics, enabled: !physics.enabled })}
-              isChecked={physics.enabled}
-            />
-          </AccordionButton>
-          <AccordionPanel>
-            <VStack
-              spacing={2}
-              justifyContent="flex-start"
-              divider={<StackDivider borderColor="gray.200" />}
-              align="stretch"
-            >
-              <EnableSection
-                label="Gravity"
-                value={physics.gravityOn}
-                onChange={() => setPhysics({ ...physics, gravityOn: !physics.gravityOn })}
+      <Scrollbars autoHeight autoHeightMax={600}>
+        <Accordion allowMultiple allowToggle colorScheme="purple">
+          <AccordionItem>
+            <AccordionButton display="flex" justifyContent="space-between" colorScheme="purple">
+              <Box display="flex">
+                <AccordionIcon />
+                <Text>Physics</Text>
+              </Box>
+              <Switch
+                id="physicsOn"
+                onChange={() => setPhysics({ ...physics, enabled: !physics.enabled })}
+                isChecked={physics.enabled}
+                colorScheme="purple"
+              />
+            </AccordionButton>
+            <AccordionPanel>
+              <VStack
+                spacing={2}
+                justifyContent="flex-start"
+                divider={<StackDivider borderColor="gray.200" />}
+                align="stretch"
               >
+                <EnableSection
+                  label="Gravity"
+                  value={physics.gravityOn}
+                  onChange={() => setPhysics({ ...physics, gravityOn: !physics.gravityOn })}
+                >
+                  <SliderWithInfo
+                    label="Strength"
+                    value={physics.gravity * 10}
+                    onChange={(v) => setPhysics({ ...physics, gravity: v / 10 })}
+                  />
+                </EnableSection>
                 <SliderWithInfo
-                  label="Strength"
-                  value={physics.gravity * 10}
-                  onChange={(v) => setPhysics({ ...physics, gravity: v / 10 })}
+                  value={-physics.charge / 100}
+                  onChange={(value) => setPhysics({ ...physics, charge: -100 * value })}
+                  label="Repulsive Force"
                 />
-              </EnableSection>
-              <SliderWithInfo
-                value={-physics.charge / 100}
-                onChange={(value) => setPhysics({ ...physics, charge: -100 * value })}
-                label="Repulsive Force"
-              />
-              <EnableSection
-                label="Collision"
-                infoText="Perfomance sap, disable if slow"
-                value={physics.collision}
-                onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
-              >
+                <EnableSection
+                  label="Collision"
+                  infoText="Perfomance sap, disable if slow"
+                  value={physics.collision}
+                  onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
+                >
+                  <SliderWithInfo
+                    value={physics.collisionStrength * 10}
+                    onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
+                    label="Strength"
+                  />
+                </EnableSection>
                 <SliderWithInfo
-                  value={physics.collisionStrength * 10}
-                  onChange={(value) => setPhysics({ ...physics, collisionStrength: value / 10 })}
-                  label="Strength"
+                  value={physics.linkStrength * 5}
+                  onChange={(value) => setPhysics({ ...physics, linkStrength: value / 5 })}
+                  label="Link Force"
                 />
-              </EnableSection>
-              <SliderWithInfo
-                value={physics.linkStrength * 5}
-                onChange={(value) => setPhysics({ ...physics, linkStrength: value / 5 })}
-                label="Link Force"
-              />
-              <SliderWithInfo
-                label="Link Iterations"
-                value={physics.linkIts}
-                onChange={(value) => setPhysics({ ...physics, linkIts: value })}
-                min={0}
-                max={6}
-                step={1}
-                infoText="How many links down the line the physics of a single node affects (Slow)"
-              />
-              <SliderWithInfo
-                label="Viscosity"
-                value={physics.velocityDecay * 10}
-                onChange={(value) => setPhysics({ ...physics, velocityDecay: value / 10 })}
-              />
-            </VStack>
-            <Box>
-              <Accordion allowToggle>
-                <AccordionItem>
-                  <AccordionButton>
-                    <Text>Advanced</Text>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel>
-                    <VStack
-                      spacing={2}
-                      justifyContent="flex-start"
-                      divider={<StackDivider borderColor="gray.200" />}
-                      align="stretch"
-                    >
-                      <SliderWithInfo
-                        label="Iterations per tick"
-                        min={1}
-                        max={10}
-                        step={1}
-                        value={physics.iterations}
-                        onChange={(v) => setPhysics({ ...physics, iterations: v })}
-                        infoText="Number of times the physics simulation iterates per simulation step"
-                      />
-                      <SliderWithInfo
-                        label="Stabilization rate"
-                        value={physics.alphaDecay * 50}
-                        onChange={(value) => setPhysics({ ...physics, alphaDecay: value / 50 })}
-                      />
-                    </VStack>
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
-            </Box>
-            {/* </VStack> */}
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionButton>
-            <AccordionIcon />
-            Visual
-          </AccordionButton>
-          <AccordionPanel>
-            <VStack
-              spacing={2}
-              justifyContent="flex-start"
-              divider={<StackDivider borderColor="gray.200" />}
-              align="stretch"
-            >
-              <SliderWithInfo
-                label="Node size"
-                value={physics.nodeRel}
-                onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
-              />
-              <SliderWithInfo
-                label="Link width"
-                value={physics.linkWidth}
-                onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
-              />
-              <EnableSection
-                label="Labels"
-                value={physics.labels}
-                onChange={() => setPhysics({ ...physics, labels: !physics.labels })}
-              >
                 <SliderWithInfo
-                  label="Label Appearance Scale"
-                  value={physics.labelScale * 5}
-                  onChange={(value) => setPhysics({ ...physics, labelScale: value / 5 })}
-                />
-              </EnableSection>
-              <EnableSection
-                label="Directional Particles"
-                value={physics.particles}
-                onChange={() => setPhysics({ ...physics, particles: !physics.particles })}
-              >
-                <SliderWithInfo
-                  label="Particle Number"
-                  value={physics.particlesNumber}
-                  max={5}
+                  label="Link Iterations"
+                  value={physics.linkIts}
+                  onChange={(value) => setPhysics({ ...physics, linkIts: value })}
+                  min={0}
+                  max={6}
                   step={1}
-                  onChange={(value) => setPhysics({ ...physics, particlesNumber: value })}
+                  infoText="How many links down the line the physics of a single node affects (Slow)"
                 />
                 <SliderWithInfo
-                  label="Particle Size"
-                  value={physics.particlesWidth}
-                  onChange={(value) => setPhysics({ ...physics, particleWidth: value })}
+                  label="Viscosity"
+                  value={physics.velocityDecay * 10}
+                  onChange={(value) => setPhysics({ ...physics, velocityDecay: value / 10 })}
                 />
-              </EnableSection>
-              <EnableSection
-                label="Highlight"
-                onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
-                value={physics.highlight}
+              </VStack>
+              <Box>
+                <Accordion allowToggle>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Text>Advanced</Text>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel>
+                      <VStack
+                        spacing={2}
+                        justifyContent="flex-start"
+                        divider={<StackDivider borderColor="gray.200" />}
+                        align="stretch"
+                      >
+                        <SliderWithInfo
+                          label="Iterations per tick"
+                          min={1}
+                          max={10}
+                          step={1}
+                          value={physics.iterations}
+                          onChange={(v) => setPhysics({ ...physics, iterations: v })}
+                          infoText="Number of times the physics simulation iterates per simulation step"
+                        />
+                        <SliderWithInfo
+                          label="Stabilization rate"
+                          value={physics.alphaDecay * 50}
+                          onChange={(value) => setPhysics({ ...physics, alphaDecay: value / 50 })}
+                        />
+                      </VStack>
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              </Box>
+              {/* </VStack> */}
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <AccordionIcon />
+              Visual
+            </AccordionButton>
+            <AccordionPanel>
+              <VStack
+                spacing={2}
+                justifyContent="flex-start"
+                divider={<StackDivider borderColor="gray.200" />}
+                align="stretch"
               >
                 <SliderWithInfo
-                  label="Highlight Link Thickness Multiplier"
-                  value={physics.highlightLinkSize}
-                  onChange={(value) => setPhysics({ ...physics, highlightLinkSize: value })}
+                  label="Node size"
+                  value={physics.nodeRel}
+                  onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
                 />
                 <SliderWithInfo
-                  label="Highlight Node Size Multiplier"
-                  value={physics.highlightNodeSize}
-                  onChange={(value) => setPhysics({ ...physics, highlightNodeSize: value })}
+                  label="Link width"
+                  value={physics.linkWidth}
+                  onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
                 />
-                <Flex justifyContent="space-between">
-                  <Text> Highlight node color </Text>
-                </Flex>
-                <Flex justifyContent="space-between">
-                  <Text> Highlight link color </Text>
-                </Flex>
-              </EnableSection>
-            </VStack>
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionButton>
-            <AccordionIcon />
-            Behavior
-          </AccordionButton>
-          <AccordionPanel>
-            <VStack
-              spacing={2}
-              justifyContent="flex-start"
-              divider={<StackDivider borderColor="gray.200" />}
-              align="stretch"
-            >
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Text>Hover Higlight</Text>
-                <Menu>
-                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                    {physics.hover}
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem>Off</MenuItem>
-                    <MenuItem>On</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Text>Click</Text>
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Text>Double-click</Text>
-              </Box>
-            </VStack>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+                <EnableSection
+                  label="Labels"
+                  value={physics.labels}
+                  onChange={() => setPhysics({ ...physics, labels: !physics.labels })}
+                >
+                  <SliderWithInfo
+                    label="Label Appearance Scale"
+                    value={physics.labelScale * 5}
+                    onChange={(value) => setPhysics({ ...physics, labelScale: value / 5 })}
+                  />
+                </EnableSection>
+                <EnableSection
+                  label="Directional Particles"
+                  value={physics.particles}
+                  onChange={() => setPhysics({ ...physics, particles: !physics.particles })}
+                >
+                  <SliderWithInfo
+                    label="Particle Number"
+                    value={physics.particlesNumber}
+                    max={5}
+                    step={1}
+                    onChange={(value) => setPhysics({ ...physics, particlesNumber: value })}
+                  />
+                  <SliderWithInfo
+                    label="Particle Size"
+                    value={physics.particlesWidth}
+                    onChange={(value) => setPhysics({ ...physics, particleWidth: value })}
+                  />
+                </EnableSection>
+                <EnableSection
+                  label="Highlight"
+                  onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
+                  value={physics.highlight}
+                >
+                  <SliderWithInfo
+                    label="Highlight Link Thickness Multiplier"
+                    value={physics.highlightLinkSize}
+                    onChange={(value) => setPhysics({ ...physics, highlightLinkSize: value })}
+                  />
+                  <SliderWithInfo
+                    label="Highlight Node Size Multiplier"
+                    value={physics.highlightNodeSize}
+                    onChange={(value) => setPhysics({ ...physics, highlightNodeSize: value })}
+                  />
+                  <Flex justifyContent="space-between">
+                    <Text> Highlight node color </Text>
+                  </Flex>
+                  <Flex justifyContent="space-between">
+                    <Text> Highlight link color </Text>
+                  </Flex>
+                </EnableSection>
+              </VStack>
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <AccordionIcon />
+              Behavior
+            </AccordionButton>
+            <AccordionPanel>
+              <VStack
+                spacing={2}
+                justifyContent="flex-start"
+                divider={<StackDivider borderColor="gray.200" />}
+                align="stretch"
+              >
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Text>Hover Higlight</Text>
+                  <Menu>
+                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                      {physics.hover}
+                    </MenuButton>
+                    <MenuList>
+                      <MenuItem>Off</MenuItem>
+                      <MenuItem>On</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                  <Text>Click</Text>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                  <Text>Double-click</Text>
+                </Box>
+              </VStack>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Scrollbars>
     </Box>
   )
 }
@@ -681,37 +677,27 @@ export const Graph = function (props: GraphProps) {
     return
   }
 
+  const theme = useTheme()
+  console.log(theme)
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: '#242730',
+    backgroundColor: theme.white,
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       if (!physics.colorful) {
         if (Object.keys(highlightedNodes).length === 0) {
           return 'rgb(100, 100, 100)'
         }
-        return highlightedNodes[node.id!] ? '#a991f1' : 'rgb(50, 50, 50)'
+        return highlightedNodes[node.id!] ? theme.blue['500'] : 'rgb(50, 50, 50)'
       }
 
-      const palette = [
-        '#ff665c',
-        '#e69055',
-        '#7bc275',
-        '#4db5bd',
-        '#FCCE7B',
-        '#51afef',
-        '#1f5582',
-        '#C57BDB',
-        '#a991f1',
-        '#5cEfFF',
-        '#6A8FBF',
-      ]
+      const palette = ['pink', 'purple', 'blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red']
 
-      return palette[
-        numbereWithinRange(linksByNodeId[node.id!]?.length ?? 0, 0, palette.length - 1)
-      ]
+      return theme.colors[
+        palette[numbereWithinRange(linksByNodeId[node.id!]?.length ?? 0, 0, palette.length - 1)]
+      ][500]
     },
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
@@ -778,7 +764,7 @@ export const Graph = function (props: GraphProps) {
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
 
-      return linkIsHighlighted ? '#a991f1' : '#666666'
+      return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[400]
     },
     linkWidth: (link) => {
       return physics.linkWidth

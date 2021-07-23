@@ -94,7 +94,7 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
       (push (cons (pop column-names) (pop rows)) res))
     res))
 
-(defservlet* theme application/json ()
+(defservlet* theme text/stream ()
   (progn
     (when (boundp 'doom-themes--colors)
       (let*
@@ -102,7 +102,7 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
         (progn
           (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
           (insert (json-encode  ui-theme)))))
-    (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+    (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")))
 
 
 (defservlet* id/:id text/html ()
