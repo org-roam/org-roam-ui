@@ -720,7 +720,9 @@ export const Graph = function (props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
-      return links.length
+      const basicSize = 3 + links.length
+      const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
+      return basicSize * highlightSize
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
@@ -781,12 +783,19 @@ export const Graph = function (props: GraphProps) {
 
       return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]
     },
-    linkWidth: physics.linkWidth,
+    linkWidth: (link) => {
+      const linkIsHighlighted =
+        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
+        (link.target as NodeObject).id! === centralHighlightedNode?.id!
+
+      return linkIsHighlighted ? physics.highlightLinkSize * physics.linkWidth : physics.linkWidth
+    },
     linkDirectionalParticleWidth: physics.particlesWidth,
 
     d3AlphaDecay: physics.alphaDecay,
     d3AlphaMin: physics.alphaMin,
     d3VelocityDecay: physics.velocityDecay,
+
     onNodeClick,
     onBackgroundClick: () => {
       setScope((currentScope) => ({
