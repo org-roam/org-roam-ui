@@ -459,7 +459,7 @@ export const Tweaks = function (props: TweakProps) {
                 divider={<StackDivider borderColor="gray.200" />}
                 align="stretch"
               >
-                <Box>
+                {/* <Box>
                   <Text>Kill orphans</Text>
                   <Switch
                     colorScheme="purple"
@@ -468,7 +468,7 @@ export const Tweaks = function (props: TweakProps) {
                     }}
                     isChecked={physics.orphans}
                   ></Switch>
-                </Box>
+                </Box> */}
                 <SliderWithInfo
                   label="Node size"
                   value={physics.nodeRel}
@@ -626,9 +626,9 @@ export const Graph = function (props: GraphProps) {
 
   const scopedNodes = graphData.nodes.filter((node) => {
     const links = linksByNodeId[node.id as string] ?? []
-    if (physics.orphans && links.length === 0) {
-      return false
-    }
+    /* if (physics.orphans && links.length === 0) {
+     *   return false
+     * } */
     return (
       scope.nodeIds.includes(node.id as string) ||
       links.some((link) => {
