@@ -101,7 +101,7 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
         ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
         (progn
           (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
-          (insert (json-encode  ui-theme)))))
+          (insert (format "data: %s\n\n" (json-encode  ui-theme))))))
     (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")))
 
 

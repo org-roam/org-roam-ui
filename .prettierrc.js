@@ -1,4 +1,3 @@
-// eslint-disable-next-line immutable/no-mutation
 module.exports = {
   semi: false,
   trailingComma: 'all',

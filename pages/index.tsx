@@ -122,19 +122,8 @@ export function GraphPage() {
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
 
-  useEffect(() => {
-    const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
-
-    trackEmacs.addEventListener('message', (e) => {
-      const emacsNodeId = e.data
-      setEmacsNodeId(emacsNodeId)
-    })
-    /* fetch('http://localhost:35901/theme')
-     *   .then((res) => res.json())
-     *   .then((emacsTheme) => {
-     *     setTheme(emacsTheme)
-     *   }) */
-    fetch('http://localhost:35901/graph')
+  const updateGraphData = () => {
+    return fetch('http://localhost:35901/graph')
       .then((res) => res.json())
       .then((orgRoamGraphData: OrgRoamGraphReponse) => {
         nodeByIdRef.current = Object.fromEntries(
@@ -154,7 +143,25 @@ export function GraphPage() {
         const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphData))
         setGraphData(orgRoamGraphDataClone)
       })
+  }
+
+  useEffect(() => {
+    const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
+
+    trackEmacs.addEventListener('message', (e) => {
+      const emacsNodeId = e.data
+      setEmacsNodeId(emacsNodeId)
+    })
+
+    updateGraphData()
   }, [])
+
+  useEffect(() => {
+    if (!emacsNodeId) {
+      return
+    }
+    updateGraphData()
+  }, [emacsNodeId])
 
   const [threeDim, setThreeDim] = useState(false)
   const [showTweaks, setShowTweaks] = useState(true)
@@ -178,7 +185,11 @@ export function GraphPage() {
         />
       ) : (
         <Box position="absolute" zIndex="overlay" marginTop="2%" marginLeft="2%">
-          <IconButton icon={<SettingsIcon />} onClick={() => setShowTweaks(true)} />
+          <IconButton
+            aria-label="Settings"
+            icon={<SettingsIcon />}
+            onClick={() => setShowTweaks(true)}
+          />
         </Box>
       )}
       <Graph
@@ -546,7 +557,7 @@ export interface GraphProps {
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId, emacsNodeId } = props
+  const { physics, graphData, threeDim, linksByNodeId, emacsNodeId, nodeById } = props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
@@ -617,38 +628,27 @@ export const Graph = function (props: GraphProps) {
             nodes: scopedNodes,
             links: scopedLinks,
           },
-    [scope],
+    [scope, JSON.stringify(Object.keys(nodeById))],
   )
+
+  // make sure the camera position and zoom or fine when the list of nodes to render is changed
+  useEffect(() => {
+    // this setTimeout was added holistically because the behavior is better when we put
+    // zoomToFit off a little bit
+    setTimeout(() => {
+      const fg = threeDim ? graph3dRef.current : graph2dRef.current
+      fg?.zoomToFit(0, 200)
+    }, 1)
+  }, [JSON.stringify(scopedNodeIds)])
 
   useEffect(() => {
     ;(async () => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
-      if (physics.gravityOn) {
-        fg.d3Force('x', d3.forceX().strength(physics.gravity))
-        fg.d3Force('y', d3.forceY().strength(physics.gravity))
-        if (threeDim) {
-          if (physics.galaxy) {
-            fg.d3Force('x', d3.forceX().strength(physics.gravity / 5))
-            fg.d3Force('z', d3.forceZ().strength(physics.gravity / 5))
-          } else {
-            fg.d3Force('x', d3.forceX().strength(physics.gravity))
-            fg.d3Force('z', d3.forceZ().strength(physics.gravity))
-          }
-        } else {
-          fg.d3Force('z', null)
-        }
-      } else {
-        fg.d3Force('x', null)
-        fg.d3Force('y', null)
-        threeDim ? fg.d3Force('z', null) : null
-      }
-      fg.d3Force('link').strength(physics.linkStrength)
-      fg.d3Force('link').iterations(physics.linkIts)
-      physics.collision
-        ? fg.d3Force('collide', d3.forceCollide().radius(20))
-        : fg.d3Force('collide', null)
-      fg.d3Force('charge').strength(physics.charge)
+      // fg.d3Force('x', null)
+      //   fg.d3Force('y', null)
+      fg.d3Force('collide', d3.forceCollide().radius(10))
+      // fg.d3Force('charge').strength(1)
     })()
   })
 
@@ -702,9 +702,7 @@ export const Graph = function (props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
-      const basicSize = 3 + links.length
-      const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
-      return basicSize * highlightSize
+      return links.length
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
@@ -728,14 +726,14 @@ export const Graph = function (props: GraphProps) {
       const fadeFactor = Math.min((3 * (globalScale - physics.labelScale)) / physics.labelScale, 1)
 
       // draw label background
-      ctx.fillStyle =
-        'rgba(20, 20, 20, ' +
-        (Object.keys(highlightedNodes).length === 0
-          ? fadeFactor
+      const backgroundOpacity =
+        Object.keys(highlightedNodes).length === 0
+          ? 0.5 * fadeFactor
           : highlightedNodes[node.id!]
           ? 0.5
-          : 0.15 * fadeFactor) +
-        ')'
+          : 0.15 * fadeFactor
+
+      ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
       ctx.fillRect(
         node.x! - bckgDimensions[0] / 2,
         node.y! - bckgDimensions[1] / 2,
@@ -743,16 +741,15 @@ export const Graph = function (props: GraphProps) {
       )
 
       // draw label text
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.fillStyle =
-        'rgb(255, 255, 255, ' +
-        (Object.keys(highlightedNodes).length === 0
+      const textOpacity =
+        Object.keys(highlightedNodes).length === 0
           ? fadeFactor
           : highlightedNodes[node.id!]
           ? 1
-          : 0.3 * fadeFactor) +
-        ')'
+          : 0.3 * fadeFactor
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillStyle = `rgb(255, 255, 255, ${textOpacity})`
       ctx.font = `${fontSize}px Sans-Serif`
       ctx.fillText(label, node.x!, node.y!)
     },
@@ -766,19 +763,12 @@ export const Graph = function (props: GraphProps) {
 
       return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[400]
     },
-    linkWidth: (link) => {
-      return physics.linkWidth
-      const linkIsHighlighted =
-        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-        (link.target as NodeObject).id! === centralHighlightedNode?.id!
-
-      return linkIsHighlighted ? physics.highlightLinkSize * physics.linkWidth : physics.linkWidth
-    },
+    linkWidth: physics.linkWidth,
     linkDirectionalParticleWidth: physics.particlesWidth,
 
-    d3AlphaDecay: physics.alphaDecay,
-    d3AlphaMin: physics.alphaMin,
-    d3VelocityDecay: physics.velocityDecay,
+    // d3AlphaDecay: physics.alphaDecay,
+    // d3AlphaMin: physics.alphaMin,
+    // d3VelocityDecay: physics.velocityDecay,
 
     onNodeClick: onNodeClick,
     onBackgroundClick: () => {
