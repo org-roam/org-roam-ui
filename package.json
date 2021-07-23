@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "prettier": "prettier -w .",
     "lint": "tsc --noEmit && next lint && eslint \"./**/*.{ts,tsx,js}\" \"./**/.*.{ts,tsx,js}\" --fix"

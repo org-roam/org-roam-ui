@@ -46,7 +46,7 @@
 (defvar org-roam-ui/root-dir default-directory
   "Root directory of the org-roam-ui project.")
 
-(defvar org-roam-ui/app-build-dir (expand-file-name "./build/")
+(defvar org-roam-ui/app-build-dir (expand-file-name "./out/")
   "Directory containing org-roam-ui's web build.")
 
 ;;; Dynamic variables
