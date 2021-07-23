@@ -1,34 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# org-roam-ui
 
-## Getting Started
+org-roam-ui is a successor of https://github.com/org-roam/org-roam-server that extends functionality of org-roam with a Web app that runs side-by-side with Emacs.
 
-First, run the development server:
+## Disclaimers
 
+- We only support [org-roam v2](https://blog.jethro.dev/posts/org_roam_v2/); v1 will never be supported.
+- Feature-parity with org-roam-server is not the goal althought we aim to make a similar product which is having a visial graph to help you explore and navigate your org-roam nodes.
+- This is alpha software: please do give it a try and use it, but expect bugs and troubleshooting.
+- The project was created by a couple of tinkerers to scratch their own itch. We don't get rewarded in any material way and may stop any day (because life). The best way to keep the project alive is to [explore the code and contribute](#Contribute).
+
+## Install
+
+org-roam-ui is not on MELPA.
+
+Clone the repo:
 ```bash
-npm run dev
-# or
-yarn dev
+cd ~/.emacs.d/private
+git clone git@github.com:org-roam/org-roam-ui.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Load in Emacs (add to config):
+```lisp
+(add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
+(load-library "org-roam-ui")
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Should your Emacs miss any of the dependecies, please install them manually.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.tsx`.
+## Use
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Use `M-x org-roam-ui RET` to enable the global mode. 
+It will start a web server on http://127.0.0.1:35901/.
 
-## Learn More
+## Org-Roam Protocol
 
-To learn more about Next.js, take a look at the following resources:
+The graph utilizes org-roam protocol which means if you click on one
+of the nodes, it will open the corresponding file in Emacs. For this
+feature to work, org-roam protocol should be configured in the system.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[Configuring Org-Roam Protocol](https://www.orgroam.com/manual.html#Installation-_00281_0029)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Also make sure the emacs server is started; `M-x server-start RET`
 
-## Deploy on Vercel
+# Contribute
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[GitHub Community Guidelines
+](https://docs.github.com/en/github/site-policy/github-community-guidelines) apply.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Go [here](https://github.com/org-roam/org-roam-ui/discussions/4) to have an onboarding call with a member of the core team.
+
+We would ❤️ to have you on board.
