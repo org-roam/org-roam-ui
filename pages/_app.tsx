@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { useEffect, useState, useMemo } from 'react'
 import { extendTheme } from '@chakra-ui/react'
+import * as d3int from 'd3-interpolate'
 //import hexRgb from 'hex-rgb'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -79,6 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
         purple: {
           500: emacsTheme.violet,
+          inter: d3int.interpolate(emacsTheme.base4, emacsTheme.violet),
         },
         pink: {
           500: emacsTheme.magenta,

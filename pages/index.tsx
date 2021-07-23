@@ -11,6 +11,8 @@ import { GraphData, NodeObject } from 'force-graph'
 
 import { useWindowSize } from '@react-hook/window-size'
 import { Scrollbars } from 'react-custom-scrollbars-2'
+import { Easing } from '@tweenjs/tween.js'
+import { useAnimation } from '@lilib/hooks'
 
 import {
   Accordion,
@@ -342,9 +344,9 @@ export const Tweaks = function (props: TweakProps) {
           />
         )}
       >
-        <Accordion allowMultiple allowToggle colorScheme="purple">
+        <Accordion allowMultiple allowToggle>
           <AccordionItem>
-            <AccordionButton display="flex" justifyContent="space-between" colorScheme="purple">
+            <AccordionButton display="flex" justifyContent="space-between">
               <Box display="flex">
                 <AccordionIcon />
                 <Text>Physics</Text>
@@ -724,7 +726,36 @@ export const Graph = function (props: GraphProps) {
     return
   }
 
+  const [opacity, setOpacity] = useState<number>(0)
+  const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
+    duration: 300,
+    algorithm: Easing.Quadratic.Out,
+  })
+  const [fadeOut, fadeOutCancel] = useAnimation((x) => setOpacity(-1 * (x - 1)), {
+    duration: 300,
+    algorithm: Easing.Quadratic.Out,
+  })
+
+  const lastHoverNode = useRef()
+  useEffect(() => {
+    hoverNode ? fadeIn() : fadeOut()
+    hoverNode && (lastHoverNode.current = hoverNode)
+  }, [hoverNode])
   const theme = useTheme()
+  //this was just easier than getting an actual package
+  /* const convertHexToRGBA = (hexCode: string, opacity: number) => {
+     *   let hex = hexCode.replace('#', '')
+
+     *   if (hex.length === 3) {
+     *     hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
+     *   }
+
+     *   const r = parseInt(hex.substring(0, 2), 16)
+     *   const g = parseInt(hex.substring(2, 4), 16)
+     *   const b = parseInt(hex.substring(4, 6), 16)
+
+     *   return `rgba(${r},${g},${b},${opacity})`
+     * } */
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -748,20 +779,32 @@ export const Graph = function (props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
+      const wasNeighbor = (link) =>
+        link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!
+      const wasHighlightedNode = links.some(wasNeighbor)
       const basicSize = 3 + links.length
-      const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
+      const highlightSize = highlightedNodes[node.id!]
+        ? 1 + opacity * (physics.highlightNodeSize - 1)
+        : lastHoverNode.current?.id! === node.id!
+        ? 1 + opacity * (physics.highlightNodeSize - 1)
+        : wasHighlightedNode
+        ? 1 + opacity * (physics.highlightNodeSize - 1)
+        : 1
       return basicSize * highlightSize
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
         return
       }
-
       if (globalScale <= physics.labelScale && !highlightedNodes[node.id!]) {
         return
       }
 
-      const nodeTitle = (node as OrgRoamNode).title
+      const wasHighlightedNode = linksByNodeId[node.id!].some(
+        (link) =>
+          link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!,
+      )
+      const nodeTitle = (node as OrgRoamNode).title!
       const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 30))
       // const label = 'label'
       const fontSize = 12 / globalScale
@@ -776,10 +819,12 @@ export const Graph = function (props: GraphProps) {
       // draw label background
       const backgroundOpacity =
         Object.keys(highlightedNodes).length === 0
-          ? 0.5 * fadeFactor
-          : highlightedNodes[node.id!]
+          ? lastHoverNode.current?.id! === node.id
+            ? 0.5
+            : 0.5 * fadeFactor * (-1 * (0.5 * opacity - 1))
+          : highlightedNodes[node.id!] || wasHighlightedNode
           ? 0.5
-          : 0.15 * fadeFactor
+          : 0.5 * fadeFactor * (-1 * (0.5 * opacity - 1))
 
       ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
       ctx.fillRect(
@@ -792,9 +837,9 @@ export const Graph = function (props: GraphProps) {
       const textOpacity =
         Object.keys(highlightedNodes).length === 0
           ? fadeFactor
-          : highlightedNodes[node.id!]
+          : highlightedNodes[node.id!] || wasHighlightedNode
           ? 1
-          : 0.3 * fadeFactor
+          : 0.5 * fadeFactor * -1 * (0.5 * opacity - 1)
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillStyle = `rgb(255, 255, 255, ${textOpacity})`
@@ -808,15 +853,28 @@ export const Graph = function (props: GraphProps) {
       const linkIsHighlighted =
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
-
-      return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]
+      const linkWasHighlighted =
+        (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
+        (link.target as NodeObject).id! === lastHoverNode.current?.id!
+      return linkIsHighlighted
+        ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
+        : linkWasHighlighted
+        ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
+        : theme.colors.gray[500]
     },
     linkWidth: (link) => {
       const linkIsHighlighted =
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
+      const linkWasHighlighted =
+        (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
+        (link.target as NodeObject).id! === lastHoverNode.current?.id!
 
-      return linkIsHighlighted ? physics.highlightLinkSize * physics.linkWidth : physics.linkWidth
+      return linkIsHighlighted
+        ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
+        : linkWasHighlighted
+        ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
+        : physics.linkWidth
     },
     linkDirectionalParticleWidth: physics.particlesWidth,
 
