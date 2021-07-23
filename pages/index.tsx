@@ -782,7 +782,7 @@ export const Graph = function (props: GraphProps) {
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
 
-      return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[400]
+      return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]
     },
     linkWidth: physics.linkWidth,
     linkDirectionalParticleWidth: physics.particlesWidth,
