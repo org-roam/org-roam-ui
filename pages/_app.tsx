@@ -38,16 +38,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     trackTheme.addEventListener('message', (e) => {
       const themeData = JSON.parse(e.data)
       setEmacsTheme(themeData)
-      console.log(themeData)
-      console.log(themeData['fg-alt'])
     })
   }, [])
 
-  const borderColor = emacsTheme.violet + 'aa'
-  const theme =
+  const theme = useMemo(() => {
     //useMemo(() => {
     //console.log("theme change")
-    extendTheme({
+    const borderColor = emacsTheme.violet + 'aa'
+    return extendTheme({
       colors: {
         white: emacsTheme.bg,
         black: emacsTheme.fg,
@@ -97,6 +95,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         outline: '0 0 0 3px ' + borderColor,
       },
     })
+  }, [JSON.stringify(emacsTheme)])
   // }, [emacsTheme.base1])
 
   return (

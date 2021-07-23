@@ -444,6 +444,16 @@ export const Tweaks = function (props: TweakProps) {
                 divider={<StackDivider borderColor="gray.200" />}
                 align="stretch"
               >
+                <Box>
+                  <Text>Kill orphans</Text>
+                  <Switch
+                    colorScheme="purple"
+                    onChange={() => {
+                      setPhysics({ ...physics, orphans: !physics.orphans })
+                    }}
+                    isChecked={physics.orphans}
+                  ></Switch>
+                </Box>
                 <SliderWithInfo
                   label="Node size"
                   value={physics.nodeRel}
