@@ -99,6 +99,7 @@ const initialPhysics = {
   highlight: true,
   highlightNodeSize: 2,
   highlightLinkSize: 2,
+  highlightAnim: false,
   orphans: false,
 }
 
@@ -510,6 +511,16 @@ export const Tweaks = function (props: TweakProps) {
                     onChange={(value) => setPhysics({ ...physics, particlesWidth: value })}
                   />
                 </EnableSection>
+                <Box>
+                  <Text>Kill orphans</Text>
+                  <Switch
+                    colorScheme="purple"
+                    onChange={() => {
+                      setPhysics({ ...physics, highlightAnim: !physics.highlightAnim })
+                    }}
+                    isChecked={physics.highlightAnim}
+                  ></Switch>
+                </Box>
                 <EnableSection
                   label="Highlight"
                   onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
@@ -726,7 +737,7 @@ export const Graph = function (props: GraphProps) {
     return
   }
 
-  const [opacity, setOpacity] = useState<number>(0)
+  const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: 300,
     algorithm: Easing.Quadratic.Out,
@@ -738,8 +749,11 @@ export const Graph = function (props: GraphProps) {
 
   const lastHoverNode = useRef()
   useEffect(() => {
-    hoverNode ? fadeIn() : fadeOut()
     hoverNode && (lastHoverNode.current = hoverNode)
+    if (!physics.highlightAnim) {
+      return
+    }
+    hoverNode ? fadeIn() : fadeOut()
   }, [hoverNode])
   const theme = useTheme()
   //this was just easier than getting an actual package
