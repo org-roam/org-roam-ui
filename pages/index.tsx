@@ -628,6 +628,16 @@ export const Graph = function (props: GraphProps) {
     [scope],
   )
 
+  // make sure the camera position and zoom or fine when the list of nodes to render is changed
+  useEffect(() => {
+    // this setTimeout was added holistically because the behavior is better when we put
+    // zoomToFit off a little bit
+    setTimeout(() => {
+      const fg = threeDim ? graph3dRef.current : graph2dRef.current
+      fg?.zoomToFit(0, 200)
+    }, 1)
+  }, [JSON.stringify(scopedNodeIds)])
+
   useEffect(() => {
     ;(async () => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
