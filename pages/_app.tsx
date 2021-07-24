@@ -59,6 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           700: emacsTheme.base6,
           800: emacsTheme.base7,
           900: emacsTheme.base8,
+          inter: d3int.interpolate(emacsTheme.base4, emacsTheme.base3),
         },
         blue: {
           500: emacsTheme.blue,

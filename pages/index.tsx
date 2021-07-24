@@ -69,18 +69,20 @@ export type Scope = {
   nodeIds: string[]
 }
 
-const options: string[] = []
-const algorithms: { [name: string]: (percent: number) => number } = {}
-
-for (let type in Easing) {
-  for (let mode in (Easing as any)[type]) {
-    let name = type + mode
-    if (name === 'LinearNone') {
-      name = 'Linear'
+const getAlgos = (option?: boolean) => {
+  const options: string[] = []
+  const algorithms: { [name: string]: (percent: number) => number } = {}
+  for (let type in Easing) {
+    for (let mode in (Easing as any)[type]) {
+      let name = type + mode
+      if (name === 'LinearNone') {
+        name = 'Linear'
+      }
+      option ? options.push(name) : (algorithms[name] = (Easing as any)[type][mode])
     }
-    options.push(name)
-    algorithms[name] = (Easing as any)[type][mode]
+    console.log(algorithms)
   }
+  return option ? options : algorithms
 }
 const initialPhysics = {
   enabled: true,
@@ -115,8 +117,8 @@ const initialPhysics = {
   highlightLinkSize: 2,
   highlightAnim: false,
   animationSpeed: 250,
-  algorithms: algorithms,
-  algorithmOptions: options,
+  algorithms: getAlgos(false),
+  algorithmOptions: getAlgos(true),
   algorithmName: 'CubicOut',
   orphans: false,
   follow: 'Local',
@@ -174,6 +176,12 @@ export function GraphPage() {
         // nodeByIdRef, linksByNodeIdRef
         const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphData))
         setGraphData(orgRoamGraphDataClone)
+      })
+      .catch((error) => {
+        console.log(
+          'Oopsie whoopsie! We made a fucky wucky! Are you suwu owg-woam-uwui is wunning?',
+          error,
+        )
       })
   }
 
@@ -535,6 +543,13 @@ export const Tweaks = (props: TweakProps) => {
                 divider={<StackDivider borderColor="gray.200" />}
                 align="stretch"
               >
+                <EnableSection
+                  label="Colors"
+                  onChange={() => setPhysics({ ...physics, colorful: !physics.colorful })}
+                  value={physics.colorful}
+                >
+                  <Text>Child</Text>
+                </EnableSection>
                 <SliderWithInfo
                   label="Node size"
                   value={physics.nodeRel}
@@ -592,11 +607,13 @@ export const Tweaks = (props: TweakProps) => {
                   />
                   <Select
                     placeholder={physics.algorithmName}
-                    onChange={(v) => setPhysics({ ...physics, algorithmName: v.target.value })}
+                    onChange={(v) => {
+                      setPhysics({ ...physics, algorithmName: v.target.value })
+                      console.log(v.target.value)
+                    }}
                   >
                     {physics.algorithmOptions.map((opt, i) => (
                       <option key={i} value={physics.algorithmOptions[i]}>
-                        {' '}
                         {physics.algorithmOptions[i]}
                       </option>
                     ))}
@@ -838,6 +855,10 @@ export const Graph = function (props: GraphProps) {
   // This forces the graph to make a small update when you do
   useEffect(() => {
     graph2dRef.current?.d3ReheatSimulation()
+    console.log(fadeIn)
+    console.log(physics.algorithms[physics.algorithmName])
+    console.log(physics.algorithms)
+    console.log(physics.algorithmName)
   }, [physics])
 
   //shitty handler to check for doubleClicks
@@ -863,13 +884,13 @@ export const Graph = function (props: GraphProps) {
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: physics.animationSpeed,
-    algorithm: physics.algorithms[physics.algorithmName] ?? Easing.Cubic.InOut,
+    algorithm: physics.algorithms[physics.algorithmName],
   })
   const [fadeOut, fadeOutCancel] = useAnimation(
     (x) => setOpacity(Math.min(opacity, -1 * (x - 1))),
     {
       duration: physics.animationSpeed,
-      algorithm: physics.algorithms[physics.algorithmName] ?? Easing.Cubic.InOut,
+      algorithm: physics.algorithms[physics.algorithmName],
     },
   )
 
@@ -895,10 +916,20 @@ export const Graph = function (props: GraphProps) {
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       if (!physics.colorful) {
-        if (Object.keys(highlightedNodes).length === 0) {
-          return 'rgb(100, 100, 100)'
+        if (!physics.highlightAnim) {
+          return Object.keys(highlightedNodes).length === 0
+            ? highlightedNodes[node.id!]
+              ? theme.colors.purple[500]
+              : theme.colors.gray[400]
+            : theme.colors.gray[500]
         }
-        return highlightedNodes[node.id!] ? theme.blue['500'] : 'rgb(50, 50, 50)'
+        return Object.keys(highlightedNodes).length === 0
+          ? lastHoverNode.current?.id! === node.id!
+            ? theme.colors.purple['inter'](opacity)
+            : theme.colors.gray['inter'](opacity)
+          : highlightedNodes[node.id!]
+          ? theme.colors.purple['inter'](opacity)
+          : theme.colors.gray['inter'](opacity)
       }
 
       const palette = ['pink', 'purple', 'blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red']
@@ -932,15 +963,18 @@ export const Graph = function (props: GraphProps) {
       if (!physics.labels) {
         return
       }
-      if (globalScale <= physics.labelScale && !highlightedNodes[node.id!]) {
+      const links = linksByNodeId[node.id!] ?? []
+      const wasHighlightedNode =
+        physics.highlightAnim &&
+        links.some(
+          (link) =>
+            link.source === lastHoverNode.current?.id! ||
+            link.target === lastHoverNode.current?.id!,
+        )
+      if (globalScale <= physics.labelScale && !highlightedNodes[node.id!] && !wasHighlightedNode) {
         return
       }
 
-      const links = linksByNodeId[node.id!] ?? []
-      const wasHighlightedNode = links.some(
-        (link) =>
-          link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!,
-      )
       const nodeTitle = (node as OrgRoamNode).title!
       const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 30))
       // const label = 'label'
@@ -956,6 +990,9 @@ export const Graph = function (props: GraphProps) {
       // draw label background
       const getLabelOpacity = () => {
         if (physics.highlightAnim) {
+          if (globalScale <= physics.labelScale) {
+            return opacity
+          }
           return Object.keys(highlightedNodes).length === 0
             ? lastHoverNode.current?.id! === node.id
               ? 1
