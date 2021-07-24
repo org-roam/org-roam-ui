@@ -803,13 +803,13 @@ export const Graph = function (props: GraphProps) {
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: physics.animationSpeed,
-    algorithm: physics.algorithms[physics.algorithmName],
+    algorithm: physics.algorithms[physics.algorithmName] ?? Easing.Cubic.InOut,
   })
   const [fadeOut, fadeOutCancel] = useAnimation(
     (x) => setOpacity(Math.min(opacity, -1 * (x - 1))),
     {
       duration: physics.animationSpeed,
-      algorithm: physics.algorithms[physics.algorithmName],
+      algorithm: physics.algorithms[physics.algorithmName] ?? Easing.Cubic.InOut,
     },
   )
 
@@ -1000,10 +1000,7 @@ export const Graph = function (props: GraphProps) {
       if (!physics.hover) {
         return
       }
-      const timer = setTimeout(() => {
-        setHoverNode(node)
-      }, 30)
-      return () => clearTimeout(timer)
+      setHoverNode(node)
     },
   }
 
