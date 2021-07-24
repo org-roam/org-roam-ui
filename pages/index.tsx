@@ -119,8 +119,16 @@ const initialPhysics = {
   algorithmOptions: options,
   algorithmName: 'CubicOut',
   orphans: false,
+  follow: 'Local',
 }
 
+const initialFilter = {
+  orphans: false,
+  tags: [],
+  nodes: [],
+  links: [],
+  date: [],
+}
 export default function Home() {
   // only render on the client
   const [showPage, setShowPage] = useState(false)
@@ -137,6 +145,7 @@ export default function Home() {
 
 export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
+  const [filter, setFilter] = usePersistantState('filter', initialFilter)
   //  const [theme, setTheme] = useState(initialTheme)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
@@ -156,9 +165,10 @@ export function GraphPage() {
             ...acc,
             [link.source]: [...(acc[link.source] ?? []), link],
             [link.target]: [...(acc[link.target] ?? []), link],
+            [link.type]: [...(acc[link.type] ?? []), link],
           }
         }, {})
-
+        console.log(linksByNodeIdRef.current)
         // react-force-graph modifies the graph data implicitly,
         // so we make sure there's no overlap between the objects we pass it and
         // nodeByIdRef, linksByNodeIdRef
@@ -173,6 +183,7 @@ export function GraphPage() {
       const emacsNodeId = e.data
       setEmacsNodeId(emacsNodeId)
     })
+    console.log('tttt')
     updateGraphData()
   }, [])
 
@@ -198,6 +209,9 @@ export function GraphPage() {
             physics,
             setPhysics,
             threeDim,
+            setThreeDim,
+            filter,
+            setFilter,
           }}
           onClose={() => {
             setShowTweaks(false)
@@ -220,6 +234,7 @@ export function GraphPage() {
           graphData,
           threeDim,
           emacsNodeId,
+          filter,
         }}
       />
     </div>
@@ -339,10 +354,13 @@ export interface TweakProps {
   physics: typeof initialPhysics
   setPhysics: any
   threeDim: boolean
+  setTreedim: (boolean) => void
+  filter: typeof initialFilter
+  setFilter: any
   onClose: () => void
 }
 export const Tweaks = (props: TweakProps) => {
-  const { physics, setPhysics, threeDim, onClose } = props
+  const { physics, setPhysics, threeDim, setThreeDim, filter, setFilter, onClose } = props
   return (
     <Box
       zIndex="overlay"
@@ -383,6 +401,24 @@ export const Tweaks = (props: TweakProps) => {
         )}
       >
         <Accordion allowMultiple allowToggle>
+          <AccordionItem>
+            <AccordionButton>
+              <AccordionIcon />
+              <Text>Filter</Text>
+            </AccordionButton>
+            <AccordionPanel>
+              <Flex justifyContent="space-between">
+                <Text>Kill orphans</Text>
+                <Switch
+                  colorScheme="purple"
+                  onChange={() => {
+                    setFilter({ ...filter, orphans: !filter.orphans })
+                  }}
+                  isChecked={filter.orphans}
+                ></Switch>
+              </Flex>
+            </AccordionPanel>
+          </AccordionItem>
           <AccordionItem>
             <AccordionButton display="flex" justifyContent="space-between">
               <Box display="flex">
@@ -499,16 +535,6 @@ export const Tweaks = (props: TweakProps) => {
                 divider={<StackDivider borderColor="gray.200" />}
                 align="stretch"
               >
-                {/* <Box>
-                  <Text>Kill orphans</Text>
-                  <Switch
-                    colorScheme="purple"
-                    onChange={() => {
-                      setPhysics({ ...physics, orphans: !physics.orphans })
-                    }}
-                    isChecked={physics.orphans}
-                  ></Switch>
-                </Box> */}
                 <SliderWithInfo
                   label="Node size"
                   value={physics.nodeRel}
@@ -653,11 +679,12 @@ export interface GraphProps {
   graphData: GraphData
   physics: typeof initialPhysics
   threeDim: boolean
+  filter: typeof initialFilter
   emacsNodeId: string | null
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId, emacsNodeId, nodeById } = props
+  const { physics, graphData, threeDim, linksByNodeId, filter, emacsNodeId, nodeById } = props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
@@ -674,9 +701,13 @@ export const Graph = function (props: GraphProps) {
     if (!emacsNodeId) {
       return
     }
-    setScope({
-      nodeIds: [emacsNodeId],
-    })
+    switch (physics.follow) {
+      case 'Local':
+        setScope({ nodeIds: [emacsNodeId] })
+        break
+      case 'Zoom':
+      default:
+    }
   }, [emacsNodeId])
 
   const centralHighlightedNode = hoverNode
@@ -698,8 +729,32 @@ export const Graph = function (props: GraphProps) {
     )
   }, [centralHighlightedNode, linksByNodeId])
 
-  const scopedNodes = useMemo(() => {
+  const filteredNodes = useMemo(() => {
     return graphData.nodes.filter((node) => {
+      const links = linksByNodeId[node.id as string] ?? []
+      let filterNode = true
+      if (filter.orphans) {
+        filterNode = links.length !== 0
+      }
+      return filterNode
+    })
+  }, [filter, graphData.nodes, linksByNodeId])
+
+  const filteredLinks = useMemo(() => {
+    return graphData.links.filter((link) => {
+      // we need to cover both because force-graph modifies the original data
+      // but if we supply the original data on each render, the graph will re-render sporadically
+      //const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
+      //const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+      const linkType = link.type
+
+      return link.type !== 'cite'
+    })
+  }, [filter, JSON.stringify(graphData.links)])
+
+  const scopedNodes = useMemo(() => {
+    console.log(filteredNodes)
+    return filteredNodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
       /* if (physics.orphans && links.length === 0) {
        *   return false
@@ -711,34 +766,32 @@ export const Graph = function (props: GraphProps) {
         })
       )
     })
-  }, [graphData, linksByNodeId, scope.nodeIds])
+  }, [filteredNodes, linksByNodeId, scope.nodeIds])
 
   const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-  const scopedLinks = useMemo(
-    () =>
-      graphData.links.filter((link) => {
-        // we need to cover both because force-graph modifies the original data
-        // but if we supply the original data on each render, the graph will re-render sporadically
-        const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-        const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+  const scopedLinks = useMemo(() => {
+    return filteredLinks.filter((link) => {
+      // we need to cover both because force-graph modifies the original data
+      // but if we supply the original data on each render, the graph will re-render sporadically
+      const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
+      const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
 
-        return (
-          scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
-        )
-      }),
-    [graphData, scopedNodeIds],
-  )
+      return (
+        scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
+      )
+    })
+  }, [filteredLinks, scopedNodes])
 
   const scopedGraphData = useMemo(
     () =>
       scope.nodeIds.length === 0
-        ? graphData
+        ? { nodes: filteredNodes, links: filteredLinks }
         : {
             nodes: scopedNodes,
             links: scopedLinks,
           },
-    [scope, JSON.stringify(Object.keys(nodeById))],
+    [filter, scope, JSON.stringify(Object.keys(nodeById))],
   )
 
   // make sure the camera position and zoom or fine when the list of nodes to render is changed
@@ -978,6 +1031,7 @@ export const Graph = function (props: GraphProps) {
 
     onNodeClick,
     onBackgroundClick: () => {
+      console.log(scope)
       setScope((currentScope) => ({
         ...currentScope,
         nodeIds: [],

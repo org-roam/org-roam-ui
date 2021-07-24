@@ -78,11 +78,11 @@ This serves the web-build and API over HTTP."
 
 (defservlet* graph application/json ()
   (let* ((nodes-columns [id file title level])
-         (links-columns [source dest])
+         (links-columns [source dest type])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
-         (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (= type "id")]))
+         (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
          (response (json-encode `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
-                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target)) links-db-rows))))))
+                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))))))
     (insert response)
     (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*")))
 
