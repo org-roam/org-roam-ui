@@ -64,6 +64,9 @@ const ForceGraph3D = (
 ) as typeof TForceGraph3D
 
 export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
+export type ParentNodesByFile = {
+  [adultness: string]: { [nodeFile: string]: string[] } | undefined
+}
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
 export type Scope = {
   nodeIds: string[]
@@ -80,7 +83,6 @@ const getAlgos = (option?: boolean) => {
       }
       option ? options.push(name) : (algorithms[name] = (Easing as any)[type][mode])
     }
-    console.log(algorithms)
   }
   return option ? options : algorithms
 }
@@ -126,6 +128,7 @@ const initialPhysics = {
 
 const initialFilter = {
   orphans: false,
+  parents: true,
   tags: [],
   nodes: [],
   links: [],
@@ -153,6 +156,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
 
   const nodeByIdRef = useRef<NodeById>({})
+  const parentNodesByFileRef = useRef<any>({}) //useRef<ParentNodesByFile>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
 
   const updateGraphData = () => {
@@ -167,21 +171,13 @@ export function GraphPage() {
             ...acc,
             [link.source]: [...(acc[link.source] ?? []), link],
             [link.target]: [...(acc[link.target] ?? []), link],
-            [link.type]: [...(acc[link.type] ?? []), link],
           }
         }, {})
-        console.log(linksByNodeIdRef.current)
         // react-force-graph modifies the graph data implicitly,
         // so we make sure there's no overlap between the objects we pass it and
         // nodeByIdRef, linksByNodeIdRef
         const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphData))
         setGraphData(orgRoamGraphDataClone)
-      })
-      .catch((error) => {
-        console.log(
-          'Oopsie whoopsie! We made a fucky wucky! Are you suwu owg-woam-uwui is wunning?',
-          error,
-        )
       })
   }
 
@@ -191,7 +187,6 @@ export function GraphPage() {
       const emacsNodeId = e.data
       setEmacsNodeId(emacsNodeId)
     })
-    console.log('tttt')
     updateGraphData()
   }, [])
 
@@ -425,6 +420,16 @@ export const Tweaks = (props: TweakProps) => {
                   isChecked={filter.orphans}
                 ></Switch>
               </Flex>
+              <Flex justifyContent="space-between">
+                <Text>Link nodes with parent file</Text>
+                <Switch
+                  colorScheme="purple"
+                  onChange={() => {
+                    setFilter({ ...filter, parents: !filter.parents })
+                  }}
+                  isChecked={filter.parents}
+                ></Switch>
+              </Flex>
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem>
@@ -609,7 +614,6 @@ export const Tweaks = (props: TweakProps) => {
                     placeholder={physics.algorithmName}
                     onChange={(v) => {
                       setPhysics({ ...physics, algorithmName: v.target.value })
-                      console.log(v.target.value)
                     }}
                   >
                     {physics.algorithmOptions.map((opt, i) => (
@@ -749,11 +753,25 @@ export const Graph = function (props: GraphProps) {
   const filteredNodes = useMemo(() => {
     return graphData.nodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
-      let filterNode = true
+      let showNode = true
       if (filter.orphans) {
-        filterNode = links.length !== 0
+        if (filter.parents) {
+          showNode = links.length !== 0
+        } else {
+          if (links.length === 0) {
+            showNode = false
+          } else {
+            if (
+              links.length -
+                links.filter((link) => link.type === 'parent' || link.type === 'cite').length ===
+              0
+            ) {
+              showNode = false
+            }
+          }
+        }
       }
-      return filterNode
+      return showNode
     })
   }, [filter, graphData.nodes, linksByNodeId])
 
@@ -763,14 +781,15 @@ export const Graph = function (props: GraphProps) {
       // but if we supply the original data on each render, the graph will re-render sporadically
       //const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
       //const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
-      const linkType = link.type
-
-      return link.type !== 'cite'
+      let showNode = true
+      if (!filter.parents && link.type === 'parent') {
+        showNode = false
+      }
+      return link.type !== 'cite' && showNode
     })
   }, [filter, JSON.stringify(graphData.links)])
 
   const scopedNodes = useMemo(() => {
-    console.log(filteredNodes)
     return filteredNodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
       /* if (physics.orphans && links.length === 0) {
@@ -855,10 +874,6 @@ export const Graph = function (props: GraphProps) {
   // This forces the graph to make a small update when you do
   useEffect(() => {
     graph2dRef.current?.d3ReheatSimulation()
-    console.log(fadeIn)
-    console.log(physics.algorithms[physics.algorithmName])
-    console.log(physics.algorithms)
-    console.log(physics.algorithmName)
   }, [physics])
 
   //shitty handler to check for doubleClicks
@@ -933,15 +948,23 @@ export const Graph = function (props: GraphProps) {
       }
 
       const palette = ['pink', 'purple', 'blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red']
+      // otherwise links with parents get shown as having one note
+      const linklen = linksByNodeId[node.id!]?.length ?? 0
+      const parentCiteNeighbors = linklen
+        ? linksByNodeId[node.id]?.filter((link) => link.type === 'parent' || link.type === 'cite')
+            .length
+        : 0
+      const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors
 
-      return theme.colors[
-        palette[numbereWithinRange(linksByNodeId[node.id!]?.length ?? 0, 0, palette.length - 1)]
-      ][500]
+      return theme.colors[palette[numbereWithinRange(neighbors, 0, palette.length - 1)]][500]
     },
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
-      const basicSize = 3 + links.length
+      const parentNeighbors = links.length
+        ? links.filter((link) => link.type === 'parent' || link.type === 'cite').length
+        : 0
+      const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
       if (physics.highlightAnim) {
         const wasNeighbor = (link) =>
           link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!
@@ -1068,7 +1091,6 @@ export const Graph = function (props: GraphProps) {
 
     onNodeClick,
     onBackgroundClick: () => {
-      console.log(scope)
       setScope((currentScope) => ({
         ...currentScope,
         nodeIds: [],
