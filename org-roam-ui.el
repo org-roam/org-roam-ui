@@ -77,7 +77,7 @@ This serves the web-build and API over HTTP."
     (httpd-stop))))
 
 (defservlet* graph application/json ()
-  (let* ((nodes-columns [id file title])
+  (let* ((nodes-columns [id file title level])
          (links-columns [source dest])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
          (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (= type "id")]))

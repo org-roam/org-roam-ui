@@ -48,6 +48,7 @@ import {
   MenuItemOption,
   Flex,
   useTheme,
+  Select,
 } from '@chakra-ui/react'
 
 import { InfoOutlineIcon, RepeatClockIcon, ChevronDownIcon, SettingsIcon } from '@chakra-ui/icons'
@@ -68,6 +69,19 @@ export type Scope = {
   nodeIds: string[]
 }
 
+const options: string[] = []
+const algorithms: { [name: string]: (percent: number) => number } = {}
+
+for (let type in Easing) {
+  for (let mode in (Easing as any)[type]) {
+    let name = type + mode
+    if (name === 'LinearNone') {
+      name = 'Linear'
+    }
+    options.push(name)
+    algorithms[name] = (Easing as any)[type][mode]
+  }
+}
 const initialPhysics = {
   enabled: true,
   charge: -350,
@@ -100,6 +114,10 @@ const initialPhysics = {
   highlightNodeSize: 2,
   highlightLinkSize: 2,
   highlightAnim: false,
+  animationSpeed: 250,
+  algorithms: algorithms,
+  algorithmOptions: options,
+  algorithmName: 'CubicOut',
   orphans: false,
 }
 
@@ -151,12 +169,10 @@ export function GraphPage() {
 
   useEffect(() => {
     const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
-
     trackEmacs.addEventListener('message', (e) => {
       const emacsNodeId = e.data
       setEmacsNodeId(emacsNodeId)
     })
-
     updateGraphData()
   }, [])
 
@@ -289,6 +305,27 @@ export const EnableSection = (props: EnableSectionProps) => {
   )
 }
 
+export interface DropDownMenuProps {
+  textArray: string[]
+  onClickArray: any
+  displayValue: string
+}
+
+export const DropDownMenu = (props: DropDownMenuProps) => {
+  const { textArray, onClickArray, displayValue } = props
+  return (
+    <Menu>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+        {displayValue}
+      </MenuButton>
+      <MenuList>
+        {textArray.map((option, i) => {
+          ;<MenuItem onClick={onClickArray[i]}> {option} </MenuItem>
+        })}
+      </MenuList>
+    </Menu>
+  )
+}
 /* style={{
  *   position: "absolute",
  *   zIndex: 2000,
@@ -304,7 +341,7 @@ export interface TweakProps {
   threeDim: boolean
   onClose: () => void
 }
-export const Tweaks = function (props: TweakProps) {
+export const Tweaks = (props: TweakProps) => {
   const { physics, setPhysics, threeDim, onClose } = props
   return (
     <Box
@@ -511,16 +548,41 @@ export const Tweaks = function (props: TweakProps) {
                     onChange={(value) => setPhysics({ ...physics, particlesWidth: value })}
                   />
                 </EnableSection>
-                <Box>
-                  <Text>Kill orphans</Text>
-                  <Switch
-                    colorScheme="purple"
-                    onChange={() => {
-                      setPhysics({ ...physics, highlightAnim: !physics.highlightAnim })
-                    }}
-                    isChecked={physics.highlightAnim}
-                  ></Switch>
-                </Box>
+                <EnableSection
+                  label="Highlight Animation"
+                  onChange={() => {
+                    setPhysics({ ...physics, highlightAnim: !physics.highlightAnim })
+                  }}
+                  value={physics.highlightAnim}
+                >
+                  <SliderWithInfo
+                    label="Animation speed"
+                    onChange={(v) => setPhysics({ ...physics, animationSpeed: v })}
+                    value={physics.animationSpeed}
+                    infoText="Slower speed has a chance of being buggy"
+                    min={50}
+                    max={1000}
+                    step={10}
+                  />
+                  <Select
+                    placeholder={physics.algorithmName}
+                    onChange={(v) => setPhysics({ ...physics, algorithmName: v.target.value })}
+                  >
+                    {physics.algorithmOptions.map((opt, i) => (
+                      <option key={i} value={physics.algorithmOptions[i]}>
+                        {' '}
+                        {physics.algorithmOptions[i]}
+                      </option>
+                    ))}
+                  </Select>
+                  {/* <DropDownMenu
+                    displayValue={physics.algorithmName}
+                    textArray={physics.algorithmOptions}
+                    onClickArray={physics.algorithmOptions.map((option) =>
+                      setPhysics({ ...physics, algorithmName: { option } }),
+                    )}
+                  /> */}
+                </EnableSection>
                 <EnableSection
                   label="Highlight"
                   onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
@@ -736,24 +798,39 @@ export const Graph = function (props: GraphProps) {
     }))
     return
   }
+  // easing algorithms
 
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
-    duration: 300,
-    algorithm: Easing.Quadratic.Out,
+    duration: physics.animationSpeed,
+    algorithm: physics.algorithms[physics.algorithmName],
   })
-  const [fadeOut, fadeOutCancel] = useAnimation((x) => setOpacity(-1 * (x - 1)), {
-    duration: 300,
-    algorithm: Easing.Quadratic.Out,
-  })
+  const [fadeOut, fadeOutCancel] = useAnimation(
+    (x) => setOpacity(Math.min(opacity, -1 * (x - 1))),
+    {
+      duration: physics.animationSpeed,
+      algorithm: physics.algorithms[physics.algorithmName],
+    },
+  )
 
   const lastHoverNode = useRef()
   useEffect(() => {
+    console.log(physics.algorithms[physics.algorithmName])
     hoverNode && (lastHoverNode.current = hoverNode)
     if (!physics.highlightAnim) {
       return
     }
-    hoverNode ? fadeIn() : fadeOut()
+    if (hoverNode) {
+      fadeIn()
+    } else {
+      // if (opacity > 0.7) {
+      cancel()
+      opacity > 0.5 ? fadeOut() : setOpacity(0)
+      // } else {
+      //    cancel()
+      //    setOpacity(0)
+      // }
+    }
   }, [hoverNode])
   const theme = useTheme()
   //this was just easier than getting an actual package
@@ -793,18 +870,23 @@ export const Graph = function (props: GraphProps) {
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
-      const wasNeighbor = (link) =>
-        link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!
-      const wasHighlightedNode = links.some(wasNeighbor)
       const basicSize = 3 + links.length
-      const highlightSize = highlightedNodes[node.id!]
-        ? 1 + opacity * (physics.highlightNodeSize - 1)
-        : lastHoverNode.current?.id! === node.id!
-        ? 1 + opacity * (physics.highlightNodeSize - 1)
-        : wasHighlightedNode
-        ? 1 + opacity * (physics.highlightNodeSize - 1)
-        : 1
-      return basicSize * highlightSize
+      if (physics.highlightAnim) {
+        const wasNeighbor = (link) =>
+          link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!
+        const wasHighlightedNode = links.some(wasNeighbor)
+        const highlightSize = highlightedNodes[node.id!]
+          ? 1 + opacity * (physics.highlightNodeSize - 1)
+          : lastHoverNode.current?.id! === node.id!
+          ? 1 + opacity * (physics.highlightNodeSize - 1)
+          : wasHighlightedNode
+          ? 1 + opacity * (physics.highlightNodeSize - 1)
+          : 1
+        return basicSize * highlightSize
+      } else {
+        const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
+        return basicSize * highlightSize
+      }
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!physics.labels) {
@@ -814,7 +896,8 @@ export const Graph = function (props: GraphProps) {
         return
       }
 
-      const wasHighlightedNode = linksByNodeId[node.id!].some(
+      const links = linksByNodeId[node.id!] ?? []
+      const wasHighlightedNode = links.some(
         (link) =>
           link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!,
       )
@@ -831,15 +914,24 @@ export const Graph = function (props: GraphProps) {
       const fadeFactor = Math.min((3 * (globalScale - physics.labelScale)) / physics.labelScale, 1)
 
       // draw label background
-      const backgroundOpacity =
-        Object.keys(highlightedNodes).length === 0
-          ? lastHoverNode.current?.id! === node.id
-            ? 0.5
-            : 0.5 * fadeFactor * (-1 * (0.5 * opacity - 1))
-          : highlightedNodes[node.id!] || wasHighlightedNode
-          ? 0.5
-          : 0.5 * fadeFactor * (-1 * (0.5 * opacity - 1))
-
+      const getLabelOpacity = () => {
+        if (physics.highlightAnim) {
+          return Object.keys(highlightedNodes).length === 0
+            ? lastHoverNode.current?.id! === node.id
+              ? 1
+              : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
+            : highlightedNodes[node.id!] || wasHighlightedNode
+            ? 1
+            : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
+        } else {
+          return Object.keys(highlightedNodes).length === 0
+            ? 1 * fadeFactor
+            : highlightedNodes[node.id!]
+            ? 1
+            : 1 * fadeFactor
+        }
+      }
+      const backgroundOpacity = 0.5 * getLabelOpacity()
       ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
       ctx.fillRect(
         node.x! - bckgDimensions[0] / 2,
@@ -848,12 +940,7 @@ export const Graph = function (props: GraphProps) {
       )
 
       // draw label text
-      const textOpacity =
-        Object.keys(highlightedNodes).length === 0
-          ? fadeFactor
-          : highlightedNodes[node.id!] || wasHighlightedNode
-          ? 1
-          : 0.5 * fadeFactor * -1 * (0.5 * opacity - 1)
+      const textOpacity = 2 * backgroundOpacity
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillStyle = `rgb(255, 255, 255, ${textOpacity})`
@@ -867,23 +954,29 @@ export const Graph = function (props: GraphProps) {
       const linkIsHighlighted =
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
-      const linkWasHighlighted =
-        (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
-        (link.target as NodeObject).id! === lastHoverNode.current?.id!
-      return linkIsHighlighted
-        ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
-        : linkWasHighlighted
-        ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
-        : theme.colors.gray[500]
+      if (physics.highlightAnim) {
+        const linkWasHighlighted =
+          (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
+          (link.target as NodeObject).id! === lastHoverNode.current?.id!
+        return linkIsHighlighted
+          ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
+          : linkWasHighlighted
+          ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
+          : theme.colors.gray[500]
+      } else {
+        return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]
+      }
     },
     linkWidth: (link) => {
       const linkIsHighlighted =
         (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
         (link.target as NodeObject).id! === centralHighlightedNode?.id!
+      if (!physics.highlightAnim) {
+        return linkIsHighlighted ? physics.linkWidth * physics.highlightLinkSize : physics.linkWidth
+      }
       const linkWasHighlighted =
         (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
         (link.target as NodeObject).id! === lastHoverNode.current?.id!
-
       return linkIsHighlighted
         ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
         : linkWasHighlighted
@@ -907,7 +1000,10 @@ export const Graph = function (props: GraphProps) {
       if (!physics.hover) {
         return
       }
-      setHoverNode(node)
+      const timer = setTimeout(() => {
+        setHoverNode(node)
+      }, 30)
+      return () => clearTimeout(timer)
     },
   }
 
