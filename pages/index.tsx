@@ -674,14 +674,13 @@ export const Graph = function (props: GraphProps) {
     if (!emacsNodeId) {
       return
     }
-
     setScope({
       nodeIds: [emacsNodeId],
     })
   }, [emacsNodeId])
 
   const centralHighlightedNode = hoverNode
-  const highlightedNodes = (() => {
+  const highlightedNodes = useMemo(() => {
     if (!centralHighlightedNode) {
       return {}
     }
@@ -697,31 +696,39 @@ export const Graph = function (props: GraphProps) {
         ...links.flatMap((link) => [link.source, link.target]),
       ].map((nodeId) => [nodeId, {}]),
     )
-  })()
+  }, [centralHighlightedNode, linksByNodeId])
 
-  const scopedNodes = graphData.nodes.filter((node) => {
-    const links = linksByNodeId[node.id as string] ?? []
-    /* if (physics.orphans && links.length === 0) {
-     *   return false
-     * } */
-    return (
-      scope.nodeIds.includes(node.id as string) ||
-      links.some((link) => {
-        return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
-      })
-    )
-  })
+  const scopedNodes = useMemo(() => {
+    return graphData.nodes.filter((node) => {
+      const links = linksByNodeId[node.id as string] ?? []
+      /* if (physics.orphans && links.length === 0) {
+       *   return false
+       * } */
+      return (
+        scope.nodeIds.includes(node.id as string) ||
+        links.some((link) => {
+          return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
+        })
+      )
+    })
+  }, [graphData, linksByNodeId, scope.nodeIds])
 
   const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-  const scopedLinks = graphData.links.filter((link) => {
-    // we need to cover both because force-graph modifies the original data
-    // but if we supply the original data on each render, the graph will re-render sporadically
-    const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-    const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+  const scopedLinks = useMemo(
+    () =>
+      graphData.links.filter((link) => {
+        // we need to cover both because force-graph modifies the original data
+        // but if we supply the original data on each render, the graph will re-render sporadically
+        const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
+        const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
 
-    return scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
-  })
+        return (
+          scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
+        )
+      }),
+    [graphData, scopedNodeIds],
+  )
 
   const scopedGraphData = useMemo(
     () =>
@@ -815,7 +822,6 @@ export const Graph = function (props: GraphProps) {
 
   const lastHoverNode = useRef()
   useEffect(() => {
-    console.log(physics.algorithms[physics.algorithmName])
     hoverNode && (lastHoverNode.current = hoverNode)
     if (!physics.highlightAnim) {
       return
@@ -823,30 +829,11 @@ export const Graph = function (props: GraphProps) {
     if (hoverNode) {
       fadeIn()
     } else {
-      // if (opacity > 0.7) {
       cancel()
       opacity > 0.5 ? fadeOut() : setOpacity(0)
-      // } else {
-      //    cancel()
-      //    setOpacity(0)
-      // }
     }
   }, [hoverNode])
   const theme = useTheme()
-  //this was just easier than getting an actual package
-  /* const convertHexToRGBA = (hexCode: string, opacity: number) => {
-     *   let hex = hexCode.replace('#', '')
-
-     *   if (hex.length === 3) {
-     *     hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
-     *   }
-
-     *   const r = parseInt(hex.substring(0, 2), 16)
-     *   const g = parseInt(hex.substring(2, 4), 16)
-     *   const b = parseInt(hex.substring(4, 6), 16)
-
-     *   return `rgba(${r},${g},${b},${opacity})`
-     * } */
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
