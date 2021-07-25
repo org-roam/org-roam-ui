@@ -58,11 +58,6 @@
   35901
   "Port to serve the org-roam-ui interface.")
 
-(defcustom org-roam-ui-link-child-notes t
-  "TODO"
-  :group 'org-roam-ui
-  :type 'boolean)
-
 (define-minor-mode
   org-roam-ui-mode
   "Enable org-roam-ui.
@@ -86,9 +81,8 @@ This serves the web-build and API over HTTP."
          (links-columns [source dest type])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
          (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
-         (links-total (append links-db-rows (when org-roam-ui-link-child-notes (org-roam-ui-link-children-parents))))
          (response (json-encode `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
-                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-total))))))
+                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))))))
     (insert response)
     (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*")))
 
@@ -99,29 +93,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     (while rows
       (push (cons (pop column-names) (pop rows)) res))
     res))
-
-(defun org-roam-ui-link-children-parents ()
-  "Return list of links from child notes to their parent file node."
-(let* ((parents (org-roam-db-query `[:select [file id] :from nodes :where (= level 0)]))
-       (row))
-  (dolist (dad parents)
-    (if-let
-        ((children
-(org-roam-db-query `[:select [id] :from nodes :where (and (> level 0) (= file ,(car dad)))])))
-      (dolist (child children) (push (list (car child) (elt dad 1) "parent") row))))
-       row)
-  )
-
-(defservlet* theme text/stream ()
-  (progn
-    (when (boundp 'doom-themes--colors)
-      (let*
-        ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
-        (progn
-          (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
-          (insert (format "data: %s\n\n" (json-encode  ui-theme))))))
-    (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")))
-
 
 (defservlet* id/:id text/html ()
   (let ((node (org-roam-populate (org-roam-node-create :id id)))
