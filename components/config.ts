@@ -13,7 +13,7 @@ export const initialPhysics = {
   linkOpacity: 0.4,
   linkWidth: 1,
   nodeRel: 4,
-  labels: true,
+  labels: 2,
   labelScale: 1.5,
   alphaDecay: 0.02,
   alphaTarget: 0,
@@ -47,6 +47,27 @@ export const initialFilter = {
   nodes: [],
   links: [],
   date: [],
+}
+
+export const initialMouse = {
+  hover: {
+    highlight: true,
+    select: false,
+    follow: false,
+    local: false,
+  },
+  click: {
+    highlight: true,
+    select: false,
+    follow: true,
+    local: true,
+  },
+  doubleClick: {
+    highlight: true,
+    select: false,
+    follow: false,
+    local: false,
+  },
 }
 
 function getAlgos(option?: boolean) {

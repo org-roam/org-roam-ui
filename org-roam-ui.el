@@ -36,6 +36,8 @@
 (require 'json)
 (require 'simple-httpd)
 (require 'org-roam)
+(require 'org-ref)
+(require 'org-id)
 
 (defgroup org-roam-ui nil
   "UI in Org-roam."
@@ -98,11 +100,27 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
   (let ((node (org-roam-populate (org-roam-node-create :id id)))
         html-string)
     (org-roam-with-temp-buffer (org-roam-node-file node)
+      (progn
       (setq-local org-export-with-toc nil)
       (setq-local org-export-with-broken-links t)
       (setq-local org-export-with-sub-superscripts nil)
-      (setq html-string (org-export-as 'html)))
-    (insert html-string)))
+      (replace-string "[[id:" "[[./")
+             (let* ((file-string (buffer-string))
+                    (matches (s-match-strings-all "\\[\\[\\(file:\\|\\.\\/\\)\\(.*\\.\\(png\\|jpg\\|jpeg\\|gif\\|svg\\)\\)\\]\\(\\[.*\\]\\)?\\]" file-string)))
+               (dolist (match matches)
+                 (let ((path (elt match 2))
+                       (link (elt match 0)))
+                   (unless (file-name-absolute-p path)
+                     (setq path (concat (file-name-directory (org-roam-node-file-node)) path)))
+                   (setq path (f-full path))
+                   (if (file-exists-p path)
+                       (setq file-string
+                             (s-replace link (format "[[image:%s]]" path) file-string)))))
+               (erase-buffer)
+             (insert file-string))
+      (setq html-string (org-export-as 'html))))
+    (insert html-string)
+    (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
 
 (defservlet* current-node-id text/event-stream ()
   (insert (format "data: %s\n\n"

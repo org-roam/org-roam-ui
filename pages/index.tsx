@@ -9,14 +9,17 @@ import type {
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { GraphData, NodeObject } from 'force-graph'
 
+import Head from 'next/head'
+
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import { Button, Box, IconButton, useTheme } from '@chakra-ui/react'
+import { Button, Box, IconButton, useTheme, useDisclosure } from '@chakra-ui/react'
 
 import { SettingsIcon } from '@chakra-ui/icons'
 import { initialPhysics, initialFilter } from '../components/config'
 import { Tweaks } from '../components/tweaks'
+import { Sidebar } from '../components/sidebar'
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -54,6 +57,7 @@ export function GraphPage() {
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -135,7 +139,32 @@ export function GraphPage() {
   }
 
   return (
-    <Box display="flex" justifyContent="space-between">
+    <Box display="flex">
+      <Head>
+        <title> Org Roam UI </title>
+        <script
+          async
+          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"
+        ></script>
+      </Head>
+      <Button
+        position="absolute"
+        marginTop="6%"
+        zIndex="overlay"
+        marginRight="5"
+        colorScheme="purple"
+        onClick={onOpen}
+      >
+        Open Drawer
+      </Button>
+      <Sidebar
+        nodeById={nodeByIdRef.current}
+        {...{
+          isOpen,
+          onClose,
+          emacsNodeId,
+        }}
+      />
       <Tweaks
         {...{
           physics,
@@ -600,10 +629,16 @@ export const Graph = function (props: GraphProps) {
     },
   }
 
+  const bg = theme.colors.alt[100]
   return (
     <div>
       {threeDim ? (
-        <ForceGraph3D ref={graph3dRef} {...graphCommonProps} nodeThreeObjectExtend={true} />
+        <ForceGraph3D
+          ref={graph3dRef}
+          {...graphCommonProps}
+          nodeThreeObjectExtend={true}
+          backgroundColor={theme.colors.alt[100]}
+        />
       ) : (
         <ForceGraph2D ref={graph2dRef} {...graphCommonProps} />
       )}
