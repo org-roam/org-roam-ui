@@ -33,6 +33,7 @@ export type ParentNodesByFile = {
   [adultness: string]: { [nodeFile: string]: string[] } | undefined
 }
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
+export type NodesByFile = { [file: string]: OrgRoamNode[] | undefined }
 export type Scope = {
   nodeIds: string[]
 }
@@ -64,20 +65,51 @@ export function GraphPage() {
     return fetch('http://localhost:35901/graph')
       .then((res) => res.json())
       .then((orgRoamGraphData: OrgRoamGraphReponse) => {
+        const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
+          return {
+            ...acc,
+            [node.file]: [...(acc[node.file] ?? []), node],
+          }
+        }, {})
+
+        const fileLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
+          const nodesInFile = nodesByFile[file] ?? []
+          // "file node" as opposed to "heading node"
+          const fileNode = nodesInFile.find((node) => node.level === 0)
+          const headingNodes = nodesInFile.filter((node) => node.level !== 0)
+
+          if (!fileNode) {
+            return []
+          }
+
+          return headingNodes.map((headingNode) => ({
+            source: headingNode.id,
+            target: fileNode.id,
+          }))
+        })
+
         nodeByIdRef.current = Object.fromEntries(
           orgRoamGraphData.nodes.map((node) => [node.id, node]),
         )
-        linksByNodeIdRef.current = orgRoamGraphData.links.reduce<LinksByNodeId>((acc, link) => {
+
+        const links = [...orgRoamGraphData.links, ...fileLinks]
+        linksByNodeIdRef.current = links.reduce<LinksByNodeId>((acc, link) => {
           return {
             ...acc,
             [link.source]: [...(acc[link.source] ?? []), link],
             [link.target]: [...(acc[link.target] ?? []), link],
           }
         }, {})
+
+        const orgRoamGraphDataWithFileLinks = {
+          ...orgRoamGraphData,
+          links,
+        }
+
         // react-force-graph modifies the graph data implicitly,
         // so we make sure there's no overlap between the objects we pass it and
         // nodeByIdRef, linksByNodeIdRef
-        const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphData))
+        const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
         setGraphData(orgRoamGraphDataClone)
       })
   }
@@ -286,7 +318,7 @@ export const Graph = function (props: GraphProps) {
     // zoomToFit off a little bit
     setTimeout(() => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
-      fg?.zoomToFit(0, 200)
+      fg?.zoomToFit(0, numbereWithinRange(20, 200, windowWidth / 8))
     }, 1)
   }, [JSON.stringify(scopedNodeIds)])
 
@@ -396,8 +428,11 @@ export const Graph = function (props: GraphProps) {
           ? theme.colors.purple['inter'](opacity)
           : theme.colors.gray['inter'](opacity)
       }
+      if (node.id === emacsNodeId) {
+        return theme.colors['red'][500]
+      }
 
-      const palette = ['pink', 'purple', 'blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red']
+      const palette = ['pink', 'purple', 'blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red'].filter((color) => !['red'].includes(color))
       // otherwise links with parents get shown as having one note
       const linklen = linksByNodeId[node.id!]?.length ?? 0
       const parentCiteNeighbors = linklen
@@ -433,6 +468,10 @@ export const Graph = function (props: GraphProps) {
       }
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
+      if (!node) {
+        return
+      }
+
       if (!physics.labels) {
         return
       }
