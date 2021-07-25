@@ -205,7 +205,7 @@ export function GraphPage() {
   }
 
   return (
-    <div>
+    <Box display="flex" justifyContent="space-between">
       {showTweaks ? (
         <Tweaks
           {...{
@@ -229,6 +229,17 @@ export function GraphPage() {
           />
         </Box>
       )}
+      <Button
+        position="absolute"
+        marginRight="2%"
+        marginTop="2%"
+        zIndex="overlay"
+        marginLeft="95%"
+        onClick={() => setThreeDim(!threeDim)}
+        colorScheme="purple"
+      >
+        {threeDim ? '3D' : '2D'}{' '}
+      </Button>
       <Graph
         nodeById={nodeByIdRef.current!}
         linksByNodeId={linksByNodeIdRef.current!}
@@ -240,7 +251,7 @@ export function GraphPage() {
           filter,
         }}
       />
-    </div>
+    </Box>
   )
 }
 
@@ -357,13 +368,13 @@ export interface TweakProps {
   physics: typeof initialPhysics
   setPhysics: any
   threeDim: boolean
-  setTreedim: (boolean) => void
+  setThreedim: (boolean) => void
   filter: typeof initialFilter
   setFilter: any
   onClose: () => void
 }
 export const Tweaks = (props: TweakProps) => {
-  const { physics, setPhysics, threeDim, setThreeDim, filter, setFilter, onClose } = props
+  const { physics, setPhysics, threeDim, filter, setFilter, onClose } = props
   return (
     <Box
       zIndex="overlay"
