@@ -12,12 +12,7 @@ import { GraphData, NodeObject } from 'force-graph'
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import {
-  Button,
-  Box,
-  IconButton,
-  useTheme,
-} from '@chakra-ui/react'
+import { Button, Box, IconButton, useTheme } from '@chakra-ui/react'
 
 import { SettingsIcon } from '@chakra-ui/icons'
 import { initialPhysics, initialFilter } from '../components/config'
@@ -59,15 +54,13 @@ export default function Home() {
 export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
-  //  const [theme, setTheme] = useState(initialTheme)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
 
   const nodeByIdRef = useRef<NodeById>({})
-  const parentNodesByFileRef = useRef<any>({}) //useRef<ParentNodesByFile>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
 
-  const updateGraphData = () => {
+  const fetchGraphData = () => {
     return fetch('http://localhost:35901/graph')
       .then((res) => res.json())
       .then((orgRoamGraphData: OrgRoamGraphReponse) => {
@@ -95,18 +88,17 @@ export function GraphPage() {
       const emacsNodeId = e.data
       setEmacsNodeId(emacsNodeId)
     })
-    updateGraphData()
+    fetchGraphData()
   }, [])
 
   useEffect(() => {
     if (!emacsNodeId) {
       return
     }
-    updateGraphData()
+    fetchGraphData()
   }, [emacsNodeId])
 
   const [threeDim, setThreeDim] = useState(false)
-  const [showTweaks, setShowTweaks] = useState(true)
 
   if (!graphData) {
     return null
@@ -114,29 +106,17 @@ export function GraphPage() {
 
   return (
     <Box display="flex" justifyContent="space-between">
-      {showTweaks ? (
-        <Tweaks
-          {...{
-            physics,
-            setPhysics,
-            threeDim,
-            setThreeDim,
-            filter,
-            setFilter,
-          }}
-          onClose={() => {
-            setShowTweaks(false)
-          }}
-        />
-      ) : (
-        <Box position="absolute" zIndex="overlay" marginTop="2%" marginLeft="2%">
-          <IconButton
-            aria-label="Settings"
-            icon={<SettingsIcon />}
-            onClick={() => setShowTweaks(true)}
-          />
-        </Box>
-      )}
+      <Tweaks
+        {...{
+          physics,
+          setPhysics,
+          threeDim,
+          setThreeDim,
+          filter,
+          setFilter,
+        }}
+      />
+
       <Button
         position="absolute"
         marginRight="2%"
@@ -148,6 +128,7 @@ export function GraphPage() {
       >
         {threeDim ? '3D' : '2D'}{' '}
       </Button>
+      
       <Graph
         nodeById={nodeByIdRef.current!}
         linksByNodeId={linksByNodeIdRef.current!}

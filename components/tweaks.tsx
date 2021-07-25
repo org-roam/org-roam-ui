@@ -25,6 +25,7 @@ import {
   Tooltip,
   VStack,
 } from '@chakra-ui/react'
+import { useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import { initialPhysics, initialFilter } from './config'
 
@@ -35,11 +36,22 @@ export interface TweakProps {
   setThreeDim: (newValue: boolean) => void
   filter: typeof initialFilter
   setFilter: any
-  onClose: () => void
 }
 
 export const Tweaks = (props: TweakProps) => {
-  const { physics, setPhysics, threeDim, filter, setFilter, onClose } = props
+  const { physics, setPhysics, threeDim, filter, setFilter } = props
+  const [showTweaks, setShowTweaks] = useState(true)
+
+  if (!showTweaks) {
+    return <Box position="absolute" zIndex="overlay" marginTop="2%" marginLeft="2%">
+      <IconButton
+        aria-label="Settings"
+        icon={<SettingsIcon />}
+        onClick={() => setShowTweaks(true)}
+      />
+    </Box>
+  }
+
   return (
     <Box
       zIndex="overlay"
@@ -51,7 +63,6 @@ export const Tweaks = (props: TweakProps) => {
       borderRadius="md"
       maxH={650}
       paddingBottom={5}
-      //overflowY="scroll"
     >
       <Box display="flex" justifyContent="flex-end">
         <Tooltip label="Reset settings to defaults">
@@ -62,7 +73,7 @@ export const Tweaks = (props: TweakProps) => {
             colorScheme="purple"
           />
         </Tooltip>
-        <CloseButton onClick={onClose} />
+        <CloseButton onClick={() => setShowTweaks(false)} />
       </Box>
       <Scrollbars
         autoHeight
