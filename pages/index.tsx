@@ -85,6 +85,7 @@ export function GraphPage() {
           return headingNodes.map((headingNode) => ({
             source: headingNode.id,
             target: fileNode.id,
+            type: 'id',
           }))
         })
 
