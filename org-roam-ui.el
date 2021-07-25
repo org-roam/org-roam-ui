@@ -117,5 +117,15 @@ This function is added to `post-command-hook'."
          (condition-case nil (org-roam-id-at-point) (error nil))
          org-roam-ui-current-node-id)))
 
+(defservlet* theme text/stream ()
+  (progn
+    (when (boundp 'doom-themes--colors)
+      (let*
+        ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
+        (progn
+          (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
+          (insert (format "data: %s\n\n" (json-encode  ui-theme))))))
+    (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")))
+
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here
