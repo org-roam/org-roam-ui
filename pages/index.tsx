@@ -29,9 +29,6 @@ const ForceGraph3D = (
 ) as typeof TForceGraph3D
 
 export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
-export type ParentNodesByFile = {
-  [adultness: string]: { [nodeFile: string]: string[] } | undefined
-}
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
 export type NodesByFile = { [file: string]: OrgRoamNode[] | undefined }
 export type Scope = {
@@ -161,7 +158,7 @@ export function GraphPage() {
       >
         {threeDim ? '3D' : '2D'}{' '}
       </Button>
-      
+
       <Graph
         nodeById={nodeByIdRef.current!}
         linksByNodeId={linksByNodeIdRef.current!}
@@ -313,7 +310,7 @@ export const Graph = function (props: GraphProps) {
     [filter, scope, JSON.stringify(Object.keys(nodeById))],
   )
 
-  // make sure the camera position and zoom or fine when the list of nodes to render is changed
+  // make sure the camera position and zoom are fine when the list of nodes to render is changed
   useEffect(() => {
     // this setTimeout was added holistically because the behavior is better when we put
     // zoomToFit off a little bit
@@ -377,24 +374,23 @@ export const Graph = function (props: GraphProps) {
     }))
     return
   }
-  // easing algorithms
 
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: physics.animationSpeed,
     algorithm: physics.algorithms[physics.algorithmName],
   })
-  const [fadeOut, fadeOutCancel] = useAnimation(
-    (x) => setOpacity(Math.min(opacity, -1 * (x - 1))),
-    {
-      duration: physics.animationSpeed,
-      algorithm: physics.algorithms[physics.algorithmName],
-    },
-  )
+  const [fadeOut] = useAnimation((x) => setOpacity(Math.min(opacity, -1 * (x - 1))), {
+    duration: physics.animationSpeed,
+    algorithm: physics.algorithms[physics.algorithmName],
+  })
 
   const lastHoverNode = useRef()
   useEffect(() => {
-    hoverNode && (lastHoverNode.current = hoverNode)
+    if (hoverNode) {
+      lastHoverNode.current = hoverNode
+    }
+
     if (!physics.highlightAnim) {
       return
     }
@@ -433,7 +429,17 @@ export const Graph = function (props: GraphProps) {
         return theme.colors['red'][500]
       }
 
-      const palette = ['pink', 'purple', 'blue', 'cyan', 'teal', 'green', 'yellow', 'orange', 'red'].filter((color) => !['red'].includes(color))
+      const palette = [
+        'pink',
+        'purple',
+        'blue',
+        'cyan',
+        'teal',
+        'green',
+        'yellow',
+        'orange',
+        'red',
+      ].filter((color) => !['red'].includes(color))
       // otherwise links with parents get shown as having one note
       const linklen = linksByNodeId[node.id!]?.length ?? 0
       const parentCiteNeighbors = linklen
