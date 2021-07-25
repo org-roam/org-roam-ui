@@ -43,13 +43,15 @@ export const Tweaks = (props: TweakProps) => {
   const [showTweaks, setShowTweaks] = useState(true)
 
   if (!showTweaks) {
-    return <Box position="absolute" zIndex="overlay" marginTop="2%" marginLeft="2%">
-      <IconButton
-        aria-label="Settings"
-        icon={<SettingsIcon />}
-        onClick={() => setShowTweaks(true)}
-      />
-    </Box>
+    return (
+      <Box position="absolute" zIndex="overlay" marginTop="2%" marginLeft="2%">
+        <IconButton
+          aria-label="Settings"
+          icon={<SettingsIcon />}
+          onClick={() => setShowTweaks(true)}
+        />
+      </Box>
+    )
   }
 
   return (
@@ -98,7 +100,7 @@ export const Tweaks = (props: TweakProps) => {
             </AccordionButton>
             <AccordionPanel>
               <Flex justifyContent="space-between">
-                <Text>Kill orphans</Text>
+                <Text>Orphans</Text>
                 <Switch
                   colorScheme="purple"
                   onChange={() => {
