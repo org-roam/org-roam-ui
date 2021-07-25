@@ -4,7 +4,6 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useEffect, useState, useMemo } from 'react'
 import { extendTheme } from '@chakra-ui/react'
 import * as d3int from 'd3-interpolate'
-//import hexRgb from 'hex-rgb'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const initialTheme = {
@@ -43,8 +42,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   const theme = useMemo(() => {
-    //useMemo(() => {
-    //console.log("theme change")
     const borderColor = emacsTheme.violet + 'aa'
     return extendTheme({
       colors: {
@@ -99,7 +96,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       },
     })
   }, [JSON.stringify(emacsTheme)])
-  // }, [emacsTheme.base1])
 
   return (
     <ChakraProvider theme={theme}>

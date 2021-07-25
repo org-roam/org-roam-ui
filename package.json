@@ -31,6 +31,7 @@
     "use-constant": "^1.1.0"
   },
   "devDependencies": {
+    "@types/d3-interpolate": "^3.0.1",
     "@types/react": "17.0.14",
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1",
