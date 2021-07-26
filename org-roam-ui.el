@@ -59,6 +59,30 @@
 (defvar org-roam-ui-port
   35901
   "Port to serve the org-roam-ui interface.")
+(defcustom org-roam-ui-sync-theme t
+  "Syncs your current Emacs theme with org-raom-ui. Works best with doom-themes.
+Ignored if a custom theme is provied for 'org-roam-ui-custom-theme'."
+  :group 'org-roam-ui
+  :type 'boolean)
+
+(defcustom org-roam-ui-custom-theme nil
+  "Custom theme for org-roam-ui. Blocks 'org-roam-ui-sync-theme.
+Provide a list of cons with the following values:
+bg, bg-alt, fg, fg-alt, red, orange, yellow, green, cyan, blue, violet, magenta.
+E.g. '((bg . '#1E2029')
+ (bg-alt . '#282a36')
+ (fg . '#f8f8f2')
+ (fg-alt . '#6272a4')
+ (red . '#ff5555')
+ (orange . '#f1fa8c')
+ (yellow .'#ffb86c')
+ (green . '#50fa7b')
+ (cyan . '#8be9fd')
+(blue . '#ff79c6')
+(violet . '#8be9fd')
+(magenta . '#bd93f9'))."
+  :group 'org-roam-ui
+  :type 'list)
 
 (define-minor-mode
   org-roam-ui-mode
@@ -135,15 +159,35 @@ This function is added to `post-command-hook'."
          (condition-case nil (org-roam-id-at-point) (error nil))
          org-roam-ui-current-node-id)))
 
+(defun org-roam-ui-get-theme ()
+  "Attempt to bring the current theme into a standardized format."
+(list `(bg . ,(face-background hl-line-face))
+        `(bg-alt . ,(face-background 'default))
+        `(fg . ,(face-foreground 'default))
+        `(fg-alt . ,(face-foreground font-lock-comment-face))
+        `(red . ,(face-foreground 'error))
+        `(orange . ,(face-foreground 'warning))
+        `(yellow . ,(face-foreground font-lock-builtin-face))
+        `(green . ,(face-foreground 'success))
+        `(cyan . ,(face-foreground font-lock-constant-face))
+        `(blue . ,(face-foreground font-lock-keyword-face))
+        `(violet . ,(face-foreground font-lock-constant-face))
+        `(magenta . ,(face-foreground font-lock-preprocessor-face))
+        ))
+
 (defservlet* theme text/stream ()
-  (progn
-    (when (boundp 'doom-themes--colors)
+  (progn)
+  (if org-roam-ui-sync-theme
+    (if (boundp 'doom-themes--colors)
       (let*
         ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
         (progn
           (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
-          (insert (format "data: %s\n\n" (json-encode  ui-theme))))))
-    (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*")))
+          (insert (format "data: %s\n\n" (json-encode  ui-theme)))))
+      (insert (format "data: %s\n\n" (json-encode (org-roam-ui-get-theme)))))
+    (when org-roam-ui-custom-theme
+      (insert (format "data %s\n\n" (json-encode org-roam-ui-custom-theme)))))
+    (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*"))
 
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here

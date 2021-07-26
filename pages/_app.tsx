@@ -43,21 +43,24 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const theme = useMemo(() => {
     const borderColor = emacsTheme.violet + 'aa'
+    const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
     return extendTheme({
       colors: {
         white: emacsTheme.bg,
         black: emacsTheme.fg,
         gray: {
-          100: emacsTheme.base1,
-          200: d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2),
-          300: emacsTheme.base2,
-          400: emacsTheme.base3,
-          500: emacsTheme.base4,
-          600: emacsTheme.base5,
-          700: emacsTheme.base6,
-          800: emacsTheme.base7,
-          900: emacsTheme.base8,
-          inter: d3int.interpolate(emacsTheme.base4, emacsTheme.base3),
+          100: emacsTheme.base1 ?? bgfgInterpolate(0.1),
+          200: d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2) ?? bgfgInterpolate(0.2),
+          300: emacsTheme.base2 ?? bgfgInterpolate(0.3),
+          400: emacsTheme.base3 ?? bgfgInterpolate(0.4),
+          500: emacsTheme.base4 ?? bgfgInterpolate(0.5),
+          600: emacsTheme.base5 ?? bgfgInterpolate(0.6),
+          700: emacsTheme.base6 ?? bgfgInterpolate(0.7),
+          800: emacsTheme.base7 ?? bgfgInterpolate(0.8),
+          900: emacsTheme.base8 ?? bgfgInterpolate(0.9),
+          inter: emacsTheme.base4
+            ? d3int.interpolate(emacsTheme.base4, emacsTheme.base3)
+            : bgfgInterpolate(0.45),
         },
         blue: {
           500: emacsTheme.blue,
@@ -79,7 +82,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
         purple: {
           500: emacsTheme.violet,
-          inter: d3int.interpolate(emacsTheme.base4, emacsTheme.violet),
+          inter: d3int.interpolate(emacsTheme.base4 ?? bgfgInterpolate(0.5), emacsTheme.violet),
         },
         pink: {
           500: emacsTheme.magenta,
