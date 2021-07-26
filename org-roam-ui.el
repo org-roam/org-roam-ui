@@ -59,6 +59,7 @@
 (defvar org-roam-ui-port
   35901
   "Port to serve the org-roam-ui interface.")
+
 (defcustom org-roam-ui-sync-theme t
   "Syncs your current Emacs theme with org-raom-ui. Works best with doom-themes.
 Ignored if a custom theme is provied for 'org-roam-ui-custom-theme'."
