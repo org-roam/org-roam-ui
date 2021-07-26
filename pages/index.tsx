@@ -357,7 +357,7 @@ export const Graph = function (props: GraphProps) {
     }
     setScope((currentScope) => ({
       ...currentScope,
-      nodeIds: [...currentScope.nodeIds, nodeId as string],
+      nodeIds: [...currentScope.nodeIds, node.id as string],
     }))
   }
 
@@ -371,7 +371,7 @@ export const Graph = function (props: GraphProps) {
     algorithm: physics.algorithms[physics.algorithmName],
   })
 
-  const lastHoverNode = useRef()
+  const lastHoverNode = useRef<NodeObject | null>(null)
   useEffect(() => {
     if (hoverNode) {
       lastHoverNode.current = hoverNode
@@ -429,10 +429,10 @@ export const Graph = function (props: GraphProps) {
       // otherwise links with parents get shown as having one note
       const linklen = linksByNodeId[node.id!]?.length ?? 0
       const parentCiteNeighbors = linklen
-        ? linksByNodeId[node.id]?.filter((link) => link.type === 'parent' || link.type === 'cite')
+        ? linksByNodeId[node.id!]?.filter((link) => link.type === 'parent' || link.type === 'cite')
             .length
         : 0
-      const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors
+      const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
 
       return theme.colors[palette[numbereWithinRange(neighbors, 0, palette.length - 1)]][500]
     },
@@ -444,7 +444,7 @@ export const Graph = function (props: GraphProps) {
         : 0
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
       if (physics.highlightAnim) {
-        const wasNeighbor = (link) =>
+        const wasNeighbor = (link: OrgRoamLink) =>
           link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!
         const wasHighlightedNode = links.some(wasNeighbor)
         const highlightSize = highlightedNodes[node.id!]

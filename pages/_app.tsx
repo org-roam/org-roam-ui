@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const theme = useMemo(() => {
     const borderColor = emacsTheme.violet + 'aa'
     const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
-    return extendTheme({
+    const themeColors = {
       colors: {
         white: emacsTheme.bg,
         black: emacsTheme.fg,
@@ -98,7 +98,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       shadows: {
         outline: '0 0 0 3px ' + borderColor,
       },
-    })
+    }
+    return extendTheme(themeColors)
   }, [JSON.stringify(emacsTheme)])
 
   return (
