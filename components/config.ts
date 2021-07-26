@@ -49,19 +49,6 @@ export const initialFilter = {
   date: [],
 }
 
-// 0: never
-// 1: hover
-// 2: click
-// 3: doubleclick
-// 4: rightclick
-export const initialMouse = {
-  highlight: 1,
-  select: 2,
-  open: 2,
-  local: 3,
-  follow: 4,
-}
-
 function getAlgos(option?: boolean) {
   const options: string[] = []
   const algorithms: { [name: string]: (percent: number) => number } = {}
