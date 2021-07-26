@@ -12,9 +12,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  BoxProps,
   Button,
-  CloseButton,
   Flex,
   IconButton,
   Menu,
@@ -31,14 +29,12 @@ import {
   Text,
   Tooltip,
   VStack,
-  useDisclosure,
   Heading,
-  SlideFade,
   Collapse,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
-import { initialPhysics, initialFilter, initialMouse } from './config'
+import { initialPhysics, initialFilter } from './config'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -47,14 +43,11 @@ export interface TweakProps {
   setThreeDim: (newValue: boolean) => void
   filter: typeof initialFilter
   setFilter: any
-  mouse: typeof initialMouse
-  setMouse: any
 }
 
 export const Tweaks = (props: TweakProps) => {
-  const { physics, setPhysics, threeDim, setThreeDim, mouse, setMouse, filter, setFilter } = props
+  const { physics, setPhysics, threeDim, setThreeDim, filter, setFilter } = props
   const [showTweaks, setShowTweaks] = useState(true)
-  const mouseArray = ['Never', 'Hover', 'Click', 'Double Click', 'Right Click']
 
   return (
     <>
@@ -91,7 +84,6 @@ export const Tweaks = (props: TweakProps) => {
                 colorScheme="purple"
                 variant={threeDim ? 'solid' : 'outline'}
                 zIndex="overlay"
-                variant="ghost"
               >
                 {threeDim ? '2D' : '3D'}
               </Button>
@@ -337,7 +329,7 @@ export const Tweaks = (props: TweakProps) => {
                           </MenuList>
                         </Menu>
                       </Flex>
-                      <Collapse in={physics.labels > 1} animateOpactiy>
+                      <Collapse in={physics.labels > 1} animateOpacity>
                         <Box paddingLeft={4} paddingTop={2}>
                           <SliderWithInfo
                             label="Label Appearance Scale"
@@ -415,11 +407,13 @@ export const Tweaks = (props: TweakProps) => {
                               setPhysics({ ...physics, algorithmName: v.target.value })
                             }}
                           >
-                            {physics.algorithmOptions.map((opt, i) => (
-                              <option key={i} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
+                            {physics.algorithmOptions.map((opt: string, i: number) => {
+                              return (
+                                <option key={i} value={opt}>
+                                  {opt}
+                                </option>
+                              )
+                            })}
                           </Select>
                           {/* <DropDownMenu
                     displayValue={physics.algorithmName}
@@ -447,83 +441,7 @@ export const Tweaks = (props: TweakProps) => {
                     align="stretch"
                     paddingLeft={7}
                     color="gray.800"
-                  >
-                    <Flex alignItems="center" justifyContent="space-between">
-                      <Flex>
-                        <Text>Open preview window on...</Text>
-                        <InfoTooltip infoText="Open a drawer with an HTML export of the node. Note, kinda buggy." />
-                      </Flex>
-                      <Menu>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                          {mouseArray[mouse.open]}
-                        </MenuButton>
-                        <MenuList bgColor="gray.200">
-                          <MenuItem onClick={() => setMouse({ ...mouse, open: 0 })}>Never</MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, open: 1 })}>Hover</MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, open: 2 })}>Click</MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, open: 3 })}>
-                            Double Click
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, open: 4 })}>
-                            Right Click
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </Flex>
-                    <Flex alignItems="center" justifyContent="space-between">
-                      <Flex>
-                        <Text>Enter local graph on...</Text>
-                        <InfoTooltip infoText="View only the node and its direct neighbors" />
-                      </Flex>
-                      <Menu>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                          {mouseArray[mouse.local]}
-                        </MenuButton>
-                        <MenuList bgColor="gray.200">
-                          <MenuItem onClick={() => setMouse({ ...mouse, local: 0 })}>
-                            Never
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, local: 1 })}>
-                            Hover
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, local: 2 })}>
-                            Click
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, local: 3 })}>
-                            Double Click
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, local: 4 })}>
-                            Right Click
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </Flex>
-                    <Flex alignItems="center" justifyContent="space-between">
-                      <Text>Open node in emacs on...</Text>
-                      <Menu>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                          {mouseArray[mouse.follow]}
-                        </MenuButton>
-                        <MenuList bgColor="gray.200">
-                          <MenuItem onClick={() => setMouse({ ...mouse, follow: 0 })}>
-                            Never
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, follow: 1 })}>
-                            Hover
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, follow: 2 })}>
-                            Click
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, follow: 3 })}>
-                            Double Click
-                          </MenuItem>
-                          <MenuItem onClick={() => setMouse({ ...mouse, follow: 4 })}>
-                            Right Click
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </Flex>
-                  </VStack>
+                  ></VStack>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

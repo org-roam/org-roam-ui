@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     violet: '#a991f1',
     yellow: '#FCCE7B',
   }
-  const [emacsTheme, setEmacsTheme] = useState(initialTheme)
+  const [emacsTheme, setEmacsTheme] = useState<typeof initialTheme>(initialTheme)
   useEffect(() => {
     const trackTheme = new EventSource('http://127.0.0.1:35901/theme')
     trackTheme.addEventListener('message', (e) => {
