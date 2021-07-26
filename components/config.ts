@@ -1,4 +1,16 @@
 import { Easing } from '@tweenjs/tween.js'
+const options: string[] = []
+const algorithms: { [name: string]: (percent: number) => number } = {}
+for (let type in Easing) {
+  for (let mode in (Easing as any)[type]) {
+    let name = type + mode
+    if (name === 'LinearNone') {
+      name = 'Linear'
+    }
+    options.push(name)
+    algorithms[name] = (Easing as any)[type][mode]
+  }
+}
 
 export const initialPhysics = {
   enabled: true,
@@ -33,8 +45,8 @@ export const initialPhysics = {
   highlightLinkSize: 2,
   highlightAnim: false,
   animationSpeed: 250,
-  algorithms: getAlgos(false),
-  algorithmOptions: getAlgos(true),
+  algorithms: options,
+  algorithmOptions: algorithms,
   algorithmName: 'CubicOut',
   orphans: false,
   follow: 'Local',
@@ -47,19 +59,4 @@ export const initialFilter = {
   nodes: [],
   links: [],
   date: [],
-}
-
-function getAlgos(option?: boolean) {
-  const options: string[] = []
-  const algorithms: { [name: string]: (percent: number) => number } = {}
-  for (let type in Easing) {
-    for (let mode in (Easing as any)[type]) {
-      let name = type + mode
-      if (name === 'LinearNone') {
-        name = 'Linear'
-      }
-      option ? options.push(name) : (algorithms[name] = (Easing as any)[type][mode])
-    }
-  }
-  return option ? options : algorithms
 }

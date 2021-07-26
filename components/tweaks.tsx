@@ -407,13 +407,11 @@ export const Tweaks = (props: TweakProps) => {
                               setPhysics({ ...physics, algorithmName: v.target.value })
                             }}
                           >
-                            {physics.algorithmOptions.map((opt: string, i: number) => {
-                              return (
-                                <option key={i} value={opt}>
-                                  {opt}
-                                </option>
-                              )
-                            })}
+                            {physics.algorithmOptions.map((opt: string) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
                           </Select>
                           {/* <DropDownMenu
                     displayValue={physics.algorithmName}
