@@ -9,14 +9,11 @@ import type {
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { GraphData, NodeObject } from 'force-graph'
 
-import Head from 'next/head'
-
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import { Button, Box, IconButton, useTheme, useDisclosure, Flex } from '@chakra-ui/react'
+import { Box, useTheme } from '@chakra-ui/react'
 
-import { ChevronLeftIcon, SettingsIcon } from '@chakra-ui/icons'
 import { initialPhysics, initialFilter } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
@@ -247,16 +244,9 @@ export const Graph = function (props: GraphProps) {
   }, [filter, graphData.nodes, linksByNodeId])
 
   const filteredLinks = useMemo(() => {
-    return graphData.links.filter((link) => {
-      // we need to cover both because force-graph modifies the original data
-      // but if we supply the original data on each render, the graph will re-render sporadically
-      //const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-      //const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
-      let showNode = true
-      if (!filter.parents && link.type === 'parent') {
-        showNode = false
-      }
-      return link.type !== 'cite' && showNode
+    return graphData.links.filter((linkArg) => {
+      const link = linkArg as OrgRoamLink
+      return link.type !== 'cite' && (filter.parents || link.type !== 'parent')
     })
   }, [filter, JSON.stringify(graphData.links)])
 
@@ -331,6 +321,7 @@ export const Graph = function (props: GraphProps) {
         fg.d3Force('y', null)
         threeDim ? fg.d3Force('z', null) : null
       }
+
       physics.linkStrength && fg.d3Force('link').strength(physics.linkStrength)
       physics.linkIts && fg.d3Force('link').iterations(physics.linkIts)
       physics.charge && fg.d3Force('charge').strength(physics.charge)
@@ -357,7 +348,7 @@ export const Graph = function (props: GraphProps) {
     }
     setScope((currentScope) => ({
       ...currentScope,
-      nodeIds: [...currentScope.nodeIds, nodeId as string],
+      nodeIds: [...currentScope.nodeIds, node.id as string],
     }))
   }
 
@@ -371,7 +362,7 @@ export const Graph = function (props: GraphProps) {
     algorithm: physics.algorithms[physics.algorithmName],
   })
 
-  const lastHoverNode = useRef()
+  const lastHoverNode = useRef<NodeObject | null>(null)
   useEffect(() => {
     if (hoverNode) {
       lastHoverNode.current = hoverNode
