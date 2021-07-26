@@ -1,6 +1,7 @@
 import React, { ComponentPropsWithoutRef, useEffect, useRef, useState, useMemo } from 'react'
 import { usePersistantState } from '../util/persistant-state'
 const d3promise = import('d3-force-3d')
+import * as d3int from 'd3-interpolate'
 
 import type {
   ForceGraph2D as TForceGraph2D,
@@ -379,6 +380,14 @@ export const Graph = function (props: GraphProps) {
     }
   }, [hoverNode])
   const theme = useTheme()
+  const interPurple = useMemo(
+    () => d3int.interpolate(theme.colors.gray[500], theme.colors.purple[500]),
+    [theme],
+  )
+  const interGray = useMemo(
+    () => d3int.interpolate(theme.colors.gray[500], theme.colors.gray[400]),
+    [theme],
+  )
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -396,11 +405,11 @@ export const Graph = function (props: GraphProps) {
         }
         return Object.keys(highlightedNodes).length === 0
           ? lastHoverNode.current?.id! === node.id!
-            ? theme.colors.purple['inter'](opacity)
-            : theme.colors.gray['inter'](opacity)
+            ? interPurple(opacity)
+            : interGray(opacity)
           : highlightedNodes[node.id!]
-          ? theme.colors.purple['inter'](opacity)
-          : theme.colors.gray['inter'](opacity)
+          ? interPurple(opacity)
+          : interGray(opacity)
       }
       if (node.id === emacsNodeId) {
         return theme.colors['red'][500]
@@ -532,9 +541,9 @@ export const Graph = function (props: GraphProps) {
           (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
           (link.target as NodeObject).id! === lastHoverNode.current?.id!
         return linkIsHighlighted
-          ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
+          ? interPurple(opacity) /*the.colors.purple[500]*/
           : linkWasHighlighted
-          ? theme.colors.purple['inter'](opacity) /*the.colors.purple[500]*/
+          ? interPurple(opacity) /*the.colors.purple[500]*/
           : theme.colors.gray[500]
       } else {
         return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]

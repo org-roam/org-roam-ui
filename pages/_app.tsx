@@ -1,8 +1,7 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { useEffect, useState, useMemo } from 'react'
-import { extendTheme } from '@chakra-ui/react'
 import * as d3int from 'd3-interpolate'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -37,30 +36,38 @@ function MyApp({ Component, pageProps }: AppProps) {
     const trackTheme = new EventSource('http://127.0.0.1:35901/theme')
     trackTheme.addEventListener('message', (e) => {
       const themeData = JSON.parse(e.data)
+      if (!themeData.base4) {
+        const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
+        themeData.base1 = bgfgInterpolate(0.1)
+        themeData.base2 = bgfgInterpolate(0.2)
+        themeData.base3 = bgfgInterpolate(0.3)
+        themeData.base4 = bgfgInterpolate(0.4)
+        themeData.base5 = bgfgInterpolate(0.5)
+        themeData.base6 = bgfgInterpolate(0.6)
+        themeData.base7 = bgfgInterpolate(0.7)
+        themeData.base8 = bgfgInterpolate(0.8)
+      }
       setEmacsTheme(themeData)
     })
   }, [])
 
+  const borderColor = emacsTheme.violet + 'aa'
+  const missingColor = d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2)
   const theme = useMemo(() => {
-    const borderColor = emacsTheme.violet + 'aa'
-    const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
-    const themeColors = {
+    return {
       colors: {
         white: emacsTheme.bg,
         black: emacsTheme.fg,
         gray: {
-          100: emacsTheme.base1 ?? bgfgInterpolate(0.1),
-          200: d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2) ?? bgfgInterpolate(0.2),
-          300: emacsTheme.base2 ?? bgfgInterpolate(0.3),
-          400: emacsTheme.base3 ?? bgfgInterpolate(0.4),
-          500: emacsTheme.base4 ?? bgfgInterpolate(0.5),
-          600: emacsTheme.base5 ?? bgfgInterpolate(0.6),
-          700: emacsTheme.base6 ?? bgfgInterpolate(0.7),
-          800: emacsTheme.base7 ?? bgfgInterpolate(0.8),
-          900: emacsTheme.base8 ?? bgfgInterpolate(0.9),
-          inter: emacsTheme.base4
-            ? d3int.interpolate(emacsTheme.base4, emacsTheme.base3)
-            : bgfgInterpolate(0.45),
+          100: emacsTheme.base1,
+          200: missingColor,
+          300: emacsTheme.base2,
+          400: emacsTheme.base3,
+          500: emacsTheme.base4,
+          600: emacsTheme.base5,
+          700: emacsTheme.base6,
+          800: emacsTheme.base7,
+          900: emacsTheme.base8,
         },
         blue: {
           500: emacsTheme.blue,
@@ -82,7 +89,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
         purple: {
           500: emacsTheme.violet,
-          inter: d3int.interpolate(emacsTheme.base4 ?? bgfgInterpolate(0.5), emacsTheme.violet),
         },
         pink: {
           500: emacsTheme.magenta,
@@ -99,11 +105,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         outline: '0 0 0 3px ' + borderColor,
       },
     }
-    return extendTheme(themeColors)
   }, [JSON.stringify(emacsTheme)])
 
+  const extendedTheme = extendTheme(theme)
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={extendedTheme}>
       <Component {...pageProps} />
     </ChakraProvider>
   )
