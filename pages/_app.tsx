@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         black: emacsTheme.fg,
         gray: {
           100: emacsTheme.base1,
-          200: d3int.interpolate(emacsTheme.base1, emacsTheme.base3)(0.3),
+          200: d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2),
           300: emacsTheme.base2,
           400: emacsTheme.base3,
           500: emacsTheme.base4,

@@ -14,10 +14,10 @@ import Head from 'next/head'
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import { Button, Box, IconButton, useTheme, useDisclosure } from '@chakra-ui/react'
+import { Button, Box, IconButton, useTheme, useDisclosure, Flex } from '@chakra-ui/react'
 
-import { SettingsIcon } from '@chakra-ui/icons'
-import { initialPhysics, initialFilter } from '../components/config'
+import { ChevronLeftIcon, SettingsIcon } from '@chakra-ui/icons'
+import { initialPhysics, initialFilter, initialMouse } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 import { Sidebar } from '../components/sidebar'
 
@@ -55,6 +55,7 @@ export default function Home() {
 export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
+  const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -133,13 +134,14 @@ export function GraphPage() {
   }, [emacsNodeId])
 
   const [threeDim, setThreeDim] = useState(false)
+  const [openNode, setOpenNode] = useState('')
 
   if (!graphData) {
     return null
   }
 
   return (
-    <Box display="flex">
+    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%">
       <Head>
         <title> Org Roam UI </title>
         <script
@@ -147,22 +149,12 @@ export function GraphPage() {
           src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"
         ></script>
       </Head>
-      <Button
-        position="absolute"
-        marginTop="6%"
-        zIndex="overlay"
-        marginRight="5"
-        colorScheme="purple"
-        onClick={onOpen}
-      >
-        Open Drawer
-      </Button>
       <Sidebar
         nodeById={nodeByIdRef.current}
         {...{
           isOpen,
           onClose,
-          emacsNodeId,
+          openNode,
         }}
       />
       <Tweaks
@@ -171,34 +163,44 @@ export function GraphPage() {
           setPhysics,
           threeDim,
           setThreeDim,
+          mouse,
+          setMouse,
+          initialMouse,
           filter,
           setFilter,
         }}
       />
+      <Flex height="100%" flexDirection="column" marginLeft="auto">
+        {!isOpen && (
+          <IconButton
+            icon={<ChevronLeftIcon />}
+            height={100}
+            aria-label="Open org-viewer"
+            position="relative"
+            zIndex="overlay"
+            colorScheme="purple"
+            onClick={onOpen}
+            variant="outline"
+            marginTop={10}
+          />
+        )}
+      </Flex>
 
-      <Button
-        position="absolute"
-        marginRight="2%"
-        marginTop="2%"
-        zIndex="overlay"
-        marginLeft="95%"
-        onClick={() => setThreeDim(!threeDim)}
-        colorScheme="purple"
-      >
-        {threeDim ? '3D' : '2D'}{' '}
-      </Button>
-
-      <Graph
-        nodeById={nodeByIdRef.current!}
-        linksByNodeId={linksByNodeIdRef.current!}
-        {...{
-          physics,
-          graphData,
-          threeDim,
-          emacsNodeId,
-          filter,
-        }}
-      />
+      <Box position="absolute" alignItems="top">
+        <Graph
+          nodeById={nodeByIdRef.current!}
+          linksByNodeId={linksByNodeIdRef.current!}
+          {...{
+            physics,
+            graphData,
+            threeDim,
+            emacsNodeId,
+            filter,
+            setOpenNode,
+            mouse,
+          }}
+        />
+      </Box>
     </Box>
   )
 }
@@ -211,10 +213,22 @@ export interface GraphProps {
   threeDim: boolean
   filter: typeof initialFilter
   emacsNodeId: string | null
+  mouse: typeof initialMouse
+  setOpenNode: any
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId, filter, emacsNodeId, nodeById } = props
+  const {
+    physics,
+    graphData,
+    threeDim,
+    linksByNodeId,
+    filter,
+    emacsNodeId,
+    nodeById,
+    mouse,
+    setOpenNode,
+  } = props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
@@ -227,6 +241,24 @@ export const Graph = function (props: GraphProps) {
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
 
+  const handleMouse = (nodeId: string | number | undefined, num: number) => {
+    switch (num) {
+      // case mouse.highlight: setHighlightNode(node)
+      // case mouse.select: setSelectedNode(node)
+      case mouse.open:
+        setOpenNode(nodeId as string)
+      case mouse.local: {
+        setScope((currentScope) => ({
+          ...currentScope,
+          nodeIds: [...currentScope.nodeIds, nodeId as string],
+        }))
+      }
+      case mouse.follow:
+        window.open(('org-protocol://roam-node?node=' + nodeId) as string, '_self')
+      default:
+        break
+    }
+  }
   useEffect(() => {
     if (!emacsNodeId) {
       return
@@ -393,14 +425,17 @@ export const Graph = function (props: GraphProps) {
     lastNodeClickRef.current = event.timeStamp
 
     if (isDoubleClick) {
+      handleMouse(node.id, 3)
       window.open('org-protocol://roam-node?node=' + node.id, '_self')
       return
     }
 
-    setScope((currentScope) => ({
-      ...currentScope,
-      nodeIds: [...currentScope.nodeIds, node.id as string],
-    }))
+    handleMouse(node.id, 2)
+    console.log(mouse)
+    /* setScope((currentScope) => ({
+     *   ...currentScope,
+     *   nodeIds: [...currentScope.nodeIds, node.id as string],
+     * })) */
     return
   }
 
@@ -626,6 +661,9 @@ export const Graph = function (props: GraphProps) {
         return
       }
       setHoverNode(node)
+    },
+    onNodeRightClick: (node) => {
+      handleMouse(node.id, 4)
     },
   }
 
