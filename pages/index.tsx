@@ -354,13 +354,15 @@ export const Graph = function (props: GraphProps) {
     if (hoverNode) {
       lastHoverNode.current = hoverNode
     }
-
     if (!physics.highlightAnim) {
-      return
+      return hoverNode ? setOpacity(1) : setOpacity(0)
     }
+
     if (hoverNode) {
       fadeIn()
     } else {
+      // to prevent fadeout animation from starting at 1
+      // when quickly moving away from a hovered node
       cancel()
       opacity > 0.5 ? fadeOut() : setOpacity(0)
     }
@@ -422,22 +424,14 @@ export const Graph = function (props: GraphProps) {
         ? links.filter((link) => link.type === 'parent' || link.type === 'cite').length
         : 0
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
-      if (physics.highlightAnim) {
-        const wasHighlightedNode = links.some((link) =>
-          isLinkRelatedToNode(link, lastHoverNode.current),
-        )
-        const highlightSize = highlightedNodes[node.id!]
-          ? 1 + opacity * (physics.highlightNodeSize - 1)
-          : lastHoverNode.current?.id! === node.id!
-          ? 1 + opacity * (physics.highlightNodeSize - 1)
-          : wasHighlightedNode
+      const wasHighlightedNode = links.some((link) =>
+        isLinkRelatedToNode(link, lastHoverNode.current),
+      )
+      const highlightSize =
+        highlightedNodes[node.id!] || wasHighlightedNode
           ? 1 + opacity * (physics.highlightNodeSize - 1)
           : 1
-        return basicSize * highlightSize
-      } else {
-        const highlightSize = highlightedNodes[node.id!] ? physics.highlightNodeSize : 1
-        return basicSize * highlightSize
-      }
+      return basicSize * highlightSize
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!node) {
@@ -448,10 +442,15 @@ export const Graph = function (props: GraphProps) {
         return
       }
       const links = linksByNodeId[node.id!] ?? []
-      const wasHighlightedNode =
-        physics.highlightAnim &&
-        links.some((link) => isLinkRelatedToNode(link, lastHoverNode.current))
-      if (globalScale <= physics.labelScale && !highlightedNodes[node.id!] && !wasHighlightedNode) {
+      const wasHighlightedNode = links.some((link) =>
+        isLinkRelatedToNode(link, lastHoverNode.current),
+      )
+
+      if (
+        (globalScale <= physics.labelScale || physics.labels === 1) &&
+        !highlightedNodes[node.id!] &&
+        !wasHighlightedNode
+      ) {
         return
       }
 
@@ -469,35 +468,31 @@ export const Graph = function (props: GraphProps) {
 
       // draw label background
       const getLabelOpacity = () => {
-        if (physics.highlightAnim) {
-          if (globalScale <= physics.labelScale) {
-            return opacity
-          }
-          return Object.keys(highlightedNodes).length === 0
-            ? lastHoverNode.current?.id! === node.id
-              ? 1
-              : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
-            : highlightedNodes[node.id!] || wasHighlightedNode
+        if (physics.labels === 1) {
+          return opacity
+        }
+        if (globalScale <= physics.labelScale) {
+          return opacity
+        }
+        return Object.keys(highlightedNodes).length === 0
+          ? lastHoverNode.current?.id! === node.id
             ? 1
             : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
-        } else {
-          return Object.keys(highlightedNodes).length === 0
-            ? 1 * fadeFactor
-            : highlightedNodes[node.id!]
-            ? 1
-            : 1 * fadeFactor
-        }
+          : highlightedNodes[node.id!] || wasHighlightedNode
+          ? 1
+          : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
       }
-      const backgroundOpacity = 0.5 * getLabelOpacity()
-      ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
-      ctx.fillRect(
-        node.x! - bckgDimensions[0] / 2,
-        node.y! - bckgDimensions[1] / 2,
-        ...bckgDimensions,
-      )
-
+      if (physics.labels === 2 && (wasHighlightedNode || highlightedNodes[node.id!])) {
+        const backgroundOpacity = 0.5 * getLabelOpacity()
+        ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
+        ctx.fillRect(
+          node.x! - bckgDimensions[0] / 2,
+          node.y! - bckgDimensions[1] / 2,
+          ...bckgDimensions,
+        )
+      }
       // draw label text
-      const textOpacity = 2 * backgroundOpacity
+      const textOpacity = getLabelOpacity()
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillStyle = `rgb(255, 255, 255, ${textOpacity})`
@@ -510,23 +505,11 @@ export const Graph = function (props: GraphProps) {
     linkColor: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
-      if (physics.highlightAnim) {
-        return linkIsHighlighted
-          ? interPurple(opacity) /*the.colors.purple[500]*/
-          : linkWasHighlighted
-          ? interPurple(opacity) /*the.colors.purple[500]*/
-          : theme.colors.gray[500]
-      } else {
-        return linkIsHighlighted ? theme.colors.purple[500] : theme.colors.gray[500]
-      }
+      return linkIsHighlighted || linkWasHighlighted ? interPurple(opacity) : theme.colors.gray[500]
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
-
-      if (!physics.highlightAnim) {
-        return linkIsHighlighted ? physics.linkWidth * physics.highlightLinkSize : physics.linkWidth
-      }
 
       return linkIsHighlighted || linkWasHighlighted
         ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
