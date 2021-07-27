@@ -83,6 +83,8 @@ Then something along the following to your `config.el`
 )
 ```
 
+We recommend only loading org-roam-ui after loading org(-roam) as starting the server and making database requests can impact startup times quite a lot.
+
 ### Quelpa/use-package
 
 TODO
@@ -128,8 +130,7 @@ You can also provide your own theme if you do not like syncing nor like the defa
         (cyan . '#8be9fd')
         (blue . '#ff79c6')
         (violet . '#8be9fd')
-        (magenta . '#bd93f9'))."
-))
+        (magenta . '#bd93f9')))
 ```
 
 At the moment, the main highlighting color is the `magenta` variable, so change that one if you want to change that.
