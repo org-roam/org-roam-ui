@@ -382,13 +382,6 @@ export const Graph = function (props: GraphProps) {
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       if (!physics.colorful) {
-        if (!physics.highlightAnim) {
-          return Object.keys(highlightedNodes).length === 0
-            ? highlightedNodes[node.id!]
-              ? theme.colors.purple[500]
-              : theme.colors.gray[400]
-            : theme.colors.gray[500]
-        }
         return Object.keys(highlightedNodes).length === 0
           ? lastHoverNode.current?.id! === node.id!
             ? interPurple(opacity)
