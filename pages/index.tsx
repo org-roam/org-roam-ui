@@ -351,11 +351,11 @@ export const Graph = function (props: GraphProps) {
 
   const lastHoverNode = useRef<NodeObject | null>(null)
   useEffect(() => {
-    if (!physics.highlightAnim) {
-      return hoverNode ? setOpacity(1) : setOpacity(0)
-    }
     if (hoverNode) {
       lastHoverNode.current = hoverNode
+    }
+    if (!physics.highlightAnim) {
+      return hoverNode ? setOpacity(1) : setOpacity(0)
     }
     if (hoverNode) {
       fadeIn()
@@ -391,7 +391,7 @@ export const Graph = function (props: GraphProps) {
           ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
         ].map((nodeId) => [nodeId, {}]),
       ),
-    [hoverNode],
+    [hoverNode, previouslyHighlightedLinks, lastHoverNode],
   )
 
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
@@ -453,9 +453,7 @@ export const Graph = function (props: GraphProps) {
         return
       }
       const links = linksByNodeId[node.id!] ?? []
-      const wasHighlightedNode = links.some((link) =>
-        isLinkRelatedToNode(link, lastHoverNode.current),
-      )
+      const wasHighlightedNode = previouslyHighlightedNodes[node.id!]
 
       if (
         (globalScale <= physics.labelScale || physics.labels === 1) &&
@@ -485,9 +483,10 @@ export const Graph = function (props: GraphProps) {
         if (globalScale <= physics.labelScale) {
           return opacity
         }
+
         return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-          ? 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
-          : 1
+          ? Math.max(fadeFactor, opacity)
+          : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
       }
       if (physics.labels === 2 && (wasHighlightedNode || highlightedNodes[node.id!])) {
         const backgroundOpacity = 0.5 * getLabelOpacity()

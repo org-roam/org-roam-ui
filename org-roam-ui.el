@@ -36,8 +36,6 @@
 (require 'json)
 (require 'simple-httpd)
 (require 'org-roam)
-(require 'org-ref)
-(require 'org-id)
 
 (defgroup org-roam-ui nil
   "UI in Org-roam."
@@ -61,7 +59,8 @@
   "Port to serve the org-roam-ui interface.")
 
 (defcustom org-roam-ui-sync-theme t
-  "Syncs your current Emacs theme with org-raom-ui. Works best with doom-themes.
+  "If true, sync your current Emacs theme with org-roam-ui.
+Works best with doom-themes.
 Ignored if a custom theme is provied for 'org-roam-ui-custom-theme'."
   :group 'org-roam-ui
   :type 'boolean)
@@ -71,14 +70,14 @@ Ignored if a custom theme is provied for 'org-roam-ui-custom-theme'."
 Provide a list of cons with the following values:
 bg, bg-alt, fg, fg-alt, red, orange, yellow, green, cyan, blue, violet, magenta.
 E.g. '((bg . '#1E2029')
- (bg-alt . '#282a36')
- (fg . '#f8f8f2')
- (fg-alt . '#6272a4')
- (red . '#ff5555')
- (orange . '#f1fa8c')
- (yellow .'#ffb86c')
- (green . '#50fa7b')
- (cyan . '#8be9fd')
+(bg-alt . '#282a36')
+(fg . '#f8f8f2')
+(fg-alt . '#6272a4')
+(red . '#ff5555')
+(orange . '#f1fa8c')
+(yellow .'#ffb86c')
+(green . '#50fa7b')
+(cyan . '#8be9fd')
 (blue . '#ff79c6')
 (violet . '#8be9fd')
 (magenta . '#bd93f9'))."
@@ -105,7 +104,6 @@ This serves the web-build and API over HTTP."
     (httpd-stop))))
 
 
-;;;###autoload
 (defservlet* graph application/json ()
   (let* ((nodes-columns [id file title level])
          (links-columns [source dest type])
@@ -125,7 +123,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     res))
 
 
-;;;###autoload
 (defservlet* id/:id text/html ()
   (let ((node (org-roam-populate (org-roam-node-create :id id)))
         html-string)
@@ -153,7 +150,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
 
 
-;;;###autoload
 (defservlet* current-node-id text/event-stream ()
   (insert (format "data: %s\n\n"
                        org-roam-ui-current-node-id))
@@ -184,7 +180,6 @@ This function is added to `post-command-hook'."
         ))
 
 
-;;;###autoload
 (defservlet* theme text/stream ()
   (progn)
   (if org-roam-ui-sync-theme
