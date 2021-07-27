@@ -423,7 +423,9 @@ export const Graph = function (props: GraphProps) {
         : 0
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
       if (physics.highlightAnim) {
-        const wasHighlightedNode = links.some((link) => isLinkRelatedToNode(link, lastHoverNode))
+        const wasHighlightedNode = links.some((link) =>
+          isLinkRelatedToNode(link, lastHoverNode.current),
+        )
         const highlightSize = highlightedNodes[node.id!]
           ? 1 + opacity * (physics.highlightNodeSize - 1)
           : lastHoverNode.current?.id! === node.id!
@@ -447,7 +449,8 @@ export const Graph = function (props: GraphProps) {
       }
       const links = linksByNodeId[node.id!] ?? []
       const wasHighlightedNode =
-        physics.highlightAnim && links.some((link) => isLinkRelatedToNode(link, lastHoverNode))
+        physics.highlightAnim &&
+        links.some((link) => isLinkRelatedToNode(link, lastHoverNode.current))
       if (globalScale <= physics.labelScale && !highlightedNodes[node.id!] && !wasHighlightedNode) {
         return
       }
@@ -506,7 +509,7 @@ export const Graph = function (props: GraphProps) {
     linkDirectionalParticles: physics.particles ? physics.particlesNumber : undefined,
     linkColor: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
-      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode)
+      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       if (physics.highlightAnim) {
         return linkIsHighlighted
           ? interPurple(opacity) /*the.colors.purple[500]*/
@@ -519,15 +522,13 @@ export const Graph = function (props: GraphProps) {
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
-      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode)
+      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
 
       if (!physics.highlightAnim) {
         return linkIsHighlighted ? physics.linkWidth * physics.highlightLinkSize : physics.linkWidth
       }
 
-      return linkIsHighlighted
-        ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
-        : linkWasHighlighted
+      return linkIsHighlighted || linkWasHighlighted
         ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
         : physics.linkWidth
     },
