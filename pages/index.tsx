@@ -351,13 +351,12 @@ export const Graph = function (props: GraphProps) {
 
   const lastHoverNode = useRef<NodeObject | null>(null)
   useEffect(() => {
-    if (hoverNode) {
-      lastHoverNode.current = hoverNode
-    }
     if (!physics.highlightAnim) {
       return hoverNode ? setOpacity(1) : setOpacity(0)
     }
-
+    if (hoverNode) {
+      lastHoverNode.current = hoverNode
+    }
     if (hoverNode) {
       fadeIn()
     } else {
@@ -376,6 +375,7 @@ export const Graph = function (props: GraphProps) {
     () => d3int.interpolate(theme.colors.gray[500], theme.colors.gray[400]),
     [theme],
   )
+
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -383,12 +383,12 @@ export const Graph = function (props: GraphProps) {
     backgroundColor: theme.white,
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
+      const links = linksByNodeId[node.id!] ?? []
+      const wasHighlightedNode = links.some((link) =>
+        isLinkRelatedToNode(link, lastHoverNode.current),
+      )
       if (!physics.colorful) {
-        return Object.keys(highlightedNodes).length === 0
-          ? lastHoverNode.current?.id! === node.id!
-            ? interPurple(opacity)
-            : interGray(opacity)
-          : highlightedNodes[node.id!]
+        return wasHighlightedNode || highlightedNodes[node.id!]
           ? interPurple(opacity)
           : interGray(opacity)
       }
