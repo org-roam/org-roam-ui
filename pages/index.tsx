@@ -376,6 +376,24 @@ export const Graph = function (props: GraphProps) {
     [theme],
   )
 
+  const highlightedLinks = useMemo(() => linksByNodeId[hoverNode?.id!] ?? [], [hoverNode])
+
+  const previouslyHighlightedLinks = useMemo(
+    () => linksByNodeId[lastHoverNode.current?.id!] ?? [],
+    [hoverNode],
+  )
+
+  const previouslyHighlightedNodes = useMemo(
+    () =>
+      Object.fromEntries(
+        [
+          lastHoverNode.current?.id! as string,
+          ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
+        ].map((nodeId) => [nodeId, {}]),
+      ),
+    [hoverNode],
+  )
+
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -383,12 +401,8 @@ export const Graph = function (props: GraphProps) {
     backgroundColor: theme.white,
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
-      const links = linksByNodeId[node.id!] ?? []
-      const wasHighlightedNode = links.some((link) =>
-        isLinkRelatedToNode(link, lastHoverNode.current),
-      )
       if (!physics.colorful) {
-        return wasHighlightedNode || highlightedNodes[node.id!]
+        return previouslyHighlightedNodes[node.id!] || highlightedNodes[node.id!]
           ? interPurple(opacity)
           : interGray(opacity)
       }
@@ -424,11 +438,8 @@ export const Graph = function (props: GraphProps) {
         ? links.filter((link) => link.type === 'parent' || link.type === 'cite').length
         : 0
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
-      const wasHighlightedNode = links.some((link) =>
-        isLinkRelatedToNode(link, lastHoverNode.current),
-      )
       const highlightSize =
-        highlightedNodes[node.id!] || wasHighlightedNode
+        highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
           ? 1 + opacity * (physics.highlightNodeSize - 1)
           : 1
       return basicSize * highlightSize
@@ -474,13 +485,9 @@ export const Graph = function (props: GraphProps) {
         if (globalScale <= physics.labelScale) {
           return opacity
         }
-        return Object.keys(highlightedNodes).length === 0
-          ? lastHoverNode.current?.id! === node.id
-            ? 1
-            : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
-          : highlightedNodes[node.id!] || wasHighlightedNode
-          ? 1
-          : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
+        return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+          ? 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
+          : 1
       }
       if (physics.labels === 2 && (wasHighlightedNode || highlightedNodes[node.id!])) {
         const backgroundOpacity = 0.5 * getLabelOpacity()
