@@ -8,7 +8,7 @@ import type {
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
-import { GraphData, NodeObject } from 'force-graph'
+import { GraphData, NodeObject, LinkObject } from 'force-graph'
 
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
@@ -339,20 +339,6 @@ export const Graph = function (props: GraphProps) {
   //shitty handler to check for doubleClicks
   const lastNodeClickRef = useRef(0)
 
-  const onNodeClick = (node: NodeObject, event: any) => {
-    const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
-    lastNodeClickRef.current = event.timeStamp
-
-    if (isDoubleClick) {
-      window.open('org-protocol://roam-node?node=' + node.id, '_self')
-      return
-    }
-    setScope((currentScope) => ({
-      ...currentScope,
-      nodeIds: [...currentScope.nodeIds, node.id as string],
-    }))
-  }
-
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: physics.animationSpeed,
@@ -444,9 +430,7 @@ export const Graph = function (props: GraphProps) {
         : 0
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
       if (physics.highlightAnim) {
-        const wasNeighbor = (link: OrgRoamLink) =>
-          link.source === lastHoverNode.current?.id! || link.target === lastHoverNode.current?.id!
-        const wasHighlightedNode = links.some(wasNeighbor)
+        const wasHighlightedNode = links.some((link) => isLinkRelatedToNode(link, lastHoverNode))
         const highlightSize = highlightedNodes[node.id!]
           ? 1 + opacity * (physics.highlightNodeSize - 1)
           : lastHoverNode.current?.id! === node.id!
@@ -470,12 +454,7 @@ export const Graph = function (props: GraphProps) {
       }
       const links = linksByNodeId[node.id!] ?? []
       const wasHighlightedNode =
-        physics.highlightAnim &&
-        links.some(
-          (link) =>
-            link.source === lastHoverNode.current?.id! ||
-            link.target === lastHoverNode.current?.id!,
-        )
+        physics.highlightAnim && links.some((link) => isLinkRelatedToNode(link, lastHoverNode))
       if (globalScale <= physics.labelScale && !highlightedNodes[node.id!] && !wasHighlightedNode) {
         return
       }
@@ -533,13 +512,9 @@ export const Graph = function (props: GraphProps) {
 
     linkDirectionalParticles: physics.particles ? physics.particlesNumber : undefined,
     linkColor: (link) => {
-      const linkIsHighlighted =
-        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-        (link.target as NodeObject).id! === centralHighlightedNode?.id!
+      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
+      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode)
       if (physics.highlightAnim) {
-        const linkWasHighlighted =
-          (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
-          (link.target as NodeObject).id! === lastHoverNode.current?.id!
         return linkIsHighlighted
           ? interPurple(opacity) /*the.colors.purple[500]*/
           : linkWasHighlighted
@@ -550,15 +525,13 @@ export const Graph = function (props: GraphProps) {
       }
     },
     linkWidth: (link) => {
-      const linkIsHighlighted =
-        (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-        (link.target as NodeObject).id! === centralHighlightedNode?.id!
+      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
+      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode)
+
       if (!physics.highlightAnim) {
         return linkIsHighlighted ? physics.linkWidth * physics.highlightLinkSize : physics.linkWidth
       }
-      const linkWasHighlighted =
-        (link.source as NodeObject).id! === lastHoverNode.current?.id! ||
-        (link.target as NodeObject).id! === lastHoverNode.current?.id!
+
       return linkIsHighlighted
         ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
         : linkWasHighlighted
@@ -571,7 +544,19 @@ export const Graph = function (props: GraphProps) {
     d3AlphaMin: physics.alphaMin,
     d3VelocityDecay: physics.velocityDecay,
 
-    onNodeClick,
+    onNodeClick: (node: NodeObject, event: any) => {
+      const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
+      lastNodeClickRef.current = event.timeStamp
+
+      if (isDoubleClick) {
+        window.open('org-protocol://roam-node?node=' + node.id, '_self')
+        return
+      }
+      setScope((currentScope) => ({
+        ...currentScope,
+        nodeIds: [...currentScope.nodeIds, node.id as string],
+      }))
+    },
     onBackgroundClick: () => {
       setScope((currentScope) => ({
         ...currentScope,
@@ -586,7 +571,6 @@ export const Graph = function (props: GraphProps) {
     },
   }
 
-  const bg = theme.colors.alt[100]
   return (
     <div>
       {threeDim ? (
@@ -600,6 +584,13 @@ export const Graph = function (props: GraphProps) {
         <ForceGraph2D ref={graph2dRef} {...graphCommonProps} />
       )}
     </div>
+  )
+}
+
+function isLinkRelatedToNode(link: LinkObject, centralHighlightedNode: NodeObject | null) {
+  return (
+    (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
+    (link.target as NodeObject).id! === centralHighlightedNode?.id!
   )
 }
 
