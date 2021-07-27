@@ -85,6 +85,7 @@ E.g. '((bg . '#1E2029')
   :group 'org-roam-ui
   :type 'list)
 
+;;;###autoload
 (define-minor-mode
   org-roam-ui-mode
   "Enable org-roam-ui.
@@ -103,6 +104,8 @@ This serves the web-build and API over HTTP."
     (remove-hook 'post-command-hook #'org-roam-ui-update)
     (httpd-stop))))
 
+
+;;;###autoload
 (defservlet* graph application/json ()
   (let* ((nodes-columns [id file title level])
          (links-columns [source dest type])
@@ -121,6 +124,8 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
       (push (cons (pop column-names) (pop rows)) res))
     res))
 
+
+;;;###autoload
 (defservlet* id/:id text/html ()
   (let ((node (org-roam-populate (org-roam-node-create :id id)))
         html-string)
@@ -147,6 +152,8 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     (insert html-string)
     (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
 
+
+;;;###autoload
 (defservlet* current-node-id text/event-stream ()
   (insert (format "data: %s\n\n"
                        org-roam-ui-current-node-id))
@@ -176,6 +183,8 @@ This function is added to `post-command-hook'."
         `(magenta . ,(face-foreground font-lock-preprocessor-face))
         ))
 
+
+;;;###autoload
 (defservlet* theme text/stream ()
   (progn)
   (if org-roam-ui-sync-theme
