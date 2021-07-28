@@ -35,7 +35,7 @@ export type Scope = {
   nodeIds: string[]
 }
 
-export default function Home() {
+export default function Home(setEmacsTheme: any) {
   // only render on the client
   const [showPage, setShowPage] = useState(false)
   useEffect(() => {
@@ -46,10 +46,10 @@ export default function Home() {
     return null
   }
 
-  return <GraphPage />
+  return <GraphPage setEmacsTheme={setEmacsTheme} />
 }
 
-export function GraphPage() {
+export function GraphPage(setEmacsTheme: any) {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
@@ -62,6 +62,7 @@ export function GraphPage() {
     return fetch('http://localhost:35901/graph')
       .then((res) => res.json())
       .then((orgRoamGraphData) => {
+        console.log('fetching graphdata')
         parseGraphData(orgRoamGraphData)
       })
   }
@@ -115,34 +116,35 @@ export function GraphPage() {
   }
 
   useEffect(() => {
-    //const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
-    //trackEmacs.addEventListener('message', (e) => {
-    // const emacsNodeId = e.data
-    //setEmacsNodeId(emacsNodeId)
-    //})
     const socket = new WebSocket('ws://localhost:35903')
     socket.addEventListener('open', (e) => {
       console.log('Connection with Emacs established')
     })
     socket.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data)
-      console.log(typeof data.type)
-      switch (data.type) {
+      const message = JSON.parse(event.data)
+      console.log(typeof message.type)
+      switch (message.type) {
         case 'graphdata':
           console.log('hey')
-          parseGraphData(data.data)
+          parseGraphData(message.data)
+          break
+        case 'theme':
+          console.log('Received theme data')
+          console.log(message.data)
+          console.log(setEmacsTheme)
+          setEmacsTheme.setEmacsTheme.setEmacsTheme(message.data)
           break
         case 'command':
           console.log('command')
-          switch (data.data.commandName) {
+          switch (message.data.commandName) {
             case 'follow':
-              setEmacsNodeId(data.data.id)
+              setEmacsNodeId(message.data.id)
               break
             case 'zoom': {
-              const links = linksByNodeIdRef.current[data.data.id!] ?? []
+              const links = linksByNodeIdRef.current[message.data.id!] ?? []
               const nodes = Object.fromEntries(
                 [
-                  data.commandData.id! as string,
+                  message.commandData.id! as string,
                   ...links.flatMap((link) => [link.source, link.target]),
                 ].map((nodeId) => [nodeId, {}]),
               )

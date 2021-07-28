@@ -32,28 +32,31 @@ function MyApp({ Component, pageProps }: AppProps) {
     yellow: '#FCCE7B',
   }
   const [emacsTheme, setEmacsTheme] = useState<typeof initialTheme>(initialTheme)
-  useEffect(() => {
-    const trackTheme = new EventSource('http://127.0.0.1:35901/theme')
-    trackTheme.addEventListener('message', (e) => {
-      const themeData = JSON.parse(e.data)
-      if (!themeData.base4) {
-        const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
-        themeData.base1 = bgfgInterpolate(0.1)
-        themeData.base2 = bgfgInterpolate(0.2)
-        themeData.base3 = bgfgInterpolate(0.3)
-        themeData.base4 = bgfgInterpolate(0.4)
-        themeData.base5 = bgfgInterpolate(0.5)
-        themeData.base6 = bgfgInterpolate(0.6)
-        themeData.base7 = bgfgInterpolate(0.7)
-        themeData.base8 = bgfgInterpolate(0.8)
-      }
-      setEmacsTheme(themeData)
-    })
-  }, [])
-
+  /* useEffect(() => {
+   *   const trackTheme = new EventSource('http://127.0.0.1:35901/theme')
+   *   trackTheme.addEventListener('message', (e) => {
+   *     const themeData = JSON.parse(e.data)
+   *     console.log("aa")
+   *     if (!themeData.base4) {
+   *       const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
+   *       themeData.base1 = bgfgInterpolate(0.1)
+   *       themeData.base2 = bgfgInterpolate(0.2)
+   *       themeData.base3 = bgfgInterpolate(0.3)
+   *       themeData.base4 = bgfgInterpolate(0.4)
+   *       themeData.base5 = bgfgInterpolate(0.5)
+   *       themeData.base6 = bgfgInterpolate(0.6)
+   *       themeData.base7 = bgfgInterpolate(0.7)
+   *       themeData.base8 = bgfgInterpolate(0.8)
+   *       console.log('o  o')
+   *     }
+   *     emacsTheme.bg !== themeData.bg && setEmacsTheme(themeData)
+   *   })
+   * }, [])
+   */
   const borderColor = emacsTheme.violet + 'aa'
   const missingColor = d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2)
   const theme = useMemo(() => {
+    console.log('ii')
     return {
       colors: {
         white: emacsTheme.bg,
@@ -124,7 +127,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const extendedTheme = extendTheme(theme)
   return (
     <ChakraProvider theme={extendedTheme}>
-      <Component {...pageProps} />
+      <Component {...pageProps} setEmacsTheme={setEmacsTheme} />
     </ChakraProvider>
   )
 }

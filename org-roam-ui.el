@@ -107,12 +107,18 @@ This serves the web-build and API over HTTP."
          :host 'local
          :on-open (lambda (ws) (progn (setq oru-ws ws) (org-roam-ui--send-graphdata) (message "Connection established with org-roam-ui")))
          :on-close (lambda (_websocket) (setq oru-ws nil) (message "Connection with org-roam-ui closed succesfully."))))
+    (if (boundp 'counsel-load-theme
+(advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
+            (advice-add 'load-theme :after #'org-roam-ui-sync-theme-manually)))
     (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
     (add-hook 'post-command-hook #'org-roam-ui-update))
    (t
     (progn
     (remove-hook 'post-command-hook #'org-roam-ui-update)
     (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
+    (if (boundp 'counsel-load-theme
+(advice-remove 'counsel-load-theme #'org-roam-ui-sync-theme--advice)
+            (advice-remove 'load-theme #'org-roam-ui-sync-theme--advice)))
     (websocket-server-close org-roam-ui-ws)
     (delete-process org-roam-ui-ws)
     (httpd-stop)))))
@@ -136,6 +142,27 @@ This serves the web-build and API over HTTP."
 (defun org-roam-ui-show-node ()
   (interactive)
       (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,(org-roam-id-at-point))))))))
+
+(defun org-roam-ui-sync-theme--advice ()
+  (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
+
+(defun org-roam-ui-sync-theme-manually ()
+  (interactive)
+  (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
+
+(defun org-roam-ui--update-theme ()
+  (let  ((ui-theme (list nil)))
+  (if org-roam-ui-sync-theme
+    (if (boundp 'doom-themes--colors)
+      (let*
+        ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) doom-theme (list-nil))
+        (progn
+          (dolist (color colors) (push (cons (car color) (car (cdr color))) doom-theme)))
+        (setq ui-theme doom-theme))
+      (setq ui-theme (org-roam-ui-get-theme)))
+    (when org-roam-ui-custom-theme
+     org-roam-ui-custom-theme))
+  ui-theme))
 
 (defservlet* graph application/json ()
   (let* ((nodes-columns [id file title level])
@@ -221,7 +248,7 @@ This function is added to `post-command-hook'."
         ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
         (progn
           (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
-          (insert (format "data: %s\n\n" (json-encode  ui-theme)))))
+          ui-theme)))))
       (insert (format "data: %s\n\n" (json-encode (org-roam-ui-get-theme)))))
     (when org-roam-ui-custom-theme
       (insert (format "data %s\n\n" (json-encode org-roam-ui-custom-theme)))))
