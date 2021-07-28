@@ -1,4 +1,11 @@
-import React, { ComponentPropsWithoutRef, useEffect, useRef, useState, useMemo } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useContext,
+} from 'react'
 import { usePersistantState } from '../util/persistant-state'
 const d3promise = import('d3-force-3d')
 import * as d3int from 'd3-interpolate'
@@ -15,9 +22,10 @@ import { useAnimation } from '@lilib/hooks'
 
 import { Box, useTheme } from '@chakra-ui/react'
 
-import { initialPhysics, initialFilter } from '../components/config'
+import { initialPhysics, initialFilter, initialVisuals } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
+import { ThemeContext, ThemeContextProps } from './themecontext'
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -35,7 +43,7 @@ export type Scope = {
   nodeIds: string[]
 }
 
-export default function Home(setEmacsTheme: any) {
+export default function Home() {
   // only render on the client
   const [showPage, setShowPage] = useState(false)
   useEffect(() => {
@@ -46,12 +54,13 @@ export default function Home(setEmacsTheme: any) {
     return null
   }
 
-  return <GraphPage setEmacsTheme={setEmacsTheme} />
+  return <GraphPage />
 }
 
-export function GraphPage(setEmacsTheme: any) {
+export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
+  const [visuals, setVisuals] = usePersistantState('visuals', initialVisuals)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
 
@@ -114,7 +123,7 @@ export function GraphPage(setEmacsTheme: any) {
     const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
     setGraphData(orgRoamGraphDataClone)
   }
-
+  const { setEmacsTheme } = useContext(ThemeContext)
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:35903')
     socket.addEventListener('open', (e) => {
@@ -132,7 +141,7 @@ export function GraphPage(setEmacsTheme: any) {
           console.log('Received theme data')
           console.log(message.data)
           console.log(setEmacsTheme)
-          setEmacsTheme.setEmacsTheme.setEmacsTheme(message.data)
+          setEmacsTheme(message.data)
           break
         case 'command':
           console.log('command')
@@ -182,6 +191,8 @@ export function GraphPage(setEmacsTheme: any) {
           setThreeDim,
           filter,
           setFilter,
+          visuals,
+          setVisuals,
         }}
       />
       <Box position="absolute" alignItems="top">
@@ -194,6 +205,7 @@ export function GraphPage(setEmacsTheme: any) {
             threeDim,
             emacsNodeId,
             filter,
+            visuals,
           }}
         />
       </Box>
@@ -209,10 +221,12 @@ export interface GraphProps {
   threeDim: boolean
   filter: typeof initialFilter
   emacsNodeId: string | null
+  visuals: typeof initialVisuals
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId, filter, emacsNodeId, nodeById } = props
+  const { physics, graphData, threeDim, linksByNodeId, filter, emacsNodeId, nodeById, visuals } =
+    props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
@@ -410,9 +424,14 @@ export const Graph = function (props: GraphProps) {
     }
   }, [hoverNode])
   const theme = useTheme()
+  const themeContext = useContext<ThemeContextProps>(ThemeContext)
   const interPurple = useMemo(
     () => d3int.interpolate(theme.colors.gray[500], theme.colors.purple[500]),
     [theme],
+  )
+  const interHighlight = useMemo(
+    () => d3int.interpolate(theme.colors.gray[500], theme.colors[themeContext.highlightColor][500]),
+    [theme, visuals.highlightColor],
   )
   const interGray = useMemo(
     () => d3int.interpolate(theme.colors.gray[500], theme.colors.gray[400]),
@@ -446,7 +465,7 @@ export const Graph = function (props: GraphProps) {
     nodeColor: (node) => {
       if (!physics.colorful) {
         return previouslyHighlightedNodes[node.id!] || highlightedNodes[node.id!]
-          ? interPurple(opacity)
+          ? interHighlight(opacity)
           : interGray(opacity)
       }
       if (node.id === emacsNodeId) {
@@ -554,7 +573,9 @@ export const Graph = function (props: GraphProps) {
     linkColor: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
-      return linkIsHighlighted || linkWasHighlighted ? interPurple(opacity) : theme.colors.gray[500]
+      return linkIsHighlighted || linkWasHighlighted
+        ? interHighlight(opacity)
+        : theme.colors.gray[500]
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)

@@ -1,8 +1,11 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import { useEffect, useState, useMemo } from 'react'
+import { ChakraProvider, extendTheme, withDefaultColorScheme } from '@chakra-ui/react'
+import { useEffect, useState, useMemo, useContext, useReducer } from 'react'
 import * as d3int from 'd3-interpolate'
+
+import { ThemeContext } from './themecontext'
+import { usePersistantState } from '../util/persistant-state'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const initialTheme = {
@@ -31,30 +34,81 @@ function MyApp({ Component, pageProps }: AppProps) {
     violet: '#a991f1',
     yellow: '#FCCE7B',
   }
-  const [emacsTheme, setEmacsTheme] = useState<typeof initialTheme>(initialTheme)
-  /* useEffect(() => {
-   *   const trackTheme = new EventSource('http://127.0.0.1:35901/theme')
-   *   trackTheme.addEventListener('message', (e) => {
-   *     const themeData = JSON.parse(e.data)
-   *     console.log("aa")
-   *     if (!themeData.base4) {
-   *       const bgfgInterpolate = d3int.interpolate(emacsTheme.bg, emacsTheme.fg)
-   *       themeData.base1 = bgfgInterpolate(0.1)
-   *       themeData.base2 = bgfgInterpolate(0.2)
-   *       themeData.base3 = bgfgInterpolate(0.3)
-   *       themeData.base4 = bgfgInterpolate(0.4)
-   *       themeData.base5 = bgfgInterpolate(0.5)
-   *       themeData.base6 = bgfgInterpolate(0.6)
-   *       themeData.base7 = bgfgInterpolate(0.7)
-   *       themeData.base8 = bgfgInterpolate(0.8)
-   *       console.log('o  o')
-   *     }
-   *     emacsTheme.bg !== themeData.bg && setEmacsTheme(themeData)
-   *   })
-   * }, [])
-   */
-  const borderColor = emacsTheme.violet + 'aa'
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  const [emacsTheme, setEmacsTheme] = useState(initialTheme)
+  const [highlightColor, setHighlightColor] = useState('purple')
+
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('theme', JSON.stringify(emacsTheme))
+    }
+  }, [emacsTheme])
+
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('highlightColor', JSON.stringify(highlightColor))
+    }
+  }, [highlightColor])
+
+  useEffect(() => {
+    setEmacsTheme(
+      JSON.parse(localStorage.getItem('theme') ?? JSON.stringify(initialTheme)) ?? initialTheme,
+    )
+    setHighlightColor(
+      JSON.parse(localStorage.getItem('highlightColor') ?? JSON.stringify(highlightColor)) ??
+        highlightColor,
+    )
+    setIsInitialized(true)
+  }, [])
+
+  const themeObject = {
+    emacsTheme: emacsTheme,
+    setEmacsTheme: setEmacsTheme,
+    highlightColor: highlightColor,
+    setHighlightColor: setHighlightColor,
+  }
+  return (
+    <ThemeContext.Provider value={themeObject as typeof themeObject}>
+      <SubApp>
+        <Component {...pageProps} />
+      </SubApp>
+    </ThemeContext.Provider>
+  )
+}
+
+function SubApp(props: any) {
+  const { children } = props
+  const { highlightColor, emacsTheme } = useContext(ThemeContext)
+  // yeah it's annoying, should put this someplace more sensible
+  const getBorderColor = () => {
+    if (highlightColor === 'purple') {
+      return emacsTheme.violet + 'aa'
+    }
+    if (highlightColor === 'pink') {
+      return emacsTheme.magenta + 'aa'
+    }
+    if (highlightColor === 'blue') {
+      return emacsTheme.blue + 'aa'
+    }
+    if (highlightColor === 'cyan') {
+      return emacsTheme.cyan + 'aa'
+    }
+    if (highlightColor === 'green') {
+      return emacsTheme.green + 'aa'
+    }
+    if (highlightColor === 'yellow') {
+      return emacsTheme.yellow + 'aa'
+    }
+    if (highlightColor === 'orange') {
+      return emacsTheme.orange + 'aa'
+    }
+    if (highlightColor === 'red') {
+      return emacsTheme.red + 'aa'
+    }
+  }
   const missingColor = d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2)
+  const borderColor = getBorderColor()
   const theme = useMemo(() => {
     console.log('ii')
     return {
@@ -112,23 +166,19 @@ function MyApp({ Component, pageProps }: AppProps) {
           variants: {
             outline: {
               border: '2px solid',
-              borderColor: 'purple.500',
-              color: 'purple.500',
+              borderColor: highlightColor + '.500',
+              color: highlightColor + '.500',
             },
             ghost: {
-              color: 'purple.500',
+              color: highlightColor + '.500',
             },
           },
         },
       },
     }
-  }, [JSON.stringify(emacsTheme)])
+  }, [highlightColor, JSON.stringify(emacsTheme)])
 
-  const extendedTheme = extendTheme(theme)
-  return (
-    <ChakraProvider theme={extendedTheme}>
-      <Component {...pageProps} setEmacsTheme={setEmacsTheme} />
-    </ChakraProvider>
-  )
+  const extendedTheme = extendTheme(theme, withDefaultColorScheme({ colorScheme: highlightColor }))
+  return <ChakraProvider theme={extendedTheme}>{children}</ChakraProvider>
 }
 export default MyApp

@@ -64,3 +64,27 @@ export const initialFilter = {
   links: [],
   date: [],
 }
+
+export const initialVisuals = {
+  particles: false,
+  particlesNumber: 0,
+  particlesWidth: 4,
+  linkOpacity: 0.7,
+  linkWidth: 1,
+  nodeRel: 4,
+  nodeOpacity: 0.9,
+  nodeResolution: 8,
+  labels: 2,
+  labelScale: 1.5,
+  highlight: true,
+  highlightNodeSize: 2,
+  highlightLinkSize: 2,
+  highlightAnim: false,
+  animationSpeed: 250,
+  algorithms: algorithms,
+  algorithmOptions: options,
+  algorithmName: 'CubicOut',
+  linkColorScheme: 'plain',
+  nodeColorScheme: 'colorful',
+  highlightColor: 'purple',
+}

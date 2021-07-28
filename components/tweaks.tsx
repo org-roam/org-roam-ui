@@ -32,9 +32,11 @@ import {
   Heading,
   Collapse,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
-import { initialPhysics, initialFilter } from './config'
+import { initialPhysics, initialFilter, initialVisuals } from './config'
+
+import { ThemeContext } from '../pages/themecontext'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -43,11 +45,15 @@ export interface TweakProps {
   setThreeDim: (newValue: boolean) => void
   filter: typeof initialFilter
   setFilter: any
+  visuals: typeof initialVisuals
+  setVisuals: any
 }
 
 export const Tweaks = (props: TweakProps) => {
-  const { physics, setPhysics, threeDim, setThreeDim, filter, setFilter } = props
+  const { physics, setPhysics, threeDim, setThreeDim, filter, setFilter, visuals, setVisuals } =
+    props
   const [showTweaks, setShowTweaks] = useState(true)
+  const { highlightColor, setHighlightColor } = useContext(ThemeContext)
 
   return (
     <>
@@ -67,24 +73,19 @@ export const Tweaks = (props: TweakProps) => {
       <Collapse in={showTweaks} animateOpacity>
         <Box
           bg="alt.100"
-          w="xs"
+          w={300}
           marginTop={10}
           marginLeft={10}
           borderRadius="xl"
           maxH={650}
           paddingBottom={5}
-          zIndex="overlay"
+          zIndex={300}
           position="relative"
           boxShadow="xl"
         >
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Tooltip label={'Switch to ' + threeDim ? '2D' : '3D' + ' view'}>
-              <Button
-                onClick={() => setThreeDim(!threeDim)}
-                colorScheme="purple"
-                variant="ghost"
-                zIndex="overlay"
-              >
+              <Button onClick={() => setThreeDim(!threeDim)} variant="ghost" zIndex="overlay">
                 {threeDim ? '3D' : '2D'}
               </Button>
             </Tooltip>
@@ -94,14 +95,12 @@ export const Tweaks = (props: TweakProps) => {
                   aria-label="Reset Defaults"
                   icon={<RepeatClockIcon />}
                   onClick={() => setPhysics(initialPhysics)}
-                  colorScheme="purple"
                   variant="none"
                   size="sm"
                 />
               </Tooltip>
               <IconButton
                 size="sm"
-                colorScheme="purple"
                 icon={<CloseIcon />}
                 aria-label="Close Tweak Panel"
                 variant="ghost"
@@ -120,7 +119,7 @@ export const Tweaks = (props: TweakProps) => {
                   ...style,
                   borderRadius: 10,
                 }}
-                bg="purple.500"
+                bg={highlightColor + '.500'}
               />
             )}
           >
@@ -142,7 +141,6 @@ export const Tweaks = (props: TweakProps) => {
                     <Flex justifyContent="space-between">
                       <Text>Orphans</Text>
                       <Switch
-                        colorScheme="purple"
                         onChange={() => {
                           setFilter({ ...filter, orphans: !filter.orphans })
                         }}
@@ -152,7 +150,6 @@ export const Tweaks = (props: TweakProps) => {
                     <Flex justifyContent="space-between">
                       <Text>Link nodes with parent file</Text>
                       <Switch
-                        colorScheme="purple"
                         onChange={() => {
                           setFilter({ ...filter, parents: !filter.parents })
                         }}
@@ -172,7 +169,6 @@ export const Tweaks = (props: TweakProps) => {
                     id="physicsOn"
                     onChange={() => setPhysics({ ...physics, enabled: !physics.enabled })}
                     isChecked={physics.enabled}
-                    colorScheme="purple"
                   />
                 </AccordionButton>
                 <AccordionPanel>
@@ -270,7 +266,7 @@ export const Tweaks = (props: TweakProps) => {
                                 label="Centering Strength"
                                 value={physics.centeringStrength}
                                 max={2}
-                                step={0.1}
+                                step={0.01}
                                 onChange={(v) => setPhysics({ ...physics, centeringStrength: v })}
                               />
                             </EnableSection>
@@ -296,13 +292,95 @@ export const Tweaks = (props: TweakProps) => {
                     paddingLeft={7}
                     color="gray.800"
                   >
-                    <EnableSection
-                      label="Colors"
-                      onChange={() => setPhysics({ ...physics, colorful: !physics.colorful })}
-                      value={physics.colorful}
-                    >
-                      <Text>Child</Text>
-                    </EnableSection>
+                    <Accordion>
+                      <AccordionItem>
+                        <AccordionButton>
+                          <AccordionIcon marginRight={2} />
+                          <Heading size="sm">Visual</Heading>
+                        </AccordionButton>
+                        <AccordionPanel>
+                          <VStack
+                            spacing={2}
+                            justifyContent="flex-start"
+                            divider={<StackDivider borderColor="gray.500" />}
+                            align="stretch"
+                            paddingLeft={7}
+                            color="gray.800"
+                          >
+                            <Box>
+                              <Flex alignItems="center" justifyContent="space-between">
+                                <Text>Node Color Scheme</Text>
+                                <Menu>
+                                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                    {visuals.nodeColorScheme === 'colorful' ? 'Colorful' : 'Plain'}
+                                  </MenuButton>
+                                  <MenuList bgColor="gray.200">
+                                    <MenuItem onClick={() => setPhysics({ ...physics, labels: 1 })}>
+                                      Colorful
+                                    </MenuItem>
+                                    <MenuItem onClick={() => setPhysics({ ...physics, labels: 2 })}>
+                                      Plain
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Flex>
+                              <Flex alignItems="center" justifyContent="space-between">
+                                <Text>Link Color Scheme</Text>
+                                <Menu>
+                                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                    {visuals.linkColorScheme === 'colorful' ? 'Colorful' : 'Plain'}
+                                  </MenuButton>
+                                  <MenuList bgColor="gray.200">
+                                    <MenuItem onClick={() => setPhysics({ ...physics, labels: 1 })}>
+                                      Colorful
+                                    </MenuItem>
+                                    <MenuItem onClick={() => setPhysics({ ...physics, labels: 2 })}>
+                                      Plain
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Flex>
+                              <Flex alignItems="center" justifyContent="space-between">
+                                <Text>Highlight color</Text>
+                                <Menu>
+                                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                    {highlightColor[0]!.toUpperCase() + highlightColor!.slice(1)}
+                                  </MenuButton>
+                                  <MenuList bgColor="gray.200" width={50}>
+                                    {[
+                                      'red',
+                                      'orange',
+                                      'yellow',
+                                      'green',
+                                      'cyan',
+                                      'blue',
+                                      'pink',
+                                      'purple',
+                                    ].map((color) => (
+                                      <MenuItem
+                                        key={color}
+                                        onClick={() => setHighlightColor(color)}
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        display="flex"
+                                      >
+                                        <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
+                                        <Box
+                                          bgColor={color + '.500'}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      </MenuItem>
+                                    ))}
+                                  </MenuList>
+                                </Menu>
+                              </Flex>
+                            </Box>
+                          </VStack>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    </Accordion>
                     <SliderWithInfo
                       label="Node size"
                       value={physics.nodeRel}
@@ -516,24 +594,18 @@ export const SliderWithInfo = ({
   ...rest
 }: SliderWithInfoProps) => {
   const { onChange, label, infoText } = rest
+  const { highlightColor } = useContext(ThemeContext)
   return (
     <Box>
       <Box display="flex" alignItems="flex-end">
         <Text>{label}</Text>
         {infoText && <InfoTooltip infoText={infoText} />}
       </Box>
-      <Slider
-        value={value}
-        onChange={onChange}
-        min={min}
-        max={max}
-        step={step}
-        colorScheme="purple"
-      >
+      <Slider value={value} onChange={onChange} min={min} max={max} step={step}>
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
-        <Tooltip bg="purple.500" label={value.toFixed(1)}>
+        <Tooltip bg={highlightColor + '.500'} label={value.toFixed(1)}>
           <SliderThumb bg="white" />
         </Tooltip>
       </Slider>
@@ -558,7 +630,7 @@ export const EnableSection = (props: EnableSectionProps) => {
           <Text>{label}</Text>
           {infoText && <InfoTooltip infoText={infoText} />}
         </Box>
-        <Switch isChecked={!!value} onChange={onChange} colorScheme="purple" />
+        <Switch isChecked={!!value} onChange={onChange} />
       </Box>
       <Collapse in={!!value} animateOpacity>
         <Box paddingLeft={4} paddingTop={2}>
