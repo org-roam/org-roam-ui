@@ -61,71 +61,107 @@ export function GraphPage() {
   const fetchGraphData = () => {
     return fetch('http://localhost:35901/graph')
       .then((res) => res.json())
-      .then((orgRoamGraphData: OrgRoamGraphReponse) => {
-        const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
-          return {
-            ...acc,
-            [node.file]: [...(acc[node.file] ?? []), node],
-          }
-        }, {})
-
-        const fileLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
-          const nodesInFile = nodesByFile[file] ?? []
-          // "file node" as opposed to "heading node"
-          const fileNode = nodesInFile.find((node) => node.level === 0)
-          const headingNodes = nodesInFile.filter((node) => node.level !== 0)
-
-          if (!fileNode) {
-            return []
-          }
-
-          return headingNodes.map((headingNode) => ({
-            source: headingNode.id,
-            target: fileNode.id,
-            type: 'parent',
-          }))
-        })
-
-        nodeByIdRef.current = Object.fromEntries(
-          orgRoamGraphData.nodes.map((node) => [node.id, node]),
-        )
-
-        const links = [...orgRoamGraphData.links, ...fileLinks]
-        linksByNodeIdRef.current = links.reduce<LinksByNodeId>((acc, link) => {
-          return {
-            ...acc,
-            [link.source]: [...(acc[link.source] ?? []), link],
-            [link.target]: [...(acc[link.target] ?? []), link],
-          }
-        }, {})
-
-        const orgRoamGraphDataWithFileLinks = {
-          ...orgRoamGraphData,
-          links,
-        }
-
-        // react-force-graph modifies the graph data implicitly,
-        // so we make sure there's no overlap between the objects we pass it and
-        // nodeByIdRef, linksByNodeIdRef
-        const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
-        setGraphData(orgRoamGraphDataClone)
+      .then((orgRoamGraphData) => {
+        parseGraphData(orgRoamGraphData)
       })
   }
 
-  useEffect(() => {
-    const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
-    trackEmacs.addEventListener('message', (e) => {
-      const emacsNodeId = e.data
-      setEmacsNodeId(emacsNodeId)
+  const parseGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+    const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
+      return {
+        ...acc,
+        [node.file]: [...(acc[node.file] ?? []), node],
+      }
+    }, {})
+
+    const fileLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
+      const nodesInFile = nodesByFile[file] ?? []
+      // "file node" as opposed to "heading node"
+      const fileNode = nodesInFile.find((node) => node.level === 0)
+      const headingNodes = nodesInFile.filter((node) => node.level !== 0)
+
+      if (!fileNode) {
+        return []
+      }
+
+      return headingNodes.map((headingNode) => ({
+        source: headingNode.id,
+        target: fileNode.id,
+        type: 'parent',
+      }))
     })
-    fetchGraphData()
+
+    nodeByIdRef.current = Object.fromEntries(orgRoamGraphData.nodes.map((node) => [node.id, node]))
+
+    const links = [...orgRoamGraphData.links, ...fileLinks]
+    linksByNodeIdRef.current = links.reduce<LinksByNodeId>((acc, link) => {
+      return {
+        ...acc,
+        [link.source]: [...(acc[link.source] ?? []), link],
+        [link.target]: [...(acc[link.target] ?? []), link],
+      }
+    }, {})
+
+    const orgRoamGraphDataWithFileLinks = {
+      ...orgRoamGraphData,
+      links,
+    }
+
+    // react-force-graph modifies the graph data implicitly,
+    // so we make sure there's no overlap between the objects we pass it and
+    // nodeByIdRef, linksByNodeIdRef
+    const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
+    setGraphData(orgRoamGraphDataClone)
+  }
+
+  useEffect(() => {
+    //const trackEmacs = new EventSource('http://127.0.0.1:35901/current-node-id')
+    //trackEmacs.addEventListener('message', (e) => {
+    // const emacsNodeId = e.data
+    //setEmacsNodeId(emacsNodeId)
+    //})
+    const socket = new WebSocket('ws://localhost:35903')
+    socket.addEventListener('open', (e) => {
+      console.log('Connection with Emacs established')
+    })
+    socket.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data)
+      console.log(typeof data.type)
+      switch (data.type) {
+        case 'graphdata':
+          console.log('hey')
+          parseGraphData(data.data)
+          break
+        case 'command':
+          console.log('command')
+          switch (data.data.commandName) {
+            case 'follow':
+              setEmacsNodeId(data.data.id)
+              break
+            case 'zoom': {
+              const links = linksByNodeIdRef.current[data.data.id!] ?? []
+              const nodes = Object.fromEntries(
+                [
+                  data.commandData.id! as string,
+                  ...links.flatMap((link) => [link.source, link.target]),
+                ].map((nodeId) => [nodeId, {}]),
+              )
+              /* zoomToFit(500, 200, (node: OrgRoamNode)=>nodes[node.id!]) */
+              console.log(nodes)
+            }
+            default:
+              console.log('oopsie whoopsie')
+          }
+      }
+    })
+    // fetchGraphData()
   }, [])
 
   useEffect(() => {
     if (!emacsNodeId) {
       return
     }
-    fetchGraphData()
+    //fetchGraphData()
   }, [emacsNodeId])
 
   const [threeDim, setThreeDim] = useState(false)

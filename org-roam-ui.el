@@ -36,6 +36,7 @@
 (require 'json)
 (require 'simple-httpd)
 (require 'org-roam)
+(require 'websocket)
 
 (defgroup org-roam-ui nil
   "UI in Org-roam."
@@ -84,6 +85,8 @@ E.g. '((bg . '#1E2029')
   :group 'org-roam-ui
   :type 'list)
 
+(defvar org-roam-ui--ws-current-node nil)
+
 ;;;###autoload
 (define-minor-mode
   org-roam-ui-mode
@@ -98,11 +101,41 @@ This serves the web-build and API over HTTP."
     (setq httpd-port org-roam-ui-port
           httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
+    (setq org-roam-ui-ws
+        (websocket-server
+         35903
+         :host 'local
+         :on-open (lambda (ws) (progn (setq oru-ws ws) (org-roam-ui--send-graphdata) (message "Connection established with org-roam-ui")))
+         :on-close (lambda (_websocket) (setq oru-ws nil) (message "Connection with org-roam-ui closed succesfully."))))
+    (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
     (add-hook 'post-command-hook #'org-roam-ui-update))
    (t
+    (progn
     (remove-hook 'post-command-hook #'org-roam-ui-update)
-    (httpd-stop))))
+    (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
+    (websocket-server-close org-roam-ui-ws)
+    (delete-process org-roam-ui-ws)
+    (httpd-stop)))))
 
+
+(defun org-roam-ui--send-graphdata ()
+  (let* ((nodes-columns [id file title level])
+         (links-columns [source dest type])
+         (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
+         (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
+         (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
+                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows)))))
+    (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
+
+(defun org-roam-ui--update-current-node ()
+  (let* ((node (org-roam-id-at-point)))
+    (unless (string= org-roam-ui--ws-current-node node)
+    (setq org-roam-ui--ws-current-node node)
+      (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node)))))))))
+
+(defun org-roam-ui-show-node ()
+  (interactive)
+      (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,(org-roam-id-at-point))))))))
 
 (defservlet* graph application/json ()
   (let* ((nodes-columns [id file title level])
