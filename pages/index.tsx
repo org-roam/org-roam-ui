@@ -360,11 +360,16 @@ export const Graph = function (props: GraphProps) {
         fg.d3Force('y', null)
         threeDim ? fg.d3Force('z', null) : null
       }
-
+      physics.centering
+        ? fg.d3Force('center', d3.forceCenter().strength(physics.centeringStrength))
+        : fg.d3Force('center', null)
       physics.linkStrength && fg.d3Force('link').strength(physics.linkStrength)
       physics.linkIts && fg.d3Force('link').iterations(physics.linkIts)
       physics.charge && fg.d3Force('charge').strength(physics.charge)
-      fg.d3Force('collide', physics.collision ? d3.forceCollide().radius(20) : null)
+      fg.d3Force(
+        'collide',
+        physics.collision ? d3.forceCollide().radius(physics.collisionStrength) : null,
+      )
     })()
   })
 
@@ -585,7 +590,7 @@ export const Graph = function (props: GraphProps) {
       }))
     },
     onNodeHover: (node) => {
-      if (!physics.hover) {
+      if (!physics.highlight) {
         return
       }
       setHoverNode(node)

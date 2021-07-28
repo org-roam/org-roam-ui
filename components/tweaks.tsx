@@ -207,11 +207,12 @@ export const Tweaks = (props: TweakProps) => {
                       onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
                     >
                       <SliderWithInfo
-                        value={physics.collisionStrength * 10}
+                        value={physics.collisionStrength / 5}
                         onChange={(value) =>
-                          setPhysics({ ...physics, collisionStrength: value / 10 })
+                          setPhysics({ ...physics, collisionStrength: value * 5 })
                         }
-                        label="Strength"
+                        label="Collision Radius"
+                        infoText="Easy with this one, high values can lead to a real jiggly mess"
                       />
                     </EnableSection>
                     <SliderWithInfo
@@ -251,21 +252,28 @@ export const Tweaks = (props: TweakProps) => {
                             color="gray.800"
                           >
                             <SliderWithInfo
-                              label="Iterations per tick"
-                              min={1}
-                              max={10}
-                              step={1}
-                              value={physics.iterations}
-                              onChange={(v) => setPhysics({ ...physics, iterations: v })}
-                              infoText="Number of times the physics simulation iterates per simulation step"
-                            />
-                            <SliderWithInfo
                               label="Stabilization rate"
                               value={physics.alphaDecay * 50}
                               onChange={(value) =>
                                 setPhysics({ ...physics, alphaDecay: value / 50 })
                               }
                             />
+                            <EnableSection
+                              label="Keeps nodes centered"
+                              value={physics.centering}
+                              onChange={() =>
+                                setPhysics({ ...physics, centering: !physics.centering })
+                              }
+                              infoText="Keeps the nodes in the center of the viewport. If disabled you can drag the nodes anywhere you want."
+                            >
+                              <SliderWithInfo
+                                label="Centering Strength"
+                                value={physics.centeringStrength}
+                                max={2}
+                                step={0.1}
+                                onChange={(v) => setPhysics({ ...physics, centeringStrength: v })}
+                              />
+                            </EnableSection>
                           </VStack>
                         </AccordionPanel>
                       </AccordionItem>
