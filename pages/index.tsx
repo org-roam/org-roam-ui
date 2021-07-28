@@ -53,7 +53,6 @@ export default function Home() {
   if (!showPage) {
     return null
   }
-
   return <GraphPage />
 }
 

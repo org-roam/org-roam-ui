@@ -84,7 +84,33 @@ export const initialVisuals = {
   algorithms: algorithms,
   algorithmOptions: options,
   algorithmName: 'CubicOut',
-  linkColorScheme: 'plain',
-  nodeColorScheme: 'colorful',
-  highlightColor: 'purple',
+  linkColorScheme: 'grey',
+  nodeColorScheme: ['gray', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'pink', 'purple'],
+  nodeHighlight: '',
+  linkHighlight: '',
+}
+
+export type Visuals = {
+  particles: boolean
+  particlesNumber: number
+  particlesWidth: number
+  linkOpacity: number
+  linkWidth: number
+  nodeRel: number
+  nodeOpacity: number
+  nodeResolution: number
+  labels: number
+  labelScale: number
+  highlight: boolean
+  highlightNodeSize: number
+  highlightLinkSize: number
+  highlightAnim: boolean
+  animationSpeed: number
+  algorithms: typeof algorithms
+  algorithmOptions: typeof options
+  algorithmName: string
+  linkColorScheme: string
+  nodeColorScheme: string[]
+  nodeHighlight: string
+  linkHighlight: string
 }
