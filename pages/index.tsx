@@ -598,6 +598,9 @@ export const Graph = function (props: GraphProps) {
           {...graphCommonProps}
           nodeThreeObjectExtend={true}
           backgroundColor={theme.colors.white}
+          nodeOpacity={physics.nodeOpacity}
+          nodeResolution={physics.nodeResolution}
+          linkOpacity={physics.linkOpacity}
         />
       ) : (
         <ForceGraph2D ref={graph2dRef} {...graphCommonProps} />

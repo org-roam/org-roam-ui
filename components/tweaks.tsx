@@ -300,11 +300,39 @@ export const Tweaks = (props: TweakProps) => {
                       value={physics.nodeRel}
                       onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
                     />
+                    {threeDim && (
+                      <>
+                        <SliderWithInfo
+                          label="Node opacity"
+                          value={physics.nodeOpacity}
+                          min={0}
+                          max={1}
+                          onChange={(value) => setPhysics({ ...physics, nodeOpacity: value })}
+                        />
+                        <SliderWithInfo
+                          label="Node resolution"
+                          value={physics.nodeResolution}
+                          min={5}
+                          max={32}
+                          step={1}
+                          onChange={(value) => setPhysics({ ...physics, nodeResolution: value })}
+                        />
+                      </>
+                    )}
                     <SliderWithInfo
                       label="Link width"
                       value={physics.linkWidth}
                       onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
                     />
+                    {threeDim && (
+                      <SliderWithInfo
+                        label="Link opacity"
+                        min={0}
+                        max={1}
+                        value={physics.linkOpacity}
+                        onChange={(value) => setPhysics({ ...physics, linkOpacity: value })}
+                      />
+                    )}
                     <Box>
                       <Flex alignItems="center" justifyContent="space-between">
                         <Text>Labels</Text>
