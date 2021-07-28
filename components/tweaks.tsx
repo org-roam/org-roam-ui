@@ -82,10 +82,10 @@ export const Tweaks = (props: TweakProps) => {
               <Button
                 onClick={() => setThreeDim(!threeDim)}
                 colorScheme="purple"
-                variant={threeDim ? 'solid' : 'outline'}
+                variant="ghost"
                 zIndex="overlay"
               >
-                {threeDim ? '2D' : '3D'}
+                {threeDim ? '3D' : '2D'}
               </Button>
             </Tooltip>
             <Box display="flex" alignItems="center">

@@ -104,6 +104,20 @@ function MyApp({ Component, pageProps }: AppProps) {
       shadows: {
         outline: '0 0 0 3px ' + borderColor,
       },
+      components: {
+        Button: {
+          variants: {
+            outline: {
+              border: '2px solid',
+              borderColor: 'purple.500',
+              color: 'purple.500',
+            },
+            ghost: {
+              color: 'purple.500',
+            },
+          },
+        },
+      },
     }
   }, [JSON.stringify(emacsTheme)])
 
