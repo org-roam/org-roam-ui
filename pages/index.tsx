@@ -401,15 +401,16 @@ export const Graph = function (props: GraphProps) {
     algorithm: physics.algorithms[physics.algorithmName],
   })
 
-  const lastHoverNode = useRef<NodeObject | null>(null)
+  const lastHoverNode = useRef<OrgRoamNode | null>(null)
   useEffect(() => {
     if (hoverNode) {
-      lastHoverNode.current = hoverNode
+      lastHoverNode.current = hoverNode as OrgRoamNode
     }
     if (!physics.highlightAnim) {
       return hoverNode ? setOpacity(1) : setOpacity(0)
     }
     if (hoverNode) {
+      console.log(getNodeColorById(lastHoverNode.current!.id!))
       fadeIn()
     } else {
       // to prevent fadeout animation from starting at 1
@@ -476,28 +477,26 @@ export const Graph = function (props: GraphProps) {
       numbereWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
     ]
   }
-  const getLinkNodeColor = (link: OrgRoamLink) =>
-    linksByNodeId[link.target!]!.length < linksByNodeId[link.source!]!.length
-      ? getNodeColorById(link.target!)
-      : getNodeColorById(link.source!)
+  const getLinkNodeColor = (sourceId: string, targetId: string) => {
+    return linksByNodeId[sourceId]! > linksByNodeId[targetId]!
+      ? getNodeColorById(sourceId)
+      : getNodeColorById(targetId)
+  }
 
-  const getLinkColor = (link: OrgRoamLink) => {
+  const getLinkColor = (sourceId: string, targetId: string, needsHighlighting: string) => {
     // I'm so sorry
-    const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
-    const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
-    const needsHighlighting = linkIsHighlighted || linkWasHighlighted
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (!visuals.linkHighlight && !visuals.linkColorScheme && !needsHighlighting) {
-      const nodeColor = getLinkNodeColor(link)
+      const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
     if (!needsHighlighting && !visuals.linkColorScheme) {
-      const nodeColor = getLinkNodeColor(link)
+      const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
     if (!needsHighlighting && !visuals.linkColorScheme) {
-      const nodeColor = getLinkNodeColor(link)
+      const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
     if (!needsHighlighting) {
@@ -505,14 +504,14 @@ export const Graph = function (props: GraphProps) {
     }
 
     if (!visuals.linkHighlight && !visuals.linkColorScheme) {
-      const nodeColor = getLinkNodeColor(link)
+      const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
     if (!visuals.linkHighlight) {
       return theme.colors.gray[visuals.linkColorScheme]
     }
     if (!visuals.linkColorScheme) {
-      return highlightColors[getLinkNodeColor(link)][visuals.linkHighlight](opacity)
+      return highlightColors[getLinkNodeColor(sourceId, targetId)][visuals.linkHighlight](opacity)
     }
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
@@ -621,8 +620,12 @@ export const Graph = function (props: GraphProps) {
        *     ? theme.colors.gray[visuals.linkColorScheme]
        *     : theme.colors[getLinkNodeColor(link)][500]
        * } */
-
-      return getLinkColor(link as OrgRoamLink)
+      const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
+      const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
+      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
+      const needsHighlighting = linkIsHighlighted || linkWasHighlighted
+      return getLinkColor(sourceId, targetId, needsHighlighting)
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
