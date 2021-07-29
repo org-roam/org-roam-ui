@@ -532,9 +532,18 @@ export const Graph = function (props: GraphProps) {
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
 
-  const getLinkBaseColor = (link: OrgRoamLinkObject) => {
-    if (!visuals.linkColorScheme) {
+  const getNodeColor = (node: OrgRoamNodeObject) => {
+    // I'm so sorry
+    const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+    // if we are matching the node color and don't have a highlight color
+    // or we don't have our own scheme and we're not being highlighted
+    if (!needsHighlighting) {
+      return theme.colors[getNodeColorById(node.id)][500]
     }
+    if (!visuals.nodeHighlight) {
+      return theme.colors[getNodeColorById(node.id)][500]
+    }
+    return highlightColors[getNodeColorById(node.id)][visuals.nodeHighlight](opacity)
   }
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
@@ -543,28 +552,7 @@ export const Graph = function (props: GraphProps) {
     backgroundColor: theme.colors.gray[visuals.backgroundColor],
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
-      if (!physics.colorful) {
-        return previouslyHighlightedNodes[node.id!] || highlightedNodes[node.id!]
-          ? interHighlight(opacity)
-          : interGray(opacity)
-      }
-      if (node.id === emacsNodeId) {
-        return theme.colors[visuals.emacsNodeColor][500]
-      }
-
-      // otherwise links with parents get shown as having one note
-      const linklen = linksByNodeId[node.id!]?.length ?? 0
-      const parentCiteNeighbors = linklen
-        ? linksByNodeId[node.id!]?.filter((link) => link.type === 'parent' || link.type === 'cite')
-            .length
-        : 0
-      const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
-
-      return theme.colors[
-        visuals.nodeColorScheme[
-          numbereWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
-        ]
-      ][500]
+      return getNodeColor(node)
     },
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {

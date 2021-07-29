@@ -372,6 +372,9 @@ export const Tweaks = (props: TweakProps) => {
                                       type="checkbox"
                                       defaultValue={visuals.nodeColorScheme}
                                       onChange={(colors) => {
+                                        if (!colors.length) {
+                                          return
+                                        }
                                         setVisuals({ ...visuals, nodeColorScheme: colors })
                                         console.log(visuals.nodeColorScheme)
                                       }}
@@ -383,6 +386,10 @@ export const Tweaks = (props: TweakProps) => {
                                             (c) => c === color,
                                           )}
                                           value={color}
+                                          isDisabled={
+                                            visuals.nodeColorScheme.length === 1 &&
+                                            visuals.nodeColorScheme[0] === color
+                                          }
                                         >
                                           <Box
                                             justifyContent="space-between"
