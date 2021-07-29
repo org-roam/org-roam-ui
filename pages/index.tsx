@@ -240,19 +240,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
 
-  useEffect(() => {
-    if (!emacsNodeId) {
-      return
-    }
-    const fg = graphRef.current
-    if (behavior.followLocalOrZoom) {
-      setScope({ nodeIds: [emacsNodeId] })
-    } else {
-      fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
-      setHoverNode(nodeById[emacsNodeId] as NodeObject)
-    }
-  }, [emacsNodeId])
-
   const getNeighborNodes = (id: string) => {
     const links = linksByNodeId[id]! ?? []
     return Object.fromEntries(
@@ -262,6 +249,25 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       ]),
     )
   }
+
+  useEffect(() => {
+    if (!emacsNodeId) {
+      return
+    }
+    const fg = graphRef.current
+    if (behavior.followLocalOrZoom) {
+      setScope({ nodeIds: [emacsNodeId] })
+      setTimeout(() => {
+        fg?.zoomToFit(1000, numberWithinRange(20, 200, windowWidth / 8), (node: NodeObject) =>
+      getNeighborNodes(emacsNodeId)[node.id!],
+      )
+      }, 1)
+    } else {
+      fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
+      setHoverNode(nodeById[emacsNodeId] as NodeObject)
+    }
+  }, [emacsNodeId])
+
   const centralHighlightedNode = useRef<NodeObject | null>(null)
   centralHighlightedNode.current = hoverNode
   const highlightedNodes = useMemo(() => {
@@ -282,8 +288,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
   }, [centralHighlightedNode.current, linksByNodeId])
 
-  const filteredNodes = useMemo(() => {
-    return graphData.nodes.filter((node) => {
+  const scopedGraphData = useMemo(() => {
+    const filteredNodes = graphData.nodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
       if (!filter.orphans) {
         return true
@@ -299,17 +305,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
       return !links.some((link) => !['parent', 'cite'].includes(link.type))
     })
-  }, [filter, graphData.nodes, linksByNodeId])
 
-  const filteredLinks = useMemo(() => {
-    return graphData.links.filter((linkArg) => {
+    const filteredLinks = graphData.links.filter((linkArg) => {
       const link = linkArg as OrgRoamLink
       return link.type !== 'cite' && (filter.parents || link.type !== 'parent')
     })
-  }, [filter, JSON.stringify(graphData.links)])
 
-  const scopedNodes = useMemo(() => {
-    return filteredNodes.filter((node) => {
+    const scopedNodes = filteredNodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
       return (
         scope.nodeIds.includes(node.id as string) ||
@@ -318,11 +320,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         })
       )
     })
-  }, [filteredNodes, linksByNodeId, scope.nodeIds])
 
-  const scopedNodeIds = scopedNodes.map((node) => node.id as string)
+    const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-  const scopedGraphData = useMemo(() => {
     const scopedLinks = filteredLinks.filter((link) => {
       // we need to cover both because force-graph modifies the original data
       // but if we supply the original data on each render, the graph will re-render sporadically
@@ -341,18 +341,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           links: scopedLinks,
         }
   }, [filter, scope, JSON.stringify(Object.keys(nodeById))])
-
-  // make sure the camera position and zoom are fine when the list of nodes to render is changed
-  useEffect(() => {
-    // this setTimeout was added holistically because the behavior is better when we put
-    // zoomToFit off a little bit
-    setTimeout(() => {
-      const fg = graphRef.current
-      fg?.zoomToFit(1000, numbereWithinRange(20, 200, windowWidth / 8), (node: NodeObject) =>
-        scopedNodeIds.some((n) => n === node.id),
-      )
-    }, 1)
-  }, [JSON.stringify(scopedNodeIds)])
 
   useEffect(() => {
     ;(async () => {
@@ -481,7 +469,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
 
     return visuals.nodeColorScheme[
-      numbereWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
+      numberWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
     ]
   }
   const getLinkNodeColor = (sourceId: string, targetId: string) => {
@@ -708,6 +696,6 @@ function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   )
 }
 
-function numbereWithinRange(num: number, min: number, max: number) {
+function numberWithinRange(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
