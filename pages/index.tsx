@@ -66,15 +66,15 @@ export function GraphPage() {
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
 
-  const fetchGraphData = () => {
-    return fetch('http://localhost:35901/graph')
-      .then((res) => res.json())
-      .then((orgRoamGraphData) => {
-        console.log('fetching graphdata')
-        parseGraphData(orgRoamGraphData)
-      })
-  }
-
+  /* const fetchGraphData = () => {
+   *   return fetch('http://localhost:35901/graph')
+   *     .then((res) => res.json())
+   *     .then((orgRoamGraphData) => {
+   *       console.log('fetching graphdata')
+   *       parseGraphData(orgRoamGraphData)
+   *     })
+   * }
+   */
   const parseGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
@@ -125,7 +125,7 @@ export function GraphPage() {
   const { setEmacsTheme } = useContext(ThemeContext)
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:35903')
-    socket.addEventListener('open', (e) => {
+    socket.addEventListener('open', (event) => {
       console.log('Connection with Emacs established')
     })
     socket.addEventListener('message', (event) => {
@@ -420,30 +420,15 @@ export const Graph = function (props: GraphProps) {
   }, [hoverNode])
   const theme = useTheme()
   const themeContext = useContext<ThemeContextProps>(ThemeContext)
-  const interPurple = useMemo(
-    () => d3int.interpolate(theme.colors.gray[500], theme.colors.purple[500]),
-    [theme],
-  )
-  const interHighlight = useMemo(
-    () => d3int.interpolate(theme.colors.gray[500], theme.colors[themeContext.highlightColor][500]),
-    [theme, visuals.highlightColor],
-  )
-  const interGray = useMemo(
-    () => d3int.interpolate(theme.colors.gray[500], theme.colors.gray[400]),
-    [theme],
-  )
 
   const highlightColors = useMemo(() => {
-    const allColors = [].concat(
-      visuals.nodeColorScheme /* && visuals.nodeColorScheme.map((c) => theme.colors[c][500]))  */ ||
-        [],
-      visuals.linkColorScheme /* && theme.colors.gray[visuals.linkColorScheme])]]  */ || [],
-      visuals.linkHighlight /* && theme.colors[visuals.linkHighlight][500])  */ || [],
-      visuals.nodeHighlight /* && theme.colors[visuals.linkHighlight][500]) */ || [],
+    const allColors = visuals.nodeColorScheme.concat(
+      visuals.linkColorScheme || [],
+      visuals.linkHighlight || [],
+      visuals.nodeHighlight || [],
     )
 
-    console.log(visuals.linkColorScheme)
-    const getColor = (c) => (isNaN(c) ? theme.colors[c][500] : theme.colors.gray[c])
+    const getColor = (c: any) => (isNaN(c) ? theme.colors[c][500] : theme.colors.gray[c])
     const highlightColors = Object.fromEntries(
       allColors.map((color) => {
         const color1 = getColor(color)
@@ -477,7 +462,7 @@ export const Graph = function (props: GraphProps) {
           ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
         ].map((nodeId) => [nodeId, {}]),
       ),
-    [hoverNode, previouslyHighlightedLinks, lastHoverNode],
+    [hoverNode, previouslyHighlightedLinks, lastHoverNode.current],
   )
 
   const getNodeColorById = (id: string) => {
@@ -492,11 +477,11 @@ export const Graph = function (props: GraphProps) {
     ]
   }
   const getLinkNodeColor = (link: OrgRoamLink) =>
-    linksByNodeId[link.target.id!]?.length < linksByNodeId[link.source.id!]?.length
-      ? getNodeColorById(link.target.id!)
-      : getNodeColorById(link.source.id!)
+    linksByNodeId[link.target!]!.length < linksByNodeId[link.source!]!.length
+      ? getNodeColorById(link.target!)
+      : getNodeColorById(link.source!)
 
-  const getLinkColor = (link: OrgRoamLinkObject) => {
+  const getLinkColor = (link: OrgRoamLink) => {
     // I'm so sorry
     const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
     const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
@@ -552,7 +537,7 @@ export const Graph = function (props: GraphProps) {
     backgroundColor: theme.colors.gray[visuals.backgroundColor],
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
-      return getNodeColor(node)
+      return getNodeColor(node as OrgRoamNode)
     },
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
@@ -575,7 +560,6 @@ export const Graph = function (props: GraphProps) {
       if (!physics.labels) {
         return
       }
-      const links = linksByNodeId[node.id!] ?? []
       const wasHighlightedNode = previouslyHighlightedNodes[node.id!]
 
       if (
@@ -638,7 +622,7 @@ export const Graph = function (props: GraphProps) {
        *     : theme.colors[getLinkNodeColor(link)][500]
        * } */
 
-      return getLinkColor(link)
+      return getLinkColor(link as OrgRoamLink)
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
