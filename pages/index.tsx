@@ -258,9 +258,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     if (behavior.followLocalOrZoom) {
       setScope({ nodeIds: [emacsNodeId] })
       setTimeout(() => {
-        fg?.zoomToFit(1000, numberWithinRange(20, 200, windowWidth / 8), (node: NodeObject) =>
-      getNeighborNodes(emacsNodeId)[node.id!],
-      )
+        fg?.zoomToFit(
+          1000,
+          numberWithinRange(20, 200, windowWidth / 8),
+          (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!],
+        )
       }, 1)
     } else {
       fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
@@ -426,7 +428,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
 
     const getColor = (c: any) => (isNaN(c) ? theme.colors[c][500] : theme.colors.gray[c])
-    const highlightColors = Object.fromEntries(
+    return Object.fromEntries(
       allColors.map((color) => {
         const color1 = getColor(color)
         const crisscross = allColors.map((color2) => [
@@ -436,8 +438,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return [color, Object.fromEntries(crisscross)]
       }),
     )
-    console.log(highlightColors)
-    return highlightColors
   }, [
     visuals.nodeColorScheme,
     visuals.linkHighlight,
@@ -445,21 +445,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     visuals.linkColorScheme,
   ])
 
-  const previouslyHighlightedLinks = useMemo(
-    () => linksByNodeId[lastHoverNode.current?.id!] ?? [],
-    [JSON.stringify(hoverNode), lastHoverNode.current],
-  )
-
-  const previouslyHighlightedNodes = useMemo(
-    () =>
-      Object.fromEntries(
-        [
-          lastHoverNode.current?.id! as string,
-          ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
-        ].map((nodeId) => [nodeId, {}]),
-      ),
-    [JSON.stringify(hoverNode), previouslyHighlightedLinks, lastHoverNode.current],
-  )
+  const previouslyHighlightedNodes = useMemo(() => {
+    const previouslyHighlightedLinks = linksByNodeId[lastHoverNode.current?.id!] ?? []
+    return Object.fromEntries(
+      [
+        lastHoverNode.current?.id! as string,
+        ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
+      ].map((nodeId) => [nodeId, {}]),
+    )
+  }, [JSON.stringify(hoverNode), lastHoverNode.current])
 
   const getNodeColorById = (id: string) => {
     const linklen = linksByNodeId[id!]?.length ?? 0
