@@ -66,16 +66,7 @@ export function GraphPage() {
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
 
-  /* const fetchGraphData = () => {
-   *   return fetch('http://localhost:35901/graph')
-   *     .then((res) => res.json())
-   *     .then((orgRoamGraphData) => {
-   *       console.log('fetching graphdata')
-   *       parseGraphData(orgRoamGraphData)
-   *     })
-   * }
-   */
-  const parseGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+  const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
         ...acc,
@@ -125,15 +116,14 @@ export function GraphPage() {
   const { setEmacsTheme } = useContext(ThemeContext)
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:35903')
-    socket.addEventListener('open', (event) => {
+    socket.addEventListener('open', () => {
       console.log('Connection with Emacs established')
     })
     socket.addEventListener('message', (event) => {
       const message = JSON.parse(event.data)
-      console.log(typeof message.type)
       switch (message.type) {
         case 'graphdata':
-          parseGraphData(message.data)
+          updateGraphData(message.data)
           break
         case 'theme':
           console.log('Received theme data')
@@ -450,7 +440,6 @@ export const Graph = function (props: GraphProps) {
     visuals.nodeHighlight,
     visuals.linkColorScheme,
   ])
-  const highlightedLinks = useMemo(() => linksByNodeId[hoverNode?.id!] ?? [], [hoverNode])
 
   const previouslyHighlightedLinks = useMemo(
     () => linksByNodeId[lastHoverNode.current?.id!] ?? [],
@@ -493,14 +482,12 @@ export const Graph = function (props: GraphProps) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
+
     if (!needsHighlighting && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
-    if (!needsHighlighting && !visuals.linkColorScheme) {
-      const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return theme.colors[nodeColor][500]
-    }
+
     if (!needsHighlighting) {
       return theme.colors.gray[visuals.linkColorScheme]
     }
@@ -509,12 +496,15 @@ export const Graph = function (props: GraphProps) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
       return theme.colors[nodeColor][500]
     }
+
     if (!visuals.linkHighlight) {
       return theme.colors.gray[visuals.linkColorScheme]
     }
+
     if (!visuals.linkColorScheme) {
       return highlightColors[getLinkNodeColor(sourceId, targetId)][visuals.linkHighlight](opacity)
     }
+    
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
 
@@ -617,11 +607,6 @@ export const Graph = function (props: GraphProps) {
 
     linkDirectionalParticles: physics.particles ? physics.particlesNumber : undefined,
     linkColor: (link) => {
-      /* if (!physics.highlight || !visuals.linkHighlight) {
-       *   return visuals.linkColorScheme
-       *     ? theme.colors.gray[visuals.linkColorScheme]
-       *     : theme.colors[getLinkNodeColor(link)][500]
-       * } */
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
       const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
