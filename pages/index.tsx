@@ -342,7 +342,9 @@ export const Graph = function (props: GraphProps) {
     // zoomToFit off a little bit
     setTimeout(() => {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
-      fg?.zoomToFit(0, numbereWithinRange(20, 200, windowWidth / 8))
+      fg?.zoomToFit(1000, numbereWithinRange(20, 200, windowWidth / 8), (node: NodeObject) =>
+        scopedNodeIds.some((n) => n === node.id),
+      )
     }, 1)
   }, [JSON.stringify(scopedNodeIds)])
 

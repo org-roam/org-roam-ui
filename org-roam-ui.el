@@ -136,7 +136,7 @@ This serves the web-build and API over HTTP."
 
 (defun org-roam-ui--update-current-node ()
   (let* ((node (org-roam-id-at-point)))
-    (unless (string-match-p (regexp-quote "Minibuf") (current-buffer))
+    (unless (string-match-p (regexp-quote "Minibuf") (buffer-name (current-buffer)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
       (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
