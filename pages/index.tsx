@@ -641,6 +641,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }))
     },
     onBackgroundClick: () => {
+      setHoverNode(null)
+      if (scope.nodeIds.length === 0) {
+        return 
+      }
       setScope((currentScope) => ({
         ...currentScope,
         nodeIds: [],
