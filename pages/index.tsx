@@ -132,8 +132,16 @@ export function GraphPage() {
     const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
     setGraphData(orgRoamGraphDataClone)
   }
+
   const { setEmacsTheme } = useContext(ThemeContext)
+
+  const [threeDim, setThreeDim] = useState(false)
+
+  const graph2dRef = useRef<any>(null)
+  const graph3dRef = useRef<any>(null)
+
   useEffect(() => {
+    const fg = threeDim ? graph3dRef.current : graph2dRef.current
     const socket = new ReconnectingWebSocket('ws://localhost:35903')
     socket.addEventListener('open', (event) => {
       console.log('Connection with Emacs established')
@@ -156,14 +164,18 @@ export function GraphPage() {
               setEmacsNodeId(message.data.id)
               break
             case 'zoom': {
+              console.log(message)
               const links = linksByNodeIdRef.current[message.data.id!] ?? []
               const nodes = Object.fromEntries(
                 [
-                  message.commandData.id! as string,
+                  message.data.id! as string,
                   ...links.flatMap((link) => [link.source, link.target]),
                 ].map((nodeId) => [nodeId, {}]),
               )
-              /* zoomToFit(500, 200, (node: OrgRoamNode)=>nodes[node.id!]) */
+              fg.zoomToFit(2000, 200, (node: OrgRoamNode) => nodes[node.id!])
+            }
+            case 'toggle': {
+              /* setBehavior({ ...behavior, followLocalorZoom: !behavior.followLocalOrZoom }) */
             }
             default:
               console.log('oopsie whoopsie')
@@ -179,8 +191,6 @@ export function GraphPage() {
     }
     //fetchGraphData()
   }, [emacsNodeId])
-
-  const [threeDim, setThreeDim] = useState(false)
 
   if (!graphData) {
     return null
@@ -212,6 +222,8 @@ export function GraphPage() {
             filter,
             visuals,
             behavior,
+            graph2dRef,
+            graph3dRef,
           }}
         />
       </Box>
@@ -229,6 +241,8 @@ export interface GraphProps {
   emacsNodeId: string | null
   visuals: typeof initialVisuals
   behavior: typeof initialBehavior
+  graph2dRef: any
+  graph3dRef: any
 }
 
 export const Graph = function (props: GraphProps) {
@@ -242,10 +256,9 @@ export const Graph = function (props: GraphProps) {
     nodeById,
     visuals,
     behavior,
+    graph2dRef,
+    graph3dRef,
   } = props
-
-  const graph2dRef = useRef<any>(null)
-  const graph3dRef = useRef<any>(null)
 
   // react-force-graph does not track window size
   // https://github.com/vasturiano/react-force-graph/issues/233
@@ -260,15 +273,11 @@ export const Graph = function (props: GraphProps) {
       return
     }
     const fg = threeDim ? graph3dRef.current : graph2dRef.current
-    switch (behavior.follow) {
-      case 'Local':
-        setScope({ nodeIds: [emacsNodeId] })
-        break
-      case 'Zoom':
-        fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
-        setHoverNode(nodeById[emacsNodeId] as NodeObject)
-        break
-      default:
+    if (behavior.followLocalOrZoom) {
+      setScope({ nodeIds: [emacsNodeId] })
+    } else {
+      fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
+      setHoverNode(nodeById[emacsNodeId] as NodeObject)
     }
   }, [emacsNodeId])
 
@@ -281,24 +290,25 @@ export const Graph = function (props: GraphProps) {
       ]),
     )
   }
-  const centralHighlightedNode = hoverNode
+  const centralHighlightedNode = useRef<NodeObject | null>(null)
+  centralHighlightedNode.current = hoverNode
   const highlightedNodes = useMemo(() => {
-    if (!centralHighlightedNode) {
+    if (!centralHighlightedNode.current) {
       return {}
     }
 
-    const links = linksByNodeId[centralHighlightedNode.id!]
+    const links = linksByNodeId[centralHighlightedNode.current.id!]
     if (!links) {
       return {}
     }
 
     return Object.fromEntries(
       [
-        centralHighlightedNode.id! as string,
+        centralHighlightedNode.current.id! as string,
         ...links.flatMap((link) => [link.source, link.target]),
       ].map((nodeId) => [nodeId, {}]),
     )
-  }, [centralHighlightedNode, linksByNodeId])
+  }, [centralHighlightedNode.current, linksByNodeId])
 
   const filteredNodes = useMemo(() => {
     return graphData.nodes.filter((node) => {
@@ -658,13 +668,13 @@ export const Graph = function (props: GraphProps) {
        * } */
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
       const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
-      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
+      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode.current)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
     },
     linkWidth: (link) => {
-      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
+      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode.current)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
 
       return linkIsHighlighted || linkWasHighlighted
@@ -735,10 +745,9 @@ export const Graph = function (props: GraphProps) {
   )
 }
 
-function isLinkRelatedToNode(link: LinkObject, centralHighlightedNode: NodeObject | null) {
+function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   return (
-    (link.source as NodeObject).id! === centralHighlightedNode?.id! ||
-    (link.target as NodeObject).id! === centralHighlightedNode?.id!
+    (link.source as NodeObject).id! === node?.id! || (link.target as NodeObject).id! === node?.id!
   )
 }
 

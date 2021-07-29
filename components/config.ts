@@ -93,4 +93,5 @@ export const initialVisuals = {
 
 export const initialBehavior = {
   follow: 'Zoom',
+  followLocalOrZoom: true,
 }

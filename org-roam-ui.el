@@ -108,28 +108,23 @@ This serves the web-build and API over HTTP."
          35903
          :host 'local
          :on-open (lambda (ws) (progn (setq oru-ws
-         ws) (org-roam-ui--send-graphdata) (org-roam-ui-sync-theme--advice) (message "Connection
-         established with org-roam-ui")
-    (add-hook 'post-command-hook
-                                 #'org-roam-ui--update-current-node)
-                                 ))
+         ws) (org-roam-ui--send-graphdata) (message "Connection established with org-roam-ui")
+    (add-hook 'post-command-hook #'org-roam-ui--update-current-node)))
          :on-close (lambda (_websocket) (setq oru-ws
-         nil) (message "Connection with org-roam-ui closed
-         succesfully."))))
+         nil) (message "Connection with org-roam-ui closed  succesfully."))))
     (if (boundp 'counsel-load-theme)
-(advice-add 'counsel-load-theme :around #'org-roam-ui-sync-theme--advice)
+(advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
             (advice-add 'load-theme :around #'org-roam-ui-sync-theme--advice))
     (add-hook 'post-command-hook #'org-roam-ui--update-current-node))
     ;(add-hook 'post-command-hook #'org-roam-ui-update))
    (t
     (progn
+    (websocket-server-close org-roam-ui-ws)
     (remove-hook 'post-command-hook #'org-roam-ui-update)
     (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
     (if (boundp 'counsel-load-theme)
 (advice-remove 'counsel-load-theme #'org-roam-ui-sync-theme--advice)
             (advice-remove 'load-theme #'org-roam-ui-sync-theme--advice))
-    (websocket-server-close org-roam-ui-ws)
-    (delete-process org-roam-ui-ws)
     (httpd-stop)))))
 
 
@@ -144,13 +139,13 @@ This serves the web-build and API over HTTP."
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
 (defun org-roam-ui--update-current-node ()
-  (when (and (boundp 'org-roam-ui-websocket) (websocket-openp org-roam-ui-websocket))
+  (when (websocket-openp oru-ws)
   (let* ((node (org-roam-id-at-point)))
     (unless (string-match-p (regexp-quote "Minibuf") (buffer-name (current-buffer)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
-      (websocket-send-text org-roam-ui-websocket (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
-)
+      (websocket-send-text oru-ws (json-encode `((type . "command") (data
+. ((commandName . "follow") (id . ,node)))))))))))
 
 (defun org-roam-ui-show-node ()
   "Open the current org-roam node in org-roam-ui."
@@ -257,19 +252,35 @@ This function is added to `post-command-hook'."
         ))
 
 
-;; (defservlet* theme text/stream ()
-;;   (progn)
-;;   (if org-roam-ui-sync-theme
-;;     (if (boundp 'doom-themes--colors)
-;;       (let*
-;;         ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25))) ui-theme (list nil))
-;;         (progn
-;;           (dolist (color colors) (push (cons (car color) (car (cdr color))) ui-theme))
-;;           ui-theme))
-;;       (insert (format "data: %s\n\n" (json-encode (org-roam-ui-get-theme)))))
-;;     (when org-roam-ui-custom-theme
-;;       (insert (format "data %s\n\n" (json-encode org-roam-ui-custom-theme)))))
-;;     (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*"))
+;;;; commands
+(defun orui-zoom-to-node (&optional id speed padding)
+  "Move the view of the graph to the node at points, or optionally a node of your choosing.
+Optionally takes three arguments:
+The id of the node you want to travel to.
+The time in ms it takes to make the transition.
+The padding around the nodes in the viewport."
+  (interactive)
+  (if-let ((node (or id (org-roam-id-at-point))))
+  (websocket-send-text oru-ws (json-encode `((type . "command") (data .
+      ((commandName . "zoom") (id . ,node) (speed . ,speed) (padding . ,padding)))))))
+  (message "No node found."))
+
+(defun orui-toggle-following ()
+  "Set whether ORUI should follow your every move in emacs. Default yes."
+  (interactive)
+  (if (member #'org-roam-ui--update-current-node post-command-hook)
+      (progn
+      (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
+      (message "Org-Roam-UI will now leave you alone.")
+    (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
+    (message "Org-Roam-UI will now follow you around."))
+  ))
+
+(defun orui-toggle-local-zoom ()
+  "Toggles whether org-roam-ui should go to the local view of a given node or zoom to it.
+Defaults to local."
+  (interactive)
+  (org-roam-ui--send-command "toggle" `(id . yes)))
 
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here
