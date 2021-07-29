@@ -132,7 +132,6 @@ export function GraphPage() {
   const graphRef = useRef<any>(null)
 
   useEffect(() => {
-    const fg = graphRef.current
     const socket = new ReconnectingWebSocket('ws://localhost:35903')
     socket.addEventListener('open', (event) => {
       console.log('Connection with Emacs established')
@@ -157,6 +156,7 @@ export function GraphPage() {
                   ...links.flatMap((link) => [link.source, link.target]),
                 ].map((nodeId) => [nodeId, {}]),
               )
+              const fg = graphRef.current
               fg.zoomToFit(2000, 200, (node: OrgRoamNode) => nodes[node.id!])
             }
             case 'toggle': {
