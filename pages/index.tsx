@@ -483,7 +483,7 @@ export const Graph = function (props: GraphProps) {
       : getNodeColorById(targetId)
   }
 
-  const getLinkColor = (sourceId: string, targetId: string, needsHighlighting: string) => {
+  const getLinkColor = (sourceId: string, targetId: string, needsHighlighting: boolean) => {
     // I'm so sorry
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
@@ -625,7 +625,7 @@ export const Graph = function (props: GraphProps) {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
-      return getLinkColor(sourceId, targetId, needsHighlighting)
+      return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
