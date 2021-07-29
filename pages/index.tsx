@@ -491,7 +491,7 @@ export const Graph = function (props: GraphProps) {
       numbereWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
     ]
   }
-  const getLinkNodeColor = (link: OrgRoamLinkObject) =>
+  const getLinkNodeColor = (link: OrgRoamLink) =>
     linksByNodeId[link.target.id!]?.length < linksByNodeId[link.source.id!]?.length
       ? getNodeColorById(link.target.id!)
       : getNodeColorById(link.source.id!)
@@ -532,7 +532,7 @@ export const Graph = function (props: GraphProps) {
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
 
-  const getNodeColor = (node: OrgRoamNodeObject) => {
+  const getNodeColor = (node: OrgRoamNode) => {
     // I'm so sorry
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
     // if we are matching the node color and don't have a highlight color
