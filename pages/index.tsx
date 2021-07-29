@@ -22,10 +22,16 @@ import { useAnimation } from '@lilib/hooks'
 
 import { Box, useTheme } from '@chakra-ui/react'
 
-import { initialPhysics, initialFilter, initialVisuals } from '../components/config'
+import {
+  initialPhysics,
+  initialFilter,
+  initialVisuals,
+  initialBehavior,
+} from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
 import { ThemeContext, ThemeContextProps } from './themecontext'
+import SpriteText from 'three-spritetext'
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -62,6 +68,7 @@ export function GraphPage() {
   const [visuals, setVisuals] = usePersistantState('visuals', initialVisuals)
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
+  const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -201,6 +208,7 @@ export function GraphPage() {
             emacsNodeId,
             filter,
             visuals,
+            behavior,
           }}
         />
       </Box>
@@ -217,11 +225,21 @@ export interface GraphProps {
   filter: typeof initialFilter
   emacsNodeId: string | null
   visuals: typeof initialVisuals
+  behavior: typeof initialBehavior
 }
 
 export const Graph = function (props: GraphProps) {
-  const { physics, graphData, threeDim, linksByNodeId, filter, emacsNodeId, nodeById, visuals } =
-    props
+  const {
+    physics,
+    graphData,
+    threeDim,
+    linksByNodeId,
+    filter,
+    emacsNodeId,
+    nodeById,
+    visuals,
+    behavior,
+  } = props
 
   const graph2dRef = useRef<any>(null)
   const graph3dRef = useRef<any>(null)
@@ -238,15 +256,31 @@ export const Graph = function (props: GraphProps) {
     if (!emacsNodeId) {
       return
     }
-    switch (physics.follow) {
+    const fg = threeDim ? graph3dRef.current : graph2dRef.current
+    switch (behavior.follow) {
       case 'Local':
         setScope({ nodeIds: [emacsNodeId] })
         break
       case 'Zoom':
+        fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
+        setHoverNode(nodeById[emacsNodeId] as NodeObject)
+        break
       default:
     }
   }, [emacsNodeId])
 
+  const getNeighborNodes = (id: string) => {
+    const links = linksByNodeId[id]! ?? []
+    if (!links.length) {
+      return [id]
+    }
+    return Object.fromEntries(
+      [id as string, ...links.flatMap((link) => [link.source, link.target])].map((nodeId) => [
+        nodeId,
+        {},
+      ]),
+    )
+  }
   const centralHighlightedNode = hoverNode
   const highlightedNodes = useMemo(() => {
     if (!centralHighlightedNode) {
@@ -353,23 +387,23 @@ export const Graph = function (props: GraphProps) {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
       if (physics.gravityOn) {
-        fg.d3Force('x', d3.forceX().strength(physics.gravity))
-        fg.d3Force('y', d3.forceY().strength(physics.gravity))
+        fg.d3Force(0, d3.forceX().strength(physics.gravity))
+        fg.d3Force(0, d3.forceY().strength(physics.gravity))
         if (threeDim) {
           if (physics.galaxy) {
-            fg.d3Force('x', d3.forceX().strength(physics.gravity / 5))
-            fg.d3Force('z', d3.forceZ().strength(physics.gravity / 5))
+            fg.d3Force(0, d3.forceX().strength(physics.gravity / 5))
+            fg.d3Force(0, d3.forceZ().strength(physics.gravity / 5))
           } else {
-            fg.d3Force('x', d3.forceX().strength(physics.gravity))
-            fg.d3Force('z', d3.forceZ().strength(physics.gravity))
+            fg.d3Force(0, d3.forceX().strength(physics.gravity))
+            fg.d3Force(0, d3.forceZ().strength(physics.gravity))
           }
         } else {
-          fg.d3Force('z', null)
+          fg.d3Force(0, null)
         }
       } else {
-        fg.d3Force('x', null)
-        fg.d3Force('y', null)
-        threeDim ? fg.d3Force('z', null) : null
+        fg.d3Force(0, null)
+        fg.d3Force(0, null)
+        threeDim ? fg.d3Force(0, null) : null
       }
       physics.centering
         ? fg.d3Force('center', d3.forceCenter().strength(physics.centeringStrength))
@@ -681,6 +715,18 @@ export const Graph = function (props: GraphProps) {
           nodeOpacity={physics.nodeOpacity}
           nodeResolution={physics.nodeResolution}
           linkOpacity={physics.linkOpacity}
+          nodeThreeObject={(node: OrgRoamNode) => {
+            if (!physics.labels) {
+              return
+            }
+            if (physics.labels === 1 && !highlightedNodes[node.id!]) {
+              return
+            }
+            const sprite = new SpriteText(node.title.substring(0, 30))
+            sprite.color = '#ffffff'
+            sprite.textHeight = 8
+            return sprite
+          }}
         />
       ) : (
         <ForceGraph2D ref={graph2dRef} {...graphCommonProps} />

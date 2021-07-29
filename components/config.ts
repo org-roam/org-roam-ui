@@ -90,3 +90,7 @@ export const initialVisuals = {
   linkHighlight: '',
   backgroundColor: 'white',
 }
+
+export const initialBehavior = {
+  follow: 'Zoom',
+}
