@@ -123,18 +123,13 @@ export function GraphPage() {
       const message = JSON.parse(event.data)
       switch (message.type) {
         case 'graphdata':
-          updateGraphData(message.data)
-          break
+          return updateGraphData(message.data)
         case 'theme':
-          console.log('Received theme data')
-          setEmacsTheme(message.data)
-          break
+          return setEmacsTheme(message.data)
         case 'command':
-          console.log('command')
           switch (message.data.commandName) {
             case 'follow':
-              setEmacsNodeId(message.data.id)
-              break
+              return setEmacsNodeId(message.data.id)
             case 'zoom': {
               const links = linksByNodeIdRef.current[message.data.id!] ?? []
               const nodes = Object.fromEntries(
@@ -146,19 +141,11 @@ export function GraphPage() {
               /* zoomToFit(500, 200, (node: OrgRoamNode)=>nodes[node.id!]) */
             }
             default:
-              console.log('oopsie whoopsie')
+              return console.error('unknown message type', message.type)
           }
       }
     })
-    // fetchGraphData()
   }, [])
-
-  useEffect(() => {
-    if (!emacsNodeId) {
-      return
-    }
-    //fetchGraphData()
-  }, [emacsNodeId])
 
   const [threeDim, setThreeDim] = useState(false)
 
