@@ -4,6 +4,8 @@ import {
   ChevronDownIcon,
   SettingsIcon,
   InfoOutlineIcon,
+  RepeatIcon,
+  ArrowRightIcon,
 } from '@chakra-ui/icons'
 import {
   Accordion,
@@ -48,7 +50,7 @@ export interface TweakProps {
   setThreeDim: (newValue: boolean) => void
   filter: typeof initialFilter
   setFilter: any
-  visuals: Visuals
+  visuals: typeof initialVisuals
   setVisuals: any
 }
 
@@ -58,6 +60,7 @@ export const Tweaks = (props: TweakProps) => {
   const [showTweaks, setShowTweaks] = useState(true)
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
   const colorList = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'pink', 'purple', 'gray']
+  const grays = ['100', '200', '300', '400', '500', '600', '700', '800', '900']
   return (
     <>
       <Box
@@ -287,15 +290,8 @@ export const Tweaks = (props: TweakProps) => {
                   <Heading size="sm">Visual</Heading>
                 </AccordionButton>
                 <AccordionPanel>
-                  <VStack
-                    spacing={2}
-                    justifyContent="flex-start"
-                    divider={<StackDivider borderColor="gray.500" />}
-                    align="stretch"
-                    paddingLeft={7}
-                    color="gray.800"
-                  >
-                    <Accordion allowToggle defaultIndex={[0]}>
+                  <VStack>
+                    <Accordion allowToggle defaultIndex={[0]} width={250} marginLeft={10}>
                       <AccordionItem>
                         <AccordionButton>
                           <Flex justifyContent="space-between" w="100%">
@@ -314,6 +310,39 @@ export const Tweaks = (props: TweakProps) => {
                             <Box>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Nodes</Text>
+                                <Tooltip label="Shuffle node colors">
+                                  <IconButton
+                                    size="sm"
+                                    icon={<RepeatIcon />}
+                                    variant="ghost"
+                                    onClick={() => {
+                                      const arr = visuals.nodeColorScheme ?? []
+                                      setVisuals({
+                                        ...visuals,
+                                        //shuffle that guy
+                                        //definitely thought of this myself
+                                        nodeColorScheme: arr
+                                          .map((x) => [Math.random(), x])
+                                          .sort(([a], [b]) => a - b)
+                                          .map(([_, x]) => x),
+                                      })
+                                    }}
+                                  />
+                                </Tooltip>
+                                <Tooltip label="Cycle node colors">
+                                  <IconButton
+                                    icon={<ArrowRightIcon />}
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => {
+                                      const arr = visuals.nodeColorScheme ?? []
+                                      setVisuals({
+                                        ...visuals,
+                                        nodeColorScheme: [...arr.slice(1, arr.length), arr[0]],
+                                      })
+                                    }}
+                                  />
+                                </Tooltip>
                                 <Menu closeOnSelect={false}>
                                   <MenuButton
                                     width={20}
@@ -376,25 +405,88 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Links</Text>
-                                <Menu>
+                                <Menu isLazy>
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
                                     color="black"
                                     rightIcon={<ChevronDownIcon />}
                                   >
-                                    <Text>
-                                      {visuals.linkColorScheme[0]!.toUpperCase() +
-                                        visuals.linkColorScheme!.slice(1)}
-                                    </Text>
+                                    <Box>
+                                      {visuals.linkColorScheme ? (
+                                        <Box
+                                          bgColor={'gray.' + visuals.linkColorScheme}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      ) : (
+                                        <Flex
+                                          height={6}
+                                          width={6}
+                                          flexDirection="column"
+                                          flexWrap="wrap"
+                                        >
+                                          {visuals.nodeColorScheme.map((color) => (
+                                            <Box
+                                              key={color}
+                                              bgColor={color + '.500'}
+                                              flex="1 1 8px"
+                                              borderRadius="2xl"
+                                            ></Box>
+                                          ))}
+                                        </Flex>
+                                      )}
+                                    </Box>
                                   </MenuButton>
-                                  <MenuList bgColor="gray.200">
-                                    <MenuItem onClick={() => setPhysics({ ...physics, labels: 1 })}>
-                                      Match Nodes
+                                  <MenuList bgColor="gray.200" width={50}>
+                                    <MenuItem
+                                      onClick={() =>
+                                        setVisuals({ ...visuals, linkColorScheme: '' })
+                                      }
+                                      justifyContent="space-between"
+                                      alignItems="center"
+                                      display="flex"
+                                    >
+                                      <Text>Match nodes</Text>
+                                      <Flex
+                                        height={6}
+                                        width={6}
+                                        flexDirection="column"
+                                        flexWrap="wrap"
+                                      >
+                                        {visuals.nodeColorScheme.map((color) => (
+                                          <Box
+                                            key={color}
+                                            bgColor={color + '.500'}
+                                            flex="1 1 8px"
+                                            borderRadius="2xl"
+                                          ></Box>
+                                        ))}
+                                      </Flex>
                                     </MenuItem>
-                                    <MenuItem onClick={() => setPhysics({ ...physics, labels: 2 })}>
-                                      Gray
-                                    </MenuItem>
+                                    {grays.map((color) => (
+                                      <MenuItem
+                                        key={color}
+                                        onClick={() =>
+                                          setVisuals({
+                                            ...visuals,
+                                            linkColorScheme: color,
+                                          })
+                                        }
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        display="flex"
+                                      >
+                                        <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
+                                        <Box
+                                          bgColor={'gray.' + color}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      </MenuItem>
+                                    ))}
                                   </MenuList>
                                 </Menu>
                               </Flex>
@@ -537,172 +629,228 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuList>
                                 </Menu>
                               </Flex>
+                              <Flex alignItems="center" justifyContent="space-between">
+                                <Text>Background</Text>
+                                <Menu isLazy>
+                                  <MenuButton
+                                    as={Button}
+                                    colorScheme=""
+                                    color="black"
+                                    rightIcon={<ChevronDownIcon />}
+                                  >
+                                    {
+                                      <Box
+                                        bgColor={'gray.' + visuals.backgroundColor}
+                                        borderRadius="sm"
+                                        height={6}
+                                        width={6}
+                                      ></Box>
+                                    }
+                                  </MenuButton>
+                                  <MenuList bgColor="gray.200" width={50}>
+                                    {grays.map((color) => (
+                                      <MenuItem
+                                        key={color}
+                                        onClick={() =>
+                                          setVisuals({ ...visuals, backgroundColor: color })
+                                        }
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        display="flex"
+                                      >
+                                        <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
+                                        <Box
+                                          bgColor={'gray.' + color}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      </MenuItem>
+                                    ))}
+                                  </MenuList>
+                                </Menu>
+                              </Flex>
                             </Box>
                           </VStack>
                         </AccordionPanel>
                       </AccordionItem>
                     </Accordion>
-                    <SliderWithInfo
-                      label="Node size"
-                      value={physics.nodeRel}
-                      onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
-                    />
-                    {threeDim && (
-                      <>
+                    <VStack
+                      spacing={2}
+                      justifyContent="flex-start"
+                      divider={<StackDivider borderColor="gray.500" />}
+                      align="stretch"
+                      paddingLeft={7}
+                      color="gray.800"
+                    >
+                      <SliderWithInfo
+                        label="Node size"
+                        value={physics.nodeRel}
+                        onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
+                      />
+                      {threeDim && (
+                        <>
+                          <SliderWithInfo
+                            label="Node opacity"
+                            value={physics.nodeOpacity}
+                            min={0}
+                            max={1}
+                            onChange={(value) => setPhysics({ ...physics, nodeOpacity: value })}
+                          />
+                          <SliderWithInfo
+                            label="Node resolution"
+                            value={physics.nodeResolution}
+                            min={5}
+                            max={32}
+                            step={1}
+                            onChange={(value) => setPhysics({ ...physics, nodeResolution: value })}
+                          />
+                        </>
+                      )}
+                      <SliderWithInfo
+                        label="Link width"
+                        value={physics.linkWidth}
+                        onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
+                      />
+                      {threeDim && (
                         <SliderWithInfo
-                          label="Node opacity"
-                          value={physics.nodeOpacity}
+                          label="Link opacity"
                           min={0}
                           max={1}
-                          onChange={(value) => setPhysics({ ...physics, nodeOpacity: value })}
+                          value={physics.linkOpacity}
+                          onChange={(value) => setPhysics({ ...physics, linkOpacity: value })}
                         />
-                        <SliderWithInfo
-                          label="Node resolution"
-                          value={physics.nodeResolution}
-                          min={5}
-                          max={32}
-                          step={1}
-                          onChange={(value) => setPhysics({ ...physics, nodeResolution: value })}
-                        />
-                      </>
-                    )}
-                    <SliderWithInfo
-                      label="Link width"
-                      value={physics.linkWidth}
-                      onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
-                    />
-                    {threeDim && (
-                      <SliderWithInfo
-                        label="Link opacity"
-                        min={0}
-                        max={1}
-                        value={physics.linkOpacity}
-                        onChange={(value) => setPhysics({ ...physics, linkOpacity: value })}
-                      />
-                    )}
-                    <Box>
-                      <Flex alignItems="center" justifyContent="space-between">
-                        <Text>Labels</Text>
-                        <Menu>
-                          <MenuButton
-                            as={Button}
-                            colorScheme=""
-                            color="black"
-                            rightIcon={<ChevronDownIcon />}
-                          >
-                            {!physics.labels
-                              ? 'Never'
-                              : physics.labels < 2
-                              ? 'On Highlight'
-                              : 'Always'}
-                          </MenuButton>
-                          <MenuList bgColor="gray.200">
-                            <MenuItem onClick={() => setPhysics({ ...physics, labels: 0 })}>
-                              Never
-                            </MenuItem>
-                            <MenuItem onClick={() => setPhysics({ ...physics, labels: 1 })}>
-                              On Highlight
-                            </MenuItem>
-                            <MenuItem onClick={() => setPhysics({ ...physics, labels: 2 })}>
-                              Always
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
-                      </Flex>
-                      <Collapse in={physics.labels > 1} animateOpacity>
-                        <Box paddingLeft={4} paddingTop={2}>
-                          <SliderWithInfo
-                            label="Label Appearance Scale"
-                            value={physics.labelScale * 5}
-                            onChange={(value) => setPhysics({ ...physics, labelScale: value / 5 })}
-                          />
-                        </Box>
-                      </Collapse>
-                    </Box>
-                    <EnableSection
-                      label="Directional Particles"
-                      value={physics.particles}
-                      onChange={() => setPhysics({ ...physics, particles: !physics.particles })}
-                    >
-                      <SliderWithInfo
-                        label="Particle Number"
-                        value={physics.particlesNumber}
-                        max={5}
-                        step={1}
-                        onChange={(value) => setPhysics({ ...physics, particlesNumber: value })}
-                      />
-                      <SliderWithInfo
-                        label="Particle Size"
-                        value={physics.particlesWidth}
-                        onChange={(value) => setPhysics({ ...physics, particlesWidth: value })}
-                      />
-                    </EnableSection>
-                    <EnableSection
-                      label="Highlight"
-                      onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
-                      value={physics.highlight}
-                    >
-                      <VStack
-                        spacing={1}
-                        justifyContent="flex-start"
-                        divider={<StackDivider borderColor="gray.400" />}
-                        align="stretch"
-                        paddingLeft={0}
+                      )}
+                      <Box>
+                        <Flex alignItems="center" justifyContent="space-between">
+                          <Text>Labels</Text>
+                          <Menu>
+                            <MenuButton
+                              as={Button}
+                              colorScheme=""
+                              color="black"
+                              rightIcon={<ChevronDownIcon />}
+                            >
+                              {!physics.labels
+                                ? 'Never'
+                                : physics.labels < 2
+                                ? 'On Highlight'
+                                : 'Always'}
+                            </MenuButton>
+                            <MenuList bgColor="gray.200">
+                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 0 })}>
+                                Never
+                              </MenuItem>
+                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 1 })}>
+                                On Highlight
+                              </MenuItem>
+                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 2 })}>
+                                Always
+                              </MenuItem>
+                            </MenuList>
+                          </Menu>
+                        </Flex>
+                        <Collapse in={physics.labels > 1} animateOpacity>
+                          <Box paddingLeft={4} paddingTop={2}>
+                            <SliderWithInfo
+                              label="Label Appearance Scale"
+                              value={physics.labelScale * 5}
+                              onChange={(value) =>
+                                setPhysics({ ...physics, labelScale: value / 5 })
+                              }
+                            />
+                          </Box>
+                        </Collapse>
+                      </Box>
+                      <EnableSection
+                        label="Directional Particles"
+                        value={physics.particles}
+                        onChange={() => setPhysics({ ...physics, particles: !physics.particles })}
                       >
                         <SliderWithInfo
-                          label="Highlight Link Thickness"
-                          value={physics.highlightLinkSize}
-                          onChange={(value) => setPhysics({ ...physics, highlightLinkSize: value })}
+                          label="Particle Number"
+                          value={physics.particlesNumber}
+                          max={5}
+                          step={1}
+                          onChange={(value) => setPhysics({ ...physics, particlesNumber: value })}
                         />
                         <SliderWithInfo
-                          label="Highlight Node Size"
-                          value={physics.highlightNodeSize}
-                          onChange={(value) => setPhysics({ ...physics, highlightNodeSize: value })}
+                          label="Particle Size"
+                          value={physics.particlesWidth}
+                          onChange={(value) => setPhysics({ ...physics, particlesWidth: value })}
                         />
-                        {/*<Flex justifyContent="space-between">
+                      </EnableSection>
+                      <EnableSection
+                        label="Highlight"
+                        onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
+                        value={physics.highlight}
+                      >
+                        <VStack
+                          spacing={1}
+                          justifyContent="flex-start"
+                          divider={<StackDivider borderColor="gray.400" />}
+                          align="stretch"
+                          paddingLeft={0}
+                        >
+                          <SliderWithInfo
+                            label="Highlight Link Thickness"
+                            value={physics.highlightLinkSize}
+                            onChange={(value) =>
+                              setPhysics({ ...physics, highlightLinkSize: value })
+                            }
+                          />
+                          <SliderWithInfo
+                            label="Highlight Node Size"
+                            value={physics.highlightNodeSize}
+                            onChange={(value) =>
+                              setPhysics({ ...physics, highlightNodeSize: value })
+                            }
+                          />
+                          {/*<Flex justifyContent="space-between">
                           <Text> Highlight node color </Text>
                         </Flex>
                         <Flex justifyContent="space-between">
                           <Text> Highlight link color </Text>
                             </Flex>*/}
-                        <EnableSection
-                          label="Highlight Animation"
-                          onChange={() => {
-                            setPhysics({ ...physics, highlightAnim: !physics.highlightAnim })
-                          }}
-                          value={physics.highlightAnim}
-                        >
-                          <SliderWithInfo
-                            label="Animation speed"
-                            onChange={(v) => setPhysics({ ...physics, animationSpeed: v })}
-                            value={physics.animationSpeed}
-                            infoText="Slower speed has a chance of being buggy"
-                            min={50}
-                            max={1000}
-                            step={10}
-                          />
-                          <Select
-                            placeholder={physics.algorithmName}
-                            onChange={(v) => {
-                              setPhysics({ ...physics, algorithmName: v.target.value })
+                          <EnableSection
+                            label="Highlight Animation"
+                            onChange={() => {
+                              setPhysics({ ...physics, highlightAnim: !physics.highlightAnim })
                             }}
+                            value={physics.highlightAnim}
                           >
-                            {physics.algorithmOptions.map((opt: string) => (
-                              <option key={opt} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
-                          </Select>
-                          {/* <DropDownMenu
+                            <SliderWithInfo
+                              label="Animation speed"
+                              onChange={(v) => setPhysics({ ...physics, animationSpeed: v })}
+                              value={physics.animationSpeed}
+                              infoText="Slower speed has a chance of being buggy"
+                              min={50}
+                              max={1000}
+                              step={10}
+                            />
+                            <Select
+                              placeholder={physics.algorithmName}
+                              onChange={(v) => {
+                                setPhysics({ ...physics, algorithmName: v.target.value })
+                              }}
+                            >
+                              {physics.algorithmOptions.map((opt: string) => (
+                                <option key={opt} value={opt}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </Select>
+                            {/* <DropDownMenu
                     displayValue={physics.algorithmName}
                     textArray={physics.algorithmOptions}
                     onClickArray={physics.algorithmOptions.map((option) =>
                       setPhysics({ ...physics, algorithmName: { option } }),
                     )}
                   /> */}
-                        </EnableSection>
-                      </VStack>
-                    </EnableSection>
+                          </EnableSection>
+                        </VStack>
+                      </EnableSection>
+                    </VStack>
                   </VStack>
                 </AccordionPanel>
               </AccordionItem>

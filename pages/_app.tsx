@@ -110,7 +110,6 @@ function SubApp(props: any) {
   const missingColor = d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2)
   const borderColor = getBorderColor()
   const theme = useMemo(() => {
-    console.log('ii')
     return {
       colors: {
         white: emacsTheme.bg,
@@ -171,6 +170,8 @@ function SubApp(props: any) {
             },
             ghost: {
               color: highlightColor + '.500',
+              _hover: { bg: `inherit`, border: '1px solid', borderColor: highlightColor + '.500' },
+              _active: { color: `inherit`, bg: highlightColor + '.500' },
             },
           },
         },

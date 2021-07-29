@@ -133,13 +133,10 @@ export function GraphPage() {
       console.log(typeof message.type)
       switch (message.type) {
         case 'graphdata':
-          console.log('hey')
           parseGraphData(message.data)
           break
         case 'theme':
           console.log('Received theme data')
-          console.log(message.data)
-          console.log(setEmacsTheme)
           setEmacsTheme(message.data)
           break
         case 'command':
@@ -157,7 +154,6 @@ export function GraphPage() {
                 ].map((nodeId) => [nodeId, {}]),
               )
               /* zoomToFit(500, 200, (node: OrgRoamNode)=>nodes[node.id!]) */
-              console.log(nodes)
             }
             default:
               console.log('oopsie whoopsie')
@@ -437,6 +433,35 @@ export const Graph = function (props: GraphProps) {
     [theme],
   )
 
+  const highlightColors = useMemo(() => {
+    const allColors = [].concat(
+      visuals.nodeColorScheme /* && visuals.nodeColorScheme.map((c) => theme.colors[c][500]))  */ ||
+        [],
+      visuals.linkColorScheme /* && theme.colors.gray[visuals.linkColorScheme])]]  */ || [],
+      visuals.linkHighlight /* && theme.colors[visuals.linkHighlight][500])  */ || [],
+      visuals.nodeHighlight /* && theme.colors[visuals.linkHighlight][500]) */ || [],
+    )
+
+    console.log(visuals.linkColorScheme)
+    const getColor = (c) => (isNaN(c) ? theme.colors[c][500] : theme.colors.gray[c])
+    const highlightColors = Object.fromEntries(
+      allColors.map((color) => {
+        const color1 = getColor(color)
+        const crisscross = allColors.map((color2) => [
+          color2,
+          d3int.interpolate(color1, getColor(color2)),
+        ])
+        return [color, Object.fromEntries(crisscross)]
+      }),
+    )
+    console.log(highlightColors)
+    return highlightColors
+  }, [
+    visuals.nodeColorScheme,
+    visuals.linkHighlight,
+    visuals.nodeHighlight,
+    visuals.linkColorScheme,
+  ])
   const highlightedLinks = useMemo(() => linksByNodeId[hoverNode?.id!] ?? [], [hoverNode])
 
   const previouslyHighlightedLinks = useMemo(
@@ -455,11 +480,67 @@ export const Graph = function (props: GraphProps) {
     [hoverNode, previouslyHighlightedLinks, lastHoverNode],
   )
 
+  const getNodeColorById = (id: string) => {
+    const linklen = linksByNodeId[id!]?.length ?? 0
+    const parentCiteNeighbors = linklen
+      ? linksByNodeId[id!]?.filter((link) => link.type === 'parent' || link.type === 'cite').length
+      : 0
+    const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
+
+    return visuals.nodeColorScheme[
+      numbereWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
+    ]
+  }
+  const getLinkNodeColor = (link: OrgRoamLinkObject) =>
+    linksByNodeId[link.target.id!]?.length < linksByNodeId[link.source.id!]?.length
+      ? getNodeColorById(link.target.id!)
+      : getNodeColorById(link.source.id!)
+
+  const getLinkColor = (link: OrgRoamLinkObject) => {
+    // I'm so sorry
+    const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
+    const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
+    const needsHighlighting = linkIsHighlighted || linkWasHighlighted
+    // if we are matching the node color and don't have a highlight color
+    // or we don't have our own scheme and we're not being highlighted
+    if (!visuals.linkHighlight && !visuals.linkColorScheme && !needsHighlighting) {
+      const nodeColor = getLinkNodeColor(link)
+      return theme.colors[nodeColor][500]
+    }
+    if (!needsHighlighting && !visuals.linkColorScheme) {
+      const nodeColor = getLinkNodeColor(link)
+      return theme.colors[nodeColor][500]
+    }
+    if (!needsHighlighting && !visuals.linkColorScheme) {
+      const nodeColor = getLinkNodeColor(link)
+      return theme.colors[nodeColor][500]
+    }
+    if (!needsHighlighting) {
+      return theme.colors.gray[visuals.linkColorScheme]
+    }
+
+    if (!visuals.linkHighlight && !visuals.linkColorScheme) {
+      const nodeColor = getLinkNodeColor(link)
+      return theme.colors[nodeColor][500]
+    }
+    if (!visuals.linkHighlight) {
+      return theme.colors.gray[visuals.linkColorScheme]
+    }
+    if (!visuals.linkColorScheme) {
+      return highlightColors[getLinkNodeColor(link)][visuals.linkHighlight](opacity)
+    }
+    return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
+  }
+
+  const getLinkBaseColor = (link: OrgRoamLinkObject) => {
+    if (!visuals.linkColorScheme) {
+    }
+  }
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: theme.white,
+    backgroundColor: theme.colors.gray[visuals.backgroundColor],
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       if (!physics.colorful) {
@@ -468,20 +549,9 @@ export const Graph = function (props: GraphProps) {
           : interGray(opacity)
       }
       if (node.id === emacsNodeId) {
-        return theme.colors['red'][500]
+        return theme.colors[visuals.emacsNodeColor][500]
       }
 
-      const palette = [
-        'pink',
-        'purple',
-        'blue',
-        'cyan',
-        'teal',
-        'green',
-        'yellow',
-        'orange',
-        'red',
-      ].filter((color) => !['red'].includes(color))
       // otherwise links with parents get shown as having one note
       const linklen = linksByNodeId[node.id!]?.length ?? 0
       const parentCiteNeighbors = linklen
@@ -490,7 +560,11 @@ export const Graph = function (props: GraphProps) {
         : 0
       const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
 
-      return theme.colors[palette[numbereWithinRange(neighbors, 0, palette.length - 1)]][500]
+      return theme.colors[
+        visuals.nodeColorScheme[
+          numbereWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
+        ]
+      ][500]
     },
     nodeRelSize: physics.nodeRel,
     nodeVal: (node) => {
@@ -570,11 +644,13 @@ export const Graph = function (props: GraphProps) {
 
     linkDirectionalParticles: physics.particles ? physics.particlesNumber : undefined,
     linkColor: (link) => {
-      const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
-      const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
-      return linkIsHighlighted || linkWasHighlighted
-        ? interHighlight(opacity)
-        : theme.colors.gray[500]
+      /* if (!physics.highlight || !visuals.linkHighlight) {
+       *   return visuals.linkColorScheme
+       *     ? theme.colors.gray[visuals.linkColorScheme]
+       *     : theme.colors[getLinkNodeColor(link)][500]
+       * } */
+
+      return getLinkColor(link)
     },
     linkWidth: (link) => {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode)
