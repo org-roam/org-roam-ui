@@ -452,7 +452,7 @@ export const Graph = function (props: GraphProps) {
 
   const previouslyHighlightedLinks = useMemo(
     () => linksByNodeId[lastHoverNode.current?.id!] ?? [],
-    [hoverNode],
+    [JSON.stringify(hoverNode), lastHoverNode.current],
   )
 
   const previouslyHighlightedNodes = useMemo(
@@ -463,7 +463,7 @@ export const Graph = function (props: GraphProps) {
           ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
         ].map((nodeId) => [nodeId, {}]),
       ),
-    [hoverNode, previouslyHighlightedLinks, lastHoverNode.current],
+    [JSON.stringify(hoverNode), previouslyHighlightedLinks, lastHoverNode.current],
   )
 
   const getNodeColorById = (id: string) => {
