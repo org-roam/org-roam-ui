@@ -125,6 +125,7 @@ This serves the web-build and API over HTTP."
 
 
 (defun org-roam-ui--send-graphdata ()
+  "Get roam data, make JSON, send through websocket to org-roam-ui."
   (let* ((nodes-columns [id file title level])
          (links-columns [source dest type])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
@@ -135,18 +136,22 @@ This serves the web-build and API over HTTP."
 
 (defun org-roam-ui--update-current-node ()
   (let* ((node (org-roam-id-at-point)))
+    (unless (string-match-p (regexp-quote "Minibuf") (current-buffer))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
-      (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node)))))))))
+      (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
 
 (defun org-roam-ui-show-node ()
+  "Open the current org-roam node in org-roam-ui."
   (interactive)
       (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,(org-roam-id-at-point))))))))
 
 (defun org-roam-ui-sync-theme--advice ()
+  "Function which is called after load-theme to sync your current theme with org-roam-ui."
   (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
 
 (defun org-roam-ui-sync-theme-manually ()
+  "Sync your current Emacs theme with org-roam-ui."
   (interactive)
   (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
 
