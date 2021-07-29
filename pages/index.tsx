@@ -327,8 +327,8 @@ export const Graph = function (props: GraphProps) {
 
   const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-  const scopedLinks = useMemo(() => {
-    return filteredLinks.filter((link) => {
+  const scopedGraphData = useMemo(() => {
+    const scopedLinks = filteredLinks.filter((link) => {
       // we need to cover both because force-graph modifies the original data
       // but if we supply the original data on each render, the graph will re-render sporadically
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
@@ -338,18 +338,14 @@ export const Graph = function (props: GraphProps) {
         scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
       )
     })
-  }, [filteredLinks, scopedNodes])
 
-  const scopedGraphData = useMemo(
-    () =>
-      scope.nodeIds.length === 0
-        ? { nodes: filteredNodes, links: filteredLinks }
-        : {
-            nodes: scopedNodes,
-            links: scopedLinks,
-          },
-    [filter, scope, JSON.stringify(Object.keys(nodeById))],
-  )
+    return scope.nodeIds.length === 0
+      ? { nodes: filteredNodes, links: filteredLinks }
+      : {
+          nodes: scopedNodes,
+          links: scopedLinks,
+        }
+  }, [filter, scope, JSON.stringify(Object.keys(nodeById))])
 
   // make sure the camera position and zoom are fine when the list of nodes to render is changed
   useEffect(() => {
