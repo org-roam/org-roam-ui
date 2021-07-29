@@ -39,7 +39,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useState, useContext } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
-import { initialPhysics, initialFilter, initialVisuals, Visuals } from './config'
+import { initialPhysics, initialFilter, initialVisuals } from './config'
 
 import { ThemeContext } from '../pages/themecontext'
 
@@ -312,6 +312,7 @@ export const Tweaks = (props: TweakProps) => {
                                 <Text>Nodes</Text>
                                 <Tooltip label="Shuffle node colors">
                                   <IconButton
+                                    aria-label="Shuffle node colors"
                                     size="sm"
                                     icon={<RepeatIcon />}
                                     variant="ghost"
@@ -322,7 +323,7 @@ export const Tweaks = (props: TweakProps) => {
                                         //shuffle that guy
                                         //definitely thought of this myself
                                         nodeColorScheme: arr
-                                          .map((x) => [Math.random(), x])
+                                          .map((x: any) => [Math.random(), x])
                                           .sort(([a], [b]) => a - b)
                                           .map(([_, x]) => x),
                                       })
@@ -331,6 +332,7 @@ export const Tweaks = (props: TweakProps) => {
                                 </Tooltip>
                                 <Tooltip label="Cycle node colors">
                                   <IconButton
+                                    aria-label="Shift node colors"
                                     icon={<ArrowRightIcon />}
                                     size="sm"
                                     variant="ghost"
