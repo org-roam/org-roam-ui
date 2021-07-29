@@ -584,7 +584,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           ? Math.max(fadeFactor, opacity)
           : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
       }
-      if (physics.labels === 2 && (wasHighlightedNode || highlightedNodes[node.id!])) {
+
+      if (physics.labels === 2) {
         const backgroundOpacity = 0.5 * getLabelOpacity()
         ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
         ctx.fillRect(
