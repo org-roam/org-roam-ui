@@ -132,14 +132,9 @@ export function GraphPage() {
   const graph3dRef = useRef<any>(null)
 
   useEffect(() => {
-<<<<<<< HEAD
     const fg = threeDim ? graph3dRef.current : graph2dRef.current
     const socket = new ReconnectingWebSocket('ws://localhost:35903')
     socket.addEventListener('open', (event) => {
-=======
-    const socket = new WebSocket('ws://localhost:35903')
-    socket.addEventListener('open', () => {
->>>>>>> 4e3d884c402b7dc7d12f0cae88a9a312b10f166f
       console.log('Connection with Emacs established')
     })
     socket.addEventListener('message', (event) => {
@@ -173,17 +168,6 @@ export function GraphPage() {
       }
     })
   }, [])
-
-<<<<<<< HEAD
-  useEffect(() => {
-    if (!emacsNodeId) {
-      return
-    }
-    //fetchGraphData()
-  }, [emacsNodeId])
-=======
-  const [threeDim, setThreeDim] = useState(false)
->>>>>>> 4e3d884c402b7dc7d12f0cae88a9a312b10f166f
 
   if (!graphData) {
     return null
@@ -318,7 +302,7 @@ export const Graph = function (props: GraphProps) {
         return false
       }
 
-      return !links.some(link => !['parent', 'cite'].includes(link.type))
+      return !links.some((link) => !['parent', 'cite'].includes(link.type))
     })
   }, [filter, graphData.nodes, linksByNodeId])
 
