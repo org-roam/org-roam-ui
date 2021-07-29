@@ -89,6 +89,7 @@ export const initialVisuals = {
   nodeHighlight: '',
   linkHighlight: '',
   backgroundColor: 'white',
+  emacsNodeColor: '',
 }
 
 export const initialBehavior = {

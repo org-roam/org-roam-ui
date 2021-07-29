@@ -268,13 +268,13 @@ The padding around the nodes in the viewport."
 (defun orui-toggle-following ()
   "Set whether ORUI should follow your every move in emacs. Default yes."
   (interactive)
-  (if (member #'org-roam-ui--update-current-node (default-value 'post-command-hook))
+  (if (member 'org-roam-ui--update-current-node (default-value 'post-command-hook))
       (progn
       (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
-      (message "Org-Roam-UI will now leave you alone.")
+      (message "Org-Roam-UI will now leave you alone."))
     (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
     (message "Org-Roam-UI will now follow you around."))
-  ))
+  )
 
 (defun orui-toggle-local-zoom ()
   "Toggles whether org-roam-ui should go to the local view of a given node or zoom to it.

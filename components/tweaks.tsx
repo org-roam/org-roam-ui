@@ -679,6 +679,57 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuList>
                                 </Menu>
                               </Flex>
+                              <Flex alignItems="center" justifyContent="space-between">
+                                <Text>Emacs Node</Text>
+                                <Menu isLazy>
+                                  <MenuButton
+                                    as={Button}
+                                    colorScheme=""
+                                    color="black"
+                                    rightIcon={<ChevronDownIcon />}
+                                  >
+                                    {
+                                      <Box
+                                        bgColor={visuals.emacsNodeColor + '.500'}
+                                        borderRadius="sm"
+                                        height={6}
+                                        width={6}
+                                      ></Box>
+                                    }
+                                  </MenuButton>
+                                  <MenuList bgColor="gray.200" width={50}>
+                                    <MenuItem
+                                      key={'none'}
+                                      onClick={() => setVisuals({ ...visuals, emacsNodeColor: '' })}
+                                      justifyContent="space-between"
+                                      alignItems="center"
+                                      display="flex"
+                                    >
+                                      <Text>No change</Text>
+                                      <Box borderRadius="sm" height={6} width={6}></Box>
+                                    </MenuItem>
+                                    {colorList.map((color) => (
+                                      <MenuItem
+                                        key={color}
+                                        onClick={() =>
+                                          setVisuals({ ...visuals, emacsNodeColor: color })
+                                        }
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        display="flex"
+                                      >
+                                        <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
+                                        <Box
+                                          bgColor={color + '.500'}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      </MenuItem>
+                                    ))}
+                                  </MenuList>
+                                </Menu>
+                              </Flex>
                             </Box>
                           </VStack>
                         </AccordionPanel>

@@ -417,6 +417,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       opacity > 0.5 ? fadeOut() : setOpacity(0)
     }
   }, [hoverNode])
+
   const theme = useTheme()
   const themeContext = useContext<ThemeContextProps>(ThemeContext)
 
@@ -507,10 +508,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   const getNodeColor = (node: OrgRoamNode) => {
-    // I'm so sorry
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
+    if (visuals.emacsNodeColor && node.id === emacsNodeId) {
+      return theme.colors[visuals.emacsNodeColor][500]
+    }
     if (!needsHighlighting) {
       return theme.colors[getNodeColorById(node.id)][500]
     }
@@ -643,7 +646,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     onBackgroundClick: () => {
       setHoverNode(null)
       if (scope.nodeIds.length === 0) {
-        return 
+        return
       }
       setScope((currentScope) => ({
         ...currentScope,
