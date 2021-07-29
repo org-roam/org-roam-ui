@@ -32,6 +32,9 @@ import { Tweaks } from '../components/tweaks'
 
 import { ThemeContext, ThemeContextProps } from './themecontext'
 import SpriteText from 'three-spritetext'
+
+import ReconnectingWebSocket from 'reconnecting-websocket'
+
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -131,7 +134,7 @@ export function GraphPage() {
   }
   const { setEmacsTheme } = useContext(ThemeContext)
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:35903')
+    const socket = new ReconnectingWebSocket('ws://localhost:35903')
     socket.addEventListener('open', (event) => {
       console.log('Connection with Emacs established')
     })
@@ -271,9 +274,6 @@ export const Graph = function (props: GraphProps) {
 
   const getNeighborNodes = (id: string) => {
     const links = linksByNodeId[id]! ?? []
-    if (!links.length) {
-      return [id]
-    }
     return Object.fromEntries(
       [id as string, ...links.flatMap((link) => [link.source, link.target])].map((nodeId) => [
         nodeId,
@@ -387,23 +387,23 @@ export const Graph = function (props: GraphProps) {
       const fg = threeDim ? graph3dRef.current : graph2dRef.current
       const d3 = await d3promise
       if (physics.gravityOn) {
-        fg.d3Force(0, d3.forceX().strength(physics.gravity))
-        fg.d3Force(0, d3.forceY().strength(physics.gravity))
+        fg.d3Force('x', d3.forceX().strength(physics.gravity))
+        fg.d3Force('y', d3.forceY().strength(physics.gravity))
         if (threeDim) {
           if (physics.galaxy) {
-            fg.d3Force(0, d3.forceX().strength(physics.gravity / 5))
-            fg.d3Force(0, d3.forceZ().strength(physics.gravity / 5))
+            fg.d3Force('x', d3.forceX().strength(physics.gravity / 5))
+            fg.d3Force('z', d3.forceZ().strength(physics.gravity / 5))
           } else {
-            fg.d3Force(0, d3.forceX().strength(physics.gravity))
-            fg.d3Force(0, d3.forceZ().strength(physics.gravity))
+            fg.d3Force('x', d3.forceX().strength(physics.gravity))
+            fg.d3Force('z', d3.forceZ().strength(physics.gravity))
           }
         } else {
-          fg.d3Force(0, null)
+          fg.d3Force('z', null)
         }
       } else {
-        fg.d3Force(0, null)
-        fg.d3Force(0, null)
-        threeDim ? fg.d3Force(0, null) : null
+        fg.d3Force('x', null)
+        fg.d3Force('y', null)
+        threeDim ? fg.d3Force('z', null) : null
       }
       physics.centering
         ? fg.d3Force('center', d3.forceCenter().strength(physics.centeringStrength))
