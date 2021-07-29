@@ -246,25 +246,19 @@ export const Graph = function (props: GraphProps) {
   const filteredNodes = useMemo(() => {
     return graphData.nodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
-      let showNode = true
-      if (filter.orphans) {
-        if (filter.parents) {
-          showNode = links.length !== 0
-        } else {
-          if (links.length === 0) {
-            showNode = false
-          } else {
-            if (
-              links.length -
-                links.filter((link) => link.type === 'parent' || link.type === 'cite').length ===
-              0
-            ) {
-              showNode = false
-            }
-          }
-        }
+      if (!filter.orphans) {
+        return true
       }
-      return showNode
+
+      if (filter.parents) {
+        return links.length !== 0
+      }
+
+      if (links.length === 0) {
+        return false
+      }
+
+      return !links.some(link => !['parent', 'cite'].includes(link.type))
     })
   }, [filter, graphData.nodes, linksByNodeId])
 
@@ -491,7 +485,7 @@ export const Graph = function (props: GraphProps) {
     if (!visuals.linkColorScheme) {
       return highlightColors[getLinkNodeColor(sourceId, targetId)][visuals.linkHighlight](opacity)
     }
-    
+
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
 
