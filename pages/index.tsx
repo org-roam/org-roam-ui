@@ -5,6 +5,7 @@ import React, {
   useState,
   useMemo,
   useContext,
+  forwardRef,
 } from 'react'
 import { usePersistantState } from '../util/persistant-state'
 const d3promise = import('d3-force-3d')
@@ -128,11 +129,10 @@ export function GraphPage() {
 
   const [threeDim, setThreeDim] = useState(false)
 
-  const graph2dRef = useRef<any>(null)
-  const graph3dRef = useRef<any>(null)
+  const graphRef = useRef<any>(null)
 
   useEffect(() => {
-    const fg = threeDim ? graph3dRef.current : graph2dRef.current
+    const fg = graphRef.current
     const socket = new ReconnectingWebSocket('ws://localhost:35903')
     socket.addEventListener('open', (event) => {
       console.log('Connection with Emacs established')
@@ -189,6 +189,7 @@ export function GraphPage() {
       />
       <Box position="absolute" alignItems="top">
         <Graph
+          ref={graphRef}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
           {...{
@@ -199,8 +200,6 @@ export function GraphPage() {
             filter,
             visuals,
             behavior,
-            graph2dRef,
-            graph3dRef,
           }}
         />
       </Box>
@@ -218,11 +217,9 @@ export interface GraphProps {
   emacsNodeId: string | null
   visuals: typeof initialVisuals
   behavior: typeof initialBehavior
-  graph2dRef: any
-  graph3dRef: any
 }
 
-export const Graph = function (props: GraphProps) {
+export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const {
     physics,
     graphData,
@@ -233,8 +230,6 @@ export const Graph = function (props: GraphProps) {
     nodeById,
     visuals,
     behavior,
-    graph2dRef,
-    graph3dRef,
   } = props
 
   // react-force-graph does not track window size
@@ -249,7 +244,7 @@ export const Graph = function (props: GraphProps) {
     if (!emacsNodeId) {
       return
     }
-    const fg = threeDim ? graph3dRef.current : graph2dRef.current
+    const fg = graphRef.current
     if (behavior.followLocalOrZoom) {
       setScope({ nodeIds: [emacsNodeId] })
     } else {
@@ -352,7 +347,7 @@ export const Graph = function (props: GraphProps) {
     // this setTimeout was added holistically because the behavior is better when we put
     // zoomToFit off a little bit
     setTimeout(() => {
-      const fg = threeDim ? graph3dRef.current : graph2dRef.current
+      const fg = graphRef.current
       fg?.zoomToFit(1000, numbereWithinRange(20, 200, windowWidth / 8), (node: NodeObject) =>
         scopedNodeIds.some((n) => n === node.id),
       )
@@ -361,7 +356,7 @@ export const Graph = function (props: GraphProps) {
 
   useEffect(() => {
     ;(async () => {
-      const fg = threeDim ? graph3dRef.current : graph2dRef.current
+      const fg = graphRef.current
       const d3 = await d3promise
       if (physics.gravityOn) {
         fg.d3Force('x', d3.forceX().strength(physics.gravity))
@@ -398,7 +393,7 @@ export const Graph = function (props: GraphProps) {
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
   useEffect(() => {
-    graph2dRef.current?.d3ReheatSimulation()
+    graphRef.current?.d3ReheatSimulation()
   }, [physics])
 
   //shitty handler to check for doubleClicks
@@ -680,7 +675,7 @@ export const Graph = function (props: GraphProps) {
     <div>
       {threeDim ? (
         <ForceGraph3D
-          ref={graph3dRef}
+          ref={graphRef}
           {...graphCommonProps}
           nodeThreeObjectExtend={true}
           backgroundColor={theme.colors.white}
@@ -701,11 +696,11 @@ export const Graph = function (props: GraphProps) {
           }}
         />
       ) : (
-        <ForceGraph2D ref={graph2dRef} {...graphCommonProps} />
+        <ForceGraph2D ref={graphRef} {...graphCommonProps} />
       )}
     </div>
   )
-}
+})
 
 function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   return (
