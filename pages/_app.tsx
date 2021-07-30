@@ -180,10 +180,12 @@ function SubApp(props: any) {
             container: {
               marginTop: '10px',
               borderWidth: '0px',
-              paddingRight: '10px',
               _last: {
                 borderWidth: '0px',
               },
+            },
+            panel: {
+              marginRight: '10px',
             },
           },
         },

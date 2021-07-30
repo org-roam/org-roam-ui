@@ -128,7 +128,13 @@ export const Tweaks = (props: TweakProps) => {
           position="relative"
           boxShadow="xl"
         >
-          <Box display="flex" justifyContent="space-between" alignItems="center" paddingRight={2}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            paddingRight={2}
+            paddingTop={1}
+          >
             <Tooltip label={'Switch to ' + threeDim ? '2D' : '3D' + ' view'}>
               <Button onClick={() => setThreeDim(!threeDim)} variant="ghost" zIndex="overlay">
                 {threeDim ? '3D' : '2D'}
