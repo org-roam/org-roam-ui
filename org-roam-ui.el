@@ -139,13 +139,12 @@ This serves the web-build and API over HTTP."
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
 (defun org-roam-ui--update-current-node ()
-  (when (websocket-openp oru-ws)
+  (when (and (websocket-openp oru-ws) (org-roam-buffer-p))
   (let* ((node (org-roam-id-at-point)))
-    (unless (string-match-p (regexp-quote "Minibuf") (buffer-name (current-buffer)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
       (websocket-send-text oru-ws (json-encode `((type . "command") (data
-. ((commandName . "follow") (id . ,node)))))))))))
+. ((commandName . "follow") (id . ,node))))))))))
 
 (defun org-roam-ui-show-node ()
   "Open the current org-roam node in org-roam-ui."
