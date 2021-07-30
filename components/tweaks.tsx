@@ -1171,7 +1171,7 @@ export const Tweaks = (props: TweakProps) => {
                         </MenuButton>
                         <Portal>
                           {' '}
-                          <MenuList zIndex="popover" bgColor="gray.200" zIndex="popover">
+                          <MenuList bgColor="gray.200" zIndex="popover">
                             <MenuItem onClick={() => setMouse({ ...mouse, follow: '' })}>
                               Never
                             </MenuItem>
