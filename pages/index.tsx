@@ -342,7 +342,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           nodes: scopedNodes,
           links: scopedLinks,
         }
-  }, [filter, scope, JSON.stringify(Object.keys(nodeById))])
+  }, [filter, scope, graphData])
 
   useEffect(() => {
     ;(async () => {
@@ -631,7 +631,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     d3VelocityDecay: physics.velocityDecay,
 
     onNodeClick: (node: NodeObject, event: any) => {
-      event.preventDefault()
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
       lastNodeClickRef.current = event.timeStamp
 

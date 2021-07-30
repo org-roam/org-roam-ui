@@ -50,10 +50,6 @@
 (defvar org-roam-ui/app-build-dir (expand-file-name "./out/")
   "Directory containing org-roam-ui's web build.")
 
-;;; Dynamic variables
-(defvar org-roam-ui-current-node-id nil
-  "The current node id Org-roam is tracking.")
-
 ;; TODO: make into defcustom
 (defvar org-roam-ui-port
   35901
@@ -107,21 +103,27 @@ This serves the web-build and API over HTTP."
         (websocket-server
          35903
          :host 'local
-         :on-open (lambda (ws) (progn (setq oru-ws
-         ws) (org-roam-ui--send-graphdata) (message "Connection established with org-roam-ui")
-    (add-hook 'post-command-hook #'org-roam-ui--update-current-node)))
-         :on-close (lambda (_websocket) (setq oru-ws
-         nil) (message "Connection with org-roam-ui closed  succesfully."))))
-    (if (boundp 'counsel-load-theme)
-(advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
-            (advice-add 'load-theme :around #'org-roam-ui-sync-theme--advice))
-    (add-hook 'post-command-hook #'org-roam-ui--update-current-node))
-    ;(add-hook 'post-command-hook #'org-roam-ui-update))
+         :on-open (lambda (ws) (progn
+            (setq oru-ws ws)
+            (org-roam-ui--send-graphdata)
+            (add-hook 'after-save-hook #'org-roam-ui--send-graphdata)
+
+            (message "Connection established with org-roam-ui")
+            (add-hook 'post-command-hook #'org-roam-ui--update-current-node)))
+         :on-close (lambda (_websocket)
+            (setq oru-ws nil)
+            (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
+            (add-hook 'after-save-hook #'org-roam-ui--send-graphdata)
+            (message "Connection with org-roam-ui closed  succesfully."))))
+
+    (if
+      (boundp 'counsel-load-theme)
+      (advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
+      (advice-add 'load-theme :around #'org-roam-ui-sync-theme--advice)))
+
    (t
     (progn
     (websocket-server-close org-roam-ui-ws)
-    (remove-hook 'post-command-hook #'org-roam-ui-update)
-    (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
     (if (boundp 'counsel-load-theme)
 (advice-remove 'counsel-load-theme #'org-roam-ui-sync-theme--advice)
             (advice-remove 'load-theme #'org-roam-ui-sync-theme--advice))
@@ -219,20 +221,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
       (setq html-string (org-export-as 'html))))
     (insert html-string)
     (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
-
-
-(defservlet* current-node-id text/event-stream ()
-  (insert (format "data: %s\n\n"
-                       org-roam-ui-current-node-id))
-  (httpd-send-header t "text/event-stream" 200 :Access-Control-Allow-Origin "*"))
-
-(defun org-roam-ui-update ()
-  "Track changes within Emacs to update Org-roam UI.
-This function is added to `post-command-hook'."
-  (setq org-roam-ui-current-node-id
-        (or
-         (condition-case nil (org-roam-id-at-point) (error nil))
-         org-roam-ui-current-node-id)))
 
 (defun org-roam-ui-get-theme ()
   "Attempt to bring the current theme into a standardized format."
