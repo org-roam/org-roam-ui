@@ -639,6 +639,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         window.open('org-protocol://roam-node?node=' + node.id, '_self')
         return
       }
+      if (scope.nodeIds.includes(node.id as string)) {
+        return
+      }
       setScope((currentScope) => ({
         ...currentScope,
         nodeIds: [...currentScope.nodeIds, node.id as string],
