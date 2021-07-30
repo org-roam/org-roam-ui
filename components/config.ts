@@ -99,8 +99,8 @@ export const initialVisuals = {
   linkHighlight: 'purple.500',
   backgroundColor: 'white',
   emacsNodeColor: '',
-  labelTextColor: 'black',
-  labelBackgroundColor: 'white',
+  labelTextColor: 'white',
+  labelBackgroundColor: 'black',
   labelBackgroundOpacity: 0.7,
 }
 

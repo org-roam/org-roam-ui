@@ -708,6 +708,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
             if (!physics.labels) {
               return
             }
+            if (physics.labels === 2) {
+              return
+            }
             if (physics.labels === 1 && !highlightedNodes[node.id!]) {
               return
             }
