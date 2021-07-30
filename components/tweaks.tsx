@@ -1072,31 +1072,24 @@ export const Tweaks = (props: TweakProps) => {
                             <SliderWithInfo
                               label="Animation speed"
                               onChange={(v) => setVisuals({ ...visuals, animationSpeed: v })}
-                              value={physics.animationSpeed}
+                              value={visuals.animationSpeed}
                               infoText="Slower speed has a chance of being buggy"
                               min={50}
                               max={1000}
                               step={10}
                             />
                             <Select
-                              placeholder={physics.algorithmName}
+                              placeholder={visuals.algorithmName}
                               onChange={(v) => {
                                 setVisuals({ ...visuals, algorithmName: v.target.value })
                               }}
                             >
-                              {physics.algorithmOptions.map((opt: string) => (
+                              {visuals.algorithmOptions.map((opt: string) => (
                                 <option key={opt} value={opt}>
                                   {opt}
                                 </option>
                               ))}
                             </Select>
-                            {/* <DropDownMenu
-                    displayValue={physics.algorithmName}
-                    textArray={physics.algorithmOptions}
-                    onClickArray={physics.algorithmOptions.map((option) =>
-                      setVisuals({ ...visuals, algorithmName: { option } }),
-                    )}
-                  /> */}
                           </EnableSection>
                         </VStack>
                       </EnableSection>

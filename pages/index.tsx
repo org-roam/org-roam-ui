@@ -309,7 +309,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return false
       }
 
-      return !links.some((link) => !['parent', 'cite'].includes(link.type))
+      return links.some((link) => !['parent', 'cite', 'ref'].includes(link.type))
     })
 
     const filteredLinks = graphData.links.filter((linkArg) => {
@@ -355,17 +355,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       if (physics.gravityOn) {
         fg.d3Force('x', d3.forceX().strength(physics.gravity))
         fg.d3Force('y', d3.forceY().strength(physics.gravity))
-        if (threeDim) {
-          if (physics.galaxy) {
-            fg.d3Force('x', d3.forceX().strength(physics.gravity / 5))
-            fg.d3Force('z', d3.forceZ().strength(physics.gravity / 5))
-          } else {
-            fg.d3Force('x', d3.forceX().strength(physics.gravity))
-            fg.d3Force('z', d3.forceZ().strength(physics.gravity))
-          }
-        } else {
-          fg.d3Force('z', null)
-        }
       } else {
         fg.d3Force('x', null)
         fg.d3Force('y', null)
