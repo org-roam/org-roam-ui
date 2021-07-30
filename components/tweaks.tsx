@@ -128,7 +128,7 @@ export const Tweaks = (props: TweakProps) => {
           position="relative"
           boxShadow="xl"
         >
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" justifyContent="space-between" alignItems="center" paddingRight={2}>
             <Tooltip label={'Switch to ' + threeDim ? '2D' : '3D' + ' view'}>
               <Button onClick={() => setThreeDim(!threeDim)} variant="ghost" zIndex="overlay">
                 {threeDim ? '3D' : '2D'}
@@ -300,7 +300,7 @@ export const Tweaks = (props: TweakProps) => {
                               }
                             />
                             <EnableSection
-                              label="Keeps nodes centered"
+                              label="Center nodes"
                               value={physics.centering}
                               onChange={() =>
                                 setPhysics({ ...physics, centering: !physics.centering })

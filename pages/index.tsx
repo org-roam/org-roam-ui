@@ -29,6 +29,7 @@ import {
   initialVisuals,
   initialBehavior,
   initialMouse,
+  algos,
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
@@ -355,10 +356,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       if (physics.gravityOn) {
         fg.d3Force('x', d3.forceX().strength(physics.gravity))
         fg.d3Force('y', d3.forceY().strength(physics.gravity))
+        threeDim && fg.d3Force('z', d3.forceZ().strength(physics.gravity))
       } else {
         fg.d3Force('x', null)
         fg.d3Force('y', null)
-        threeDim ? fg.d3Force('z', null) : null
+        threeDim && fg.d3Force('z', null)
       }
       physics.centering
         ? fg.d3Force('center', d3.forceCenter().strength(physics.centeringStrength))
@@ -385,12 +387,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: visuals.animationSpeed,
-    algorithm: visuals.algorithms[visuals.algorithmName],
+    algorithm: algos[visuals.algorithmName],
   })
-  const [fadeOut] = useAnimation((x) => setOpacity(Math.min(opacity, -1 * (x - 1))), {
-    duration: visuals.animationSpeed,
-    algorithm: visuals.algorithms[visuals.algorithmName],
-  })
+  const [fadeOut, fadeOutCancel] = useAnimation(
+    (x) => setOpacity(Math.min(opacity, -1 * (x - 1))),
+    {
+      duration: visuals.animationSpeed,
+      algorithm: algos[visuals.algorithmName],
+    },
+  )
 
   const lastHoverNode = useRef<OrgRoamNode | null>(null)
   useEffect(() => {
@@ -401,7 +406,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       return hoverNode ? setOpacity(1) : setOpacity(0)
     }
     if (hoverNode) {
-      console.log(getNodeColorById(lastHoverNode.current!.id!))
       fadeIn()
     } else {
       // to prevent fadeout animation from starting at 1
@@ -578,7 +582,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }
 
       const nodeTitle = (node as OrgRoamNode).title!
-      const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 30))
+      const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 40))
       // const label = 'label'
       const fontSize = 12 / globalScale
       const textWidth = ctx.measureText(label).width
@@ -678,6 +682,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       if (!visuals.highlight) {
         return
       }
+
+      if (!hoverNode) {
+        fadeOutCancel()
+        setOpacity(0)
+      }
       setHoverNode(node)
     },
   }
@@ -697,13 +706,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
             if (!visuals.labels) {
               return
             }
-            if (visuals.labels === 2) {
+            if (visuals.labels < 3 && !highlightedNodes[node.id!]) {
               return
             }
-            if (visuals.labels === 1 && !highlightedNodes[node.id!]) {
-              return
-            }
-            const sprite = new SpriteText(node.title.substring(0, 30))
+            const sprite = new SpriteText(node.title.substring(0, 40))
             sprite.color = getThemeColor(visuals.labelTextColor)
             sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor)
             sprite.padding = 2

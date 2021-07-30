@@ -12,9 +12,11 @@ for (let type in Easing) {
   }
 }
 
+export const algos = algorithms
+
 export const initialPhysics = {
   enabled: true,
-  charge: -350,
+  charge: -500,
   collision: true,
   collisionStrength: 20,
   centering: true,
@@ -25,7 +27,7 @@ export const initialPhysics = {
   alphaTarget: 0,
   alphaMin: 0,
   velocityDecay: 0.25,
-  gravity: 0.5,
+  gravity: 0.3,
   gravityOn: true,
 }
 
@@ -42,21 +44,20 @@ export const initialVisuals = {
   particles: false,
   particlesNumber: 0,
   particlesWidth: 4,
-  linkOpacity: 0.7,
+  linkOpacity: 0.8,
   linkWidth: 1,
   nodeRel: 4,
-  nodeOpacity: 0.9,
-  nodeResolution: 8,
+  nodeOpacity: 1,
+  nodeResolution: 12,
   labels: 2,
   labelScale: 1.5,
   highlight: true,
   highlightNodeSize: 2,
   highlightLinkSize: 2,
-  highlightAnim: false,
-  animationSpeed: 250,
-  algorithms: algorithms,
+  highlightAnim: true,
+  animationSpeed: 700,
   algorithmOptions: options,
-  algorithmName: 'CubicOut',
+  algorithmName: 'BackOut',
   linkColorScheme: 'gray.500',
   nodeColorScheme: [
     'red.500',
@@ -71,9 +72,9 @@ export const initialVisuals = {
   nodeHighlight: '',
   linkHighlight: 'purple.500',
   backgroundColor: 'white',
-  emacsNodeColor: '',
-  labelTextColor: 'white',
-  labelBackgroundColor: 'black',
+  emacsNodeColor: 'grey.800',
+  labelTextColor: 'black',
+  labelBackgroundColor: 'white',
   labelBackgroundOpacity: 0.7,
 }
 
