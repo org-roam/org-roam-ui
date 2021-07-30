@@ -118,7 +118,7 @@ export const Tweaks = (props: TweakProps) => {
       <Collapse in={showTweaks} animateOpacity>
         <Box
           bg="alt.100"
-          w={300}
+          w="xs"
           marginTop={10}
           marginLeft={10}
           borderRadius="xl"
@@ -164,11 +164,11 @@ export const Tweaks = (props: TweakProps) => {
                   ...style,
                   borderRadius: 10,
                 }}
-                bg={highlightColor + '.500'}
+                bg={highlightColor}
               />
             )}
           >
-            <Accordion allowMultiple allowToggle color="black" paddingRight={2}>
+            <Accordion allowMultiple allowToggle color="black">
               <AccordionItem>
                 <AccordionButton>
                   <AccordionIcon marginRight={2} />
@@ -210,11 +210,11 @@ export const Tweaks = (props: TweakProps) => {
                     <AccordionIcon marginRight={2} />
                     <Heading size="sm">Physics</Heading>
                   </Box>
-                  <Switch
-                    id="physicsOn"
-                    onChange={() => setPhysics({ ...physics, enabled: !physics.enabled })}
-                    isChecked={physics.enabled}
-                  />
+                  {/* <Switch
+                      id="physicsOn"
+                      onChange={() => setPhysics({ ...physics, enabled: !physics.enabled })}
+                      isChecked={physics.enabled}
+                      /> */}
                 </AccordionButton>
                 <AccordionPanel>
                   <VStack
@@ -277,7 +277,7 @@ export const Tweaks = (props: TweakProps) => {
                     />
                   </VStack>
                   <Box>
-                    <Accordion allowToggle>
+                    <Accordion paddingLeft={3} allowToggle>
                       <AccordionItem>
                         <AccordionButton>
                           <Text>Advanced</Text>
@@ -320,7 +320,6 @@ export const Tweaks = (props: TweakProps) => {
                       </AccordionItem>
                     </Accordion>
                   </Box>
-                  {/* </VStack> */}
                 </AccordionPanel>
               </AccordionItem>
               <AccordionItem>
@@ -329,8 +328,8 @@ export const Tweaks = (props: TweakProps) => {
                   <Heading size="sm">Visual</Heading>
                 </AccordionButton>
                 <AccordionPanel>
-                  <VStack>
-                    <Accordion allowToggle defaultIndex={[0]} width={250} marginLeft={10}>
+                  <VStack justifyContent="flex-start" align="stretch">
+                    <Accordion allowToggle defaultIndex={[0]} paddingLeft={3}>
                       <AccordionItem>
                         <AccordionButton>
                           <Flex justifyContent="space-between" w="100%">
@@ -384,7 +383,7 @@ export const Tweaks = (props: TweakProps) => {
                                     }}
                                   />
                                 </Tooltip>
-                                <Menu closeOnSelect={false}>
+                                <Menu placement="right" closeOnSelect={false} matchWidth>
                                   <MenuButton
                                     width={20}
                                     as={Button}
@@ -410,8 +409,9 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
                                       <MenuOptionGroup
+                                        width={500}
                                         type="checkbox"
                                         defaultValue={visuals.nodeColorScheme}
                                         onChange={(colors) => {
@@ -438,9 +438,6 @@ export const Tweaks = (props: TweakProps) => {
                                               alignItems="center"
                                               display="flex"
                                             >
-                                              <Text>
-                                                {color[0]!.toUpperCase() + color!.slice(1)}
-                                              </Text>
                                               <Box
                                                 bgColor={color}
                                                 borderRadius="sm"
@@ -457,7 +454,7 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Links</Text>
-                                <Menu>
+                                <Menu placement="right">
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
@@ -467,7 +464,7 @@ export const Tweaks = (props: TweakProps) => {
                                     <Box>
                                       {visuals.linkColorScheme ? (
                                         <Box
-                                          bgColor={'gray.' + visuals.linkColorScheme}
+                                          bgColor={visuals.linkColorScheme}
                                           borderRadius="sm"
                                           height={6}
                                           width={6}
@@ -493,7 +490,7 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
                                       <MenuItem
                                         onClick={() =>
                                           setVisuals({ ...visuals, linkColorScheme: '' })
@@ -511,7 +508,7 @@ export const Tweaks = (props: TweakProps) => {
                                           {visuals.nodeColorScheme.map((color) => (
                                             <Box
                                               key={color}
-                                              bgColor={color + '.500'}
+                                              bgColor={color}
                                               flex="1 1 8px"
                                               borderRadius="2xl"
                                             ></Box>
@@ -545,7 +542,7 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Accent</Text>
-                                <Menu>
+                                <Menu placement="right">
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
@@ -554,7 +551,7 @@ export const Tweaks = (props: TweakProps) => {
                                   >
                                     {
                                       <Box
-                                        bgColor={highlightColor + '.500'}
+                                        bgColor={highlightColor}
                                         borderRadius="sm"
                                         height={6}
                                         width={6}
@@ -563,7 +560,7 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
                                       {colorList.map((color) => (
                                         <MenuItem
                                           key={color}
@@ -572,9 +569,8 @@ export const Tweaks = (props: TweakProps) => {
                                           alignItems="center"
                                           display="flex"
                                         >
-                                          <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
                                           <Box
-                                            bgColor={color + '.500'}
+                                            bgColor={color}
                                             borderRadius="sm"
                                             height={6}
                                             width={6}
@@ -587,7 +583,7 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Link Highlight</Text>
-                                <Menu>
+                                <Menu placement="right">
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
@@ -596,7 +592,7 @@ export const Tweaks = (props: TweakProps) => {
                                   >
                                     {
                                       <Box
-                                        bgColor={visuals.linkHighlight + '.500'}
+                                        bgColor={visuals.linkHighlight}
                                         borderRadius="sm"
                                         height={6}
                                         width={6}
@@ -605,7 +601,7 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
                                       <MenuItem
                                         key={'none'}
                                         onClick={() =>
@@ -615,7 +611,7 @@ export const Tweaks = (props: TweakProps) => {
                                         alignItems="center"
                                         display="flex"
                                       >
-                                        <Text>Match current color</Text>
+                                        <Box borderRadius="sm" height={6} width={6}></Box>
                                       </MenuItem>
                                       {colorList.map((color) => (
                                         <MenuItem
@@ -627,9 +623,8 @@ export const Tweaks = (props: TweakProps) => {
                                           alignItems="center"
                                           display="flex"
                                         >
-                                          <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
                                           <Box
-                                            bgColor={color + '.500'}
+                                            bgColor={color}
                                             borderRadius="sm"
                                             height={6}
                                             width={6}
@@ -642,7 +637,7 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Node Highlight</Text>
-                                <Menu>
+                                <Menu placement="right">
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
@@ -651,7 +646,7 @@ export const Tweaks = (props: TweakProps) => {
                                   >
                                     {
                                       <Box
-                                        bgColor={visuals.nodeHighlight + '.500'}
+                                        bgColor={visuals.nodeHighlight}
                                         borderRadius="sm"
                                         height={6}
                                         width={6}
@@ -660,7 +655,7 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
                                       <MenuItem
                                         key={'none'}
                                         onClick={() =>
@@ -670,7 +665,7 @@ export const Tweaks = (props: TweakProps) => {
                                         alignItems="center"
                                         display="flex"
                                       >
-                                        <Text>Match current color</Text>
+                                        <Box borderRadius="sm" height={6} width={6}></Box>
                                       </MenuItem>
                                       {colorList.map((color) => (
                                         <MenuItem
@@ -682,9 +677,8 @@ export const Tweaks = (props: TweakProps) => {
                                           alignItems="center"
                                           display="flex"
                                         >
-                                          <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
                                           <Box
-                                            bgColor={color + '.500'}
+                                            bgColor={color}
                                             borderRadius="sm"
                                             height={6}
                                             width={6}
@@ -697,7 +691,7 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Background</Text>
-                                <Menu>
+                                <Menu placement="right">
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
@@ -706,7 +700,7 @@ export const Tweaks = (props: TweakProps) => {
                                   >
                                     {
                                       <Box
-                                        bgColor={'gray.' + visuals.backgroundColor}
+                                        bgColor={visuals.backgroundColor}
                                         borderRadius="sm"
                                         height={6}
                                         width={6}
@@ -715,7 +709,7 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minWidth={10} zIndex="popover" bgColor="gray.200">
                                       {grays.map((color) => (
                                         <MenuItem
                                           key={color}
@@ -726,9 +720,8 @@ export const Tweaks = (props: TweakProps) => {
                                           alignItems="center"
                                           display="flex"
                                         >
-                                          <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
                                           <Box
-                                            bgColor={'gray.' + color}
+                                            bgColor={color}
                                             borderRadius="sm"
                                             height={6}
                                             width={6}
@@ -741,7 +734,7 @@ export const Tweaks = (props: TweakProps) => {
                               </Flex>
                               <Flex alignItems="center" justifyContent="space-between">
                                 <Text>Emacs Node</Text>
-                                <Menu>
+                                <Menu placement="right">
                                   <MenuButton
                                     as={Button}
                                     colorScheme=""
@@ -750,7 +743,7 @@ export const Tweaks = (props: TweakProps) => {
                                   >
                                     {
                                       <Box
-                                        bgColor={visuals.emacsNodeColor + '.500'}
+                                        bgColor={visuals.emacsNodeColor}
                                         borderRadius="sm"
                                         height={6}
                                         width={6}
@@ -759,7 +752,7 @@ export const Tweaks = (props: TweakProps) => {
                                   </MenuButton>
                                   <Portal>
                                     {' '}
-                                    <MenuList zIndex="popover" bgColor="gray.200" width={50}>
+                                    <MenuList minWidth={10} zIndex="popover" bgColor="gray.200">
                                       <MenuItem
                                         key={'none'}
                                         onClick={() =>
@@ -769,7 +762,6 @@ export const Tweaks = (props: TweakProps) => {
                                         alignItems="center"
                                         display="flex"
                                       >
-                                        <Text>No change</Text>
                                         <Box borderRadius="sm" height={6} width={6}></Box>
                                       </MenuItem>
                                       {colorList.map((color) => (
@@ -782,9 +774,8 @@ export const Tweaks = (props: TweakProps) => {
                                           alignItems="center"
                                           display="flex"
                                         >
-                                          <Text>{color[0]!.toUpperCase() + color!.slice(1)}</Text>
                                           <Box
-                                            bgColor={color + '.500'}
+                                            bgColor={color}
                                             borderRadius="sm"
                                             height={6}
                                             width={6}
@@ -810,237 +801,239 @@ export const Tweaks = (props: TweakProps) => {
                     >
                       <SliderWithInfo
                         label="Node size"
-                        value={physics.nodeRel}
-                        onChange={(value) => setPhysics({ ...physics, nodeRel: value })}
+                        value={visuals.nodeRel}
+                        onChange={(value) => setVisuals({ ...visuals, nodeRel: value })}
                       />
                       {threeDim && (
                         <>
                           <SliderWithInfo
                             label="Node opacity"
-                            value={physics.nodeOpacity}
+                            value={visuals.nodeOpacity}
                             min={0}
                             max={1}
-                            onChange={(value) => setPhysics({ ...physics, nodeOpacity: value })}
+                            onChange={(value) => setVisuals({ ...visuals, nodeOpacity: value })}
                           />
                           <SliderWithInfo
                             label="Node resolution"
-                            value={physics.nodeResolution}
+                            value={visuals.nodeResolution}
                             min={5}
                             max={32}
                             step={1}
-                            onChange={(value) => setPhysics({ ...physics, nodeResolution: value })}
+                            onChange={(value) => setVisuals({ ...visuals, nodeResolution: value })}
                           />
                         </>
                       )}
                       <SliderWithInfo
                         label="Link width"
-                        value={physics.linkWidth}
-                        onChange={(value) => setPhysics({ ...physics, linkWidth: value })}
+                        value={visuals.linkWidth}
+                        onChange={(value) => setVisuals({ ...visuals, linkWidth: value })}
                       />
                       {threeDim && (
                         <SliderWithInfo
                           label="Link opacity"
                           min={0}
                           max={1}
-                          value={physics.linkOpacity}
-                          onChange={(value) => setPhysics({ ...physics, linkOpacity: value })}
+                          value={visuals.linkOpacity}
+                          onChange={(value) => setVisuals({ ...visuals, linkOpacity: value })}
                         />
                       )}
-                      <Flex alignItems="center" justifyContent="space-between">
-                        <Text>Labels</Text>
-                        <Menu>
-                          <MenuButton
-                            as={Button}
-                            colorScheme=""
-                            color="black"
-                            rightIcon={<ChevronDownIcon />}
+                      <Box>
+                        <Flex alignItems="center" justifyContent="space-between">
+                          <Text>Labels</Text>
+                          <Menu placement="right">
+                            <MenuButton
+                              as={Button}
+                              colorScheme=""
+                              color="black"
+                              rightIcon={<ChevronDownIcon />}
+                            >
+                              {!visuals.labels
+                                ? 'Never'
+                                : visuals.labels < 2
+                                ? 'On Highlight'
+                                : 'Always'}
+                            </MenuButton>
+                            <Portal>
+                              {' '}
+                              <MenuList zIndex="popover" bgColor="gray.200">
+                                <MenuItem onClick={() => setVisuals({ ...visuals, labels: 0 })}>
+                                  Never
+                                </MenuItem>
+                                <MenuItem onClick={() => setVisuals({ ...visuals, labels: 1 })}>
+                                  On Highlight
+                                </MenuItem>
+                                <MenuItem onClick={() => setVisuals({ ...visuals, labels: 2 })}>
+                                  Always
+                                </MenuItem>
+                                <MenuItem onClick={() => setVisuals({ ...visuals, labels: 3 })}>
+                                  Always (even in 3D)
+                                </MenuItem>
+                              </MenuList>
+                            </Portal>
+                          </Menu>
+                        </Flex>
+                        <Collapse in={visuals.labels > 0} animateOpacity>
+                          <VStack
+                            spacing={1}
+                            justifyContent="flex-start"
+                            divider={<StackDivider borderColor="gray.400" />}
+                            align="stretch"
+                            paddingLeft={2}
+                            color="gray.800"
                           >
-                            {!physics.labels
-                              ? 'Never'
-                              : physics.labels < 2
-                              ? 'On Highlight'
-                              : 'Always'}
-                          </MenuButton>
-                          <Portal>
-                            {' '}
-                            <MenuList zIndex="popover" bgColor="gray.200">
-                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 0 })}>
-                                Never
-                              </MenuItem>
-                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 1 })}>
-                                On Highlight
-                              </MenuItem>
-                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 2 })}>
-                                Always
-                              </MenuItem>
-                              <MenuItem onClick={() => setPhysics({ ...physics, labels: 3 })}>
-                                Always (even in 3D)
-                              </MenuItem>
-                            </MenuList>
-                          </Portal>
-                        </Menu>
-                      </Flex>
-                      <Collapse in={physics.labels > 0} animateOpacity>
-                        <VStack
-                          spacing={1}
-                          justifyContent="flex-start"
-                          divider={<StackDivider borderColor="gray.400" />}
-                          align="stretch"
-                          paddingLeft={2}
-                          color="gray.800"
-                        >
-                          <Flex alignItems="center" justifyContent="space-between">
-                            <Text>Text</Text>
-                            <Menu matchWidth>
-                              <MenuButton
-                                as={Button}
-                                rightIcon={<ChevronDownIcon />}
-                                color="black"
-                                colorScheme=""
-                              >
-                                {
-                                  <Box
-                                    bgColor={visuals.labelTextColor}
-                                    borderRadius="sm"
-                                    height={6}
-                                    width={6}
-                                  ></Box>
-                                }
-                              </MenuButton>
-                              <Portal>
-                                {' '}
-                                <MenuList zIndex="popover" bg="gray.200">
-                                  {grays.map((color) => (
+                            <Flex alignItems="center" justifyContent="space-between">
+                              <Text>Text</Text>
+                              <Menu matchWidth>
+                                <MenuButton
+                                  as={Button}
+                                  rightIcon={<ChevronDownIcon />}
+                                  color="black"
+                                  colorScheme=""
+                                >
+                                  {
+                                    <Box
+                                      bgColor={visuals.labelTextColor}
+                                      borderRadius="sm"
+                                      height={6}
+                                      width={6}
+                                    ></Box>
+                                  }
+                                </MenuButton>
+                                <Portal>
+                                  {' '}
+                                  <MenuList minW={10} zIndex="popover" bg="gray.200">
+                                    {grays.map((color) => (
+                                      <MenuItem
+                                        key={color}
+                                        onClick={() =>
+                                          setVisuals({
+                                            ...visuals,
+                                            labelTextColor: color,
+                                          })
+                                        }
+                                      >
+                                        <Box
+                                          bgColor={color}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      </MenuItem>
+                                    ))}
+                                  </MenuList>
+                                </Portal>
+                              </Menu>
+                            </Flex>
+                            <Flex alignItems="center" justifyContent="space-between">
+                              <Text>Background</Text>
+                              <Menu placement="right">
+                                <MenuButton
+                                  as={Button}
+                                  rightIcon={<ChevronDownIcon />}
+                                  color="black"
+                                  colorScheme=""
+                                >
+                                  {
+                                    <Box
+                                      bgColor={visuals.labelBackgroundColor}
+                                      borderRadius="sm"
+                                      height={6}
+                                      width={6}
+                                    ></Box>
+                                  }
+                                </MenuButton>
+                                <Portal>
+                                  {' '}
+                                  <MenuList minW={10} zIndex="popover" bg="gray.200">
                                     <MenuItem
-                                      key={color}
                                       onClick={() =>
                                         setVisuals({
                                           ...visuals,
-                                          labelTextColor: color,
-                                        })
-                                      }
-                                    >
-                                      <Box
-                                        bgColor={color}
-                                        borderRadius="sm"
-                                        height={6}
-                                        width={6}
-                                      ></Box>
-                                    </MenuItem>
-                                  ))}
-                                </MenuList>
-                              </Portal>
-                            </Menu>
-                          </Flex>
-                          <Flex alignItems="center" justifyContent="space-between">
-                            <Text>Background</Text>
-                            <Menu>
-                              <MenuButton
-                                as={Button}
-                                rightIcon={<ChevronDownIcon />}
-                                color="black"
-                                colorScheme=""
-                              >
-                                {
-                                  <Box
-                                    bgColor={visuals.labelBackgroundColor}
-                                    borderRadius="sm"
-                                    height={6}
-                                    width={6}
-                                  ></Box>
-                                }
-                              </MenuButton>
-                              <Portal>
-                                {' '}
-                                <MenuList zIndex="popover" bg="gray.200">
-                                  <MenuItem
-                                    onClick={() =>
-                                      setVisuals({
-                                        ...visuals,
-                                        labelBackgroundColor: '',
-                                      })
-                                    }
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    display="flex"
-                                  >
-                                    None
-                                  </MenuItem>
-                                  {grays.map((color) => (
-                                    <MenuItem
-                                      key={color}
-                                      onClick={() =>
-                                        setVisuals({
-                                          ...visuals,
-                                          labelBackgroundColor: color,
+                                          labelBackgroundColor: '',
                                         })
                                       }
                                       justifyContent="space-between"
                                       alignItems="center"
                                       display="flex"
                                     >
-                                      <Box
-                                        bgColor={color}
-                                        borderRadius="sm"
-                                        height={6}
-                                        width={6}
-                                      ></Box>
+                                      None
                                     </MenuItem>
-                                  ))}
-                                </MenuList>
-                              </Portal>
-                            </Menu>
-                          </Flex>
-                          <Collapse in={!!visuals.labelBackgroundColor} animateOpacity>
-                            <Box paddingTop={2}>
-                              <SliderWithInfo
-                                label="Background opacity"
-                                value={visuals.labelBackgroundOpacity}
-                                onChange={(value) => {
-                                  console.log(visuals.labelBackgroundOpacity)
-                                  setVisuals({ ...visuals, labelBackgroundOpacity: value })
-                                }}
-                                min={0}
-                                max={1}
-                                step={0.01}
-                              />
-                            </Box>
-                          </Collapse>
-                          <Collapse in={physics.labels > 1} animateOpacity>
-                            <Box paddingTop={2}>
-                              <SliderWithInfo
-                                label="Label Appearance Scale"
-                                value={physics.labelScale * 5}
-                                onChange={(value) =>
-                                  setPhysics({ ...physics, labelScale: value / 5 })
-                                }
-                              />
-                            </Box>
-                          </Collapse>
-                        </VStack>
-                      </Collapse>
+                                    {grays.map((color) => (
+                                      <MenuItem
+                                        key={color}
+                                        onClick={() =>
+                                          setVisuals({
+                                            ...visuals,
+                                            labelBackgroundColor: color,
+                                          })
+                                        }
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        display="flex"
+                                      >
+                                        <Box
+                                          bgColor={color}
+                                          borderRadius="sm"
+                                          height={6}
+                                          width={6}
+                                        ></Box>
+                                      </MenuItem>
+                                    ))}
+                                  </MenuList>
+                                </Portal>
+                              </Menu>
+                            </Flex>
+                            <Collapse in={!!visuals.labelBackgroundColor} animateOpacity>
+                              <Box paddingTop={2}>
+                                <SliderWithInfo
+                                  label="Background opacity"
+                                  value={visuals.labelBackgroundOpacity}
+                                  onChange={(value) => {
+                                    console.log(visuals.labelBackgroundOpacity)
+                                    setVisuals({ ...visuals, labelBackgroundOpacity: value })
+                                  }}
+                                  min={0}
+                                  max={1}
+                                  step={0.01}
+                                />
+                              </Box>
+                            </Collapse>
+                            <Collapse in={visuals.labels > 1} animateOpacity>
+                              <Box paddingTop={2}>
+                                <SliderWithInfo
+                                  label="Label Appearance Scale"
+                                  value={visuals.labelScale * 5}
+                                  onChange={(value) =>
+                                    setVisuals({ ...visuals, labelScale: value / 5 })
+                                  }
+                                />
+                              </Box>
+                            </Collapse>
+                          </VStack>
+                        </Collapse>
+                      </Box>
                       <EnableSection
                         label="Directional Particles"
-                        value={physics.particles}
-                        onChange={() => setPhysics({ ...physics, particles: !physics.particles })}
+                        value={visuals.particles}
+                        onChange={() => setVisuals({ ...visuals, particles: !visuals.particles })}
                       >
                         <SliderWithInfo
                           label="Particle Number"
-                          value={physics.particlesNumber}
+                          value={visuals.particlesNumber}
                           max={5}
                           step={1}
-                          onChange={(value) => setPhysics({ ...physics, particlesNumber: value })}
+                          onChange={(value) => setVisuals({ ...visuals, particlesNumber: value })}
                         />
                         <SliderWithInfo
                           label="Particle Size"
-                          value={physics.particlesWidth}
-                          onChange={(value) => setPhysics({ ...physics, particlesWidth: value })}
+                          value={visuals.particlesWidth}
+                          onChange={(value) => setVisuals({ ...visuals, particlesWidth: value })}
                         />
                       </EnableSection>
                       <EnableSection
                         label="Highlight"
-                        onChange={() => setPhysics({ ...physics, highlight: !physics.highlight })}
-                        value={physics.highlight}
+                        onChange={() => setVisuals({ ...visuals, highlight: !visuals.highlight })}
+                        value={visuals.highlight}
                       >
                         <VStack
                           spacing={1}
@@ -1051,16 +1044,16 @@ export const Tweaks = (props: TweakProps) => {
                         >
                           <SliderWithInfo
                             label="Highlight Link Thickness"
-                            value={physics.highlightLinkSize}
+                            value={visuals.highlightLinkSize}
                             onChange={(value) =>
-                              setPhysics({ ...physics, highlightLinkSize: value })
+                              setVisuals({ ...visuals, highlightLinkSize: value })
                             }
                           />
                           <SliderWithInfo
                             label="Highlight Node Size"
-                            value={physics.highlightNodeSize}
+                            value={visuals.highlightNodeSize}
                             onChange={(value) =>
-                              setPhysics({ ...physics, highlightNodeSize: value })
+                              setVisuals({ ...visuals, highlightNodeSize: value })
                             }
                           />
                           {/*<Flex justifyContent="space-between">
@@ -1072,13 +1065,13 @@ export const Tweaks = (props: TweakProps) => {
                           <EnableSection
                             label="Highlight Animation"
                             onChange={() => {
-                              setPhysics({ ...physics, highlightAnim: !physics.highlightAnim })
+                              setVisuals({ ...visuals, highlightAnim: !visuals.highlightAnim })
                             }}
-                            value={physics.highlightAnim}
+                            value={visuals.highlightAnim}
                           >
                             <SliderWithInfo
                               label="Animation speed"
-                              onChange={(v) => setPhysics({ ...physics, animationSpeed: v })}
+                              onChange={(v) => setVisuals({ ...visuals, animationSpeed: v })}
                               value={physics.animationSpeed}
                               infoText="Slower speed has a chance of being buggy"
                               min={50}
@@ -1088,7 +1081,7 @@ export const Tweaks = (props: TweakProps) => {
                             <Select
                               placeholder={physics.algorithmName}
                               onChange={(v) => {
-                                setPhysics({ ...physics, algorithmName: v.target.value })
+                                setVisuals({ ...visuals, algorithmName: v.target.value })
                               }}
                             >
                               {physics.algorithmOptions.map((opt: string) => (
@@ -1101,7 +1094,7 @@ export const Tweaks = (props: TweakProps) => {
                     displayValue={physics.algorithmName}
                     textArray={physics.algorithmOptions}
                     onClickArray={physics.algorithmOptions.map((option) =>
-                      setPhysics({ ...physics, algorithmName: { option } }),
+                      setVisuals({ ...visuals, algorithmName: { option } }),
                     )}
                   /> */}
                           </EnableSection>
@@ -1130,7 +1123,7 @@ export const Tweaks = (props: TweakProps) => {
                         <Text>Expand Node</Text>
                         <InfoTooltip infoText="View only the node and its direct neighbors" />
                       </Flex>
-                      <Menu>
+                      <Menu placement="right">
                         <MenuButton
                           as={Button}
                           rightIcon={<ChevronDownIcon />}
@@ -1160,7 +1153,7 @@ export const Tweaks = (props: TweakProps) => {
                     </Flex>
                     <Flex alignItems="center" justifyContent="space-between">
                       <Text>Open in Emacs</Text>
-                      <Menu>
+                      <Menu placement="right">
                         <MenuButton
                           as={Button}
                           rightIcon={<ChevronDownIcon />}
@@ -1240,7 +1233,7 @@ export const SliderWithInfo = ({
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
-        <Tooltip bg={highlightColor + '.500'} label={value.toFixed(1)}>
+        <Tooltip bg={highlightColor} label={value.toFixed(1)}>
           <SliderThumb bg="white" />
         </Tooltip>
       </Slider>
@@ -1259,8 +1252,8 @@ export interface EnableSectionProps {
 export const EnableSection = (props: EnableSectionProps) => {
   const { value, onChange, label, infoText, children } = props
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between">
+    <Box paddingTop={2}>
+      <Box display="flex" justifyContent="space-between" paddingBottom={2}>
         <Box display="flex" alignItems="center">
           <Text>{label}</Text>
           {infoText && <InfoTooltip infoText={infoText} />}
@@ -1268,7 +1261,7 @@ export const EnableSection = (props: EnableSectionProps) => {
         <Switch isChecked={!!value} onChange={onChange} />
       </Box>
       <Collapse in={!!value} animateOpacity>
-        <Box paddingLeft={4} paddingTop={2}>
+        <Box paddingLeft={4} paddingTop={2} paddingBottom={2}>
           {children}
         </Box>
       </Collapse>
@@ -1285,7 +1278,7 @@ export interface DropDownMenuProps {
 export const DropDownMenu = (props: DropDownMenuProps) => {
   const { textArray, onClickArray, displayValue } = props
   return (
-    <Menu>
+    <Menu placement="right">
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
         {displayValue}
       </MenuButton>

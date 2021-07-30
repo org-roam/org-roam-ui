@@ -395,12 +395,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const [opacity, setOpacity] = useState<number>(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
-    duration: physics.animationSpeed,
-    algorithm: physics.algorithms[physics.algorithmName],
+    duration: visuals.animationSpeed,
+    algorithm: visuals.algorithms[visuals.algorithmName],
   })
   const [fadeOut] = useAnimation((x) => setOpacity(Math.min(opacity, -1 * (x - 1))), {
-    duration: physics.animationSpeed,
-    algorithm: physics.algorithms[physics.algorithmName],
+    duration: visuals.animationSpeed,
+    algorithm: visuals.algorithms[visuals.algorithmName],
   })
 
   const lastHoverNode = useRef<OrgRoamNode | null>(null)
@@ -408,7 +408,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     if (hoverNode) {
       lastHoverNode.current = hoverNode as OrgRoamNode
     }
-    if (!physics.highlightAnim) {
+    if (!visuals.highlightAnim) {
       return hoverNode ? setOpacity(1) : setOpacity(0)
     }
     if (hoverNode) {
@@ -557,7 +557,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode)
     },
-    nodeRelSize: physics.nodeRel,
+    nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
       const parentNeighbors = links.length
@@ -566,7 +566,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
       const highlightSize =
         highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-          ? 1 + opacity * (physics.highlightNodeSize - 1)
+          ? 1 + opacity * (visuals.highlightNodeSize - 1)
           : 1
       return basicSize * highlightSize
     },
@@ -575,13 +575,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return
       }
 
-      if (!physics.labels) {
+      if (!visuals.labels) {
         return
       }
       const wasHighlightedNode = previouslyHighlightedNodes[node.id!]
 
       if (
-        (globalScale <= physics.labelScale || physics.labels === 1) &&
+        (globalScale <= visuals.labelScale || visuals.labels === 1) &&
         !highlightedNodes[node.id!] &&
         !wasHighlightedNode
       ) {
@@ -598,14 +598,14 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         number,
       ] // some padding
 
-      const fadeFactor = Math.min((3 * (globalScale - physics.labelScale)) / physics.labelScale, 1)
+      const fadeFactor = Math.min((3 * (globalScale - visuals.labelScale)) / visuals.labelScale, 1)
 
       // draw label background
       const getLabelOpacity = () => {
-        if (physics.labels === 1) {
+        if (visuals.labels === 1) {
           return opacity
         }
-        if (globalScale <= physics.labelScale) {
+        if (globalScale <= visuals.labelScale) {
           return opacity
         }
         return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
@@ -635,7 +635,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
     nodeCanvasObjectMode: () => 'after',
 
-    linkDirectionalParticles: physics.particles ? physics.particlesNumber : undefined,
+    linkDirectionalParticles: visuals.particles ? visuals.particlesNumber : undefined,
     linkColor: (link) => {
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
       const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
@@ -649,10 +649,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
 
       return linkIsHighlighted || linkWasHighlighted
-        ? physics.linkWidth * (1 + opacity * (physics.highlightLinkSize - 1))
-        : physics.linkWidth
+        ? visuals.linkWidth * (1 + opacity * (visuals.highlightLinkSize - 1))
+        : visuals.linkWidth
     },
-    linkDirectionalParticleWidth: physics.particlesWidth,
+    linkDirectionalParticleWidth: visuals.particlesWidth,
 
     d3AlphaDecay: physics.alphaDecay,
     d3AlphaMin: physics.alphaMin,
@@ -686,7 +686,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }))
     },
     onNodeHover: (node) => {
-      if (!physics.highlight) {
+      if (!visuals.highlight) {
         return
       }
       setHoverNode(node)
@@ -701,17 +701,17 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           {...graphCommonProps}
           nodeThreeObjectExtend={true}
           backgroundColor={theme.colors.white}
-          nodeOpacity={physics.nodeOpacity}
-          nodeResolution={physics.nodeResolution}
-          linkOpacity={physics.linkOpacity}
+          nodeOpacity={visuals.nodeOpacity}
+          nodeResolution={visuals.nodeResolution}
+          linkOpacity={visuals.linkOpacity}
           nodeThreeObject={(node: OrgRoamNode) => {
-            if (!physics.labels) {
+            if (!visuals.labels) {
               return
             }
-            if (physics.labels === 2) {
+            if (visuals.labels === 2) {
               return
             }
-            if (physics.labels === 1 && !highlightedNodes[node.id!]) {
+            if (visuals.labels === 1 && !highlightedNodes[node.id!]) {
               return
             }
             const sprite = new SpriteText(node.title.substring(0, 30))

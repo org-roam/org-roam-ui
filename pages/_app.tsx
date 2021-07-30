@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [isInitialized, setIsInitialized] = useState(false)
 
   const [emacsTheme, setEmacsTheme] = useState(initialTheme)
-  const [highlightColor, setHighlightColor] = useState('purple')
+  const [highlightColor, setHighlightColor] = useState('purple.500')
 
   useEffect(() => {
     if (isInitialized) {
@@ -82,28 +82,28 @@ function SubApp(props: any) {
   const { highlightColor, emacsTheme } = useContext(ThemeContext)
   // yeah it's annoying, should put this someplace more sensible
   const getBorderColor = () => {
-    if (highlightColor === 'purple') {
+    if (highlightColor === 'purple.500') {
       return emacsTheme.violet + 'aa'
     }
-    if (highlightColor === 'pink') {
+    if (highlightColor === 'pink.500') {
       return emacsTheme.magenta + 'aa'
     }
-    if (highlightColor === 'blue') {
+    if (highlightColor === 'blue.500') {
       return emacsTheme.blue + 'aa'
     }
-    if (highlightColor === 'cyan') {
+    if (highlightColor === 'cyan.500') {
       return emacsTheme.cyan + 'aa'
     }
-    if (highlightColor === 'green') {
+    if (highlightColor === 'green.500') {
       return emacsTheme.green + 'aa'
     }
-    if (highlightColor === 'yellow') {
+    if (highlightColor === 'yellow.500') {
       return emacsTheme.yellow + 'aa'
     }
-    if (highlightColor === 'orange') {
+    if (highlightColor === 'orange.500') {
       return emacsTheme.orange + 'aa'
     }
-    if (highlightColor === 'red') {
+    if (highlightColor === 'red.500') {
       return emacsTheme.red + 'aa'
     }
   }
@@ -165,21 +165,46 @@ function SubApp(props: any) {
           variants: {
             outline: {
               border: '2px solid',
-              borderColor: highlightColor + '.500',
-              color: highlightColor + '.500',
+              borderColor: highlightColor,
+              color: highlightColor,
             },
             ghost: {
-              color: highlightColor + '.500',
-              _hover: { bg: `inherit`, border: '1px solid', borderColor: highlightColor + '.500' },
-              _active: { color: `inherit`, bg: highlightColor + '.500' },
+              color: highlightColor,
+              _hover: { bg: `inherit`, border: '1px solid', borderColor: highlightColor },
+              _active: { color: `inherit`, bg: highlightColor },
             },
           },
+        },
+        Accordion: {
+          baseStyle: {
+            container: {
+              marginTop: '10px',
+              borderWidth: '0px',
+              paddingRight: '10px',
+              _last: {
+                borderWidth: '0px',
+              },
+            },
+          },
+        },
+        Slider: {
+          baseStyle: (props: any) => ({
+            thumb: {
+              backgroundColor: highlightColor,
+            },
+            filledTrack: {
+              backgroundColor: 'gray.200',
+            },
+          }),
         },
       },
     }
   }, [highlightColor, JSON.stringify(emacsTheme)])
 
-  const extendedTheme = extendTheme(theme, withDefaultColorScheme({ colorScheme: highlightColor }))
+  const extendedTheme = extendTheme(
+    theme,
+    withDefaultColorScheme({ colorScheme: highlightColor.split('.')[0] }),
+  )
   return <ChakraProvider theme={extendedTheme}>{children}</ChakraProvider>
 }
 export default MyApp
