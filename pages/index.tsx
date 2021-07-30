@@ -28,6 +28,7 @@ import {
   initialFilter,
   initialVisuals,
   initialBehavior,
+  initialMouse,
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
@@ -73,6 +74,7 @@ export function GraphPage() {
   const [graphData, setGraphData] = useState<GraphData | null>(null)
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
+  const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -185,6 +187,8 @@ export function GraphPage() {
           setFilter,
           visuals,
           setVisuals,
+          mouse,
+          setMouse,
         }}
       />
       <Box position="absolute" alignItems="top">
@@ -421,6 +425,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const theme = useTheme()
   const themeContext = useContext<ThemeContextProps>(ThemeContext)
 
+  const getThemeColor = (name: string) => name.split('.').reduce((o, i) => o[i], theme.colors)
+
   const highlightColors = useMemo(() => {
     const allColors = visuals.nodeColorScheme.concat(
       visuals.linkColorScheme || [],
@@ -428,13 +434,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       visuals.nodeHighlight || [],
     )
 
-    const getColor = (c: any) => (isNaN(c) ? theme.colors[c][500] : theme.colors.gray[c])
     return Object.fromEntries(
       allColors.map((color) => {
-        const color1 = getColor(color)
+        const color1 = getThemeColor(color)
         const crisscross = allColors.map((color2) => [
           color2,
-          d3int.interpolate(color1, getColor(color2)),
+          d3int.interpolate(color1, getThemeColor(color2)),
         ])
         return [color, Object.fromEntries(crisscross)]
       }),
@@ -479,25 +484,25 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     // or we don't have our own scheme and we're not being highlighted
     if (!visuals.linkHighlight && !visuals.linkColorScheme && !needsHighlighting) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return theme.colors[nodeColor][500]
+      return getThemeColor(nodeColor)
     }
 
     if (!needsHighlighting && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return theme.colors[nodeColor][500]
+      return getThemeColor(nodeColor)
     }
 
     if (!needsHighlighting) {
-      return theme.colors.gray[visuals.linkColorScheme]
+      return getThemeColor(visuals.linkColorScheme)
     }
 
     if (!visuals.linkHighlight && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return theme.colors[nodeColor][500]
+      return getThemeColor(nodeColor)
     }
 
     if (!visuals.linkHighlight) {
-      return theme.colors.gray[visuals.linkColorScheme]
+      return getThemeColor(visuals.linkColorScheme)
     }
 
     if (!visuals.linkColorScheme) {
@@ -512,16 +517,37 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
-      return theme.colors[visuals.emacsNodeColor][500]
+      return getThemeColor(visuals.emacsNodeColor)
     }
     if (!needsHighlighting) {
-      return theme.colors[getNodeColorById(node.id)][500]
+      return getThemeColor(getNodeColorById(node.id))
     }
     if (!visuals.nodeHighlight) {
-      return theme.colors[getNodeColorById(node.id)][500]
+      return getThemeColor(getNodeColorById(node.id))
     }
     return highlightColors[getNodeColorById(node.id)][visuals.nodeHighlight](opacity)
   }
+
+  const hexToRGBA = (hex: string, opacity: number) =>
+    'rgba(' +
+    (hex = hex.replace('#', ''))
+      .match(new RegExp('(.{' + hex.length / 3 + '})', 'g'))!
+      .map(function (l) {
+        return parseInt(hex.length % 2 ? l + l : l, 16)
+      })
+      .concat(isFinite(opacity) ? opacity : 1)
+      .join(',') +
+    ')'
+
+  const labelTextColor = useMemo(
+    () => getThemeColor(visuals.labelTextColor),
+    [visuals.labelTextColor],
+  )
+  const labelBackgroundColor = useMemo(
+    () => getThemeColor(visuals.labelBackgroundColor),
+    [visuals.labelBackgroundColor],
+  )
+
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -582,26 +608,28 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         if (globalScale <= physics.labelScale) {
           return opacity
         }
-
         return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
           ? Math.max(fadeFactor, opacity)
           : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
       }
 
-      if (physics.labels === 2) {
-        const backgroundOpacity = 0.5 * getLabelOpacity()
-        ctx.fillStyle = `rgba(20, 20, 20, ${backgroundOpacity})`
+      if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
+        const backgroundOpacity = getLabelOpacity() * visuals.labelBackgroundOpacity
+        const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
+        ctx.fillStyle = labelBackground
         ctx.fillRect(
           node.x! - bckgDimensions[0] / 2,
           node.y! - bckgDimensions[1] / 2,
           ...bckgDimensions,
         )
       }
+
       // draw label text
       const textOpacity = getLabelOpacity()
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.fillStyle = `rgb(255, 255, 255, ${textOpacity})`
+      const labelText = hexToRGBA(labelTextColor, textOpacity)
+      ctx.fillStyle = labelText
       ctx.font = `${fontSize}px Sans-Serif`
       ctx.fillText(label, node.x!, node.y!)
     },
@@ -633,6 +661,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     onNodeClick: (node: NodeObject, event: any) => {
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
       lastNodeClickRef.current = event.timeStamp
+      console.log(event)
 
       if (isDoubleClick) {
         window.open('org-protocol://roam-node?node=' + node.id, '_self')
@@ -683,8 +712,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
               return
             }
             const sprite = new SpriteText(node.title.substring(0, 30))
-            sprite.color = '#ffffff'
+            sprite.color = getThemeColor(visuals.labelTextColor)
+            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor)
+            sprite.padding = 2
             sprite.textHeight = 8
+
             return sprite
           }}
         />

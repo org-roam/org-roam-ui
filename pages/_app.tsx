@@ -175,6 +175,12 @@ function SubApp(props: any) {
             },
           },
         },
+        SliderThumb: {
+          bg: highlightColor + '.500',
+        },
+        SliderFilledTrack: {
+          bg: 'gray.400',
+        },
       },
     }
   }, [highlightColor, JSON.stringify(emacsTheme)])

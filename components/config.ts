@@ -84,15 +84,33 @@ export const initialVisuals = {
   algorithms: algorithms,
   algorithmOptions: options,
   algorithmName: 'CubicOut',
-  linkColorScheme: '500',
-  nodeColorScheme: ['gray', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'pink', 'purple'],
+  linkColorScheme: 'gray.500',
+  nodeColorScheme: [
+    'red.500',
+    'orange.500',
+    'yellow.500',
+    'green.500',
+    'cyan.500',
+    'blue.500',
+    'pink.500',
+    'purple.500',
+  ],
   nodeHighlight: '',
-  linkHighlight: '',
+  linkHighlight: 'purple.500',
   backgroundColor: 'white',
   emacsNodeColor: '',
+  labelTextColor: 'black',
+  labelBackgroundColor: 'white',
+  labelBackgroundOpacity: 0.7,
 }
 
 export const initialBehavior = {
   follow: 'Zoom',
   followLocalOrZoom: true,
+}
+
+export const initialMouse = {
+  highlight: 'hover',
+  local: 'click',
+  follow: 'double',
 }

@@ -106,21 +106,18 @@ This serves the web-build and API over HTTP."
          :on-open (lambda (ws) (progn
             (setq oru-ws ws)
             (org-roam-ui--send-graphdata)
-            (add-hook 'after-save-hook #'org-roam-ui--send-graphdata)
-
+            (add-hook 'after-save-hook #'org-roam-ui--on-save)
             (message "Connection established with org-roam-ui")
             (add-hook 'post-command-hook #'org-roam-ui--update-current-node)))
          :on-close (lambda (_websocket)
-            (setq oru-ws nil)
             (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
-            (add-hook 'after-save-hook #'org-roam-ui--send-graphdata)
+            (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (message "Connection with org-roam-ui closed  succesfully."))))
 
     (if
       (boundp 'counsel-load-theme)
       (advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
-      (advice-add 'load-theme :around #'org-roam-ui-sync-theme--advice)))
-
+      (advice-add 'load-theme :after #'org-roam-ui-sync-theme--advice)))
    (t
     (progn
     (websocket-server-close org-roam-ui-ws)
@@ -129,6 +126,11 @@ This serves the web-build and API over HTTP."
             (advice-remove 'load-theme #'org-roam-ui-sync-theme--advice))
     (httpd-stop)))))
 
+(defun org-roam-ui--on-save ()
+  "Send graphdata on saving an only org-roam buffer."
+  (when (org-roam-buffer-p)
+    (org-roam-ui--send-graphdata))
+  )
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
