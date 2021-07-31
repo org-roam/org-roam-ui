@@ -147,8 +147,7 @@ This serves the web-build and API over HTTP."
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer."
   (when (org-roam-buffer-p)
-    (org-roam-ui--send-graphdata)
-    (org-roam-ui))
+    (org-roam-ui--send-graphdata))
   )
 
 (defun org-roam-ui--send-graphdata ()

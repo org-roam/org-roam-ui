@@ -9,6 +9,6 @@ const withTM = require('next-transpile-modules')(d3packages)
 module.exports = withPlugins([withTM, withPWA], {
   distDir: 'build',
   pwa: {
-    dest: 'public',
+    dest: 'build',
   },
 })

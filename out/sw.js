@@ -20,24 +20,24 @@ if (!self.define) {
       Promise.all(s.map(e)).then((e) => n(1 === e.length ? e[0] : e))
     },
     n = { require: Promise.resolve(s) }
-  self.define = (s, t, r) => {
+  self.define = (s, i, t) => {
     n[s] ||
       (n[s] = Promise.resolve().then(() => {
         let n = {}
-        const a = { uri: location.origin + s.slice(1) }
+        const r = { uri: location.origin + s.slice(1) }
         return Promise.all(
-          t.map((s) => {
+          i.map((s) => {
             switch (s) {
               case 'exports':
                 return n
               case 'module':
-                return a
+                return r
               default:
                 return e(s)
             }
           }),
         ).then((e) => {
-          const s = r(...e)
+          const s = t(...e)
           return n.default || (n.default = s), n
         })
       }))
@@ -52,58 +52,59 @@ define('./sw.js', ['./workbox-ea903bce'], function (e) {
       [
         {
           url: '/_next/static/chunks/4.2dee5d830195ddd06029.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
-          url: '/_next/static/chunks/906-f789bd1954ec4d176da1.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          url: '/_next/static/chunks/906-7b9696c9b17c64b94384.js',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/d25bd147-65fcc4c92edba8b370fb.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/fb7d5399-0d6001c72a29ebec41eb.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/framework-2191d16384373197bc0a.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/main-1b0f1fd287f08bad6012.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
-          url: '/_next/static/chunks/pages/_app-fbd69a3b63bd43d7f1b0.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          url: '/_next/static/chunks/pages/_app-6ba3a11e93bdf6a85175.js',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/pages/_error-a0e21b9b223f827fe1f2.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/pages/index-5cea1a6a4f484642ff08.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/polyfills-a54b4f32bdc1ef890ddd.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
           url: '/_next/static/chunks/webpack-a1ea085630ce50807058.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
-        { url: '/_next/static/css/331301db207a91d407e5.css', revision: 'sqy183jmJB5HZRA44nlqt' },
+        { url: '/_next/static/css/331301db207a91d407e5.css', revision: 'iq9sQ07m6d_SiAb-0HX08' },
         {
-          url: '/_next/static/sqy183jmJB5HZRA44nlqt/_buildManifest.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          url: '/_next/static/iq9sQ07m6d_SiAb-0HX08/_buildManifest.js',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         {
-          url: '/_next/static/sqy183jmJB5HZRA44nlqt/_ssgManifest.js',
-          revision: 'sqy183jmJB5HZRA44nlqt',
+          url: '/_next/static/iq9sQ07m6d_SiAb-0HX08/_ssgManifest.js',
+          revision: 'iq9sQ07m6d_SiAb-0HX08',
         },
         { url: '/favicon.ico', revision: 'c30c7d42707a47a3f4591831641e50dc' },
+        { url: '/manifest.json', revision: '6fefee72ca361eb4dfafb128818c8424' },
         { url: '/vercel.svg', revision: '4b4f1876502eb6721764637fe5c41702' },
       ],
       { ignoreURLParametersMatching: [] },
@@ -115,7 +116,7 @@ define('./sw.js', ['./workbox-ea903bce'], function (e) {
         cacheName: 'start-url',
         plugins: [
           {
-            cacheWillUpdate: async ({ request: e, response: s, event: n, state: t }) =>
+            cacheWillUpdate: async ({ request: e, response: s, event: n, state: i }) =>
               s && 'opaqueredirect' === s.type
                 ? new Response(s.body, { status: 200, statusText: 'OK', headers: s.headers })
                 : s,
