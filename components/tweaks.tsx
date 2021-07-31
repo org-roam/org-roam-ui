@@ -145,7 +145,12 @@ export const Tweaks = (props: TweakProps) => {
                 <IconButton
                   aria-label="Reset Defaults"
                   icon={<RepeatClockIcon />}
-                  onClick={() => setPhysics(initialPhysics)}
+                  onClick={() => {
+                    setVisuals(initialVisuals)
+                    setFilter(initialFilter)
+                    setMouse(initialMouse)
+                    setPhysics(initialPhysics)
+                  }}
                   variant="none"
                   size="sm"
                 />

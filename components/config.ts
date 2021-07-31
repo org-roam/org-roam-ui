@@ -16,7 +16,7 @@ export const algos = algorithms
 
 export const initialPhysics = {
   enabled: true,
-  charge: -500,
+  charge: -700,
   collision: true,
   collisionStrength: 20,
   centering: true,
@@ -61,13 +61,14 @@ export const initialVisuals = {
   linkColorScheme: 'gray.500',
   nodeColorScheme: [
     'red.500',
-    'orange.500',
+    'gray.600',
     'yellow.500',
     'green.500',
     'cyan.500',
     'blue.500',
     'pink.500',
     'purple.500',
+    'orange.500',
   ],
   nodeHighlight: '',
   linkHighlight: 'purple.500',
