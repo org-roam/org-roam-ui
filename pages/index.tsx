@@ -151,7 +151,6 @@ export function GraphPage() {
             case 'follow':
               return setEmacsNodeId(message.data.id)
             case 'zoom': {
-              console.log(message)
               const links = linksByNodeIdRef.current[message.data.id!] ?? []
               const nodes = Object.fromEntries(
                 [
@@ -443,7 +442,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const themeContext = useContext<ThemeContextProps>(ThemeContext)
 
   const getThemeColor = (name: string) => {
-    console.log(name)
     if (!theme) {
       return
     }
