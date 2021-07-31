@@ -253,16 +253,17 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       //mouse.highlight:
       case mouse.local: {
         if (scope.nodeIds.includes(node.id as string)) {
-          return
+          break
         }
         setScope((currentScope) => ({
           ...currentScope,
           nodeIds: [...currentScope.nodeIds, node.id as string],
         }))
+        break
       }
       case mouse.follow: {
         window.open('org-protocol://roam-node?node=' + node.id, '_self')
-        return
+        break
       }
       default:
         break
@@ -287,7 +288,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       setScope({ nodeIds: [emacsNodeId] })
       setTimeout(() => {
         fg?.zoomToFit(
-          1000,
+          2000,
           numberWithinRange(20, 200, windowWidth / 8),
           (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!],
         )
@@ -442,6 +443,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const themeContext = useContext<ThemeContextProps>(ThemeContext)
 
   const getThemeColor = (name: string) => {
+    console.log(name)
     if (!theme) {
       return
     }

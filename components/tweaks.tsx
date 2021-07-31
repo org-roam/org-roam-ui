@@ -37,6 +37,7 @@ import {
   Collapse,
   Grid,
   Portal,
+  SlideFade,
 } from '@chakra-ui/react'
 import React, { useState, useContext } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -102,20 +103,22 @@ export const Tweaks = (props: TweakProps) => {
   ]
   return (
     <>
-      <Box
-        position="relative"
-        zIndex="overlay"
-        marginTop={10}
-        marginLeft={10}
-        display={showTweaks ? 'none' : 'block'}
-      >
-        <IconButton
-          aria-label="Settings"
-          icon={<SettingsIcon />}
-          onClick={() => setShowTweaks(true)}
-        />
-      </Box>
-      <Collapse in={showTweaks} animateOpacity>
+      <SlideFade in={!showTweaks} animateOpacity>
+        <Box
+          position="absolute"
+          zIndex="overlay"
+          marginTop={10}
+          marginLeft={10}
+          display={showTweaks ? 'none' : 'block'}
+        >
+          <IconButton
+            aria-label="Settings"
+            icon={<SettingsIcon />}
+            onClick={() => setShowTweaks(true)}
+          />
+        </Box>
+      </SlideFade>
+      <SlideFade in={showTweaks} animateOpacity>
         <Box
           bg="alt.100"
           w="xs"
@@ -1191,7 +1194,7 @@ export const Tweaks = (props: TweakProps) => {
             </Accordion>
           </Scrollbars>
         </Box>
-      </Collapse>
+      </SlideFade>
     </>
   )
 }

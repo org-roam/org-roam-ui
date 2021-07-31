@@ -73,7 +73,7 @@ export const initialVisuals = {
   nodeHighlight: '',
   linkHighlight: 'purple.500',
   backgroundColor: 'white',
-  emacsNodeColor: 'grey.800',
+  emacsNodeColor: 'gray.800',
   labelTextColor: 'black',
   labelBackgroundColor: 'white',
   labelBackgroundOpacity: 0.7,
