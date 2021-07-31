@@ -103,7 +103,7 @@ export const Tweaks = (props: TweakProps) => {
   ]
   return (
     <>
-      <SlideFade in={!showTweaks} animateOpacity>
+      <SlideFade in={!showTweaks}>
         <Box
           position="absolute"
           zIndex="overlay"
@@ -118,7 +118,7 @@ export const Tweaks = (props: TweakProps) => {
           />
         </Box>
       </SlideFade>
-      <SlideFade in={showTweaks} animateOpacity>
+      <SlideFade in={showTweaks}>
         <Box
           bg="alt.100"
           w="xs"
