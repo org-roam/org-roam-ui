@@ -407,9 +407,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       return links.some((link) => !['parent', 'cite', 'ref'].includes(link.type))
     })
 
+    const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((linkArg) => {
       const link = linkArg as OrgRoamLink
-      return link.type !== 'cite' && (filter.parents || link.type !== 'parent')
+      return (
+        link.type !== 'cite' &&
+        (filter.parents || link.type !== 'parent') &&
+        filteredNodeIds.includes(link.source as string) &&
+        filteredNodeIds.includes(link.target)
+      )
     })
 
     const scopedNodes = filteredNodes.filter((node) => {
@@ -429,7 +435,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       // but if we supply the original data on each render, the graph will re-render sporadically
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
       const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
-
       return (
         scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
       )
