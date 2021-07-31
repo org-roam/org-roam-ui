@@ -30,7 +30,7 @@ When you open a note in Emacs, org-roam-ui will move to the corresponding node o
 
 ### Theme syncing
 
-Because why not? If you set `org-roam-ui-sync-theme` to `t`, org-roam-ui will automagically detect your current theme and match the ui to it! This works best with doom-themes, as those provide a variable from which we can easily read theme info, but should work with any theme (results may vary).
+Your gruvbox is only a `M-x org-roam-ui-sync-theme` away.
 
 ## Installation
 
@@ -175,9 +175,15 @@ Fewer forces fewer worries
 
 #### Favor 2D over 3D
 
+I know, it looks cool, but man is it slow.
+
 #### Don't drag the dang thing around so much!
 
-In our experience, once the graph has actually settled and nothing needs to be rendered again, looking around should pose little trouble. Atm there is no way of "saving" the graph configuration, but we are exploring the possibility.
+In our experience, once the graph has actually settled and nothing needs to be rendered again, looking around should pose little trouble. At the moment there is no way of "saving" the graph configuration, but we are exploring the possibility. The graph layout algorithm is deterministic however, so barring any changes to the data it should produce the same results each time.
+
+### Q: Some of my links are not showing up?
+
+At the moment we aren't showing citation links made with `org-roam-bibtex` yet, but we will soon!
 
 ### Q: Will you implement X?
 
@@ -186,6 +192,29 @@ Hopefully, yeah! But time is limited, and so is the amount of features we can cr
 ### Q: This doesn't work with org-roam v1/org-brain/Zettledelft!
 
 Correct! We only support org-roam v2!
+
+## Planned features
+
+### Graph
+
+In no particular order
+
+- Citation links + customization
+- Tag filtering/coloring
+- Local graph show Nth neighbor
+- More colors
+- Colorization options (by neighbors, centrality, etc)
+-
+
+### UI in general
+
+- File viewing using AST parsing
+- Displaying notes Andy Matushak style
+- Discovery options, e.g. "show shortest path between X and Y"
+
+### Beyond
+
+- Discuss the future of org-roam-ui with us (here!)[https://github.com/org-roam/org-roam-ui/discussions/6]
 
 # Contribute 💪
 

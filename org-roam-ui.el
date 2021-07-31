@@ -81,7 +81,13 @@ E.g. '((bg . '#1E2029')
   :group 'org-roam-ui
   :type 'list)
 
-(defvar org-roam-ui--ws-current-node nil)
+(defcustom org-roam-ui-follow t
+  "If true, org-roam-ui will follow you around in the graph."
+  :group 'org-roam-ui
+  :type 'boolean)
+
+(defvar org-roam-ui--ws-current-node nil
+  "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
   "The websocket for org-roam-ui.")
 
@@ -108,12 +114,12 @@ This serves the web-build and API over HTTP."
             (org-roam-ui--send-graphdata)
             (add-hook 'after-save-hook #'org-roam-ui--on-save)
             (message "Connection established with org-roam-ui")
-            (add-hook 'post-command-hook #'org-roam-ui--update-current-node)))
+            (when org-roam-ui-follow
+              (add-hook 'post-command-hook #'org-roam-ui--update-current-node))))
          :on-close (lambda (_websocket)
             (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (message "Connection with org-roam-ui closed  succesfully."))))
-
     (if
       (boundp 'counsel-load-theme)
       (advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
@@ -242,7 +248,7 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 
 
 ;;;; commands
-(defun orui-zoom-to-node (&optional id speed padding)
+(defun orui-node-zoom (&optional id speed padding)
   "Move the view of the graph to the node at points, or optionally a node of your choosing.
 Optionally takes three arguments:
 The id of the node you want to travel to.
@@ -254,7 +260,16 @@ The padding around the nodes in the viewport."
       ((commandName . "zoom") (id . ,node) (speed . ,speed) (padding . ,padding)))))))
   (message "No node found."))
 
-(defun orui-toggle-following ()
+
+(defun orui-node-local (&optional id speed padding)
+  "Open the local graph view of the current node, or optionally of a node of your choosing."
+  (interactive)
+  (if-let ((node (or id (org-roam-id-at-point))))
+  (websocket-send-text oru-ws (json-encode `((type . "command") (data .
+      ((commandName . "local") (id . ,node)))))))
+  (message "No node found."))
+
+(defun orui-toggle-follow ()
   "Set whether ORUI should follow your every move in emacs. Default yes."
   (interactive)
   (if (member 'org-roam-ui--update-current-node (default-value 'post-command-hook))
