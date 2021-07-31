@@ -1,11 +1,11 @@
-# org-roam-ui: An org-roam frontend
+# org-roam-ui: an org-roam frontend
 
 ![image](https://user-images.githubusercontent.com/21983833/127746882-4ba00691-3be4-49d6-8c8c-e139a14596c2.png)
 
 
 Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](https://github.com/org-roam/org-roam) notes.
 
-Org-Roam-UI is meant a successor of https://github.com/org-roam/org-roam-server that extends functionality of org-roam with a Web app that runs side-by-side with Emacs.
+Org-Roam-UI is meant a successor of [org-roam-server](https://github.com/org-roam/org-roam-server) that extends functionality of org-roam with a Web app that runs side-by-side with Emacs.
 
 
 ## Installation
