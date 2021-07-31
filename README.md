@@ -206,7 +206,7 @@ At the moment we aren't showing citation links made with `org-roam-bibtex` yet, 
 
 ### Q: Will you implement X?
 
-Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! Please post feature requests in [this discussion]() or upvote those already posted, this way we can adjust our priorities somewhat!
+Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! Please post feature requests in [this discussion](https://github.com/org-roam/org-roam-ui/discussions/6) or upvote those already posted, this way we can adjust our priorities somewhat!
 
 ### Q: This doesn't work with org-roam v1/org-brain/Zettledelft!
 
@@ -303,7 +303,7 @@ In no particular order
 
 ### Beyond
 
-- Discuss the future of org-roam-ui with us (here!)[https://github.com/org-roam/org-roam-ui/discussions/6]
+- Discuss the future of org-roam-ui with us [here!](https://github.com/org-roam/org-roam-ui/discussions/6)
 
 # Contribute 💪
 
