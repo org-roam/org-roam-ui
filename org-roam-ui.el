@@ -91,6 +91,12 @@ E.g. '((bg . '#1E2029')
   :group 'org-roam-ui
   :type 'boolean)
 
+(defcustom org-roam-ui-update-on-save t
+  "If true, org-roam-ui will send new data when you save an org-roam-buffer.
+This can lead to some jank."
+  :group 'org-roam-ui
+  :type 'boolean)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
@@ -117,7 +123,8 @@ This serves the web-build and API over HTTP."
          :on-open (lambda (ws) (progn
             (setq oru-ws ws)
             (org-roam-ui--send-graphdata)
-            (add-hook 'after-save-hook #'org-roam-ui--on-save)
+            (when org-roam-ui-update-on-save
+            (add-hook 'after-save-hook #'org-roam-ui--on-save))
             (message "Connection established with org-roam-ui")
             (when org-roam-ui-follow
               (org-roam-ui-follow-mode 1))))
@@ -129,6 +136,7 @@ This serves the web-build and API over HTTP."
     (progn
     (websocket-server-close org-roam-ui-ws)
     (httpd-stop)
+    (remove-hook 'after-save-hook #'org-roam-ui--on-save)
     (org-roam-ui-follow-mode -1)
     ))))
 
@@ -241,6 +249,7 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 
 
 ;;;; commands
+;;;###autoload
 (defun orui-node-zoom (&optional id speed padding)
   "Move the view of the graph to the node at points, or optionally a node of your choosing.
 Optionally takes three arguments:
@@ -254,6 +263,7 @@ The padding around the nodes in the viewport."
   (message "No node found."))
 
 
+;;;###autoload
 (defun orui-node-local (&optional id speed padding)
   "Open the local graph view of the current node, or optionally of a node of your choosing.
 Optionally with id (string), speed (number, ms) and padding (number, px)."
@@ -263,8 +273,8 @@ Optionally with id (string), speed (number, ms) and padding (number, px)."
       ((commandName . "local") (id . ,node)))))))
   (message "No node found."))
 
-(defvar org-roam-ui--following nil)
 
+;;;###autoload
 (define-minor-mode org-roam-ui-follow-mode
   "Set whether ORUI should follow your every move in emacs. Default yes."
   :lighter "org-roam-ui "
