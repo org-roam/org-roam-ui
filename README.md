@@ -1,6 +1,7 @@
 # org-roam-ui: An org-roam frontend
 
-(cool picture)
+![image](https://user-images.githubusercontent.com/21983833/127746882-4ba00691-3be4-49d6-8c8c-e139a14596c2.png)
+
 
 Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](https://github.com/org-roam/org-roam) notes.
 
@@ -12,29 +13,63 @@ Org-Roam-UI's main feature is the ability to generate a graph visualization of y
 
 ### Cool graph
 
+![image](https://user-images.githubusercontent.com/21983833/127747037-aac46e8a-8617-4436-8887-ea1ad7a3141a.png)
+
+
 #### Sliders!
 
 Configure the graph just the way you like it.
 
+![image](https://user-images.githubusercontent.com/21983833/127746907-f6283400-c7b9-432f-bd85-e37b16a753e9.png)
+
+
 #### Colors
 
-A ton, or just a splash.
+A ton
+![image](https://user-images.githubusercontent.com/21983833/127747009-a4be5e47-1df6-4311-a747-71613168d028.png)
+
+or just a splash.
+![image](https://user-images.githubusercontent.com/21983833/127746962-97ed15d2-ffeb-4a3b-9743-ad77e7efce2e.png)
+
 
 #### Open notes in Emacs
 
 (Double) clicking a node will open the corresponding note in Emacs, very cool.
+You *don't* need org-protocol for this, it works out of the box!
 
-#### 3 D
 
-Literally deepen your understanding of your thoughts (and it looks cool)
+https://user-images.githubusercontent.com/21983833/127747170-3b49fbde-7fc5-410f-bd26-4ffea8dae48c.mp4
 
-#### Follow your movement in Emacs, and back!
+
+#### Follow your movement in Emacs!
 
 When you open a note in Emacs, org-roam-ui will move to the corresponding node on the graph.
+
+
+https://user-images.githubusercontent.com/21983833/127747187-7823a825-a2f8-449c-a0ec-1c5c525621dc.mp4
+
+
 
 #### Theme syncing
 
 Your gruvbox is only a `M-x org-roam-ui-sync-theme` away.
+
+
+https://user-images.githubusercontent.com/21983833/127747203-a1aeca95-7def-4caf-b2cf-8a18fa1f2059.mp4
+
+#### Filters
+
+
+
+https://user-images.githubusercontent.com/21983833/127747222-7c768e37-4948-4072-895b-a55ff7b5906a.mp4
+
+
+
+#### 3 D
+
+Literally deepen your understanding of your thoughts (and it looks cool)
+https://user-images.githubusercontent.com/21983833/127747234-d0588cdf-623f-4d13-a060-737bc570b295.mp4
+
 
 ## Installation
 
@@ -260,7 +295,7 @@ In no particular order
 - Local graph show Nth neighbor
 - More colors
 - Colorization options (by neighbors, centrality, etc)
--
+- Setting profiles
 
 ### UI in general
 
