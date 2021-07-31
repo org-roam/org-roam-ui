@@ -15,15 +15,6 @@ Org-Roam-UI is meant a successor of https://github.com/org-roam/org-roam-server 
 Should your Emacs miss any of the dependencies, please install them manually!
 org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >27 for fast JSON parsing.
 
-### Prerequisites
-
-The graph utilizes `org-protocol`, which means if you click on one
-of the nodes, it will open the corresponding file in Emacs. For this
-feature to work, org-roam protocol should be configured in the system.
-
-[Configuring Org-Roam Protocol](https://www.orgroam.com/manual.html#Installation-_00281_0029)
-
-Also make sure the emacs server is started; `M-x server-start RET`
 
 ### Manually
 
