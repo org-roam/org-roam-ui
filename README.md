@@ -1,40 +1,10 @@
-# org-roam-ui: An org-roam frontend
+# org-roam-ui: an org-roam frontend
 
-(cool picture)
+![image](https://user-images.githubusercontent.com/21983833/127746882-4ba00691-3be4-49d6-8c8c-e139a14596c2.png)
 
 Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](https://github.com/org-roam/org-roam) notes.
 
-Org-Roam-UI is meant a successor of https://github.com/org-roam/org-roam-server that extends functionality of org-roam with a Web app that runs side-by-side with Emacs.
-
-## Features ✨
-
-Org-Roam-UI's main feature is the ability to generate a graph visualization of your org-roam notes.
-
-### Cool graph
-
-#### Sliders!
-
-Configure the graph just the way you like it.
-
-#### Colors
-
-A ton, or just a splash.
-
-#### Open notes in Emacs
-
-(Double) clicking a node will open the corresponding note in Emacs, very cool.
-
-#### 3 D
-
-Literally deepen your understanding of your thoughts (and it looks cool)
-
-#### Follow your movement in Emacs, and back!
-
-When you open a note in Emacs, org-roam-ui will move to the corresponding node on the graph.
-
-#### Theme syncing
-
-Your gruvbox is only a `M-x org-roam-ui-sync-theme` away.
+Org-Roam-UI is meant a successor of [org-roam-server](https://github.com/org-roam/org-roam-server) that extends functionality of org-roam with a Web app that runs side-by-side with Emacs.
 
 ## Installation
 
@@ -42,16 +12,6 @@ Your gruvbox is only a `M-x org-roam-ui-sync-theme` away.
 
 Should your Emacs miss any of the dependencies, please install them manually!
 org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >27 for fast JSON parsing.
-
-### Prerequisites
-
-The graph utilizes `org-protocol`, which means if you click on one
-of the nodes, it will open the corresponding file in Emacs. For this
-feature to work, org-roam protocol should be configured in the system.
-
-[Configuring Org-Roam Protocol](https://www.orgroam.com/manual.html#Installation-_00281_0029)
-
-Also make sure the emacs server is started; `M-x server-start RET`
 
 ### Manually
 
@@ -82,7 +42,7 @@ Add the following to your `package.el`
 
 ```emacs-lisp
 (package! websocket)
-(package! org-roam-ui :recipe (:host github :repo org-roam/org-roam-ui :files "*.el out")
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 ```
 
 Then something along the following to your `config.el`
@@ -101,14 +61,22 @@ Then something along the following to your `config.el`
 
 We recommend only loading org-roam-ui after loading org(-roam) as starting the server and making database requests can impact startup times quite a lot.
 
-### Quelpa/use-package
+### straight/use-package
+
+```emacs-lisp
+(use-package org-roam-ui
+  :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    :hook (org-roam . org-roam-ui-mode))
+```
 
 TODO
 You probably know how to do this
 
 ## Usage
 
-Use `M-x org-roam-ui RET` to enable the global mode.
+Use `M-x org-roam-ui-mode RET` to enable the global mode.
 It will start a web server on http://127.0.0.1:35901/ and connect to it via a WebSocket for real-time updates.
 
 ### Commands
@@ -243,11 +211,64 @@ At the moment we aren't showing citation links made with `org-roam-bibtex` yet, 
 
 ### Q: Will you implement X?
 
-Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! Please post feature requests in [this discussion]() or upvote those already posted, this way we can adjust our priorities somewhat!
+Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! Please post feature requests in [this discussion](https://github.com/org-roam/org-roam-ui/discussions/6) or upvote those already posted, this way we can adjust our priorities somewhat!
 
 ### Q: This doesn't work with org-roam v1/org-brain/Zettledelft!
 
 Correct! We only support org-roam v2!
+
+## Features ✨
+
+Org-Roam-UI's main feature is the ability to generate a graph visualization of your org-roam notes.
+
+### Cool graph
+
+![image](https://user-images.githubusercontent.com/21983833/127747037-aac46e8a-8617-4436-8887-ea1ad7a3141a.png)
+
+#### Sliders!
+
+Configure the graph just the way you like it.
+
+![image](https://user-images.githubusercontent.com/21983833/127746907-f6283400-c7b9-432f-bd85-e37b16a753e9.png)
+
+#### Colors
+
+A ton
+
+![image](https://user-images.githubusercontent.com/21983833/127747009-a4be5e47-1df6-4311-a747-71613168d028.png)
+
+or just a splash.
+
+![image](https://user-images.githubusercontent.com/21983833/127746962-97ed15d2-ffeb-4a3b-9743-ad77e7efce2e.png)
+
+#### Open notes in Emacs
+
+(Double) clicking a node will open the corresponding note in Emacs, very cool.
+You _don't_ need org-protocol for this, it works out of the box!
+
+https://user-images.githubusercontent.com/21983833/127747170-3b49fbde-7fc5-410f-bd26-4ffea8dae48c.mp4
+
+#### Follow your movement in Emacs!
+
+When you open a note in Emacs, org-roam-ui will move to the corresponding node on the graph.
+
+https://user-images.githubusercontent.com/21983833/127747187-7823a825-a2f8-449c-a0ec-1c5c525621dc.mp4
+
+#### Theme syncing
+
+Your gruvbox is only a `M-x orui-sync-theme` away.
+
+https://user-images.githubusercontent.com/21983833/127747203-a1aeca95-7def-4caf-b2cf-8a18fa1f2059.mp4
+
+#### Filters
+
+https://user-images.githubusercontent.com/21983833/127747222-7c768e37-4948-4072-895b-a55ff7b5906a.mp4
+
+#### 3 D
+
+Literally deepen your understanding of your thoughts (and it looks cool)
+
+https://user-images.githubusercontent.com/21983833/127747234-d0588cdf-623f-4d13-a060-737bc570b295.mp4
 
 ## Planned features
 
@@ -260,7 +281,7 @@ In no particular order
 - Local graph show Nth neighbor
 - More colors
 - Colorization options (by neighbors, centrality, etc)
--
+- Setting profiles
 
 ### UI in general
 
@@ -270,9 +291,15 @@ In no particular order
 
 ### Beyond
 
-- Discuss the future of org-roam-ui with us (here!)[https://github.com/org-roam/org-roam-ui/discussions/6]
+- Discuss the future of org-roam-ui with us [here!](https://github.com/org-roam/org-roam-ui/discussions/6)
 
 # Contribute 💪
+
+```bash
+git clone https://github.com/org-roam/org-roam-ui
+yarn
+yarn dev
+```
 
 [GitHub Community Guidelines
 ](https://docs.github.com/en/github/site-policy/github-community-guidelines) apply.
