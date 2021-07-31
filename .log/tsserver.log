@@ -1,0 +1,987 @@
+Info 0    [18:19:01.181] Starting TS Server
+Info 1    [18:19:01.182] Version: 4.3.5
+Info 2    [18:19:01.182] Arguments: /home/thomas/.local/share/nvm/v15.12.0/bin/node /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/.bin/tsserver --logFile /home/thomas/Projects/emacs/OrgRoamForceGraphReact/.log/tsserver.log --logVerbosity info --cancellationPipeName /tmp/2a37d6da660b1c0920513261af595413/tscancellation*
+Info 3    [18:19:01.182] Platform: linux NodeVersion: 15 CaseSensitive: true
+Info 4    [18:19:01.182] ServerMode: undefined syntaxOnly: false hasUnknownServerMode: undefined
+Info 5    [18:19:02.797] Search path: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages
+Info 6    [18:19:02.798] For info: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx :: Config file name: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 7    [18:19:02.798] Creating configuration project /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 8    [18:19:02.855] Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json : {
+ "rootNames": [
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/next-env.d.ts",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/api.d.ts",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/types.d.ts",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/components/config.ts",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/util/persistant-state.ts",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/components/tweaks.tsx",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/_app.tsx",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx",
+  "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/util/themecontext.tsx"
+ ],
+ "options": {
+  "target": 1,
+  "lib": [
+   "lib.dom.d.ts",
+   "lib.dom.iterable.d.ts",
+   "lib.esnext.d.ts"
+  ],
+  "allowJs": true,
+  "skipLibCheck": true,
+  "strict": true,
+  "forceConsistentCasingInFileNames": true,
+  "noEmit": true,
+  "esModuleInterop": true,
+  "module": 99,
+  "moduleResolution": 2,
+  "resolveJsonModule": true,
+  "isolatedModules": true,
+  "jsx": 1,
+  "configFilePath": "/home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json"
+ }
+}
+Info 9    [18:19:03.598] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 10   [18:19:07.027] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 1 structureChanged: true Elapsed: 3428.903706997633ms
+Info 11   [18:19:07.027] Project '/home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json' (Configured)
+Info 12   [18:19:07.027] 	Files (717)
+
+Info 13   [18:19:07.027] -----------------------------------------------
+Info 14   [18:19:07.061] Starting updateGraphWorker: Project: /dev/null/autoImportProviderProject1*
+Info 15   [18:19:07.092] Finishing updateGraphWorker: Project: /dev/null/autoImportProviderProject1* Version: 1 structureChanged: true Elapsed: 31.530788999050856ms
+Info 16   [18:19:07.092] Project '/dev/null/autoImportProviderProject1*' (AutoImportProvider)
+Info 17   [18:19:07.092] 	Files (10)
+
+Info 18   [18:19:07.092] -----------------------------------------------
+Info 19   [18:20:37.799] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 20   [18:20:38.039] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 2 structureChanged: true Elapsed: 239.67791299894452ms
+Info 21   [18:20:38.039] Different program with same set of files:: structureIsReused:: 1
+Info 22   [18:20:38.060] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 23   [18:20:38.110] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 3 structureChanged: false Elapsed: 49.93400599807501ms
+Info 24   [18:20:38.110] Different program with same set of files:: structureIsReused:: 2
+Info 25   [18:20:39.910] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 26   [18:20:39.959] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 4 structureChanged: false Elapsed: 48.508186999708414ms
+Info 27   [18:20:39.959] Different program with same set of files:: structureIsReused:: 2
+Info 28   [18:20:40.164] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 29   [18:20:40.213] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 5 structureChanged: false Elapsed: 48.37883700057864ms
+Info 30   [18:20:40.213] Different program with same set of files:: structureIsReused:: 2
+Info 31   [18:20:40.255] getCompletionData: Get current token: 0.03482099995017052
+Info 32   [18:20:40.255] getCompletionData: Is inside comment: 0.013532999902963638
+Info 33   [18:20:40.255] getCompletionData: Get previous token 1: 0.08942599967122078
+Info 34   [18:20:40.255] getCompletionData: Get previous token 2: 0.06675099954009056
+Info 35   [18:20:40.256] getCompletionsAtPosition: isCompletionListBlocker: 0.27957599982619286
+Info 36   [18:20:40.267] collectAutoImports: starting, not resolving module specifiers
+Info 37   [18:20:40.267] collectAutoImports: module specifier cache size: 0
+Info 38   [18:20:40.268] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 39   [18:20:40.356] forEachExternalModuleToImportFrom autoImportProvider: 2.151046000421047
+Info 40   [18:20:40.357] getSymbolToExportInfoMap: caching results
+Info 41   [18:20:40.357] getSymbolToExportInfoMap: done in 89.04373999685049 ms
+Info 42   [18:20:40.423] collectAutoImports: done in 155.50983000174165 ms
+Info 43   [18:20:40.423] getCompletionData: Semantic work: 167.1440249979496
+Info 44   [18:20:40.458] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 34.044617999345064
+Info 45   [18:20:40.479] getCompletionData: Get current token: 0.025782998651266098
+Info 46   [18:20:40.479] getCompletionData: Is inside comment: 0.008159000426530838
+Info 47   [18:20:40.479] getCompletionData: Get previous token 1: 0.07674900069832802
+Info 48   [18:20:40.479] getCompletionData: Get previous token 2: 0.07067300006747246
+Info 49   [18:20:40.479] getCompletionsAtPosition: isCompletionListBlocker: 0.006681002676486969
+Info 50   [18:20:40.485] collectAutoImports: starting, not resolving module specifiers
+Info 51   [18:20:40.485] collectAutoImports: module specifier cache size: 235
+Info 52   [18:20:40.485] getSymbolToExportInfoMap: cache hit
+Info 53   [18:20:40.505] collectAutoImports: done in 20.60410800203681 ms
+Info 54   [18:20:40.505] getCompletionData: Semantic work: 25.73056099936366
+Info 55   [18:20:40.528] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 22.507438998669386
+Info 56   [18:20:40.538] getCompletionData: Get current token: 0.03387200087308884
+Info 57   [18:20:40.538] getCompletionData: Is inside comment: 0.008522000163793564
+Info 58   [18:20:40.538] getCompletionData: Get previous token 1: 0.10296100005507469
+Info 59   [18:20:40.538] getCompletionData: Get previous token 2: 0.10247600078582764
+Info 60   [18:20:40.538] getCompletionsAtPosition: isCompletionListBlocker: 0.007165998220443726
+Info 61   [18:20:40.544] collectAutoImports: starting, not resolving module specifiers
+Info 62   [18:20:40.544] collectAutoImports: module specifier cache size: 235
+Info 63   [18:20:40.544] getSymbolToExportInfoMap: cache hit
+Info 64   [18:20:40.558] collectAutoImports: done in 14.84341600164771 ms
+Info 65   [18:20:40.558] getCompletionData: Semantic work: 20.050050001591444
+Info 66   [18:20:40.578] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 19.674490999430418
+Info 67   [18:20:40.593] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 68   [18:20:40.641] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 6 structureChanged: false Elapsed: 47.424121998250484ms
+Info 69   [18:20:40.641] Different program with same set of files:: structureIsReused:: 2
+Info 70   [18:20:40.642] getCompletionData: Get current token: 0.018748998641967773
+Info 71   [18:20:40.642] getCompletionData: Is inside comment: 0.005964998155832291
+Info 72   [18:20:40.642] getCompletionData: Get previous token 1: 0.4311389997601509
+Info 73   [18:20:40.642] getCompletionData: Get previous token 2: 0.0985799990594387
+Info 74   [18:20:40.643] getCompletionsAtPosition: isCompletionListBlocker: 0.007257997989654541
+Info 75   [18:20:40.654] collectAutoImports: starting, not resolving module specifiers
+Info 76   [18:20:40.654] collectAutoImports: module specifier cache size: 235
+Info 77   [18:20:40.662] getSymbolToExportInfoMap: cache hit
+Info 78   [18:20:40.680] collectAutoImports: done in 25.649669002741575 ms
+Info 79   [18:20:40.680] getCompletionData: Semantic work: 37.35938999801874
+Info 80   [18:20:40.738] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 24.924817997962236
+Info 81   [18:20:40.748] getCompletionData: Get current token: 0.030101999640464783
+Info 82   [18:20:40.748] getCompletionData: Is inside comment: 0.009735997766256332
+Info 83   [18:20:40.748] getCompletionData: Get previous token 1: 0.09434999898076057
+Info 84   [18:20:40.748] getCompletionData: Get previous token 2: 0.09481200203299522
+Info 85   [18:20:40.748] getCompletionsAtPosition: isCompletionListBlocker: 0.006396997720003128
+Info 86   [18:20:40.753] collectAutoImports: starting, not resolving module specifiers
+Info 87   [18:20:40.753] collectAutoImports: module specifier cache size: 235
+Info 88   [18:20:40.759] getSymbolToExportInfoMap: cache hit
+Info 89   [18:20:40.768] collectAutoImports: done in 14.990793000906706 ms
+Info 90   [18:20:40.768] getCompletionData: Semantic work: 19.310097999870777
+Info 91   [18:20:40.788] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 20.10902300104499
+Info 92   [18:20:40.793] getCompletionData: Get current token: 0.01792900264263153
+Info 93   [18:20:40.793] getCompletionData: Is inside comment: 0.005188997834920883
+Info 94   [18:20:40.793] getCompletionData: Get previous token 1: 0.05548100173473358
+Info 95   [18:20:40.793] getCompletionData: Get previous token 2: 0.051194000989198685
+Info 96   [18:20:40.793] getCompletionsAtPosition: isCompletionListBlocker: 0.005495000630617142
+Info 97   [18:20:40.796] collectAutoImports: starting, not resolving module specifiers
+Info 98   [18:20:40.796] collectAutoImports: module specifier cache size: 235
+Info 99   [18:20:40.801] getSymbolToExportInfoMap: cache hit
+Info 100  [18:20:40.806] collectAutoImports: done in 10.374614998698235 ms
+Info 101  [18:20:40.806] getCompletionData: Semantic work: 13.127921000123024
+Info 102  [18:20:40.823] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 15.40659400075674
+Info 103  [18:20:40.831] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 104  [18:20:40.860] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 7 structureChanged: false Elapsed: 29.429407000541687ms
+Info 105  [18:20:40.860] Different program with same set of files:: structureIsReused:: 2
+Info 106  [18:20:40.861] getCompletionData: Get current token: 0.016767997294664383
+Info 107  [18:20:40.861] getCompletionData: Is inside comment: 0.00481799989938736
+Info 108  [18:20:40.861] getCompletionData: Get previous token 1: 0.06194299831986427
+Info 109  [18:20:40.861] getCompletionData: Get previous token 2: 0.050682999193668365
+Info 110  [18:20:40.861] getCompletionsAtPosition: isCompletionListBlocker: 0.004707999527454376
+Info 111  [18:20:40.871] collectAutoImports: starting, not resolving module specifiers
+Info 112  [18:20:40.872] collectAutoImports: module specifier cache size: 235
+Info 113  [18:20:40.879] getSymbolToExportInfoMap: cache hit
+Info 114  [18:20:40.883] collectAutoImports: done in 11.62347899749875 ms
+Info 115  [18:20:40.883] getCompletionData: Semantic work: 22.090539999306202
+Info 116  [18:20:40.901] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.809227000921965
+Info 117  [18:20:40.905] getCompletionData: Get current token: 0.017934001982212067
+Info 118  [18:20:40.905] getCompletionData: Is inside comment: 0.004317000508308411
+Info 119  [18:20:40.905] getCompletionData: Get previous token 1: 0.04637300223112106
+Info 120  [18:20:40.905] getCompletionData: Get previous token 2: 0.040317997336387634
+Info 121  [18:20:40.905] getCompletionsAtPosition: isCompletionListBlocker: 0.0048500001430511475
+Info 122  [18:20:40.908] collectAutoImports: starting, not resolving module specifiers
+Info 123  [18:20:40.908] collectAutoImports: module specifier cache size: 235
+Info 124  [18:20:40.910] getSymbolToExportInfoMap: cache hit
+Info 125  [18:20:40.916] collectAutoImports: done in 8.470569998025894 ms
+Info 126  [18:20:40.916] getCompletionData: Semantic work: 10.946775000542402
+Info 127  [18:20:40.923] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 7.047226000577211
+Info 128  [18:20:40.926] getCompletionData: Get current token: 0.017845001071691513
+Info 129  [18:20:40.926] getCompletionData: Is inside comment: 0.004723001271486282
+Info 130  [18:20:40.926] getCompletionData: Get previous token 1: 0.04331600293517113
+Info 131  [18:20:40.926] getCompletionData: Get previous token 2: 0.03937099874019623
+Info 132  [18:20:40.927] getCompletionsAtPosition: isCompletionListBlocker: 0.0059699974954128265
+Info 133  [18:20:40.929] collectAutoImports: starting, not resolving module specifiers
+Info 134  [18:20:40.929] collectAutoImports: module specifier cache size: 235
+Info 135  [18:20:40.931] getSymbolToExportInfoMap: cache hit
+Info 136  [18:20:40.933] collectAutoImports: done in 4.468968000262976 ms
+Info 137  [18:20:40.933] getCompletionData: Semantic work: 6.628130998462439
+Info 138  [18:20:40.939] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 5.502010002732277
+Info 139  [18:20:40.944] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 140  [18:20:40.978] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 8 structureChanged: false Elapsed: 33.80917499959469ms
+Info 141  [18:20:40.978] Different program with same set of files:: structureIsReused:: 2
+Info 142  [18:20:41.000] getCompletionData: Get current token: 0.019765999168157578
+Info 143  [18:20:41.000] getCompletionData: Is inside comment: 0.004772000014781952
+Info 144  [18:20:41.000] getCompletionData: Get previous token 1: 0.048649001866579056
+Info 145  [18:20:41.000] getCompletionData: Get previous token 2: 0.06684799864888191
+Info 146  [18:20:41.000] getCompletionsAtPosition: isCompletionListBlocker: 0.009810000658035278
+Info 147  [18:20:41.012] collectAutoImports: starting, not resolving module specifiers
+Info 148  [18:20:41.012] collectAutoImports: module specifier cache size: 235
+Info 149  [18:20:41.015] getSymbolToExportInfoMap: cache hit
+Info 150  [18:20:41.018] collectAutoImports: done in 5.839496001601219 ms
+Info 151  [18:20:41.018] getCompletionData: Semantic work: 17.81725199893117
+Info 152  [18:20:41.024] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.1000129990279675
+Info 153  [18:20:44.376] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 154  [18:20:44.443] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 9 structureChanged: false Elapsed: 67.59247700124979ms
+Info 155  [18:20:44.443] Different program with same set of files:: structureIsReused:: 2
+Info 156  [18:20:44.591] getCompletionData: Get current token: 0.040219999849796295
+Info 157  [18:20:44.591] getCompletionData: Is inside comment: 0.012217000126838684
+Info 158  [18:20:44.592] getCompletionData: Get previous token 1: 0.10440200194716454
+Info 159  [18:20:44.592] getCompletionsAtPosition: isCompletionListBlocker: 0.015063997358083725
+Info 160  [18:20:44.603] getCompletionData: Semantic work: 11.43554600328207
+Info 161  [18:20:44.607] getCompletionData: Get current token: 0.029830001294612885
+Info 162  [18:20:44.607] getCompletionData: Is inside comment: 0.007446002215147018
+Info 163  [18:20:44.607] getCompletionData: Get previous token 1: 0.06393400207161903
+Info 164  [18:20:44.607] getCompletionsAtPosition: isCompletionListBlocker: 0.004788000136613846
+Info 165  [18:20:44.608] getCompletionData: Semantic work: 1.0693849995732307
+Info 166  [18:20:44.610] getCompletionData: Get current token: 0.02383900061249733
+Info 167  [18:20:44.610] getCompletionData: Is inside comment: 0.02142699807882309
+Info 168  [18:20:44.610] getCompletionData: Get previous token 1: 0.06130300089716911
+Info 169  [18:20:44.610] getCompletionsAtPosition: isCompletionListBlocker: 0.004411999136209488
+Info 170  [18:20:44.612] getCompletionData: Semantic work: 1.3685560002923012
+Info 171  [18:20:45.148] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 172  [18:20:45.177] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 10 structureChanged: false Elapsed: 28.78516300022602ms
+Info 173  [18:20:45.177] Different program with same set of files:: structureIsReused:: 2
+Info 174  [18:20:46.225] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 175  [18:20:46.253] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 11 structureChanged: false Elapsed: 27.480918999761343ms
+Info 176  [18:20:46.253] Different program with same set of files:: structureIsReused:: 2
+Info 177  [18:20:46.264] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 178  [18:20:46.293] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 12 structureChanged: false Elapsed: 29.406142000108957ms
+Info 179  [18:20:46.293] Different program with same set of files:: structureIsReused:: 2
+Info 180  [18:20:46.308] getCompletionData: Get current token: 0.045371998101472855
+Info 181  [18:20:46.308] getCompletionData: Is inside comment: 0.00953100249171257
+Info 182  [18:20:46.308] getCompletionData: Get previous token 1: 0.09408299997448921
+Info 183  [18:20:46.308] getCompletionData: Get previous token 2: 0.04778899997472763
+Info 184  [18:20:46.308] getCompletionsAtPosition: isCompletionListBlocker: 0.008334998041391373
+Info 185  [18:20:46.318] collectAutoImports: starting, not resolving module specifiers
+Info 186  [18:20:46.318] collectAutoImports: module specifier cache size: 235
+Info 187  [18:20:46.321] getSymbolToExportInfoMap: cache hit
+Info 188  [18:20:46.326] collectAutoImports: done in 8.245133001357317 ms
+Info 189  [18:20:46.326] getCompletionData: Semantic work: 17.534494001418352
+Info 190  [18:20:46.340] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 14.040312997996807
+Info 191  [18:20:46.859] getCompletionData: Get current token: 0.038297999650239944
+Info 192  [18:20:46.859] getCompletionData: Is inside comment: 0.00857900083065033
+Info 193  [18:20:46.859] getCompletionData: Get previous token 1: 0.059769000858068466
+Info 194  [18:20:46.859] getCompletionData: Get previous token 2: 0.06517599895596504
+Info 195  [18:20:46.859] getCompletionsAtPosition: isCompletionListBlocker: 0.008678000420331955
+Info 196  [18:20:46.863] collectAutoImports: starting, not resolving module specifiers
+Info 197  [18:20:46.863] collectAutoImports: module specifier cache size: 235
+Info 198  [18:20:46.866] getSymbolToExportInfoMap: cache hit
+Info 199  [18:20:46.868] collectAutoImports: done in 5.467042002826929 ms
+Info 200  [18:20:46.868] getCompletionData: Semantic work: 8.839214000850916
+Info 201  [18:20:46.874] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 5.550207000225782
+Info 202  [18:20:46.877] getCompletionData: Get current token: 0.017671998590230942
+Info 203  [18:20:46.877] getCompletionData: Is inside comment: 0.0067350007593631744
+Info 204  [18:20:46.877] getCompletionData: Get previous token 1: 0.031146999448537827
+Info 205  [18:20:46.877] getCompletionData: Get previous token 2: 0.026385001838207245
+Info 206  [18:20:46.877] getCompletionsAtPosition: isCompletionListBlocker: 0.0055060014128685
+Info 207  [18:20:46.880] collectAutoImports: starting, not resolving module specifiers
+Info 208  [18:20:46.880] collectAutoImports: module specifier cache size: 235
+Info 209  [18:20:46.883] getSymbolToExportInfoMap: cache hit
+Info 210  [18:20:46.885] collectAutoImports: done in 4.560525000095367 ms
+Info 211  [18:20:46.885] getCompletionData: Semantic work: 7.069954000413418
+Info 212  [18:20:46.890] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 5.329358000308275
+Info 213  [18:20:46.893] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 214  [18:20:46.936] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 13 structureChanged: false Elapsed: 41.98888099938631ms
+Info 215  [18:20:46.936] Different program with same set of files:: structureIsReused:: 2
+Info 216  [18:20:46.955] getCompletionData: Get current token: 0.01837499812245369
+Info 217  [18:20:46.955] getCompletionData: Is inside comment: 0.0043019987642765045
+Info 218  [18:20:46.955] getCompletionData: Get previous token 1: 0.030480001121759415
+Info 219  [18:20:46.955] getCompletionData: Get previous token 2: 0.025536000728607178
+Info 220  [18:20:46.956] getCompletionsAtPosition: isCompletionListBlocker: 0.005251999944448471
+Info 221  [18:20:46.962] collectAutoImports: starting, not resolving module specifiers
+Info 222  [18:20:46.962] collectAutoImports: module specifier cache size: 235
+Info 223  [18:20:46.965] getSymbolToExportInfoMap: cache hit
+Info 224  [18:20:46.967] collectAutoImports: done in 5.014508999884129 ms
+Info 225  [18:20:46.967] getCompletionData: Semantic work: 11.645824998617172
+Info 226  [18:20:46.974] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.740648001432419
+Info 227  [18:20:47.416] getCompletionData: Get current token: 0.029361996799707413
+Info 228  [18:20:47.416] getCompletionData: Is inside comment: 0.005986999720335007
+Info 229  [18:20:47.416] getCompletionData: Get previous token 1: 0.03971399739384651
+Info 230  [18:20:47.416] getCompletionData: Get previous token 2: 0.03601999953389168
+Info 231  [18:20:47.417] getCompletionsAtPosition: isCompletionListBlocker: 0.006175000220537186
+Info 232  [18:20:47.420] collectAutoImports: starting, not resolving module specifiers
+Info 233  [18:20:47.420] collectAutoImports: module specifier cache size: 235
+Info 234  [18:20:47.422] getSymbolToExportInfoMap: cache hit
+Info 235  [18:20:47.425] collectAutoImports: done in 5.851911999285221 ms
+Info 236  [18:20:47.425] getCompletionData: Semantic work: 8.804414000362158
+Info 237  [18:20:47.434] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 8.079420000314713
+Info 238  [18:20:47.439] getCompletionData: Get current token: 0.031040001660585403
+Info 239  [18:20:47.439] getCompletionData: Is inside comment: 0.006297998130321503
+Info 240  [18:20:47.439] getCompletionData: Get previous token 1: 0.04482400044798851
+Info 241  [18:20:47.440] getCompletionData: Get previous token 2: 0.040897998958826065
+Info 242  [18:20:47.440] getCompletionsAtPosition: isCompletionListBlocker: 0.013776000589132309
+Info 243  [18:20:47.444] collectAutoImports: starting, not resolving module specifiers
+Info 244  [18:20:47.444] collectAutoImports: module specifier cache size: 235
+Info 245  [18:20:47.447] getSymbolToExportInfoMap: cache hit
+Info 246  [18:20:47.450] collectAutoImports: done in 6.384096000343561 ms
+Info 247  [18:20:47.451] getCompletionData: Semantic work: 10.840493001043797
+Info 248  [18:20:47.461] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 10.677152000367641
+Info 249  [18:20:47.465] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 250  [18:20:47.498] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 14 structureChanged: false Elapsed: 32.45436999946833ms
+Info 251  [18:20:47.498] Different program with same set of files:: structureIsReused:: 2
+Info 252  [18:20:47.510] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 253  [18:20:47.538] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 15 structureChanged: false Elapsed: 27.514045000076294ms
+Info 254  [18:20:47.538] Different program with same set of files:: structureIsReused:: 2
+Info 255  [18:20:47.548] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 256  [18:20:47.572] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 16 structureChanged: false Elapsed: 23.6458870023489ms
+Info 257  [18:20:47.572] Different program with same set of files:: structureIsReused:: 2
+Info 258  [18:20:48.182] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 259  [18:20:48.211] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 17 structureChanged: false Elapsed: 29.340747002512217ms
+Info 260  [18:20:48.211] Different program with same set of files:: structureIsReused:: 2
+Info 261  [18:20:48.221] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 262  [18:20:48.257] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 18 structureChanged: false Elapsed: 36.14280999824405ms
+Info 263  [18:20:48.258] Different program with same set of files:: structureIsReused:: 2
+Info 264  [18:20:48.270] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 265  [18:20:48.297] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 19 structureChanged: false Elapsed: 26.377920001745224ms
+Info 266  [18:20:48.297] Different program with same set of files:: structureIsReused:: 2
+Info 267  [18:20:48.308] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 268  [18:20:48.334] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 20 structureChanged: false Elapsed: 25.182856999337673ms
+Info 269  [18:20:48.334] Different program with same set of files:: structureIsReused:: 2
+Info 270  [18:20:48.347] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 271  [18:20:48.369] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 21 structureChanged: false Elapsed: 22.351624999195337ms
+Info 272  [18:20:48.369] Different program with same set of files:: structureIsReused:: 2
+Info 273  [18:20:48.429] getCompletionData: Get current token: 0.01851099729537964
+Info 274  [18:20:48.429] getCompletionData: Is inside comment: 0.0040000006556510925
+Info 275  [18:20:48.429] getCompletionData: Get previous token 1: 0.028544001281261444
+Info 276  [18:20:48.429] getCompletionData: Get previous token 2: 0.022571999579668045
+Info 277  [18:20:48.429] getCompletionsAtPosition: isCompletionListBlocker: 0.005877997726202011
+Info 278  [18:20:48.435] collectAutoImports: starting, not resolving module specifiers
+Info 279  [18:20:48.435] collectAutoImports: module specifier cache size: 235
+Info 280  [18:20:48.438] getSymbolToExportInfoMap: cache hit
+Info 281  [18:20:48.440] collectAutoImports: done in 4.618560999631882 ms
+Info 282  [18:20:48.440] getCompletionData: Semantic work: 10.98632299900055
+Info 283  [18:20:48.446] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.133614998310804
+Info 284  [18:20:49.750] forEachExternalModuleToImportFrom autoImportProvider: 0.11665599793195724
+Info 285  [18:21:00.412] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 286  [18:21:00.454] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 22 structureChanged: false Elapsed: 41.65719800069928ms
+Info 287  [18:21:00.454] Different program with same set of files:: structureIsReused:: 2
+Info 288  [18:21:00.523] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 289  [18:21:00.549] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 23 structureChanged: false Elapsed: 25.84842599928379ms
+Info 290  [18:21:00.549] Different program with same set of files:: structureIsReused:: 2
+Info 291  [18:21:01.860] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 292  [18:21:01.963] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 24 structureChanged: false Elapsed: 102.76266299933195ms
+Info 293  [18:21:01.963] Different program with same set of files:: structureIsReused:: 2
+Info 294  [18:21:02.451] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 295  [18:21:02.488] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 25 structureChanged: false Elapsed: 36.981178000569344ms
+Info 296  [18:21:02.488] Different program with same set of files:: structureIsReused:: 2
+Info 297  [18:21:02.502] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 298  [18:21:02.536] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 26 structureChanged: false Elapsed: 33.88979200273752ms
+Info 299  [18:21:02.536] Different program with same set of files:: structureIsReused:: 2
+Info 300  [18:21:02.549] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 301  [18:21:02.570] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 27 structureChanged: false Elapsed: 21.02946599945426ms
+Info 302  [18:21:02.570] Different program with same set of files:: structureIsReused:: 2
+Info 303  [18:21:02.584] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 304  [18:21:02.617] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 28 structureChanged: false Elapsed: 32.83873900026083ms
+Info 305  [18:21:02.617] Different program with same set of files:: structureIsReused:: 2
+Info 306  [18:21:02.704] getCompletionData: Get current token: 0.02168700098991394
+Info 307  [18:21:02.704] getCompletionData: Is inside comment: 0.007291000336408615
+Info 308  [18:21:02.705] getCompletionData: Get previous token 1: 0.05726099759340286
+Info 309  [18:21:02.705] getCompletionData: Get previous token 2: 0.0446850024163723
+Info 310  [18:21:02.705] getCompletionsAtPosition: isCompletionListBlocker: 0.00818299874663353
+Info 311  [18:21:02.712] collectAutoImports: starting, not resolving module specifiers
+Info 312  [18:21:02.712] collectAutoImports: module specifier cache size: 235
+Info 313  [18:21:02.721] getSymbolToExportInfoMap: cache hit
+Info 314  [18:21:02.733] collectAutoImports: done in 20.596320997923613 ms
+Info 315  [18:21:02.733] getCompletionData: Semantic work: 28.168947998434305
+Info 316  [18:21:02.751] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 17.410198997706175
+Info 317  [18:21:03.542] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 318  [18:21:03.574] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 29 structureChanged: false Elapsed: 32.01233999803662ms
+Info 319  [18:21:03.574] Different program with same set of files:: structureIsReused:: 2
+Info 320  [18:21:03.585] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 321  [18:21:03.612] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 30 structureChanged: false Elapsed: 27.1074150018394ms
+Info 322  [18:21:03.612] Different program with same set of files:: structureIsReused:: 2
+Info 323  [18:21:03.629] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 324  [18:21:03.657] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 31 structureChanged: false Elapsed: 28.817475996911526ms
+Info 325  [18:21:03.657] Different program with same set of files:: structureIsReused:: 2
+Info 326  [18:21:03.672] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 327  [18:21:03.700] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 32 structureChanged: false Elapsed: 27.89351199939847ms
+Info 328  [18:21:03.700] Different program with same set of files:: structureIsReused:: 2
+Info 329  [18:21:03.712] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 330  [18:21:03.740] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 33 structureChanged: false Elapsed: 27.767289999872446ms
+Info 331  [18:21:03.740] Different program with same set of files:: structureIsReused:: 2
+Info 332  [18:21:06.131] forEachExternalModuleToImportFrom autoImportProvider: 0.15327799692749977
+Info 333  [18:21:06.414] forEachExternalModuleToImportFrom autoImportProvider: 0.2735600024461746
+Info 334  [18:21:07.090] forEachExternalModuleToImportFrom autoImportProvider: 0.1994599997997284
+Info 335  [18:21:25.496] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 336  [18:21:25.551] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 34 structureChanged: false Elapsed: 54.750964999198914ms
+Info 337  [18:21:25.551] Different program with same set of files:: structureIsReused:: 2
+Info 338  [18:21:25.552] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 339  [18:21:25.583] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 35 structureChanged: false Elapsed: 30.957086998969316ms
+Info 340  [18:21:25.583] Different program with same set of files:: structureIsReused:: 2
+Info 341  [18:21:25.867] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 342  [18:21:25.896] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 36 structureChanged: false Elapsed: 28.4983719997108ms
+Info 343  [18:21:25.896] Different program with same set of files:: structureIsReused:: 2
+Info 344  [18:21:25.896] getCompletionData: Get current token: 0.011438999325037003
+Info 345  [18:21:25.896] getCompletionData: Is inside comment: 0.0045480020344257355
+Info 346  [18:21:25.896] getCompletionData: Get previous token 1: 0.043508999049663544
+Info 347  [18:21:25.896] getCompletionData: Get previous token 2: 0.027168001979589462
+Info 348  [18:21:25.896] getCompletionsAtPosition: isCompletionListBlocker: 0.005658000707626343
+Info 349  [18:21:25.902] getCompletionData: Semantic work: 5.973564002662897
+Info 350  [18:21:25.905] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 0.14949699863791466
+Info 351  [18:21:25.905] getCompletionData: Get current token: 0.01606699824333191
+Info 352  [18:21:25.905] getCompletionData: Is inside comment: 0.005750998854637146
+Info 353  [18:21:25.905] getCompletionData: Get previous token 1: 0.03665599972009659
+Info 354  [18:21:25.905] getCompletionData: Get previous token 2: 0.02641899883747101
+Info 355  [18:21:25.905] getCompletionsAtPosition: isCompletionListBlocker: 0.0036369971930980682
+Info 356  [18:21:25.905] getCompletionData: Semantic work: 0.09903999790549278
+Info 357  [18:21:25.905] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 0.05266200006008148
+Info 358  [18:21:25.906] getCompletionData: Get current token: 0.010039001703262329
+Info 359  [18:21:25.906] getCompletionData: Is inside comment: 0.0038419999182224274
+Info 360  [18:21:25.906] getCompletionData: Get previous token 1: 0.03105499967932701
+Info 361  [18:21:25.906] getCompletionData: Get previous token 2: 0.03378999978303909
+Info 362  [18:21:25.906] getCompletionsAtPosition: isCompletionListBlocker: 0.0030250027775764465
+Info 363  [18:21:25.906] getCompletionData: Semantic work: 0.06945700198411942
+Info 364  [18:21:25.906] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 0.04455399885773659
+Info 365  [18:21:26.434] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 366  [18:21:26.477] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 37 structureChanged: false Elapsed: 42.910289999097586ms
+Info 367  [18:21:26.477] Different program with same set of files:: structureIsReused:: 2
+Info 368  [18:21:26.477] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 369  [18:21:26.508] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 38 structureChanged: false Elapsed: 30.63060100004077ms
+Info 370  [18:21:26.508] Different program with same set of files:: structureIsReused:: 2
+Info 371  [18:21:27.083] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 372  [18:21:27.114] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 39 structureChanged: false Elapsed: 30.11540599912405ms
+Info 373  [18:21:27.114] Different program with same set of files:: structureIsReused:: 2
+Info 374  [18:21:39.366] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 375  [18:21:39.479] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 40 structureChanged: false Elapsed: 113.46149300038815ms
+Info 376  [18:21:39.480] Different program with same set of files:: structureIsReused:: 2
+Info 377  [18:21:39.954] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 378  [18:21:39.979] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 41 structureChanged: false Elapsed: 25.133689999580383ms
+Info 379  [18:21:39.980] Different program with same set of files:: structureIsReused:: 2
+Info 380  [18:21:50.038] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 381  [18:21:50.085] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 42 structureChanged: false Elapsed: 46.79515999928117ms
+Info 382  [18:21:50.086] Different program with same set of files:: structureIsReused:: 2
+Info 383  [18:21:50.537] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 384  [18:21:50.590] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 43 structureChanged: false Elapsed: 52.98733399808407ms
+Info 385  [18:21:50.590] Different program with same set of files:: structureIsReused:: 2
+Info 386  [18:21:51.071] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 387  [18:21:51.096] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 44 structureChanged: false Elapsed: 25.011072002351284ms
+Info 388  [18:21:51.096] Different program with same set of files:: structureIsReused:: 2
+Info 389  [18:21:51.460] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 390  [18:21:51.485] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 45 structureChanged: false Elapsed: 24.019584000110626ms
+Info 391  [18:21:51.485] Different program with same set of files:: structureIsReused:: 2
+Info 392  [18:21:51.485] getCompletionData: Get current token: 0.013156000524759293
+Info 393  [18:21:51.485] getCompletionData: Is inside comment: 0.0038570016622543335
+Info 394  [18:21:51.485] getCompletionData: Get previous token 1: 0.06498100236058235
+Info 395  [18:21:51.485] getCompletionData: Get previous token 2: 0.033994998782873154
+Info 396  [18:21:51.486] getCompletionsAtPosition: isCompletionListBlocker: 0.003231000155210495
+Info 397  [18:21:51.487] getCompletionData: Semantic work: 1.2363220006227493
+Info 398  [18:21:51.487] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 0.14355699717998505
+Info 399  [18:21:52.004] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 400  [18:21:52.023] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 46 structureChanged: false Elapsed: 19.48351399973035ms
+Info 401  [18:21:52.023] Different program with same set of files:: structureIsReused:: 2
+Info 402  [18:21:57.189] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 403  [18:21:57.247] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 47 structureChanged: false Elapsed: 57.80292899906635ms
+Info 404  [18:21:57.247] Different program with same set of files:: structureIsReused:: 2
+Info 405  [18:21:59.751] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 406  [18:21:59.806] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 48 structureChanged: false Elapsed: 55.10570099949837ms
+Info 407  [18:21:59.806] Different program with same set of files:: structureIsReused:: 2
+Info 408  [18:22:01.888] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 409  [18:22:01.936] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 49 structureChanged: false Elapsed: 47.512442998588085ms
+Info 410  [18:22:01.936] Different program with same set of files:: structureIsReused:: 2
+Info 411  [18:22:11.797] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 412  [18:22:11.845] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 50 structureChanged: false Elapsed: 47.96592300012708ms
+Info 413  [18:22:11.845] Different program with same set of files:: structureIsReused:: 2
+Info 414  [18:22:12.719] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 415  [18:22:12.765] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 51 structureChanged: false Elapsed: 45.47673800215125ms
+Info 416  [18:22:12.765] Different program with same set of files:: structureIsReused:: 2
+Info 417  [18:22:13.150] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 418  [18:22:13.174] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 52 structureChanged: false Elapsed: 24.613253001123667ms
+Info 419  [18:22:13.174] Different program with same set of files:: structureIsReused:: 2
+Info 420  [18:22:13.771] Format host information updated
+Info 421  [18:22:14.113] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 422  [18:22:14.201] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 53 structureChanged: false Elapsed: 87.97376000136137ms
+Info 423  [18:22:14.201] Different program with same set of files:: structureIsReused:: 2
+Info 424  [18:22:20.251] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 425  [18:22:20.253] Elapsed:: 1.9818580001592636ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 426  [18:22:20.523] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 427  [18:22:20.525] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 54 structureChanged: false Elapsed: 2.41907200217247ms
+Info 428  [18:22:22.755] Before ensureProjectForOpenFiles:
+Info 429  [18:22:22.755] After ensureProjectForOpenFiles:
+Info 430  [18:22:22.755] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 431  [18:22:28.714] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 432  [18:22:28.755] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 55 structureChanged: false Elapsed: 40.72484900057316ms
+Info 433  [18:22:28.755] Different program with same set of files:: structureIsReused:: 2
+Info 434  [18:22:29.226] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 435  [18:22:29.262] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 56 structureChanged: false Elapsed: 36.31558699905872ms
+Info 436  [18:22:29.262] Different program with same set of files:: structureIsReused:: 2
+Info 437  [18:22:30.845] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 438  [18:22:30.894] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 57 structureChanged: false Elapsed: 48.983742997050285ms
+Info 439  [18:22:30.894] Different program with same set of files:: structureIsReused:: 2
+Info 440  [18:22:33.392] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 441  [18:22:33.425] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 58 structureChanged: false Elapsed: 33.15125000104308ms
+Info 442  [18:22:33.425] Different program with same set of files:: structureIsReused:: 2
+Info 443  [18:22:58.606] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 444  [18:22:58.692] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 59 structureChanged: false Elapsed: 85.51175799965858ms
+Info 445  [18:22:58.692] Different program with same set of files:: structureIsReused:: 2
+Info 446  [18:22:59.621] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 447  [18:22:59.663] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 60 structureChanged: false Elapsed: 41.3520100004971ms
+Info 448  [18:22:59.663] Different program with same set of files:: structureIsReused:: 2
+Info 449  [18:22:59.664] getCompletionData: Get current token: 0.021091002970933914
+Info 450  [18:22:59.664] getCompletionData: Is inside comment: 0.07535399869084358
+Info 451  [18:22:59.664] getCompletionData: Get previous token 1: 0.05314600095152855
+Info 452  [18:22:59.664] getCompletionData: Get previous token 2: 0.055615998804569244
+Info 453  [18:22:59.664] getCompletionsAtPosition: isCompletionListBlocker: 0.010001998394727707
+Info 454  [18:22:59.675] collectAutoImports: starting, not resolving module specifiers
+Info 455  [18:22:59.676] collectAutoImports: module specifier cache size: 235
+Info 456  [18:22:59.693] getSymbolToExportInfoMap: cache hit
+Info 457  [18:22:59.702] collectAutoImports: done in 26.83585999906063 ms
+Info 458  [18:22:59.702] getCompletionData: Semantic work: 38.29884999990463
+Info 459  [18:22:59.737] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 11.651802998036146
+Info 460  [18:22:59.770] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 461  [18:22:59.822] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 61 structureChanged: false Elapsed: 52.040794000029564ms
+Info 462  [18:22:59.822] Different program with same set of files:: structureIsReused:: 2
+Info 463  [18:22:59.822] getCompletionData: Get current token: 0.019540999084711075
+Info 464  [18:22:59.822] getCompletionData: Is inside comment: 0.051941998302936554
+Info 465  [18:22:59.822] getCompletionData: Get previous token 1: 0.041916001588106155
+Info 466  [18:22:59.823] getCompletionData: Get previous token 2: 0.04625200107693672
+Info 467  [18:22:59.823] getCompletionsAtPosition: isCompletionListBlocker: 0.008099999278783798
+Info 468  [18:22:59.835] collectAutoImports: starting, not resolving module specifiers
+Info 469  [18:22:59.835] collectAutoImports: module specifier cache size: 235
+Info 470  [18:22:59.840] getSymbolToExportInfoMap: cache hit
+Info 471  [18:22:59.847] collectAutoImports: done in 12.219535999000072 ms
+Info 472  [18:22:59.847] getCompletionData: Semantic work: 24.809222001582384
+Info 473  [18:22:59.896] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 15.437224000692368
+Info 474  [18:23:00.483] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 475  [18:23:00.517] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 62 structureChanged: false Elapsed: 34.412918001413345ms
+Info 476  [18:23:00.517] Different program with same set of files:: structureIsReused:: 2
+Info 477  [18:23:00.518] getCompletionData: Get current token: 0.016238998621702194
+Info 478  [18:23:00.518] getCompletionData: Is inside comment: 0.045483000576496124
+Info 479  [18:23:00.518] getCompletionData: Get previous token 1: 0.03516899794340134
+Info 480  [18:23:00.518] getCompletionData: Get previous token 2: 0.03845300152897835
+Info 481  [18:23:00.518] getCompletionsAtPosition: isCompletionListBlocker: 0.004806999117136002
+Info 482  [18:23:00.524] collectAutoImports: starting, not resolving module specifiers
+Info 483  [18:23:00.524] collectAutoImports: module specifier cache size: 235
+Info 484  [18:23:00.531] getSymbolToExportInfoMap: cache hit
+Info 485  [18:23:00.539] collectAutoImports: done in 15.470827002078295 ms
+Info 486  [18:23:00.539] getCompletionData: Semantic work: 21.235750000923872
+Info 487  [18:23:00.569] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 7.50551600009203
+Info 488  [18:23:00.575] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 489  [18:23:00.607] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 63 structureChanged: false Elapsed: 32.608645997941494ms
+Info 490  [18:23:00.607] Different program with same set of files:: structureIsReused:: 2
+Info 491  [18:23:00.609] getCompletionData: Get current token: 0.017714999616146088
+Info 492  [18:23:00.609] getCompletionData: Is inside comment: 0.04585699737071991
+Info 493  [18:23:00.609] getCompletionData: Get previous token 1: 0.03685000166296959
+Info 494  [18:23:00.609] getCompletionData: Get previous token 2: 0.04171000048518181
+Info 495  [18:23:00.609] getCompletionsAtPosition: isCompletionListBlocker: 0.004844997078180313
+Info 496  [18:23:00.622] collectAutoImports: starting, not resolving module specifiers
+Info 497  [18:23:00.622] collectAutoImports: module specifier cache size: 235
+Info 498  [18:23:00.625] getSymbolToExportInfoMap: cache hit
+Info 499  [18:23:00.628] collectAutoImports: done in 6.2575620003044605 ms
+Info 500  [18:23:00.628] getCompletionData: Semantic work: 19.377912998199463
+Info 501  [18:23:00.656] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 4.878063000738621
+Info 502  [18:23:00.660] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 503  [18:23:00.702] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 64 structureChanged: false Elapsed: 42.001225002110004ms
+Info 504  [18:23:00.702] Different program with same set of files:: structureIsReused:: 2
+Info 505  [18:23:00.703] getCompletionData: Get current token: 0.05831800028681755
+Info 506  [18:23:00.703] getCompletionData: Is inside comment: 0.08526600152254105
+Info 507  [18:23:00.703] getCompletionData: Get previous token 1: 0.04752499982714653
+Info 508  [18:23:00.703] getCompletionData: Get previous token 2: 0.051788002252578735
+Info 509  [18:23:00.703] getCompletionsAtPosition: isCompletionListBlocker: 0.006668001413345337
+Info 510  [18:23:00.709] collectAutoImports: starting, not resolving module specifiers
+Info 511  [18:23:00.709] collectAutoImports: module specifier cache size: 235
+Info 512  [18:23:00.712] getSymbolToExportInfoMap: cache hit
+Info 513  [18:23:00.714] collectAutoImports: done in 4.230951998382807 ms
+Info 514  [18:23:00.714] getCompletionData: Semantic work: 10.441794000566006
+Info 515  [18:23:00.741] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 7.259305000305176
+Info 516  [18:23:00.745] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 517  [18:23:00.770] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 65 structureChanged: false Elapsed: 25.546179000288248ms
+Info 518  [18:23:00.770] Different program with same set of files:: structureIsReused:: 2
+Info 519  [18:23:00.771] getCompletionData: Get current token: 0.017191000282764435
+Info 520  [18:23:00.771] getCompletionData: Is inside comment: 0.03302299976348877
+Info 521  [18:23:00.771] getCompletionData: Get previous token 1: 0.024797998368740082
+Info 522  [18:23:00.771] getCompletionData: Get previous token 2: 0.02781900018453598
+Info 523  [18:23:00.771] getCompletionsAtPosition: isCompletionListBlocker: 0.00406700000166893
+Info 524  [18:23:00.777] collectAutoImports: starting, not resolving module specifiers
+Info 525  [18:23:00.777] collectAutoImports: module specifier cache size: 235
+Info 526  [18:23:00.779] getSymbolToExportInfoMap: cache hit
+Info 527  [18:23:00.781] collectAutoImports: done in 4.296436000615358 ms
+Info 528  [18:23:00.781] getCompletionData: Semantic work: 10.314298998564482
+Info 529  [18:23:00.812] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.473822001367807
+Info 530  [18:23:00.815] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 531  [18:23:00.852] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 66 structureChanged: false Elapsed: 36.818052001297474ms
+Info 532  [18:23:00.852] Different program with same set of files:: structureIsReused:: 2
+Info 533  [18:23:00.853] getCompletionData: Get current token: 0.028641998767852783
+Info 534  [18:23:00.853] getCompletionData: Is inside comment: 0.056345999240875244
+Info 535  [18:23:00.853] getCompletionData: Get previous token 1: 0.0442189984023571
+Info 536  [18:23:00.853] getCompletionData: Get previous token 2: 0.04802500084042549
+Info 537  [18:23:00.853] getCompletionsAtPosition: isCompletionListBlocker: 0.005371998995542526
+Info 538  [18:23:00.859] collectAutoImports: starting, not resolving module specifiers
+Info 539  [18:23:00.859] collectAutoImports: module specifier cache size: 235
+Info 540  [18:23:00.861] getSymbolToExportInfoMap: cache hit
+Info 541  [18:23:00.863] collectAutoImports: done in 4.219975996762514 ms
+Info 542  [18:23:00.863] getCompletionData: Semantic work: 9.657287001609802
+Info 543  [18:23:00.897] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 5.680224001407623
+Info 544  [18:23:01.235] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 545  [18:23:01.260] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 67 structureChanged: false Elapsed: 24.22385900095105ms
+Info 546  [18:23:01.260] Different program with same set of files:: structureIsReused:: 2
+Info 547  [18:23:21.835] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 548  [18:23:21.835] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_
+Info 549  [18:23:21.836] Elapsed:: 0.3874709978699684ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 550  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 551  [18:23:21.836] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_
+Info 552  [18:23:21.836] Elapsed:: 0.09649699926376343ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 553  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 554  [18:23:21.836] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack
+Info 555  [18:23:21.836] Elapsed:: 0.12683099880814552ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 556  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 557  [18:23:21.836] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old
+Info 558  [18:23:21.836] Elapsed:: 0.09366899728775024ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 559  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 560  [18:23:21.836] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_
+Info 561  [18:23:21.836] Elapsed:: 0.15988099947571754ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 562  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 563  [18:23:21.836] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack
+Info 564  [18:23:21.836] Elapsed:: 0.13415300101041794ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 565  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 566  [18:23:21.836] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_
+Info 567  [18:23:21.836] Elapsed:: 0.0674159973859787ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 568  [18:23:21.836] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 569  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack
+Info 570  [18:23:21.837] Elapsed:: 0.06292799860239029ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 571  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 8:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 572  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_
+Info 573  [18:23:21.837] Elapsed:: 0.06858199834823608ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 8:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 574  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 9:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 575  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_
+Info 576  [18:23:21.837] Elapsed:: 0.05861400067806244ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 9:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 577  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 10:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 578  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack
+Info 579  [18:23:21.837] Elapsed:: 0.09661100059747696ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 10:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 580  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old 11:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 581  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old
+Info 582  [18:23:21.837] Elapsed:: 0.18277199938893318ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old 11:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 583  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 12:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 584  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_
+Info 585  [18:23:21.837] Elapsed:: 0.1338529996573925ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 12:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 586  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack 13:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 587  [18:23:21.837] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack
+Info 588  [18:23:21.837] Elapsed:: 0.08401799947023392ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack 13:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 589  [18:23:21.837] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 14:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 590  [18:23:21.838] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_
+Info 591  [18:23:21.838] Elapsed:: 0.05892400071024895ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 14:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 592  [18:23:21.838] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 15:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 593  [18:23:21.838] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack
+Info 594  [18:23:21.838] Elapsed:: 0.054382000118494034ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 15:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 595  [18:23:22.492] Format host information updated
+Info 596  [18:23:26.646] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.5f155d0bd9f5648e31be.hot-update.js 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 597  [18:23:26.646] Elapsed:: 0.47606099769473076ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.5f155d0bd9f5648e31be.hot-update.js 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 598  [18:23:26.646] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.5f155d0bd9f5648e31be.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 599  [18:23:26.647] Elapsed:: 0.21545900031924248ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.5f155d0bd9f5648e31be.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 600  [18:23:26.647] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/5f155d0bd9f5648e31be.webpack.hot-update.json 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 601  [18:23:26.647] Elapsed:: 0.11181600019335747ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/5f155d0bd9f5648e31be.webpack.hot-update.json 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 602  [18:23:26.900] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 603  [18:23:26.903] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 68 structureChanged: false Elapsed: 3.1492299996316433ms
+Info 604  [18:23:27.666] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/f14de464f9a4cff302e5.webpack.hot-update.json 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 605  [18:23:27.667] Elapsed:: 0.8646270036697388ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/f14de464f9a4cff302e5.webpack.hot-update.json 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 606  [18:23:27.667] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.f14de464f9a4cff302e5.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 607  [18:23:27.668] Elapsed:: 0.42967499792575836ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.f14de464f9a4cff302e5.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 608  [18:23:27.668] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.f14de464f9a4cff302e5.hot-update.js 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 609  [18:23:27.668] Elapsed:: 0.41867899894714355ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.f14de464f9a4cff302e5.hot-update.js 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 610  [18:23:27.921] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 611  [18:23:27.924] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 69 structureChanged: false Elapsed: 2.982278998941183ms
+Info 612  [18:23:30.169] Before ensureProjectForOpenFiles:
+Info 613  [18:23:30.169] After ensureProjectForOpenFiles:
+Info 614  [18:23:30.169] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 615  [18:24:29.001] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 616  [18:24:29.003] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_
+Info 617  [18:24:29.003] Elapsed:: 1.9755089990794659ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 618  [18:24:29.003] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 619  [18:24:29.004] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_
+Info 620  [18:24:29.004] Elapsed:: 0.5066940002143383ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 621  [18:24:29.004] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 622  [18:24:29.004] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack
+Info 623  [18:24:29.005] Elapsed:: 0.49008699879050255ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 624  [18:24:29.005] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 625  [18:24:29.005] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old
+Info 626  [18:24:29.005] Elapsed:: 0.6663589999079704ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 627  [18:24:29.006] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 628  [18:24:29.006] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_
+Info 629  [18:24:29.006] Elapsed:: 0.5073319971561432ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 630  [18:24:29.006] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 631  [18:24:29.007] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack
+Info 632  [18:24:29.007] Elapsed:: 0.7061129994690418ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 633  [18:24:29.007] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 634  [18:24:29.008] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_
+Info 635  [18:24:29.008] Elapsed:: 0.5691719986498356ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 636  [18:24:29.008] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 637  [18:24:29.009] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack
+Info 638  [18:24:29.010] Elapsed:: 1.0023420006036758ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 639  [18:24:29.010] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 8:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 640  [18:24:29.011] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_
+Info 641  [18:24:29.011] Elapsed:: 1.0487439967691898ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 8:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 642  [18:24:29.011] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 9:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 643  [18:24:29.012] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_
+Info 644  [18:24:29.012] Elapsed:: 0.40536100044846535ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 9:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 645  [18:24:29.012] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 10:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 646  [18:24:29.012] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack
+Info 647  [18:24:29.013] Elapsed:: 0.4108699969947338ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 10:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 648  [18:24:29.013] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old 11:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 649  [18:24:29.013] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old
+Info 650  [18:24:29.013] Elapsed:: 0.3928549997508526ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old 11:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 651  [18:24:29.013] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 12:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 652  [18:24:29.014] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_
+Info 653  [18:24:29.014] Elapsed:: 0.40859300270676613ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 12:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 654  [18:24:29.014] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack 13:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 655  [18:24:29.014] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack
+Info 656  [18:24:29.014] Elapsed:: 0.4179849997162819ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack 13:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 657  [18:24:29.015] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 14:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 658  [18:24:29.015] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_
+Info 659  [18:24:29.015] Elapsed:: 0.3371939994394779ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 14:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 660  [18:24:29.015] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 15:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 661  [18:24:29.015] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack
+Info 662  [18:24:29.016] Elapsed:: 0.3577499985694885ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 15:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 663  [18:41:50.660] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 664  [18:41:50.660] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif
+Info 665  [18:41:50.660] Elapsed:: 0.15260900184512138ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 666  [18:41:50.660] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 667  [18:41:50.660] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif
+Info 668  [18:41:50.660] Elapsed:: 0.08693999797105789ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 669  [18:41:50.660] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 670  [18:41:50.660] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif
+Info 671  [18:41:50.660] Elapsed:: 0.07198600098490715ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 672  [18:41:50.660] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 673  [18:41:50.660] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif
+Info 674  [18:41:50.660] Elapsed:: 0.0772549994289875ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 675  [18:41:50.660] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 676  [18:41:50.661] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif
+Info 677  [18:41:50.661] Elapsed:: 0.06527799740433693ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 678  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 679  [18:41:50.661] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif
+Info 680  [18:41:50.661] Elapsed:: 0.07602600008249283ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 681  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 682  [18:41:50.661] Elapsed:: 0.23528699949383736ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 683  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 684  [18:41:50.661] Elapsed:: 0.032719001173973083ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 685  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 686  [18:41:50.661] Elapsed:: 0.028537999838590622ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 687  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 688  [18:41:50.661] Elapsed:: 0.025849003344774246ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 689  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 690  [18:41:50.661] Elapsed:: 0.026073001325130463ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 691  [18:41:50.661] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 692  [18:41:50.662] Elapsed:: 0.025610998272895813ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined WatchType: node_modules for closed script infos in them
+Info 693  [18:41:50.662] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 694  [18:41:50.662] Elapsed:: 0.42490099743008614ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 695  [18:41:50.662] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 696  [18:41:50.662] Elapsed:: 0.12609300017356873ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 697  [18:41:50.662] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 698  [18:41:50.663] Elapsed:: 0.18384899944067ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 699  [18:41:50.663] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 700  [18:41:50.663] Elapsed:: 0.17865999788045883ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 701  [18:41:50.663] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 702  [18:41:50.663] Elapsed:: 0.0957380011677742ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 703  [18:41:50.663] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 704  [18:41:50.663] Elapsed:: 0.04499899968504906ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/node_modules 1 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 705  [18:41:59.630] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 706  [18:41:59.631] Elapsed:: 0.15006399899721146ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 707  [18:41:59.631] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 708  [18:41:59.631] Elapsed:: 0.08680799975991249ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 709  [18:41:59.633] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-17-53.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 710  [18:41:59.633] Elapsed:: 0.10536899790167809ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-17-53.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 711  [18:41:59.637] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-29-07.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 712  [18:41:59.637] Elapsed:: 0.09696000069379807ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-29-07.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 713  [18:41:59.638] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-31-11.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 714  [18:41:59.638] Elapsed:: 0.09467200189828873ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-31-11.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 715  [18:41:59.639] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-32-53.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 716  [18:41:59.639] Elapsed:: 0.08055200055241585ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-32-53.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 717  [18:42:00.640] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 718  [18:42:00.640] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif
+Info 719  [18:42:00.640] Elapsed:: 0.09453200176358223ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 720  [18:42:00.640] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 721  [18:42:00.640] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif
+Info 722  [18:42:00.640] Elapsed:: 0.05530199781060219ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 723  [18:42:00.640] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 724  [18:42:00.640] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-17-53.mkv.gif
+Info 725  [18:42:00.640] Elapsed:: 0.08127500116825104ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-17-53.mkv.gif 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 726  [18:42:00.640] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 727  [18:42:00.640] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-29-07.mkv.gif
+Info 728  [18:42:00.640] Elapsed:: 0.04955599829554558ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-29-07.mkv.gif 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 729  [18:42:00.640] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 730  [18:42:00.640] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-31-11.mkv.gif
+Info 731  [18:42:00.640] Elapsed:: 0.0490260012447834ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-31-11.mkv.gif 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 732  [18:42:00.640] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 733  [18:42:00.640] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-32-53.mkv.gif
+Info 734  [18:42:00.640] Elapsed:: 0.0519229993224144ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-32-53.mkv.gif 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 735  [18:42:14.394] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 736  [18:42:14.394] Elapsed:: 0.15402299910783768ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 737  [18:42:15.395] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 738  [18:42:15.395] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif
+Info 739  [18:42:15.396] Elapsed:: 0.24610299989581108ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/6xyp4vjvfds61.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 740  [18:45:17.754] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 741  [18:45:17.838] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 70 structureChanged: false Elapsed: 83.08528500050306ms
+Info 742  [18:45:17.838] Different program with same set of files:: structureIsReused:: 2
+Info 743  [18:45:18.753] Format host information updated
+Info 744  [18:45:23.822] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.8b7bf4127079c97a20a0.hot-update.js 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 745  [18:45:23.823] Elapsed:: 0.29556800052523613ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.8b7bf4127079c97a20a0.hot-update.js 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 746  [18:45:23.823] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.5f155d0bd9f5648e31be.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 747  [18:45:23.823] Elapsed:: 0.2577519975602627ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.5f155d0bd9f5648e31be.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 748  [18:45:23.823] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.8b7bf4127079c97a20a0.hot-update.js 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 749  [18:45:23.823] Elapsed:: 0.12105000019073486ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.8b7bf4127079c97a20a0.hot-update.js 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 750  [18:45:23.823] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/8b7bf4127079c97a20a0.webpack.hot-update.json 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 751  [18:45:23.823] Elapsed:: 0.09629099816083908ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/8b7bf4127079c97a20a0.webpack.hot-update.json 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 752  [18:45:23.823] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/5f155d0bd9f5648e31be.webpack.hot-update.json 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 753  [18:45:23.823] Elapsed:: 0.12220299988985062ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/5f155d0bd9f5648e31be.webpack.hot-update.json 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 754  [18:45:23.823] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.5f155d0bd9f5648e31be.hot-update.js 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 755  [18:45:23.824] Elapsed:: 0.09173399955034256ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.5f155d0bd9f5648e31be.hot-update.js 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 756  [18:45:24.078] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 757  [18:45:24.082] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 71 structureChanged: false Elapsed: 3.9346230030059814ms
+Info 758  [18:45:26.325] Before ensureProjectForOpenFiles:
+Info 759  [18:45:26.325] After ensureProjectForOpenFiles:
+Info 760  [18:45:26.325] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 761  [18:45:48.172] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.2b82ad4c6d44ce0ec320.hot-update.js 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 762  [18:45:48.172] Elapsed:: 0.2547539994120598ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.2b82ad4c6d44ce0ec320.hot-update.js 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 763  [18:45:48.172] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.2b82ad4c6d44ce0ec320.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 764  [18:45:48.172] Elapsed:: 0.16404299810528755ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.2b82ad4c6d44ce0ec320.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 765  [18:45:48.172] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/2b82ad4c6d44ce0ec320.webpack.hot-update.json 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 766  [18:45:48.172] Elapsed:: 0.14575399830937386ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/2b82ad4c6d44ce0ec320.webpack.hot-update.json 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 767  [18:45:48.425] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 768  [18:45:48.431] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 72 structureChanged: false Elapsed: 6.174559999257326ms
+Info 769  [18:45:49.302] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/8b7bf4127079c97a20a0.webpack.hot-update.json 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 770  [18:45:49.302] Elapsed:: 0.20085300132632256ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/8b7bf4127079c97a20a0.webpack.hot-update.json 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 771  [18:45:49.302] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.8b7bf4127079c97a20a0.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 772  [18:45:49.302] Elapsed:: 0.11596399918198586ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/webpack.8b7bf4127079c97a20a0.hot-update.js 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 773  [18:45:49.302] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.8b7bf4127079c97a20a0.hot-update.js 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 774  [18:45:49.302] Elapsed:: 0.0939669981598854ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages/index.8b7bf4127079c97a20a0.hot-update.js 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 775  [18:45:49.555] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 776  [18:45:49.560] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 73 structureChanged: false Elapsed: 4.50059799849987ms
+Info 777  [18:45:51.803] Before ensureProjectForOpenFiles:
+Info 778  [18:45:51.804] After ensureProjectForOpenFiles:
+Info 779  [18:45:51.804] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 780  [18:46:01.024] FileWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/next-env.d.ts 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/next-env.d.ts 500 undefined WatchType: Closed Script info
+Info 781  [18:46:01.025] Elapsed:: 0.6499990001320839ms FileWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/next-env.d.ts 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/next-env.d.ts 500 undefined WatchType: Closed Script info
+Info 782  [18:46:01.274] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 783  [18:46:01.281] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 74 structureChanged: false Elapsed: 6.2035700008273125ms
+Info 784  [18:46:03.525] Before ensureProjectForOpenFiles:
+Info 785  [18:46:03.525] After ensureProjectForOpenFiles:
+Info 786  [18:46:03.525] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 787  [18:46:08.440] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/server/pages :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 788  [18:46:08.440] Elapsed:: 0.2290790006518364ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/server/pages :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 789  [18:46:08.444] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/development :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 790  [18:46:08.445] Elapsed:: 0.21644499897956848ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/development :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 791  [18:46:08.445] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/server :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 792  [18:46:08.445] Elapsed:: 0.11789100244641304ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/server :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 793  [18:46:08.454] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/chunks/pages :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 794  [18:46:08.454] Elapsed:: 0.25553400069475174ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/chunks/pages :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 795  [18:46:08.454] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 796  [18:46:08.455] Elapsed:: 0.18940399959683418ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack/pages :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 797  [18:46:08.467] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/chunks :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 798  [18:46:08.467] Elapsed:: 0.1864060014486313ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/chunks :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 799  [18:46:08.467] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 800  [18:46:08.468] Elapsed:: 0.11270499974489212ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static/webpack :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 801  [18:46:08.468] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 802  [18:46:08.468] Elapsed:: 0.09431799873709679ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/static :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 803  [18:46:08.733] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 804  [18:46:08.736] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 75 structureChanged: false Elapsed: 3.714596997946501ms
+Info 805  [18:46:09.469] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 806  [18:46:09.469] Elapsed:: 0.09205599874258041ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 807  [18:46:09.732] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 808  [18:46:09.737] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 76 structureChanged: false Elapsed: 4.614285998046398ms
+Info 809  [18:46:11.970] Before ensureProjectForOpenFiles:
+Info 810  [18:46:11.970] After ensureProjectForOpenFiles:
+Info 811  [18:46:11.970] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 812  [18:46:51.638] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 813  [18:46:51.641] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_
+Info 814  [18:46:51.641] Elapsed:: 0.25800200179219246ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/2.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 815  [18:46:51.641] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 816  [18:46:51.641] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_
+Info 817  [18:46:51.641] Elapsed:: 0.09984299913048744ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 818  [18:46:51.641] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 819  [18:46:51.641] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack
+Info 820  [18:46:51.641] Elapsed:: 0.0793519988656044ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 821  [18:46:51.641] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 822  [18:46:51.641] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old
+Info 823  [18:46:51.641] Elapsed:: 0.07073899731040001ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-development/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 824  [18:46:51.641] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 825  [18:46:51.641] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_
+Info 826  [18:46:51.642] Elapsed:: 0.07578200101852417ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 827  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 828  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_
+Info 829  [18:46:51.642] Elapsed:: 0.07198400050401688ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 830  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 831  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack
+Info 832  [18:46:51.642] Elapsed:: 0.0702660009264946ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 833  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 834  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old
+Info 835  [18:46:51.642] Elapsed:: 0.08472299948334694ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack.old 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 836  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 8:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 837  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_
+Info 838  [18:46:51.642] Elapsed:: 0.06676699966192245ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack_ 8:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 839  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack 9:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 840  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack
+Info 841  [18:46:51.642] Elapsed:: 0.06706799939274788ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/2.pack 9:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 842  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 10:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 843  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_
+Info 844  [18:46:51.642] Elapsed:: 0.06533099710941315ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack_ 10:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 845  [18:46:51.642] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 11:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 846  [18:46:51.642] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack
+Info 847  [18:46:51.642] Elapsed:: 0.06612500175833702ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-development/index.pack 11:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 848  [18:46:53.439] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 849  [18:46:53.439] Elapsed:: 0.09135100245475769ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 850  [18:46:53.704] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 851  [18:46:53.718] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 77 structureChanged: false Elapsed: 13.700173001736403ms
+Info 852  [18:46:55.939] Before ensureProjectForOpenFiles:
+Info 853  [18:46:55.939] After ensureProjectForOpenFiles:
+Info 854  [18:46:55.939] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 855  [18:46:57.838] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 856  [18:46:57.839] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack_
+Info 857  [18:46:57.839] Elapsed:: 0.41831500083208084ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 858  [18:46:57.843] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 859  [18:46:57.844] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack_
+Info 860  [18:46:57.844] Elapsed:: 0.5028939992189407ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 861  [18:46:57.844] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 862  [18:46:57.844] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack
+Info 863  [18:46:57.845] Elapsed:: 0.4519140012562275ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 864  [18:46:57.845] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 865  [18:46:57.845] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack.old
+Info 866  [18:46:57.845] Elapsed:: 0.3613639995455742ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 867  [18:46:58.847] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 868  [18:46:58.848] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack_
+Info 869  [18:46:58.848] Elapsed:: 0.1515359990298748ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 870  [18:46:58.848] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 871  [18:46:58.848] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack
+Info 872  [18:46:58.848] Elapsed:: 0.07632499933242798ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/0.pack 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 873  [18:46:58.848] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack_ 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 874  [18:46:58.848] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack_
+Info 875  [18:46:58.848] Elapsed:: 0.07197199761867523ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack_ 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 876  [18:46:58.848] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 877  [18:46:58.848] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack
+Info 878  [18:46:58.848] Elapsed:: 0.06254999712109566ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/client-production/index.pack 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 879  [18:47:02.534] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 880  [18:47:02.534] Elapsed:: 0.08259399980306625ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 881  [18:47:02.798] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 882  [18:47:02.804] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 78 structureChanged: false Elapsed: 6.091095000505447ms
+Info 883  [18:47:04.156] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 884  [18:47:04.157] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack_
+Info 885  [18:47:04.157] Elapsed:: 0.18378300219774246ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack_ 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 886  [18:47:04.157] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 887  [18:47:04.157] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack_
+Info 888  [18:47:04.157] Elapsed:: 0.09119800105690956ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack_ 1:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 889  [18:47:04.157] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 890  [18:47:04.157] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack
+Info 891  [18:47:04.157] Elapsed:: 0.10846400260925293ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack 2:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 892  [18:47:04.157] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 893  [18:47:04.157] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack.old
+Info 894  [18:47:04.157] Elapsed:: 0.3125940002501011ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack.old 3:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 895  [18:47:04.157] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 896  [18:47:04.158] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack_
+Info 897  [18:47:04.158] Elapsed:: 0.14301399886608124ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack_ 4:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 898  [18:47:04.158] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 899  [18:47:04.158] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack
+Info 900  [18:47:04.158] Elapsed:: 0.1132040023803711ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/0.pack 5:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 901  [18:47:04.158] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack_ 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 902  [18:47:04.158] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack_
+Info 903  [18:47:04.158] Elapsed:: 0.1158210001885891ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack_ 6:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 904  [18:47:04.158] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 905  [18:47:04.158] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack
+Info 906  [18:47:04.158] Elapsed:: 0.11428799852728844ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/cache/webpack/server-production/index.pack 7:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 907  [18:47:05.035] Before ensureProjectForOpenFiles:
+Info 908  [18:47:05.035] After ensureProjectForOpenFiles:
+Info 909  [18:47:05.036] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 910  [18:47:05.234] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 911  [18:47:05.234] Elapsed:: 0.11416099965572357ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 912  [18:47:05.357] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/export/_next/sqy183jmJB5HZRA44nlqt :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 913  [18:47:05.357] Elapsed:: 0.20213999971747398ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/export/_next/sqy183jmJB5HZRA44nlqt :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 914  [18:47:05.363] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/export/_next :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 915  [18:47:05.363] Elapsed:: 0.18924999982118607ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/export/_next :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 916  [18:47:05.364] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/export :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 917  [18:47:05.364] Elapsed:: 0.20214999839663506ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/build/export :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 918  [18:47:05.694] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 919  [18:47:05.702] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 79 structureChanged: false Elapsed: 8.56709000095725ms
+Info 920  [18:47:06.371] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 921  [18:47:06.371] Elapsed:: 0.07796800136566162ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 922  [18:47:06.633] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 923  [18:47:06.637] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 80 structureChanged: false Elapsed: 3.6814169995486736ms
+Info 924  [18:47:08.136] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/Uwb-EHm-AvunyFLIbBaQf :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 925  [18:47:08.136] Elapsed:: 0.18153399974107742ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/Uwb-EHm-AvunyFLIbBaQf :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 926  [18:47:08.137] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/chunks/webpack-a1ea085630ce50807058.js :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 927  [18:47:08.137] Elapsed:: 0.2619109973311424ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/chunks/webpack-a1ea085630ce50807058.js :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 928  [18:47:08.137] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/css/331301db207a91d407e5.css :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 929  [18:47:08.137] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/css/331301db207a91d407e5.css
+Info 930  [18:47:08.137] Elapsed:: 0.11552099883556366ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/css/331301db207a91d407e5.css :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 931  [18:47:08.137] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/Uwb-EHm-AvunyFLIbBaQf :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 932  [18:47:08.137] Elapsed:: 0.1391020007431507ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/Uwb-EHm-AvunyFLIbBaQf :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 933  [18:47:08.138] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/css :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 934  [18:47:08.138] Elapsed:: 0.09203500300645828ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/css :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 935  [18:47:08.138] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/chunks :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 936  [18:47:08.138] Elapsed:: 0.08868500217795372ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static/chunks :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 937  [18:47:08.138] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 938  [18:47:08.138] Elapsed:: 0.08087300136685371ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/out/_next/static :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 939  [18:47:08.413] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 940  [18:47:08.419] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 81 structureChanged: false Elapsed: 5.637292001396418ms
+Info 941  [18:47:09.776] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 942  [18:47:09.776] Elapsed:: 0.2601509988307953ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 943  [18:47:10.063] Starting updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json
+Info 944  [18:47:10.074] Finishing updateGraphWorker: Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Version: 82 structureChanged: false Elapsed: 10.826733998954296ms
+Info 945  [18:47:12.277] Before ensureProjectForOpenFiles:
+Info 946  [18:47:12.277] After ensureProjectForOpenFiles:
+Info 947  [18:47:12.278] got projects updated in background, updating diagnostics for /home/thomas/Projects/emacs/OrgRoamForceGraphReact/pages/index.tsx
+Info 948  [18:47:43.072] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 949  [18:47:43.073] Elapsed:: 0.6548739969730377ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif :: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 0 undefined Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Failed Lookup Locations
+Info 950  [18:47:44.073] DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
+Info 951  [18:47:44.074] Project: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json Detected file add/remove of non supported extension: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif
+Info 952  [18:47:44.074] Elapsed:: 0.5197359994053841ms DirectoryWatcher:: Triggered with /home/thomas/Projects/emacs/OrgRoamForceGraphReact/2021-07-31 18-16-52.mkv.gif 0:: WatchInfo: /home/thomas/Projects/emacs/OrgRoamForceGraphReact 1 undefined Config: /home/thomas/Projects/emacs/OrgRoamForceGraphReact/tsconfig.json WatchType: Wild card directory
