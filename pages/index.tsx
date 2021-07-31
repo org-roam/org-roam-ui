@@ -132,9 +132,13 @@ export function GraphPage() {
 
   const [threeDim, setThreeDim] = useState(false)
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
-
+  const scopeRef = useRef<Scope>({ nodeIds: [] })
+  const behaviorRef = useRef(initialBehavior)
+  behaviorRef.current = behavior
   const graphRef = useRef<any>(null)
+  const WebSocketRef = useRef<any>(null)
 
+  scopeRef.current = scope
   const followBehavior = (
     command: string,
     emacsNode: string,
@@ -142,6 +146,8 @@ export function GraphPage() {
     padding: number = 200,
   ) => {
     const fg = graphRef.current
+    const sr = scopeRef.current
+    const bh = behaviorRef.current
     const links = linksByNodeIdRef.current[emacsNode] ?? []
     const nodes = Object.fromEntries(
       [emacsNode as string, ...links.flatMap((link) => [link.source, link.target])].map(
@@ -149,20 +155,23 @@ export function GraphPage() {
       ),
     )
     if (command === 'zoom') {
-      if (scope.nodeIds.length) {
+      console.log(sr)
+      if (sr.nodeIds.length) {
+        console.log('emptying')
+        console.log('scope ' + sr.nodeIds)
         setScope({ nodeIds: [] })
       }
       setTimeout(() => fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]), 50)
       return
     }
-    if (!scope.nodeIds.length) {
+    if (!sr.nodeIds.length) {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
         fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
       }, 50)
       return
     }
-    if (behavior.localSame !== 'add') {
+    if (bh.localSame !== 'add') {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
         fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
@@ -172,8 +181,8 @@ export function GraphPage() {
 
     // if the node is in the scopednodes, add it to scope instead of replacing it
     if (
-      !scope.nodeIds.includes(emacsNode) ||
-      !scope.nodeIds.some((scopeId: string) => {
+      !sr.nodeIds.includes(emacsNode) ||
+      !sr.nodeIds.some((scopeId: string) => {
         return nodes[scopeId]
       })
     ) {
@@ -191,12 +200,13 @@ export function GraphPage() {
   }
 
   useEffect(() => {
-    const socket = new ReconnectingWebSocket('ws://localhost:35903')
-    socket.addEventListener('open', (event) => {
+    WebSocketRef.current = new ReconnectingWebSocket('ws://localhost:35903')
+    WebSocketRef.current.addEventListener('open', (event: any) => {
       console.log('Connection with Emacs established')
     })
-    socket.addEventListener('message', (event) => {
+    WebSocketRef.current.addEventListener('message', (event: any) => {
       const fg = graphRef.current
+      const bh = behaviorRef.current
       const message = JSON.parse(event.data)
       switch (message.type) {
         case 'graphdata':
@@ -212,19 +222,14 @@ export function GraphPage() {
               setEmacsNodeId(message.data.id)
               break
             case 'zoom': {
-              const speed = message?.data?.speed || behavior.zoomSpeed
-              const padding = message?.data?.padding || behavior.zoomPadding
+              const speed = message?.data?.speed || bh.zoomSpeed
+              const padding = message?.data?.padding || bh.zoomPadding
               followBehavior('zoom', message.data.id, speed, padding)
               setEmacsNodeId(message.data.id)
               break
             }
             case 'follow': {
-              followBehavior(
-                behavior.follow,
-                message.data.id,
-                behavior.zoomSpeed,
-                behavior.zoomPadding,
-              )
+              followBehavior(bh.follow, message.data.id, bh.zoomSpeed, bh.zoomPadding)
               setEmacsNodeId(message.data.id)
               break
             }
@@ -355,7 +360,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     if (!emacsNodeId) {
       return
     }
-    centralHighlightedNode.current = nodeById[emacsNodeId] as NodeObject
+    setHoverNode(nodeById[emacsNodeId] as NodeObject)
   }, [emacsNodeId])
 
   centralHighlightedNode.current = hoverNode
@@ -751,7 +756,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       if (scope.nodeIds.length === 0) {
         return
       }
-      setScope((currentScope) => ({
+      setScope((currentScope: Scope) => ({
         ...currentScope,
         nodeIds: [],
       }))

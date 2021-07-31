@@ -163,6 +163,7 @@ export const Tweaks = (props: TweakProps) => {
                     setFilter(initialFilter)
                     setMouse(initialMouse)
                     setPhysics(initialPhysics)
+                    setBehavior(initialBehavior)
                   }}
                   variant="none"
                   size="sm"
@@ -1222,7 +1223,7 @@ export const Tweaks = (props: TweakProps) => {
                         </Portal>
                       </Menu>
                     </Flex>
-                    <Flex alignItems="center" justifyContent="space-between">
+                    {/* <Flex alignItems="center" justifyContent="space-between">
                       <Flex>
                         <Text>Follow local graph</Text>
                         <InfoTooltip infoText="When in local mode and opening a node that already exists in Emacs, should I add that local graph or open the new one?" />
@@ -1252,7 +1253,7 @@ export const Tweaks = (props: TweakProps) => {
                           </MenuList>
                         </Portal>
                       </Menu>
-                    </Flex>
+                    </Flex> */}
                     <SliderWithInfo
                       label="Zoom speed"
                       value={behavior.zoomSpeed}

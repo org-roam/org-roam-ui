@@ -1,11 +1,11 @@
  ;;; org-roam-ui.el --- User Interface for Org-roam -*- coding: utf-8; lexical-binding: t; -*-
 
-;; Copyright © 2021 ...
+;; Copyright © 2021 Kirill Rogovoy, Thomas F. K. Jorna
 
-;; Author: ...
+;; author: Kirill Rogovoy, Thomas Jorna
 ;; URL: https://github.com/org-roam/org-roam-ui
 ;; Keywords: org-mode, roam
-;; Version: ...
+;; Version: 0
 ;; Package-Requires: ((emacs "26.1") (f "0.17.2") (org-roam "2.0.0"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -115,21 +115,15 @@ This serves the web-build and API over HTTP."
             (add-hook 'after-save-hook #'org-roam-ui--on-save)
             (message "Connection established with org-roam-ui")
             (when org-roam-ui-follow
-              (add-hook 'post-command-hook #'org-roam-ui--update-current-node))))
+              (org-roam-ui-follow-mode 1))))
          :on-close (lambda (_websocket)
-            (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
-            (message "Connection with org-roam-ui closed."))))
-    (if
-      (boundp 'counsel-load-theme)
-      (advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
-      (advice-add 'load-theme :after #'org-roam-ui-sync-theme--advice)))
+            (org-roam-ui-follow-mode -1)
+            (message "Connection with org-roam-ui closed.")))))
    (t
     (progn
     (websocket-server-close org-roam-ui-ws)
-    (if (boundp 'counsel-load-theme)
-(advice-remove 'counsel-load-theme #'org-roam-ui-sync-theme--advice)
-            (advice-remove 'load-theme #'org-roam-ui-sync-theme--advice))
+    (org-roam-ui-follow-mode -1)
     (httpd-stop)))))
 
 (defun org-roam-ui--on-save ()
@@ -255,7 +249,8 @@ The padding around the nodes in the viewport."
 
 
 (defun orui-node-local (&optional id speed padding)
-  "Open the local graph view of the current node, or optionally of a node of your choosing."
+  "Open the local graph view of the current node, or optionally of a node of your choosing.
+Optionally with id (string), speed (number, ms) and padding (number, px)."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
   (websocket-send-text oru-ws (json-encode `((type . "command") (data .
@@ -263,25 +258,21 @@ The padding around the nodes in the viewport."
   (message "No node found."))
 
 (defvar org-roam-ui--following nil)
-(defun orui-toggle-follow ()
+
+(define-minor-mode org-roam-ui-follow-mode
   "Set whether ORUI should follow your every move in emacs. Default yes."
-  (interactive)
-  (if (member 'org-roam-ui--update-current-node (default-value 'post-command-hook))
+  :lighter "org-roam-ui "
+  :global t
+  :group 'org-roam-ui
+  :init-value nil
+  (if org-roam-ui-follow-mode
       (progn
+    (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
+    (message "Org-Roam-UI will now follow you around."))
       (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
       (message "Org-Roam-UI will now leave you alone.")
-      (setq org-roam-ui--following nil))
-    (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
-    (setq org-roam-ui--following nil)
-    (message "Org-Roam-UI will now follow you around."))
-  )
+  ))
 
-
-(defun orui-toggle-local-zoom ()
-  "Toggles whether org-roam-ui should go to the local view of a given node or zoom to it.
-Defaults to local."
-  (interactive)
-  (org-roam-ui--send-command "toggle" `(id . yes)))
 
 (defun orui-sync-theme ()
   "Sync your current Emacs theme with org-roam-ui."
