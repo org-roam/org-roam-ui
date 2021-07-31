@@ -1446,7 +1446,7 @@
     9421: function (r, e, t) {
       'use strict'
       t.d(e, {
-        iv: function () {
+        css: function () {
           return n.i
         },
         isStyleProp: function () {
@@ -1716,7 +1716,7 @@
             styles: (e) => {
               var t = (0, a.Wf)(e, 'styles.global'),
                 n = (0, i.Pu)(t, { theme: e, colorMode: r })
-              if (n) return (0, o.iv)(n)(e)
+              if (n) return (0, o.css)(n)(e)
             },
           })
         }
