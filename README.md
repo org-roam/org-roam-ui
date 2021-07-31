@@ -307,6 +307,12 @@ In no particular order
 
 # Contribute 💪
 
+```bash
+git clone https://github.com/org-roam/org-roam-ui
+yarn
+yarn dev
+```
+
 [GitHub Community Guidelines
 ](https://docs.github.com/en/github/site-policy/github-community-guidelines) apply.
 
