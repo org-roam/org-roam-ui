@@ -2421,11 +2421,19 @@
                         }))
                   )
                 }),
-                n = i.links.filter(function (e) {
-                  var n = e
-                  return 'cite' !== n.type && (h.parents || 'parent' !== n.type)
+                n = e.map(function (e) {
+                  return e.id
                 }),
-                t = e.filter(function (e) {
+                t = i.links.filter(function (e) {
+                  var t = e
+                  return (
+                    'cite' !== t.type &&
+                    (h.parents || 'parent' !== t.type) &&
+                    n.includes(t.source) &&
+                    n.includes(t.target)
+                  )
+                }),
+                r = e.filter(function (e) {
                   var n,
                     t = null !== (n = u[e.id]) && void 0 !== n ? n : []
                   return (
@@ -2435,15 +2443,15 @@
                     })
                   )
                 }),
-                r = t.map(function (e) {
+                o = r.map(function (e) {
                   return e.id
                 }),
-                o = n.filter(function (e) {
+                l = t.filter(function (e) {
                   var n = 'object' === typeof e.source ? e.source.id : e.source,
                     t = 'object' === typeof e.target ? e.target.id : e.target
-                  return r.includes(n) && r.includes(t)
+                  return o.includes(n) && o.includes(t)
                 })
-              return 0 === y.nodeIds.length ? { nodes: e, links: n } : { nodes: t, links: o }
+              return 0 === y.nodeIds.length ? { nodes: e, links: t } : { nodes: r, links: l }
             },
             [h, y, i],
           )

@@ -1,0 +1,9 @@
+{
+  "name": "Org Roam UI",
+  "short_name": "ORUI",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#227a40",
+  "background_color": "#fff",
+  "start_url": "/"
+}
