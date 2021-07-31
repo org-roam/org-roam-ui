@@ -205,6 +205,7 @@ export function GraphPage() {
             filter,
             visuals,
             behavior,
+            mouse,
           }}
         />
       </Box>
@@ -222,6 +223,7 @@ export interface GraphProps {
   emacsNodeId: string | null
   visuals: typeof initialVisuals
   behavior: typeof initialBehavior
+  mouse: typeof initialMouse
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -235,6 +237,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     nodeById,
     visuals,
     behavior,
+    mouse,
   } = props
 
   // react-force-graph does not track window size
@@ -245,6 +248,26 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
 
+  const handleClick = (click: string, node: NodeObject) => {
+    switch (click) {
+      //mouse.highlight:
+      case mouse.local: {
+        if (scope.nodeIds.includes(node.id as string)) {
+          return
+        }
+        setScope((currentScope) => ({
+          ...currentScope,
+          nodeIds: [...currentScope.nodeIds, node.id as string],
+        }))
+      }
+      case mouse.follow: {
+        window.open('org-protocol://roam-node?node=' + node.id, '_self')
+        return
+      }
+      default:
+        break
+    }
+  }
   const getNeighborNodes = (id: string) => {
     const links = linksByNodeId[id]! ?? []
     return Object.fromEntries(
@@ -418,7 +441,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const theme = useTheme()
   const themeContext = useContext<ThemeContextProps>(ThemeContext)
 
-  const getThemeColor = (name: string) => name.split('.').reduce((o, i) => o[i], theme.colors)
+  const getThemeColor = (name: string) => {
+    if (!theme) {
+      return
+    }
+    return name.split('.').reduce((o, i) => o[i], theme.colors)
+  }
 
   const highlightColors = useMemo(() => {
     const allColors = visuals.nodeColorScheme.concat(
@@ -654,19 +682,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     onNodeClick: (node: NodeObject, event: any) => {
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
       lastNodeClickRef.current = event.timeStamp
-      console.log(event)
-
       if (isDoubleClick) {
-        window.open('org-protocol://roam-node?node=' + node.id, '_self')
-        return
+        return handleClick('double', node)
       }
-      if (scope.nodeIds.includes(node.id as string)) {
-        return
-      }
-      setScope((currentScope) => ({
-        ...currentScope,
-        nodeIds: [...currentScope.nodeIds, node.id as string],
-      }))
+      return handleClick('click', node)
     },
     onBackgroundClick: () => {
       setHoverNode(null)
@@ -688,6 +707,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         setOpacity(0)
       }
       setHoverNode(node)
+    },
+    onNodeRightClick: (node) => {
+      handleClick('right', node)
     },
   }
 
