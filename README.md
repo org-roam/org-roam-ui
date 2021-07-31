@@ -267,7 +267,7 @@ https://user-images.githubusercontent.com/21983833/127747187-7823a825-a2f8-449c-
 
 #### Theme syncing
 
-Your gruvbox is only a `M-x org-roam-ui-sync-theme` away.
+Your gruvbox is only a `M-x orui-sync-theme` away.
 
 
 https://user-images.githubusercontent.com/21983833/127747203-a1aeca95-7def-4caf-b2cf-8a18fa1f2059.mp4
