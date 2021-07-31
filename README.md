@@ -64,14 +64,20 @@ Then something along the following to your `config.el`
 
 We recommend only loading org-roam-ui after loading org(-roam) as starting the server and making database requests can impact startup times quite a lot.
 
-### Quelpa/use-package
-
+### straight/use-package
+```emacs-lisp
+(use-package org-roam-ui 
+  :straight 
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out")) 
+    :after org-roam 
+    :hook (org-roam . org-roam-ui-mode))
+```
 TODO
 You probably know how to do this
 
 ## Usage
 
-Use `M-x org-roam-ui RET` to enable the global mode.
+Use `M-x org-roam-ui-mode RET` to enable the global mode.
 It will start a web server on http://127.0.0.1:35901/ and connect to it via a WebSocket for real-time updates.
 
 ### Commands
