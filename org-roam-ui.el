@@ -44,10 +44,15 @@
   :prefix "org-roam-ui-"
   :link '(url-link :tag "Github" "https://github.com/org-roam/org-roam-ui"))
 
-(defvar org-roam-ui/root-dir default-directory
+(defvar org-roam-ui/root-dir
+  (concat (file-name-directory
+           (f-full (or
+                    load-file-name
+                    buffer-file-name)))
+          ".")
   "Root directory of the org-roam-ui project.")
 
-(defvar org-roam-ui/app-build-dir (expand-file-name "./out/")
+(defvar org-roam-ui/app-build-dir (expand-file-name "./out/" org-roam-ui/root-dir)
   "Directory containing org-roam-ui's web build.")
 
 ;; TODO: make into defcustom
@@ -102,8 +107,8 @@ This serves the web-build and API over HTTP."
   :init-value nil
   (cond
    (org-roam-ui-mode
-    (setq httpd-port org-roam-ui-port
-          httpd-root org-roam-ui/app-build-dir)
+    (setq-local httpd-port org-roam-ui-port)
+    (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
     (setq org-roam-ui-ws
         (websocket-server
@@ -123,8 +128,9 @@ This serves the web-build and API over HTTP."
    (t
     (progn
     (websocket-server-close org-roam-ui-ws)
+    (httpd-stop)
     (org-roam-ui-follow-mode -1)
-    (httpd-stop)))))
+    ))))
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer."
