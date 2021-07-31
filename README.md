@@ -45,7 +45,7 @@ Add the following to your `package.el`
 
 ```emacs-lisp
 (package! websocket)
-(package! org-roam-ui :recipe (:host github :repo org-roam/org-roam-ui :files ("*.el" "out")))
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 ```
 
 Then something along the following to your `config.el`
