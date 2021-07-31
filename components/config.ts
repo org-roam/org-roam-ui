@@ -80,8 +80,10 @@ export const initialVisuals = {
 }
 
 export const initialBehavior = {
-  follow: 'Zoom',
-  followLocalOrZoom: true,
+  follow: 'zoom',
+  localSame: 'add',
+  zoomPadding: 200,
+  zoomSpeed: 2000,
 }
 
 export const initialMouse = {

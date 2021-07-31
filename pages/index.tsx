@@ -131,8 +131,64 @@ export function GraphPage() {
   const { setEmacsTheme } = useContext(ThemeContext)
 
   const [threeDim, setThreeDim] = useState(false)
+  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
 
   const graphRef = useRef<any>(null)
+
+  const followBehavior = (
+    command: string,
+    emacsNode: string,
+    speed: number = 2000,
+    padding: number = 200,
+  ) => {
+    const fg = graphRef.current
+    const links = linksByNodeIdRef.current[emacsNode] ?? []
+    const nodes = Object.fromEntries(
+      [emacsNode as string, ...links.flatMap((link) => [link.source, link.target])].map(
+        (nodeId) => [nodeId, {}],
+      ),
+    )
+    if (command === 'zoom') {
+      if (scope.nodeIds.length) {
+        setScope({ nodeIds: [] })
+      }
+      setTimeout(() => fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]), 50)
+      return
+    }
+    if (!scope.nodeIds.length) {
+      setScope({ nodeIds: [emacsNode] })
+      setTimeout(() => {
+        fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
+      }, 50)
+      return
+    }
+    if (behavior.localSame !== 'add') {
+      setScope({ nodeIds: [emacsNode] })
+      setTimeout(() => {
+        fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
+      }, 50)
+      return
+    }
+
+    // if the node is in the scopednodes, add it to scope instead of replacing it
+    if (
+      !scope.nodeIds.includes(emacsNode) ||
+      !scope.nodeIds.some((scopeId: string) => {
+        return nodes[scopeId]
+      })
+    ) {
+      setScope({ nodeIds: [emacsNode] })
+      setTimeout(() => {
+        fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
+      }, 50)
+      return
+    }
+    setScope((currentScope: Scope) => ({
+      ...currentScope,
+      nodeIds: [...currentScope.nodeIds, emacsNode as string],
+    }))
+    setTimeout(() => fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]), 50)
+  }
 
   useEffect(() => {
     const socket = new ReconnectingWebSocket('ws://localhost:35903')
@@ -140,6 +196,7 @@ export function GraphPage() {
       console.log('Connection with Emacs established')
     })
     socket.addEventListener('message', (event) => {
+      const fg = graphRef.current
       const message = JSON.parse(event.data)
       switch (message.type) {
         case 'graphdata':
@@ -148,21 +205,28 @@ export function GraphPage() {
           return setEmacsTheme(message.data)
         case 'command':
           switch (message.data.commandName) {
-            case 'follow':
-              return setEmacsNodeId(message.data.id)
+            case 'local':
+              const speed = behavior.zoomSpeed
+              const padding = behavior.zoomPadding
+              followBehavior('local', message.data.id, speed, padding)
+              setEmacsNodeId(message.data.id)
+              break
             case 'zoom': {
-              const links = linksByNodeIdRef.current[message.data.id!] ?? []
-              const nodes = Object.fromEntries(
-                [
-                  message.data.id! as string,
-                  ...links.flatMap((link) => [link.source, link.target]),
-                ].map((nodeId) => [nodeId, {}]),
-              )
-              const fg = graphRef.current
-              fg.zoomToFit(2000, 200, (node: OrgRoamNode) => nodes[node.id!])
+              const speed = message?.data?.speed || behavior.zoomSpeed
+              const padding = message?.data?.padding || behavior.zoomPadding
+              followBehavior('zoom', message.data.id, speed, padding)
+              setEmacsNodeId(message.data.id)
+              break
             }
-            case 'toggle': {
-              /* setBehavior({ ...behavior, followLocalorZoom: !behavior.followLocalOrZoom }) */
+            case 'follow': {
+              followBehavior(
+                behavior.follow,
+                message.data.id,
+                behavior.zoomSpeed,
+                behavior.zoomPadding,
+              )
+              setEmacsNodeId(message.data.id)
+              break
             }
             default:
               return console.error('unknown message type', message.type)
@@ -189,6 +253,8 @@ export function GraphPage() {
           setVisuals,
           mouse,
           setMouse,
+          behavior,
+          setBehavior,
         }}
       />
       <Box position="absolute" alignItems="top">
@@ -205,6 +271,8 @@ export function GraphPage() {
             visuals,
             behavior,
             mouse,
+            scope,
+            setScope,
           }}
         />
       </Box>
@@ -223,6 +291,8 @@ export interface GraphProps {
   visuals: typeof initialVisuals
   behavior: typeof initialBehavior
   mouse: typeof initialMouse
+  scope: Scope
+  setScope: any
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -237,6 +307,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     visuals,
     behavior,
     mouse,
+    scope,
+    setScope,
   } = props
 
   // react-force-graph does not track window size
@@ -245,7 +317,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const [windowWidth, windowHeight] = useWindowSize()
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
-  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
 
   const handleClick = (click: string, node: NodeObject) => {
     switch (click) {
@@ -254,7 +325,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         if (scope.nodeIds.includes(node.id as string)) {
           break
         }
-        setScope((currentScope) => ({
+        setScope((currentScope: Scope) => ({
           ...currentScope,
           nodeIds: [...currentScope.nodeIds, node.id as string],
         }))
@@ -278,27 +349,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
   }
 
+  const centralHighlightedNode = useRef<NodeObject | null>(null)
+
   useEffect(() => {
     if (!emacsNodeId) {
       return
     }
-    const fg = graphRef.current
-    if (behavior.followLocalOrZoom) {
-      setScope({ nodeIds: [emacsNodeId] })
-      setTimeout(() => {
-        fg?.zoomToFit(
-          2000,
-          numberWithinRange(20, 200, windowWidth / 8),
-          (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!],
-        )
-      }, 1)
-    } else {
-      fg?.zoomToFit(1000, 200, (node: NodeObject) => getNeighborNodes(emacsNodeId)[node.id!])
-      setHoverNode(nodeById[emacsNodeId] as NodeObject)
-    }
+    centralHighlightedNode.current = nodeById[emacsNodeId] as NodeObject
   }, [emacsNodeId])
 
-  const centralHighlightedNode = useRef<NodeObject | null>(null)
   centralHighlightedNode.current = hoverNode
   const highlightedNodes = useMemo(() => {
     if (!centralHighlightedNode.current) {

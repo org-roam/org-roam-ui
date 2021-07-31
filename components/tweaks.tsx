@@ -41,7 +41,13 @@ import {
 } from '@chakra-ui/react'
 import React, { useState, useContext } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
-import { initialPhysics, initialFilter, initialVisuals, initialMouse } from './config'
+import {
+  initialPhysics,
+  initialFilter,
+  initialVisuals,
+  initialMouse,
+  initialBehavior,
+} from './config'
 
 import { ThemeContext } from '../pages/themecontext'
 
@@ -56,6 +62,8 @@ export interface TweakProps {
   setVisuals: any
   mouse: typeof initialMouse
   setMouse: any
+  behavior: typeof initialBehavior
+  setBehavior: any
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -70,6 +78,8 @@ export const Tweaks = (props: TweakProps) => {
     setVisuals,
     mouse,
     setMouse,
+    behavior,
+    setBehavior,
   } = props
   const [showTweaks, setShowTweaks] = useState(true)
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
@@ -1188,6 +1198,78 @@ export const Tweaks = (props: TweakProps) => {
                         </Portal>
                       </Menu>
                     </Flex>
+                    <Flex alignItems="center" justifyContent="space-between">
+                      <Text>Follow Emacs by...</Text>
+                      <Menu placement="right">
+                        <MenuButton
+                          as={Button}
+                          rightIcon={<ChevronDownIcon />}
+                          colorScheme=""
+                          color="black"
+                        >
+                          <Text>{behavior.follow[0].toUpperCase() + behavior.follow.slice(1)}</Text>
+                        </MenuButton>
+                        <Portal>
+                          {' '}
+                          <MenuList bgColor="gray.200" zIndex="popover">
+                            <MenuItem onClick={() => setBehavior({ ...behavior, follow: 'local' })}>
+                              Opening the local graph
+                            </MenuItem>
+                            <MenuItem onClick={() => setBehavior({ ...behavior, follow: 'zoom' })}>
+                              Zooming to the current node
+                            </MenuItem>
+                          </MenuList>
+                        </Portal>
+                      </Menu>
+                    </Flex>
+                    <Flex alignItems="center" justifyContent="space-between">
+                      <Flex>
+                        <Text>Follow local graph</Text>
+                        <InfoTooltip infoText="When in local mode and opening a node that already exists in Emacs, should I add that local graph or open the new one?" />
+                      </Flex>
+                      <Menu placement="right">
+                        <MenuButton
+                          as={Button}
+                          rightIcon={<ChevronDownIcon />}
+                          colorScheme=""
+                          color="black"
+                        >
+                          <Text>{behavior.localSame === 'add' ? 'Add' : 'New'}</Text>
+                        </MenuButton>
+                        <Portal>
+                          {' '}
+                          <MenuList bgColor="gray.200" zIndex="popover">
+                            <MenuItem
+                              onClick={() => setBehavior({ ...behavior, localSame: 'new' })}
+                            >
+                              Open that nodes graph
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => setBehavior({ ...behavior, localSame: 'add' })}
+                            >
+                              Add node to local graph
+                            </MenuItem>
+                          </MenuList>
+                        </Portal>
+                      </Menu>
+                    </Flex>
+                    <SliderWithInfo
+                      label="Zoom speed"
+                      value={behavior.zoomSpeed}
+                      min={0}
+                      max={4000}
+                      step={100}
+                      onChange={(value) => setBehavior({ ...behavior, zoomSpeed: value })}
+                    />
+                    <SliderWithInfo
+                      label="Zoom padding"
+                      value={behavior.zoomPadding}
+                      min={0}
+                      max={400}
+                      step={1}
+                      onChange={(value) => setBehavior({ ...behavior, zoomPadding: value })}
+                      infoText="How much to zoom out to accomodate all nodes when changing the view."
+                    />
                   </VStack>
                 </AccordionPanel>
               </AccordionItem>

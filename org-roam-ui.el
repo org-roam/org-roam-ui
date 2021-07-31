@@ -119,7 +119,7 @@ This serves the web-build and API over HTTP."
          :on-close (lambda (_websocket)
             (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
-            (message "Connection with org-roam-ui closed  succesfully."))))
+            (message "Connection with org-roam-ui closed."))))
     (if
       (boundp 'counsel-load-theme)
       (advice-add 'counsel-load-theme :after #'org-roam-ui-sync-theme--advice)
@@ -133,9 +133,10 @@ This serves the web-build and API over HTTP."
     (httpd-stop)))))
 
 (defun org-roam-ui--on-save ()
-  "Send graphdata on saving an only org-roam buffer."
+  "Send graphdata on saving an org-roam buffer."
   (when (org-roam-buffer-p)
-    (org-roam-ui--send-graphdata))
+    (org-roam-ui--send-graphdata)
+    (org-roam-ui))
   )
 
 (defun org-roam-ui--send-graphdata ()
@@ -156,20 +157,12 @@ This serves the web-build and API over HTTP."
       (websocket-send-text oru-ws (json-encode `((type . "command") (data
 . ((commandName . "follow") (id . ,node))))))))))
 
-(defun org-roam-ui-show-node ()
-  "Open the current org-roam node in org-roam-ui."
-  (interactive)
-      (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,(org-roam-id-at-point))))))))
 
-(defun org-roam-ui-sync-theme--advice ()
-  "Function which is called after load-theme to sync your current theme with org-roam-ui."
-  (message "Syncing theme")
-  (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
+;; (defun org-roam-ui-sync-theme--advice ()
+;;   "Function which is called after load-theme to sync your current theme with org-roam-ui."
+;;   (message "Syncing theme")
+;;   (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
 
-(defun org-roam-ui-sync-theme-manually ()
-  "Sync your current Emacs theme with org-roam-ui."
-  (interactive)
-  (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
 
 (defun org-roam-ui--update-theme ()
   (let  ((ui-theme (list nil)))
@@ -185,15 +178,15 @@ This serves the web-build and API over HTTP."
      org-roam-ui-custom-theme))
   ui-theme))
 
-(defservlet* graph application/json ()
-  (let* ((nodes-columns [id file title level])
-         (links-columns [source dest type])
-         (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
-         (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
-         (response (json-encode `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
-                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))))))
-    (insert response)
-    (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*")))
+;; (defservlet* graph application/json ()
+;;   (let* ((nodes-columns [id file title level])
+;;          (links-columns [source dest type])
+;;          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
+;;          (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
+;;          (response (json-encode `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
+;;                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))))))
+;;     (insert response)
+;;     (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*")))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
@@ -204,31 +197,31 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
     res))
 
 
-(defservlet* id/:id text/html ()
-  (let ((node (org-roam-populate (org-roam-node-create :id id)))
-        html-string)
-    (org-roam-with-temp-buffer (org-roam-node-file node)
-      (progn
-      (setq-local org-export-with-toc nil)
-      (setq-local org-export-with-broken-links t)
-      (setq-local org-export-with-sub-superscripts nil)
-      (replace-string "[[id:" "[[./")
-             (let* ((file-string (buffer-string))
-                    (matches (s-match-strings-all "\\[\\[\\(file:\\|\\.\\/\\)\\(.*\\.\\(png\\|jpg\\|jpeg\\|gif\\|svg\\)\\)\\]\\(\\[.*\\]\\)?\\]" file-string)))
-               (dolist (match matches)
-                 (let ((path (elt match 2))
-                       (link (elt match 0)))
-                   (unless (file-name-absolute-p path)
-                     (setq path (concat (file-name-directory (org-roam-node-file-node)) path)))
-                   (setq path (f-full path))
-                   (if (file-exists-p path)
-                       (setq file-string
-                             (s-replace link (format "[[image:%s]]" path) file-string)))))
-               (erase-buffer)
-             (insert file-string))
-      (setq html-string (org-export-as 'html))))
-    (insert html-string)
-    (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
+;; (defservlet* id/:id text/html ()
+;;   (let ((node (org-roam-populate (org-roam-node-create :id id)))
+;;         html-string)
+;;     (org-roam-with-temp-buffer (org-roam-node-file node)
+;;       (progn
+;;       (setq-local org-export-with-toc nil)
+;;       (setq-local org-export-with-broken-links t)
+;;       (setq-local org-export-with-sub-superscripts nil)
+;;       (replace-string "[[id:" "[[./")
+;;              (let* ((file-string (buffer-string))
+;;                     (matches (s-match-strings-all "\\[\\[\\(file:\\|\\.\\/\\)\\(.*\\.\\(png\\|jpg\\|jpeg\\|gif\\|svg\\)\\)\\]\\(\\[.*\\]\\)?\\]" file-string)))
+;;                (dolist (match matches)
+;;                  (let ((path (elt match 2))
+;;                        (link (elt match 0)))
+;;                    (unless (file-name-absolute-p path)
+;;                      (setq path (concat (file-name-directory (org-roam-node-file-node)) path)))
+;;                    (setq path (f-full path))
+;;                    (if (file-exists-p path)
+;;                        (setq file-string
+;;                              (s-replace link (format "[[image:%s]]" path) file-string)))))
+;;                (erase-buffer)
+;;              (insert file-string))
+;;       (setq html-string (org-export-as 'html))))
+;;     (insert html-string)
+;;     (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
 
 (defun org-roam-ui-get-theme ()
   "Attempt to bring the current theme into a standardized format."
@@ -269,22 +262,31 @@ The padding around the nodes in the viewport."
       ((commandName . "local") (id . ,node)))))))
   (message "No node found."))
 
+(defvar org-roam-ui--following nil)
 (defun orui-toggle-follow ()
   "Set whether ORUI should follow your every move in emacs. Default yes."
   (interactive)
   (if (member 'org-roam-ui--update-current-node (default-value 'post-command-hook))
       (progn
       (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
-      (message "Org-Roam-UI will now leave you alone."))
+      (message "Org-Roam-UI will now leave you alone.")
+      (setq org-roam-ui--following nil))
     (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
+    (setq org-roam-ui--following nil)
     (message "Org-Roam-UI will now follow you around."))
   )
+
 
 (defun orui-toggle-local-zoom ()
   "Toggles whether org-roam-ui should go to the local view of a given node or zoom to it.
 Defaults to local."
   (interactive)
   (org-roam-ui--send-command "toggle" `(id . yes)))
+
+(defun orui-sync-theme ()
+  "Sync your current Emacs theme with org-roam-ui."
+  (interactive)
+  (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
 
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here
