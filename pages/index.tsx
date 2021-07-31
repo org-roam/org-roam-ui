@@ -33,7 +33,7 @@ import {
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
-import { ThemeContext, ThemeContextProps } from './themecontext'
+import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import SpriteText from 'three-spritetext'
 
 import ReconnectingWebSocket from 'reconnecting-websocket'

@@ -4,7 +4,7 @@ import { ChakraProvider, extendTheme, withDefaultColorScheme } from '@chakra-ui/
 import { useEffect, useState, useMemo, useContext, useReducer } from 'react'
 import * as d3int from 'd3-interpolate'
 
-import { ThemeContext } from './themecontext'
+import { ThemeContext } from '../util/themecontext'
 import { usePersistantState } from '../util/persistant-state'
 
 function MyApp({ Component, pageProps }: AppProps) {

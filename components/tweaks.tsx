@@ -49,7 +49,7 @@ import {
   initialBehavior,
 } from './config'
 
-import { ThemeContext } from '../pages/themecontext'
+import { ThemeContext } from '../util/themecontext'
 
 export interface TweakProps {
   physics: typeof initialPhysics
