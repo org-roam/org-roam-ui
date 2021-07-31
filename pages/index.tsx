@@ -267,6 +267,7 @@ export function GraphPage() {
           ref={graphRef}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
+          webSocket={WebSocketRef.current}
           {...{
             physics,
             graphData,
@@ -298,6 +299,7 @@ export interface GraphProps {
   mouse: typeof initialMouse
   scope: Scope
   setScope: any
+  webSocket: any
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -314,6 +316,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     mouse,
     scope,
     setScope,
+    webSocket,
   } = props
 
   // react-force-graph does not track window size
@@ -322,6 +325,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const [windowWidth, windowHeight] = useWindowSize()
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
+
+  const theme = useTheme()
+
+  const { emacsTheme } = useContext<ThemeContextProps>(ThemeContext)
 
   const handleClick = (click: string, node: NodeObject) => {
     switch (click) {
@@ -337,7 +344,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         break
       }
       case mouse.follow: {
-        window.open('org-protocol://roam-node?node=' + node.id, '_self')
+        webSocket.send(node.id)
         break
       }
       default:
@@ -502,9 +509,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
   }, [hoverNode])
 
-  const theme = useTheme()
-  const themeContext = useContext<ThemeContextProps>(ThemeContext)
-
   const getThemeColor = (name: string) => {
     if (!theme) {
       return
@@ -534,6 +538,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     visuals.linkHighlight,
     visuals.nodeHighlight,
     visuals.linkColorScheme,
+    emacsTheme,
   ])
 
   const previouslyHighlightedNodes = useMemo(() => {
@@ -626,11 +631,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const labelTextColor = useMemo(
     () => getThemeColor(visuals.labelTextColor),
-    [visuals.labelTextColor],
+    [visuals.labelTextColor, emacsTheme],
   )
   const labelBackgroundColor = useMemo(
     () => getThemeColor(visuals.labelBackgroundColor),
-    [visuals.labelBackgroundColor],
+    [visuals.labelBackgroundColor, emacsTheme],
   )
 
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {

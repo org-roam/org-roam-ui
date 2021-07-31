@@ -16,28 +16,32 @@ Org-Roam-UI's main feature is the ability to generate a graph visualization of y
 
 Configure the graph just the way you like it.
 
-#### 3 D
+#### Colors
 
-For a deeper understanding of your thoughts (and it looks cool)
+A ton, or just a splash.
 
 #### Open notes in Emacs
 
 (Double) clicking a node will open the corresponding note in Emacs, very cool.
 
-#### Follow your movement in Emacs
+#### 3 D
+
+Literally deepen your understanding of your thoughts (and it looks cool)
+
+#### Follow your movement in Emacs, and back!
 
 When you open a note in Emacs, org-roam-ui will move to the corresponding node on the graph.
 
-### Theme syncing
+#### Theme syncing
 
 Your gruvbox is only a `M-x org-roam-ui-sync-theme` away.
 
 ## Installation
 
-`org-roam-ui` is not yet on MELPA.
+`org-roam-ui` is not (yet!) on MELPA.
 
 Should your Emacs miss any of the dependencies, please install them manually!
-org-roam-ui requires `org-roam`.
+org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >27 for fast JSON parsing.
 
 ### Prerequisites
 
@@ -51,6 +55,12 @@ Also make sure the emacs server is started; `M-x server-start RET`
 
 ### Manually
 
+Install `websocket.el`
+
+```emacs-lisp
+M-x package-install websocket
+```
+
 Clone the repo:
 
 ```bash
@@ -61,6 +71,7 @@ git clone git@github.com:org-roam/org-roam-ui.git
 Load in Emacs (add to config):
 
 ```lisp
+(require 'websocket)
 (add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
 (load-library "org-roam-ui")
 ```
@@ -70,17 +81,22 @@ Load in Emacs (add to config):
 Add the following to your `package.el`
 
 ```emacs-lisp
+(package! websocket)
 (package! org-roam-ui :recipe (:host github :repo org-roam/org-roam-ui :files "*.el out")
 ```
 
 Then something along the following to your `config.el`
 
 ```emacs-lisp
+(use-package! websocket
+    :after org-roam)
+
 (use-package! org-roam-ui
     :after org-roam ;; or :after org
     :hook (org-roam . org-roam-ui-mode)
     :config
 )
+
 ```
 
 We recommend only loading org-roam-ui after loading org(-roam) as starting the server and making database requests can impact startup times quite a lot.
@@ -88,22 +104,60 @@ We recommend only loading org-roam-ui after loading org(-roam) as starting the s
 ### Quelpa/use-package
 
 TODO
+You probably know how to do this
 
 ## Usage
 
 Use `M-x org-roam-ui RET` to enable the global mode.
-It will start a web server on http://127.0.0.1:35901/.
+It will start a web server on http://127.0.0.1:35901/ and connect to it via a WebSocket for real-time updates.
+
+### Commands
+
+ORUI provides a few commands for interacting with the graph without ever having to leave Emacs.
+NOTE: This is quite janky at the moment and will change in the future. Consider this more of a teaser.
+
+#### Moving around
+
+```emacs-lisp
+(orui-node-zoom)
+```
+
+Zooms to the current node in the global view _ignoring local mode_.
+
+```emacs-lisp
+(orui-node-local)
+```
+
+Opens the current node in local view.
+
+You can optionally give these command three parameters:
+
+1. the node id you want to zoom to (by default the current node)
+2. The speed at which you want to zoom (can be set in the UI) in ms.
+3. The padding of the zoom in px.
+
+These options might not work at the moment, please configure them in the UI for the time being.
 
 ### Configuration
 
 Org-Roam-UI exposes a few variables, but most of the customization is done in the web app.
 
-#### Port
+#### Following
 
-If you are already the using the higly demanded `35901` port, you can set it to a different value.
+ORUI follows you around Emacs by default. To disable this, set
 
 ```emacs-lisp
-(setq org-roam-ui-port 8080)
+(setq org-roam-ui-follow nil)
+```
+
+or disable the minor mode `org-roam-ui-follow-mode`.
+
+#### Updating
+
+We plan to make updates to the graph happen smoothly, at the moment it is only possible to reload the entire graph when an update happens (but local mode is preserved). This is enabled by default, to disable
+
+```emacs-lisp
+(setq org-roam-ui-update-on-save nil)
 ```
 
 #### Theme
@@ -113,6 +167,8 @@ Org-Roam-UI can sync your Emacs theme! This is the default behavior, to disable 
 ```emacs-lisp
 (setq org-roam-ui-sync-theme nil)
 ```
+
+Then call `M-x orui-sync-theme`.
 
 You can also provide your own theme if you do not like syncing nor like the default one. To do so, set `org-roam-ui-custom-theme` to an alist of (rather specific) variables, like so
 
@@ -133,7 +189,7 @@ You can also provide your own theme if you do not like syncing nor like the defa
         (magenta . '#bd93f9')))
 ```
 
-At the moment, the main highlighting color is the `magenta` variable, so change that one if you want to change that.
+You can optionally provide `(base1 . '#XXXXXX')` arguments after the last one to also set the background shades, otherwise ORUI will guess based on the provides bg and fg.
 
 ## Disclaimers ‼
 

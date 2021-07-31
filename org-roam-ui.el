@@ -128,6 +128,10 @@ This serves the web-build and API over HTTP."
             (message "Connection established with org-roam-ui")
             (when org-roam-ui-follow
               (org-roam-ui-follow-mode 1))))
+        :on-message (lambda (_websocket frame)
+                    (org-roam-node-visit
+                        (org-roam-populate (org-roam-node-create
+                        :id (websocket-frame-text frame)))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (org-roam-ui-follow-mode -1)
