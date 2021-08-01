@@ -1,4 +1,4 @@
- ;;; org-roam-ui.el --- User Interface for Org-roam -*- coding: utf-8; lexical-binding: t; -*-
+;;; org-roam-ui.el --- User Interface for Org-roam -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; Copyright © 2021 Kirill Rogovoy, Thomas F. K. Jorna
 
@@ -6,7 +6,8 @@
 ;; URL: https://github.com/org-roam/org-roam-ui
 ;; Keywords: org-mode, roam
 ;; Version: 0
-;; Package-Requires: ((emacs "26.1") (f "0.17.2") (org-roam "2.0.0"))
+;; Package-Requires: ((emacs "26.1") (f "0.17.2") (org-roam "2.0.0")
+;; (simple-httpd "20191103.1446") (websocket "20210110.17") (json "1.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -71,18 +72,18 @@ Ignored if a custom theme is provied for 'org-roam-ui-custom-theme'."
   "Custom theme for org-roam-ui. Blocks 'org-roam-ui-sync-theme.
 Provide a list of cons with the following values:
 bg, bg-alt, fg, fg-alt, red, orange, yellow, green, cyan, blue, violet, magenta.
-E.g. '((bg . '#1E2029')
-(bg-alt . '#282a36')
-(fg . '#f8f8f2')
-(fg-alt . '#6272a4')
-(red . '#ff5555')
-(orange . '#f1fa8c')
-(yellow .'#ffb86c')
-(green . '#50fa7b')
-(cyan . '#8be9fd')
-(blue . '#ff79c6')
-(violet . '#8be9fd')
-(magenta . '#bd93f9'))."
+E.g. '((bg . \"#1E2029\")
+\(bg-alt . \"#282a36\")
+\(fg . \"#f8f8f2\")
+\(fg-alt . \"#6272a\")
+\(red . \"#ff5555\")
+\(orange . \"#f1fa8c\")
+\(yellow .\"#ffb86c\")
+\(green . \"#50fa7b\")
+\(cyan . \"#8be9fd\")
+\(blue . \"#ff79c6\")
+\(violet . \"#8be9fd\")
+\(magenta . \"#bd93f9\"))."
   :group 'org-roam-ui
   :type 'list)
 
@@ -161,6 +162,7 @@ This serves the web-build and API over HTTP."
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
 (defun org-roam-ui--update-current-node ()
+  "Send the current node data to the web-socket."
   (when (and (websocket-openp oru-ws) (org-roam-buffer-p))
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
@@ -176,6 +178,7 @@ This serves the web-build and API over HTTP."
 
 
 (defun org-roam-ui--update-theme ()
+  "Send the current theme data to the websocket."
   (let  ((ui-theme (list nil)))
   (if org-roam-ui-sync-theme
     (if (boundp 'doom-themes--colors)
@@ -254,11 +257,12 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 ;;;; commands
 ;;;###autoload
 (defun orui-node-zoom (&optional id speed padding)
-  "Move the view of the graph to the node at points, or optionally a node of your choosing.
+  "Move the view of the graph to current node.
+or optionally a node of your choosing.
 Optionally takes three arguments:
-The id of the node you want to travel to.
-The time in ms it takes to make the transition.
-The padding around the nodes in the viewport."
+The ID of the node you want to travel to.
+The SPEED in ms it takes to make the transition.
+The PADDING around the nodes in the viewport."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
   (websocket-send-text oru-ws (json-encode `((type . "command") (data .
@@ -268,8 +272,8 @@ The padding around the nodes in the viewport."
 
 ;;;###autoload
 (defun orui-node-local (&optional id speed padding)
-  "Open the local graph view of the current node, or optionally of a node of your choosing.
-Optionally with id (string), speed (number, ms) and padding (number, px)."
+  "Open the local graph view of the current node.
+Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
   (websocket-send-text oru-ws (json-encode `((type . "command") (data .
@@ -279,7 +283,7 @@ Optionally with id (string), speed (number, ms) and padding (number, px)."
 
 ;;;###autoload
 (define-minor-mode org-roam-ui-follow-mode
-  "Set whether ORUI should follow your every move in emacs. Default yes."
+  "Set whether ORUI should follow your every move in Emacs."
   :lighter "org-roam-ui "
   :global t
   :group 'org-roam-ui

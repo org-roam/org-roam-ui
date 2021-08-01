@@ -143,21 +143,21 @@ You can also provide your own theme if you do not like syncing nor like the defa
 ```emacs-lisp
 (setq org-roam-ui-custom-theme
     (list
-        (bg . '#1E2029')
-        (bg-alt . '#282a36')
-        (fg . '#f8f8f2')
-        (fg-alt . '#6272a4')
-        (red . '#ff5555')
-        (orange . '#f1fa8c')
-        (yellow .'#ffb86c')
-        (green . '#50fa7b')
-        (cyan . '#8be9fd')
-        (blue . '#ff79c6')
-        (violet . '#8be9fd')
-        (magenta . '#bd93f9')))
+        (bg . "#1E2029")
+        (bg-alt . "#282a36")
+        (fg . "#f8f8f2")
+        (fg-alt . "#6272a4")
+        (red . "#ff5555")
+        (orange . "#f1fa8c")
+        (yellow ."#ffb86c")
+        (green . "#50fa7b")
+        (cyan . "#8be9fd")
+        (blue . "#ff79c6")
+        (violet . "#8be9fd")
+        (magenta . "#bd93f9")))
 ```
 
-You can optionally provide `(base1 . '#XXXXXX')` arguments after the last one to also set the background shades, otherwise ORUI will guess based on the provides bg and fg.
+You can optionally provide `(base1 . "#XXXXXX")` arguments after the last one to also set the background shades, otherwise ORUI will guess based on the provides bg and fg.
 
 ## Disclaimers ‼
 
