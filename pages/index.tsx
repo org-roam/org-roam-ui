@@ -173,14 +173,16 @@ export function GraphPage() {
     if (!sr.nodeIds.length) {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
-        fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
+        /* fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]) */
+        fg.centerAt(0, 0, speed)
       }, 50)
       return
     }
     if (bh.localSame !== 'add') {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
-        fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
+        /* fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]) */
+        fg.centerAt(0, 0, speed)
       }, 50)
       return
     }
@@ -194,7 +196,8 @@ export function GraphPage() {
     ) {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
-        fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!])
+        /* fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]) */
+        fg.centerAt(0, 0, speed)
       }, 50)
       return
     }

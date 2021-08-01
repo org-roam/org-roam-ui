@@ -146,11 +146,11 @@
         E = r(3441),
         L = r(6569),
         Z = r(4189),
-        F = r(454),
-        B = r(8420),
-        M = r(6699),
-        W = r(155),
-        A = r(6769),
+        B = r(454),
+        F = r(8420),
+        A = r(6699),
+        M = r(155),
+        W = r(6769),
         X = r(336),
         _ = r(2026),
         q = r(4096),
@@ -239,7 +239,7 @@
             ]
           return (0, l.jsxs)(l.Fragment, {
             children: [
-              (0, l.jsx)(F.R, {
+              (0, l.jsx)(B.R, {
                 in: !b,
                 children: (0, l.jsx)(p.xu, {
                   position: 'absolute',
@@ -247,7 +247,7 @@
                   marginTop: 10,
                   marginLeft: 10,
                   display: b ? 'none' : 'block',
-                  children: (0, l.jsx)(B.h, {
+                  children: (0, l.jsx)(F.h, {
                     'aria-label': 'Settings',
                     icon: (0, l.jsx)(T.e, {}),
                     onClick: function () {
@@ -256,7 +256,7 @@
                   }),
                 }),
               }),
-              (0, l.jsx)(F.R, {
+              (0, l.jsx)(B.R, {
                 in: b,
                 children: (0, l.jsxs)(p.xu, {
                   bg: 'alt.100',
@@ -277,9 +277,9 @@
                       paddingRight: 2,
                       paddingTop: 1,
                       children: [
-                        (0, l.jsx)(M.u, {
+                        (0, l.jsx)(A.u, {
                           label: '2D',
-                          children: (0, l.jsx)(W.z, {
+                          children: (0, l.jsx)(M.z, {
                             onClick: function () {
                               return i(!t)
                             },
@@ -292,9 +292,9 @@
                           display: 'flex',
                           alignItems: 'center',
                           children: [
-                            (0, l.jsx)(M.u, {
+                            (0, l.jsx)(A.u, {
                               label: 'Reset settings to defaults',
-                              children: (0, l.jsx)(B.h, {
+                              children: (0, l.jsx)(F.h, {
                                 'aria-label': 'Reset Defaults',
                                 icon: (0, l.jsx)(D.A, {}),
                                 onClick: function () {
@@ -304,7 +304,7 @@
                                 size: 'sm',
                               }),
                             }),
-                            (0, l.jsx)(B.h, {
+                            (0, l.jsx)(F.h, {
                               size: 'sm',
                               icon: (0, l.jsx)(P.T, {}),
                               'aria-label': 'Close Tweak Panel',
@@ -333,20 +333,20 @@
                           ),
                         )
                       },
-                      children: (0, l.jsxs)(A.UQ, {
+                      children: (0, l.jsxs)(W.UQ, {
                         allowMultiple: !0,
                         allowToggle: !0,
                         color: 'black',
                         children: [
-                          (0, l.jsxs)(A.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsxs)(A.KF, {
+                              (0, l.jsxs)(W.KF, {
                                 children: [
-                                  (0, l.jsx)(A.XE, { marginRight: 2 }),
+                                  (0, l.jsx)(W.XE, { marginRight: 2 }),
                                   (0, l.jsx)(X.X, { size: 'sm', children: 'Filter' }),
                                 ],
                               }),
-                              (0, l.jsx)(A.Hk, {
+                              (0, l.jsx)(W.Hk, {
                                 children: (0, l.jsxs)(_.gC, {
                                   spacing: 2,
                                   justifyContent: 'flex-start',
@@ -386,20 +386,20 @@
                               }),
                             ],
                           }),
-                          (0, l.jsxs)(A.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsx)(A.KF, {
+                              (0, l.jsx)(W.KF, {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 children: (0, l.jsxs)(p.xu, {
                                   display: 'flex',
                                   children: [
-                                    (0, l.jsx)(A.XE, { marginRight: 2 }),
+                                    (0, l.jsx)(W.XE, { marginRight: 2 }),
                                     (0, l.jsx)(X.X, { size: 'sm', children: 'Physics' }),
                                   ],
                                 }),
                               }),
-                              (0, l.jsxs)(A.Hk, {
+                              (0, l.jsxs)(W.Hk, {
                                 children: [
                                   (0, l.jsxs)(_.gC, {
                                     spacing: 2,
@@ -478,18 +478,18 @@
                                     ],
                                   }),
                                   (0, l.jsx)(p.xu, {
-                                    children: (0, l.jsx)(A.UQ, {
+                                    children: (0, l.jsx)(W.UQ, {
                                       paddingLeft: 3,
                                       allowToggle: !0,
-                                      children: (0, l.jsxs)(A.Qd, {
+                                      children: (0, l.jsxs)(W.Qd, {
                                         children: [
-                                          (0, l.jsxs)(A.KF, {
+                                          (0, l.jsxs)(W.KF, {
                                             children: [
                                               (0, l.jsx)(U.x, { children: 'Advanced' }),
-                                              (0, l.jsx)(A.XE, { marginRight: 2 }),
+                                              (0, l.jsx)(W.XE, { marginRight: 2 }),
                                             ],
                                           }),
-                                          (0, l.jsx)(A.Hk, {
+                                          (0, l.jsx)(W.Hk, {
                                             children: (0, l.jsxs)(_.gC, {
                                               spacing: 2,
                                               justifyContent: 'flex-start',
@@ -546,36 +546,36 @@
                               }),
                             ],
                           }),
-                          (0, l.jsxs)(A.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsxs)(A.KF, {
+                              (0, l.jsxs)(W.KF, {
                                 children: [
-                                  (0, l.jsx)(A.XE, { marginRight: 2 }),
+                                  (0, l.jsx)(W.XE, { marginRight: 2 }),
                                   (0, l.jsx)(X.X, { size: 'sm', children: 'Visual' }),
                                 ],
                               }),
-                              (0, l.jsx)(A.Hk, {
+                              (0, l.jsx)(W.Hk, {
                                 children: (0, l.jsxs)(_.gC, {
                                   justifyContent: 'flex-start',
                                   align: 'stretch',
                                   children: [
-                                    (0, l.jsx)(A.UQ, {
+                                    (0, l.jsx)(W.UQ, {
                                       allowToggle: !0,
                                       defaultIndex: [0],
                                       paddingLeft: 3,
-                                      children: (0, l.jsxs)(A.Qd, {
+                                      children: (0, l.jsxs)(W.Qd, {
                                         children: [
-                                          (0, l.jsx)(A.KF, {
+                                          (0, l.jsx)(W.KF, {
                                             children: (0, l.jsxs)(q.k, {
                                               justifyContent: 'space-between',
                                               w: '100%',
                                               children: [
                                                 (0, l.jsx)(U.x, { children: 'Colors' }),
-                                                (0, l.jsx)(A.XE, { marginRight: 2 }),
+                                                (0, l.jsx)(W.XE, { marginRight: 2 }),
                                               ],
                                             }),
                                           }),
-                                          (0, l.jsx)(A.Hk, {
+                                          (0, l.jsx)(W.Hk, {
                                             children: (0, l.jsx)(_.gC, {
                                               spacing: 2,
                                               justifyContent: 'flex-start',
@@ -591,9 +591,9 @@
                                                     justifyContent: 'space-between',
                                                     children: [
                                                       (0, l.jsx)(U.x, { children: 'Nodes' }),
-                                                      (0, l.jsx)(M.u, {
+                                                      (0, l.jsx)(A.u, {
                                                         label: 'Shuffle node colors',
-                                                        children: (0, l.jsx)(B.h, {
+                                                        children: (0, l.jsx)(F.h, {
                                                           'aria-label': 'Shuffle node colors',
                                                           size: 'sm',
                                                           icon: (0, l.jsx)(H.n, {}),
@@ -631,9 +631,9 @@
                                                           },
                                                         }),
                                                       }),
-                                                      (0, l.jsx)(M.u, {
+                                                      (0, l.jsx)(A.u, {
                                                         label: 'Cycle node colors',
-                                                        children: (0, l.jsx)(B.h, {
+                                                        children: (0, l.jsx)(F.h, {
                                                           'aria-label': 'Shift node colors',
                                                           icon: (0, l.jsx)(E.L, {}),
                                                           size: 'sm',
@@ -667,7 +667,7 @@
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
                                                             width: 20,
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -765,7 +765,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -886,7 +886,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -943,7 +943,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -1032,7 +1032,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -1119,7 +1119,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -1180,7 +1180,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             colorScheme: '',
                                                             color: 'black',
                                                             rightIcon: (0, l.jsx)(L.v, {}),
@@ -1332,7 +1332,7 @@
                                                   placement: 'right',
                                                   children: [
                                                     (0, l.jsx)(V.j2, {
-                                                      as: W.z,
+                                                      as: M.z,
                                                       colorScheme: '',
                                                       color: 'black',
                                                       rightIcon: (0, l.jsx)(L.v, {}),
@@ -1411,7 +1411,7 @@
                                                         matchWidth: !0,
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             rightIcon: (0, l.jsx)(L.v, {}),
                                                             color: 'black',
                                                             colorScheme: '',
@@ -1468,7 +1468,7 @@
                                                         placement: 'right',
                                                         children: [
                                                           (0, l.jsx)(V.j2, {
-                                                            as: W.z,
+                                                            as: M.z,
                                                             rightIcon: (0, l.jsx)(L.v, {}),
                                                             color: 'black',
                                                             colorScheme: '',
@@ -1627,7 +1627,7 @@
                                                   placement: 'right',
                                                   children: [
                                                     (0, l.jsx)(V.j2, {
-                                                      as: W.z,
+                                                      as: M.z,
                                                       colorScheme: '',
                                                       color: 'black',
                                                       rightIcon: (0, l.jsx)(L.v, {}),
@@ -1837,15 +1837,15 @@
                               }),
                             ],
                           }),
-                          (0, l.jsxs)(A.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsxs)(A.KF, {
+                              (0, l.jsxs)(W.KF, {
                                 children: [
-                                  (0, l.jsx)(A.XE, { marginRight: 2 }),
+                                  (0, l.jsx)(W.XE, { marginRight: 2 }),
                                   (0, l.jsx)(X.X, { size: 'sm', children: 'Behavior' }),
                                 ],
                               }),
-                              (0, l.jsx)(A.Hk, {
+                              (0, l.jsx)(W.Hk, {
                                 children: (0, l.jsxs)(_.gC, {
                                   spacing: 2,
                                   justifyContent: 'flex-start',
@@ -1871,7 +1871,7 @@
                                           placement: 'right',
                                           children: [
                                             (0, l.jsx)(V.j2, {
-                                              as: W.z,
+                                              as: M.z,
                                               rightIcon: (0, l.jsx)(L.v, {}),
                                               colorScheme: '',
                                               color: 'black',
@@ -1934,7 +1934,7 @@
                                           placement: 'right',
                                           children: [
                                             (0, l.jsx)(V.j2, {
-                                              as: W.z,
+                                              as: M.z,
                                               rightIcon: (0, l.jsx)(L.v, {}),
                                               colorScheme: '',
                                               color: 'black',
@@ -1997,7 +1997,7 @@
                                           placement: 'right',
                                           children: [
                                             (0, l.jsx)(V.j2, {
-                                              as: W.z,
+                                              as: M.z,
                                               rightIcon: (0, l.jsx)(L.v, {}),
                                               colorScheme: '',
                                               color: 'black',
@@ -2077,7 +2077,7 @@
           var n = e.infoText
           return (0, l.jsx)(p.xu, {
             paddingLeft: '1',
-            children: (0, l.jsx)(M.u, {
+            children: (0, l.jsx)(A.u, {
               label: n,
               placement: 'top',
               color: 'gray.100',
@@ -2116,7 +2116,7 @@
                 step: s,
                 children: [
                   (0, l.jsx)(G.Uj, { children: (0, l.jsx)(G.Ms, {}) }),
-                  (0, l.jsx)(M.u, {
+                  (0, l.jsx)(A.u, {
                     bg: f,
                     label: a.toFixed(1),
                     children: (0, l.jsx)(G.gs, { bg: 'white' }),
@@ -2234,12 +2234,12 @@
           E = (0, a.Z)(H, 2),
           L = E[0],
           Z = E[1],
-          F = (0, d.useRef)({}),
           B = (0, d.useRef)({}),
-          M = (0, d.useContext)(ee.N).setEmacsTheme,
-          W = (0, d.useState)(!1),
-          A = W[0],
-          X = W[1],
+          F = (0, d.useRef)({}),
+          A = (0, d.useContext)(ee.N).setEmacsTheme,
+          M = (0, d.useState)(!1),
+          W = M[0],
+          X = M[1],
           _ = (0, d.useState)({ nodeIds: [] }),
           q = _[0],
           U = _[1],
@@ -2256,7 +2256,7 @@
             o = K.current,
             l = Q.current,
             c = V.current,
-            a = null !== (r = B.current[n]) && void 0 !== r ? r : [],
+            a = null !== (r = F.current[n]) && void 0 !== r ? r : [],
             d = Object.fromEntries(
               [n]
                 .concat(
@@ -2283,9 +2283,7 @@
             ? 'add' !== c.localSame
               ? (U({ nodeIds: [n] }),
                 void setTimeout(function () {
-                  o.zoomToFit(t, i, function (e) {
-                    return d[e.id]
-                  })
+                  o.centerAt(0, 0, t)
                 }, 50))
               : l.nodeIds.includes(n) &&
                 l.nodeIds.some(function (e) {
@@ -2301,15 +2299,11 @@
                 }, 50))
               : (U({ nodeIds: [n] }),
                 void setTimeout(function () {
-                  o.zoomToFit(t, i, function (e) {
-                    return d[e.id]
-                  })
+                  o.centerAt(0, 0, t)
                 }, 50))
             : (U({ nodeIds: [n] }),
               void setTimeout(function () {
-                o.zoomToFit(t, i, function (e) {
-                  return d[e.id]
-                })
+                o.centerAt(0, 0, t)
               }, 50))
         }
         return (
@@ -2355,7 +2349,7 @@
                               })
                             : []
                         })
-                      F.current = Object.fromEntries(
+                      B.current = Object.fromEntries(
                         e.nodes.map(function (e) {
                           return [e.id, e]
                         }),
@@ -2363,9 +2357,9 @@
                       var t = [].concat((0, s.Z)(e.links), (0, s.Z)(r)).filter(function (e) {
                         var n = e.source,
                           r = e.target
-                        return F.current[n] && F.current[r]
+                        return B.current[n] && B.current[r]
                       })
-                      B.current = t.reduce(function (e, n) {
+                      F.current = t.reduce(function (e, n) {
                         var r, t, i
                         return de(
                           de({}, e),
@@ -2395,7 +2389,7 @@
                       v(o)
                     })(r.data)
                   case 'theme':
-                    return M(r.data)
+                    return A(r.data)
                   case 'command':
                     switch (r.data.commandName) {
                       case 'local':
@@ -2439,7 +2433,7 @@
                       {
                         physics: r,
                         setPhysics: t,
-                        threeDim: A,
+                        threeDim: W,
                         setThreeDim: X,
                         filter: h,
                         setFilter: g,
@@ -2460,14 +2454,14 @@
                       de(
                         {
                           ref: K,
-                          nodeById: F.current,
-                          linksByNodeId: B.current,
+                          nodeById: B.current,
+                          linksByNodeId: F.current,
                           webSocket: J.current,
                         },
                         {
                           physics: r,
                           graphData: C,
-                          threeDim: A,
+                          threeDim: W,
                           emacsNodeId: k,
                           filter: h,
                           visuals: j,
@@ -2634,22 +2628,22 @@
             },
             [r],
           )
-        var F = (0, d.useRef)(0),
-          B = (0, d.useState)(1),
-          M = B[0],
-          W = B[1],
-          A = (0, f._7)(
+        var B = (0, d.useRef)(0),
+          F = (0, d.useState)(1),
+          A = F[0],
+          M = F[1],
+          W = (0, f._7)(
             function (e) {
-              return W(e)
+              return M(e)
             },
             { duration: b.animationSpeed, algorithm: w[b.algorithmName] },
           ),
-          X = (0, a.Z)(A, 2),
+          X = (0, a.Z)(W, 2),
           _ = X[0],
           q = X[1],
           U = (0, f._7)(
             function (e) {
-              return W(Math.min(M, -1 * (e - 1)))
+              return M(Math.min(A, -1 * (e - 1)))
             },
             { duration: b.animationSpeed, algorithm: w[b.algorithmName] },
           ),
@@ -2659,8 +2653,8 @@
           J = (0, d.useRef)(null)
         ;(0, d.useEffect)(
           function () {
-            if ((R && (J.current = R), !b.highlightAnim)) return W(R ? 1 : 0)
-            R ? _() : (q(), M > 0.5 ? V() : W(0))
+            if ((R && (J.current = R), !b.highlightAnim)) return M(R ? 1 : 0)
+            R ? _() : (q(), A > 0.5 ? V() : M(0))
           },
           [R],
         )
@@ -2781,7 +2775,7 @@
                 return b.emacsNodeColor && e.id === p
                   ? Y(b.emacsNodeColor)
                   : n && b.nodeHighlight
-                  ? G[ne(e.id)][b.nodeHighlight](M)
+                  ? G[ne(e.id)][b.nodeHighlight](A)
                   : Y(ne(e.id))
               })(e)
             },
@@ -2796,7 +2790,7 @@
                   : 0
               return (
                 (3 + r.length - (h.parents ? 0 : t)) *
-                (L[e.id] || $[e.id] ? 1 + M * (b.highlightNodeSize - 1) : 1)
+                (L[e.id] || $[e.id] ? 1 + A * (b.highlightNodeSize - 1) : 1)
               )
             },
             nodeCanvasObject: function (e, n, r) {
@@ -2812,10 +2806,10 @@
                     a = Math.min((3 * (r - b.labelScale)) / b.labelScale, 1),
                     d = function () {
                       return 1 === b.labels || r <= b.labelScale
-                        ? M
+                        ? A
                         : L[e.id] || $[e.id]
-                        ? Math.max(a, M)
-                        : 1 * a * (-1 * (0.5 * M - 1))
+                        ? Math.max(a, A)
+                        : 1 * a * (-1 * (0.5 * A - 1))
                     }
                   if (b.labelBackgroundColor && b.labelBackgroundOpacity) {
                     var u = d() * b.labelBackgroundOpacity,
@@ -2864,23 +2858,23 @@
                 }
                 return b.linkHighlight
                   ? b.linkColorScheme
-                    ? G[b.linkColorScheme][b.linkHighlight](M)
-                    : G[re(e, n)][b.linkHighlight](M)
+                    ? G[b.linkColorScheme][b.linkHighlight](A)
+                    : G[re(e, n)][b.linkHighlight](A)
                   : Y(b.linkColorScheme)
               })(n, r, t || i)
             },
             linkWidth: function (e) {
               var n = pe(e, E.current),
                 r = pe(e, J.current)
-              return n || r ? b.linkWidth * (1 + M * (b.highlightLinkSize - 1)) : b.linkWidth
+              return n || r ? b.linkWidth * (1 + A * (b.highlightLinkSize - 1)) : b.linkWidth
             },
             linkDirectionalParticleWidth: b.particlesWidth,
             d3AlphaDecay: r.alphaDecay,
             d3AlphaMin: r.alphaMin,
             d3VelocityDecay: r.velocityDecay,
             onNodeClick: function (e, n) {
-              var r = n.timeStamp - F.current < 400
-              return (F.current = n.timeStamp), H(r ? 'double' : 'click', e)
+              var r = n.timeStamp - B.current < 400
+              return (B.current = n.timeStamp), H(r ? 'double' : 'click', e)
             },
             onBackgroundClick: function () {
               T(null),
@@ -2890,7 +2884,7 @@
                   })
             },
             onNodeHover: function (e) {
-              b.highlight && (R || (K(), W(0)), T(e))
+              b.highlight && (R || (K(), M(0)), T(e))
             },
             onNodeRightClick: function (e) {
               H('right', e)
