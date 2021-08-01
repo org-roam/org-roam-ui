@@ -1876,8 +1876,9 @@
                                               colorScheme: '',
                                               color: 'black',
                                               children: (0, l.jsx)(U.x, {
-                                                children:
-                                                  g.local[0].toUpperCase() + g.local.slice(1),
+                                                children: g.local
+                                                  ? g.local[0].toUpperCase() + g.local.slice(1)
+                                                  : 'Never',
                                               }),
                                             }),
                                             (0, l.jsxs)(K.h, {
@@ -1939,8 +1940,9 @@
                                               colorScheme: '',
                                               color: 'black',
                                               children: (0, l.jsx)(U.x, {
-                                                children:
-                                                  g.follow[0].toUpperCase() + g.follow.slice(1),
+                                                children: g.follow
+                                                  ? g.follow[0].toUpperCase() + g.follow.slice(1)
+                                                  : 'Never',
                                               }),
                                             }),
                                             (0, l.jsxs)(K.h, {
