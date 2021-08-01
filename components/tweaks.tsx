@@ -1242,7 +1242,11 @@ export const Tweaks = (props: TweakProps) => {
                           colorScheme=""
                           color="black"
                         >
-                          <Text>{mouse.local[0]!.toUpperCase() + mouse.local!.slice(1)}</Text>
+                          <Text>
+                            {mouse.local
+                              ? mouse.local[0]!.toUpperCase() + mouse.local!.slice(1)
+                              : 'Never'}
+                          </Text>
                         </MenuButton>
                         <Portal>
                           {' '}
@@ -1272,7 +1276,11 @@ export const Tweaks = (props: TweakProps) => {
                           colorScheme=""
                           color="black"
                         >
-                          <Text>{mouse.follow[0]!.toUpperCase() + mouse.follow!.slice(1)}</Text>
+                          <Text>
+                            {mouse.follow
+                              ? mouse.follow[0]!.toUpperCase() + mouse.follow!.slice(1)
+                              : 'Never'}
+                          </Text>
                         </MenuButton>
                         <Portal>
                           {' '}
