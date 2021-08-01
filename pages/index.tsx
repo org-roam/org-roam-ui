@@ -107,7 +107,13 @@ export function GraphPage() {
 
     nodeByIdRef.current = Object.fromEntries(orgRoamGraphData.nodes.map((node) => [node.id, node]))
 
-    const links = [...orgRoamGraphData.links, ...fileLinks]
+    const dirtyLinks = [...orgRoamGraphData.links, ...fileLinks]
+    const links = dirtyLinks.filter((link) => {
+      const sourceId = link.source as string
+      const targetId = link.target as string
+      return nodeByIdRef.current[sourceId] && nodeByIdRef.current[targetId]
+    })
+
     linksByNodeIdRef.current = links.reduce<LinksByNodeId>((acc, link) => {
       return {
         ...acc,
@@ -410,12 +416,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((linkArg) => {
       const link = linkArg as OrgRoamLink
-      return (
-        link.type !== 'cite' &&
-        (filter.parents || link.type !== 'parent') &&
-        filteredNodeIds.includes(link.source as string) &&
-        filteredNodeIds.includes(link.target)
-      )
+      return link.type !== 'cite' && (filter.parents || link.type !== 'parent')
     })
 
     const scopedNodes = filteredNodes.filter((node) => {
