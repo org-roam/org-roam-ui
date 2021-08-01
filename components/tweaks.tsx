@@ -1038,6 +1038,100 @@ export const Tweaks = (props: TweakProps) => {
                         </Collapse>
                       </Box>
                       <EnableSection
+                        label="Link arrows"
+                        value={visuals.arrows}
+                        onChange={() => setVisuals({ ...visuals, arrows: !visuals.arrows })}
+                      >
+                        <SliderWithInfo
+                          label="Arrow size"
+                          value={visuals.arrowsLength / 10}
+                          onChange={(value) => setVisuals({ ...visuals, arrowsLength: 10 * value })}
+                        />
+                        <SliderWithInfo
+                          label="Arrow Position"
+                          value={visuals.arrowsPos}
+                          min={0}
+                          max={1}
+                          step={0.01}
+                          onChange={(value) => setVisuals({ ...visuals, arrowsPos: value })}
+                        />
+                        <Flex alignItems="center" justifyContent="space-between">
+                          <Text>Arrow Color</Text>
+                          <Menu placement="right">
+                            <MenuButton
+                              as={Button}
+                              colorScheme=""
+                              color="black"
+                              rightIcon={<ChevronDownIcon />}
+                            >
+                              {
+                                <Box
+                                  bgColor={visuals.arrowsColor}
+                                  borderRadius="sm"
+                                  height={6}
+                                  width={6}
+                                ></Box>
+                              }
+                            </MenuButton>
+                            <Portal>
+                              {' '}
+                              <MenuList minW={10} zIndex="popover" bgColor="gray.200">
+                                <MenuItem
+                                  onClick={() => setVisuals({ ...visuals, arrowsColor: '' })}
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                  display="flex"
+                                >
+                                  <Box height={6} width={6}></Box>
+                                </MenuItem>
+                                {colorList.map((color) => (
+                                  <MenuItem
+                                    key={color}
+                                    onClick={() =>
+                                      setVisuals({
+                                        ...visuals,
+                                        arrowsColor: color,
+                                      })
+                                    }
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    display="flex"
+                                  >
+                                    <Box
+                                      bgColor={color}
+                                      borderRadius="sm"
+                                      height={6}
+                                      width={6}
+                                    ></Box>
+                                  </MenuItem>
+                                ))}
+                                {grays.map((color) => (
+                                  <MenuItem
+                                    key={color}
+                                    onClick={() =>
+                                      setVisuals({
+                                        ...visuals,
+                                        arrowsColor: color,
+                                      })
+                                    }
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    display="flex"
+                                  >
+                                    <Box
+                                      bgColor={color}
+                                      borderRadius="sm"
+                                      height={6}
+                                      width={6}
+                                    ></Box>
+                                  </MenuItem>
+                                ))}
+                              </MenuList>
+                            </Portal>
+                          </Menu>
+                        </Flex>
+                      </EnableSection>
+                      <EnableSection
                         label="Directional Particles"
                         value={visuals.particles}
                         onChange={() => setVisuals({ ...visuals, particles: !visuals.particles })}
