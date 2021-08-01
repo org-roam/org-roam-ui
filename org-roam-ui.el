@@ -6,8 +6,7 @@
 ;; URL: https://github.com/org-roam/org-roam-ui
 ;; Keywords: org-mode, roam
 ;; Version: 0
-;; Package-Requires: ((emacs "26.1") (f "0.17.2") (org-roam "2.0.0")
-;; (simple-httpd "20191103.1446") (websocket "20210110.17") (json "1.2"))
+;; Package-Requires: ((emacs "26.1") (f "0.17.2") (org-roam "2.0.0") (simple-httpd "20191103.1446") (websocket "20210110.17") (json "1.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
