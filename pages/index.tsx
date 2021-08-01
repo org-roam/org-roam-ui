@@ -733,7 +733,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     linkDirectionalParticles: visuals.particles ? visuals.particlesNumber : undefined,
     linkDirectionalArrowLength: visuals.arrows ? visuals.arrowsLength : undefined,
     linkDirectionalArrowRelPos: visuals.arrowsPos,
-    linkDirectionalArrowColor: (link) => getThemeColor(visuals.arrowsColor),
+    linkDirectionalArrowColor: visuals.arrowsColor
+      ? (link) => getThemeColor(visuals.arrowsColor)
+      : undefined,
     linkColor: (link) => {
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
       const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
