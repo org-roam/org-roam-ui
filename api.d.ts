@@ -12,6 +12,7 @@ export type OrgRoamNode = {
   properties: {
     [key: string]: string | number
   }
+  tags: string[]
 }
 
 export type OrgRoamLink = {

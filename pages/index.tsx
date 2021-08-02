@@ -402,9 +402,14 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
   }, [centralHighlightedNode.current, linksByNodeId])
 
-  const scopedGraphData = useMemo(() => {
-    const filteredNodes = graphData.nodes.filter((node) => {
+  const filteredGraphData = useMemo(() => {
+    const filteredNodes = graphData.nodes.filter((nodeArg) => {
+      const node = nodeArg as OrgRoamNode
       const links = linksByNodeId[node.id as string] ?? []
+      if (filter.tags.length && node.tags.length) {
+        return !filter.tags.some((tag) => node.tags.indexOf(tag) > -1)
+      }
+
       if (!filter.orphans) {
         return true
       }
@@ -421,12 +426,23 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     })
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
-    const filteredLinks = graphData.links.filter((linkArg) => {
-      const link = linkArg as OrgRoamLink
-      return filter.parents || link.type !== 'parent'
+    const filteredLinks = graphData.links.filter((link) => {
+      if (filter.tags.length) {
+        const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
+        const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+        return (
+          filteredNodeIds.includes(sourceId as string) &&
+          filteredNodeIds.includes(targetId as string)
+        )
+      }
+      const linkRoam = link as OrgRoamLink
+      return filter.parents || linkRoam.type !== 'parent'
     })
+    return { filteredNodes, filteredLinks }
+  }, [filter, graphData])
 
-    const scopedNodes = filteredNodes.filter((node) => {
+  const scopedGraphData = useMemo(() => {
+    const scopedNodes = filteredGraphData.filteredNodes.filter((node) => {
       const links = linksByNodeId[node.id as string] ?? []
       return (
         scope.nodeIds.includes(node.id as string) ||
@@ -438,7 +454,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-    const scopedLinks = filteredLinks.filter((link) => {
+    const scopedLinks = filteredGraphData.filteredLinks.filter((link) => {
       // we need to cover both because force-graph modifies the original data
       // but if we supply the original data on each render, the graph will re-render sporadically
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
@@ -449,7 +465,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     })
 
     return scope.nodeIds.length === 0
-      ? { nodes: filteredNodes, links: filteredLinks }
+      ? { nodes: filteredGraphData.filteredNodes, links: filteredGraphData.filteredLinks }
       : {
           nodes: scopedNodes,
           links: scopedLinks,
