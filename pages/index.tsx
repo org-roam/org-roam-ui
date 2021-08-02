@@ -136,7 +136,7 @@ export function GraphPage() {
 
   const { setEmacsTheme } = useContext(ThemeContext)
 
-  const [threeDim, setThreeDim] = useState(false)
+  const [threeDim, setThreeDim] = usePersistantState('3d', false)
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
   const scopeRef = useRef<Scope>({ nodeIds: [] })
   const behaviorRef = useRef(initialBehavior)

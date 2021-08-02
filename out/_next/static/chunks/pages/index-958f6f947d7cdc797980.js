@@ -1843,25 +1843,26 @@
           F = (0, u.useRef)({}),
           A = (0, u.useRef)({}),
           B = (0, u.useContext)(ee.N).setEmacsTheme,
-          V = (0, u.useState)(!1),
-          M = V[0],
-          X = V[1],
-          W = (0, u.useState)({ nodeIds: [] }),
-          _ = W[0],
-          U = W[1],
-          Q = (0, u.useRef)({ nodeIds: [] }),
-          q = (0, u.useRef)(I)
-        q.current = R
-        var G = (0, u.useRef)(null),
-          K = (0, u.useRef)(null)
-        Q.current = _
-        var J = function (e, n) {
+          V = d('3d', !1),
+          M = (0, c.Z)(V, 2),
+          X = M[0],
+          W = M[1],
+          _ = (0, u.useState)({ nodeIds: [] }),
+          U = _[0],
+          Q = _[1],
+          q = (0, u.useRef)({ nodeIds: [] }),
+          G = (0, u.useRef)(I)
+        G.current = R
+        var K = (0, u.useRef)(null),
+          J = (0, u.useRef)(null)
+        q.current = U
+        var Y = function (e, n) {
           var t,
             r = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 2e3,
             i = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : 200,
-            o = G.current,
-            l = Q.current,
-            s = q.current,
+            o = K.current,
+            l = q.current,
+            s = G.current,
             c = null !== (t = A.current[n]) && void 0 !== t ? t : [],
             u = Object.fromEntries(
               [n]
@@ -1879,7 +1880,7 @@
           return 'zoom' === e
             ? (console.log(l),
               l.nodeIds.length &&
-                (console.log('emptying'), console.log('scope ' + l.nodeIds), U({ nodeIds: [] })),
+                (console.log('emptying'), console.log('scope ' + l.nodeIds), Q({ nodeIds: [] })),
               void setTimeout(function () {
                 return o.zoomToFit(r, i, function (e) {
                   return u[e.id]
@@ -1887,7 +1888,7 @@
               }, 50))
             : l.nodeIds.length
             ? 'add' !== s.localSame
-              ? (U({ nodeIds: [n] }),
+              ? (Q({ nodeIds: [n] }),
                 void setTimeout(function () {
                   o.centerAt(0, 0, r)
                 }, 50))
@@ -1895,7 +1896,7 @@
                 l.nodeIds.some(function (e) {
                   return u[e]
                 })
-              ? (U(function (e) {
+              ? (Q(function (e) {
                   return de(de({}, e), {}, { nodeIds: [].concat((0, a.Z)(e.nodeIds), [n]) })
                 }),
                 void setTimeout(function () {
@@ -1903,24 +1904,24 @@
                     return u[e.id]
                   })
                 }, 50))
-              : (U({ nodeIds: [n] }),
+              : (Q({ nodeIds: [n] }),
                 void setTimeout(function () {
                   o.centerAt(0, 0, r)
                 }, 50))
-            : (U({ nodeIds: [n] }),
+            : (Q({ nodeIds: [n] }),
               void setTimeout(function () {
                 o.centerAt(0, 0, r)
               }, 50))
         }
         return (
           (0, u.useEffect)(function () {
-            ;(K.current = new ce.Z('ws://localhost:35903')),
-              K.current.addEventListener('open', function (e) {
+            ;(J.current = new ce.Z('ws://localhost:35903')),
+              J.current.addEventListener('open', function (e) {
                 console.log('Connection with Emacs established')
               }),
-              K.current.addEventListener('message', function (e) {
-                G.current
-                var n = q.current,
+              J.current.addEventListener('message', function (e) {
+                K.current
+                var n = G.current,
                   t = JSON.parse(e.data)
                 switch (t.type) {
                   case 'graphdata':
@@ -2001,7 +2002,7 @@
                       case 'local':
                         var r = R.zoomSpeed,
                           i = R.zoomPadding
-                        J('local', t.data.id, r, i), w(t.data.id)
+                        Y('local', t.data.id, r, i), w(t.data.id)
                         break
                       case 'zoom':
                         var o,
@@ -2014,10 +2015,10 @@
                             (null === t || void 0 === t || null === (l = t.data) || void 0 === l
                               ? void 0
                               : l.padding) || n.zoomPadding
-                        J('zoom', t.data.id, c, u), w(t.data.id)
+                        Y('zoom', t.data.id, c, u), w(t.data.id)
                         break
                       case 'follow':
-                        J(n.follow, t.data.id, n.zoomSpeed, n.zoomPadding), w(t.data.id)
+                        Y(n.follow, t.data.id, n.zoomSpeed, n.zoomPadding), w(t.data.id)
                         break
                       default:
                         return console.error('unknown message type', t.type)
@@ -2039,8 +2040,8 @@
                       {
                         physics: t,
                         setPhysics: r,
-                        threeDim: M,
-                        setThreeDim: X,
+                        threeDim: X,
+                        setThreeDim: W,
                         filter: h,
                         setFilter: g,
                         visuals: p,
@@ -2059,22 +2060,22 @@
                       je,
                       de(
                         {
-                          ref: G,
+                          ref: K,
                           nodeById: F.current,
                           linksByNodeId: A.current,
-                          webSocket: K.current,
+                          webSocket: J.current,
                         },
                         {
                           physics: t,
                           graphData: b,
-                          threeDim: M,
+                          threeDim: X,
                           emacsNodeId: k,
                           filter: h,
                           visuals: p,
                           behavior: R,
                           mouse: E,
-                          scope: _,
-                          setScope: U,
+                          scope: U,
+                          setScope: Q,
                         },
                       ),
                     ),
