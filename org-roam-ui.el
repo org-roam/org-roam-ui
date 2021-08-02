@@ -160,9 +160,23 @@ This serves the web-build and API over HTTP."
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
   (let* ((nodes-columns [id file title level])
-         (links-columns [source dest type])
+         (links-columns [links:source links:dest links:type refs:node-id])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
-         (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
+         ;; Left outer join on refs means any id link (or cite link without a
+         ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
+         ;; cite link where a node has that `:ROAM_REFS:' will have a value.
+         (links-db-rows (org-roam-db-query `[:select ,links-columns
+                                             :from links
+                                             :left :outer :join refs :on (= links:dest refs:ref)
+                                             :where (or (= links:type "id") (= links:type "cite"))]))
+         ;; Convert any cite links that have nodes with associated refs to a
+         ;; standard id link while removing the 'nil `refs:node-id' from all
+         ;; other links
+         (links-db-rows (seq-map (lambda (l)
+                                   (pcase-let ((`(,source ,dest ,type ,node-id) l))
+                                     (if node-id
+                                         (list source node-id "id")
+                                       (list source dest type)))) links-db-rows))
          (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows)))))
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
