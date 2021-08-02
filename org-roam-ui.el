@@ -159,9 +159,14 @@ This serves the web-build and API over HTTP."
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
-  (let* ((nodes-columns [id file title level properties])
+  (let* ((nodes-columns [id file title level properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
+         (nodes-names [id file title level properties tags])
          (links-columns [links:source links:dest links:type refs:node-id])
-         (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
+         (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :as tags
+                     :from nodes
+                     :left-join tags
+                     :on (= id node_id)
+                     :group :by id]))
          ;; Left outer join on refs means any id link (or cite link without a
          ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
          ;; cite link where a node has that `:ROAM_REFS:' will have a value.
@@ -177,8 +182,9 @@ This serves the web-build and API over HTTP."
                                      (if node-id
                                          (list source node-id "cite")
                                        (list source dest type)))) links-db-rows))
-         (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
-                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows)))))
+         (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
+                                  (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
+                                  (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
 (defun org-roam-ui--update-current-node ()
@@ -227,7 +233,15 @@ This serves the web-build and API over HTTP."
 ROWS is the sql result, while COLUMN-NAMES is the columns to use."
   (let (res)
     (while rows
-      (push (cons (pop column-names) (pop rows)) res))
+      ;; emacsql does not want to give us the tags as a list, so we post process it
+      (if (not (string= (car column-names) "tags"))
+          (push (cons (pop column-names) (pop rows)) res)
+      (push (cons (pop column-names)
+                  (seq-remove
+                   (lambda (elt) (string= elt ","))
+                   rows))
+                  res)
+      (setq rows nil)))
     res))
 
 

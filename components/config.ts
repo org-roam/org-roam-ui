@@ -35,6 +35,7 @@ export const initialFilter = {
   orphans: false,
   parents: true,
   tags: [],
+  tagColors: [],
   nodes: [],
   links: [],
   date: [],

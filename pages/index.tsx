@@ -51,6 +51,7 @@ const ForceGraph3D = (
 export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
 export type NodesByFile = { [file: string]: OrgRoamNode[] | undefined }
+export type Tags = string[]
 export type Scope = {
   nodeIds: string[]
 }
@@ -79,8 +80,10 @@ export function GraphPage() {
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
+  const tagsRef = useRef<Tags>([])
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+    tagsRef.current = orgRoamGraphData.tags
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
         ...acc,
@@ -270,6 +273,7 @@ export function GraphPage() {
           behavior,
           setBehavior,
         }}
+        tags={tagsRef.current}
       />
       <Box position="absolute" alignItems="top">
         <Graph

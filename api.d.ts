@@ -1,6 +1,7 @@
 export type OrgRoamGraphReponse = {
   nodes: OrgRoamNode[]
   links: OrgRoamLink[]
+  tags: string[]
 }
 
 export type OrgRoamNode = {

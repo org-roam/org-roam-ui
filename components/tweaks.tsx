@@ -6,6 +6,8 @@ import {
   InfoOutlineIcon,
   RepeatIcon,
   ArrowRightIcon,
+  AddIcon,
+  DeleteIcon,
 } from '@chakra-ui/icons'
 import {
   Accordion,
@@ -38,6 +40,7 @@ import {
   Grid,
   Portal,
   SlideFade,
+  Input,
 } from '@chakra-ui/react'
 import React, { useState, useContext } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
@@ -64,6 +67,7 @@ export interface TweakProps {
   setMouse: any
   behavior: typeof initialBehavior
   setBehavior: any
+  tags: string[]
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -80,6 +84,7 @@ export const Tweaks = (props: TweakProps) => {
     setMouse,
     behavior,
     setBehavior,
+    tags,
   } = props
   const [showTweaks, setShowTweaks] = useState(true)
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
@@ -107,6 +112,7 @@ export const Tweaks = (props: TweakProps) => {
     'gray.900',
     'black',
   ]
+
   return (
     <>
       <SlideFade in={!showTweaks}>
@@ -223,6 +229,24 @@ export const Tweaks = (props: TweakProps) => {
                       ></Switch>
                     </Flex>
                   </VStack>
+                  <Accordion allowToggle allowMultiple paddingLeft={3}>
+                    <AccordionItem>
+                      <AccordionButton>
+                        Tag filters
+                        <AccordionIcon />
+                      </AccordionButton>
+                      <AccordionPanel>
+                        <TagPanel filter={filter} setFilter={setFilter} tags={tags} />
+                      </AccordionPanel>
+                    </AccordionItem>
+                    <AccordionItem>
+                      <AccordionButton>
+                        Tag colors
+                        <AccordionIcon />
+                      </AccordionButton>
+                      <AccordionPanel></AccordionPanel>
+                    </AccordionItem>
+                  </Accordion>
                 </AccordionPanel>
               </AccordionItem>
               <AccordionItem>
@@ -1240,5 +1264,56 @@ export const ColorMenu = (props: ColorMenuProps) => {
         </Portal>
       </Menu>
     </Flex>
+  )
+}
+
+export interface TagPanelProps {
+  tags: string[]
+  filter: typeof initialFilter
+  setFilter: any
+}
+
+export const TagPanel = (props: TagPanelProps) => {
+  const { filter, setFilter, tags } = props
+  const [tagFilterText, setTagFilterText] = useState('')
+
+  return (
+    <VStack>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Input
+          placeHolder="New tag..."
+          value={tagFilterText}
+          onChange={(v) => setTagFilterText(v.target.value)}
+        />
+        <IconButton
+          onClick={() => {
+            if (!tags.includes(tagFilterText)) {
+              return
+            }
+            setFilter({ ...filter, tags: [...filter.tags, tagFilterText] })
+            setTagFilterText('')
+          }}
+          aria-label="add tag"
+          icon={<AddIcon />}
+        />
+      </Flex>
+      {filter.tags.map((tag) => {
+        return (
+          <Flex aignItems="center" justifyContent="space-between">
+            {tag}
+            <IconButton
+              aria-label={'delete tag ' + tag}
+              icon={<DeleteIcon />}
+              onClick={() =>
+                setFilter({
+                  ...filter,
+                  tags: filter.tags.filter((t) => t !== tag),
+                })
+              }
+            />
+          </Flex>
+        )
+      })}
+    </VStack>
   )
 }
