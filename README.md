@@ -297,8 +297,8 @@ https://user-images.githubusercontent.com/21983833/127747234-d0588cdf-623f-4d13-
 
 In no particular order
 
-- Citation links + customization
-- Tag filtering/coloring
+- ~~Citation links + customization~~
+- ~~Tag filtering/coloring~~
 - Local graph show Nth neighbor
 - More colors
 - Colorization options (by neighbors, centrality, etc)
