@@ -97,6 +97,11 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
+(defcustom org-roam-ui-open-on-start t
+  "Whether to open your default browser when org-roam-ui-mode launces."
+  :group 'org-roam-ui
+  :type 'boolean)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
@@ -116,6 +121,8 @@ This serves the web-build and API over HTTP."
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
+    (when org-roam-ui-open-on-start
+      (browse-url "http://localhost:35901"))
     (setq org-roam-ui-ws
         (websocket-server
          35903
