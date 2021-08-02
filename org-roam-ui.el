@@ -273,6 +273,46 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
         `(magenta . ,(face-foreground font-lock-preprocessor-face))
         ))
 
+(defcustom org-roam-ui-use-webkit t
+  "Use embedded webkit to preview.
+This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+option."
+  :type 'boolean
+  :group 'roam)
+
+;;(declare-function xwidget-buffer 'xwidget)
+;;(declare-function xwidget-webkit-browse-url 'xwidget)
+;(declare-function xwidget-webkit-current-session 'xwidget)
+
+(defun org-roam-ui-browser (url)
+  "Use browser specified by user to load URL.
+Use default browser if nil."
+  (if org-roam-ui-url-browser
+      (let ((browse-url-generic-program org-roam-ui-url-browser)
+            (browse-url-generic-args roam-url-args))
+        (ignore browse-url-generic-program)
+        (ignore browse-url-generic-args)
+        (browse-url-generic url))
+    (browse-url url)))
+
+(defun org-roam-ui-open-url (url)
+  "Ask the browser to load URL.
+Use default browser unless `xwidget' is available."
+  (if (and org-roam-ui-use-webkit
+           (featurep 'xwidget-internal))
+      (progn
+        (xwidget-webkit-browse-url url)
+        (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
+          (when (buffer-live-p buf)
+            (and (eq buf (current-buffer)) (quit-window))
+            (let (display-buffer-alist)(pop-to-buffer buf)))))
+    (org-roam-ui-browser url)))
+
+;;;###autoload
+(define-minor-mode org-roam-ui-open-in-browser
+  "open org-roam-ui in the browser"
+ :lighter "roam"
+ (org-roam-ui-open-url "http://127.0.0.1:35901"))
 
 ;;;; commands
 ;;;###autoload
