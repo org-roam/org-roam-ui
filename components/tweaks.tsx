@@ -96,10 +96,6 @@ export const Tweaks = (props: TweakProps) => {
     'gray.500',
     'gray.600',
     'white',
-    'black',
-  ]
-  const grays = [
-    'black',
     'gray.100',
     'gray.200',
     'gray.300',
@@ -109,7 +105,7 @@ export const Tweaks = (props: TweakProps) => {
     'gray.700',
     'gray.800',
     'gray.900',
-    'white',
+    'black',
   ]
   return (
     <>
@@ -540,7 +536,7 @@ export const Tweaks = (props: TweakProps) => {
                                           ))}
                                         </Flex>
                                       </MenuItem>
-                                      {grays.map((color) => (
+                                      {colorList.map((color) => (
                                         <MenuItem
                                           key={color}
                                           onClick={() =>
@@ -606,211 +602,38 @@ export const Tweaks = (props: TweakProps) => {
                                   </Portal>
                                 </Menu>
                               </Flex>
-                              <Flex alignItems="center" justifyContent="space-between">
-                                <Text>Link Highlight</Text>
-                                <Menu placement="right">
-                                  <MenuButton
-                                    as={Button}
-                                    colorScheme=""
-                                    color="black"
-                                    rightIcon={<ChevronDownIcon />}
-                                  >
-                                    {
-                                      <Box
-                                        bgColor={visuals.linkHighlight}
-                                        borderRadius="sm"
-                                        height={6}
-                                        width={6}
-                                      ></Box>
-                                    }
-                                  </MenuButton>
-                                  <Portal>
-                                    {' '}
-                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
-                                      <MenuItem
-                                        key={'none'}
-                                        onClick={() =>
-                                          setVisuals({ ...visuals, linkHighlight: '' })
-                                        }
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        display="flex"
-                                      >
-                                        <Box borderRadius="sm" height={6} width={6}></Box>
-                                      </MenuItem>
-                                      {colorList.map((color) => (
-                                        <MenuItem
-                                          key={color}
-                                          onClick={() =>
-                                            setVisuals({ ...visuals, linkHighlight: color })
-                                          }
-                                          justifyContent="space-between"
-                                          alignItems="center"
-                                          display="flex"
-                                        >
-                                          <Box
-                                            bgColor={color}
-                                            borderRadius="sm"
-                                            height={6}
-                                            width={6}
-                                          ></Box>
-                                        </MenuItem>
-                                      ))}
-                                    </MenuList>
-                                  </Portal>
-                                </Menu>
-                              </Flex>
-                              <Flex alignItems="center" justifyContent="space-between">
-                                <Text>Node Highlight</Text>
-                                <Menu placement="right">
-                                  <MenuButton
-                                    as={Button}
-                                    colorScheme=""
-                                    color="black"
-                                    rightIcon={<ChevronDownIcon />}
-                                  >
-                                    {
-                                      <Box
-                                        bgColor={visuals.nodeHighlight}
-                                        borderRadius="sm"
-                                        height={6}
-                                        width={6}
-                                      ></Box>
-                                    }
-                                  </MenuButton>
-                                  <Portal>
-                                    {' '}
-                                    <MenuList minW={10} zIndex="popover" bgColor="gray.200">
-                                      <MenuItem
-                                        key={'none'}
-                                        onClick={() =>
-                                          setVisuals({ ...visuals, nodeHighlight: '' })
-                                        }
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        display="flex"
-                                      >
-                                        <Box borderRadius="sm" height={6} width={6}></Box>
-                                      </MenuItem>
-                                      {colorList.map((color) => (
-                                        <MenuItem
-                                          key={color}
-                                          onClick={() =>
-                                            setVisuals({ ...visuals, nodeHighlight: color })
-                                          }
-                                          justifyContent="space-between"
-                                          alignItems="center"
-                                          display="flex"
-                                        >
-                                          <Box
-                                            bgColor={color}
-                                            borderRadius="sm"
-                                            height={6}
-                                            width={6}
-                                          ></Box>
-                                        </MenuItem>
-                                      ))}
-                                    </MenuList>
-                                  </Portal>
-                                </Menu>
-                              </Flex>
-                              <Flex alignItems="center" justifyContent="space-between">
-                                <Text>Background</Text>
-                                <Menu placement="right">
-                                  <MenuButton
-                                    as={Button}
-                                    colorScheme=""
-                                    color="black"
-                                    rightIcon={<ChevronDownIcon />}
-                                  >
-                                    {
-                                      <Box
-                                        bgColor={visuals.backgroundColor}
-                                        borderRadius="sm"
-                                        height={6}
-                                        width={6}
-                                      ></Box>
-                                    }
-                                  </MenuButton>
-                                  <Portal>
-                                    {' '}
-                                    <MenuList minWidth={10} zIndex="popover" bgColor="gray.200">
-                                      {grays.map((color) => (
-                                        <MenuItem
-                                          key={color}
-                                          onClick={() =>
-                                            setVisuals({ ...visuals, backgroundColor: color })
-                                          }
-                                          justifyContent="space-between"
-                                          alignItems="center"
-                                          display="flex"
-                                        >
-                                          <Box
-                                            bgColor={color}
-                                            borderRadius="sm"
-                                            height={6}
-                                            width={6}
-                                          ></Box>
-                                        </MenuItem>
-                                      ))}
-                                    </MenuList>
-                                  </Portal>
-                                </Menu>
-                              </Flex>
-                              <Flex alignItems="center" justifyContent="space-between">
-                                <Text>Emacs Node</Text>
-                                <Menu placement="right">
-                                  <MenuButton
-                                    as={Button}
-                                    colorScheme=""
-                                    color="black"
-                                    rightIcon={<ChevronDownIcon />}
-                                  >
-                                    {
-                                      <Box
-                                        bgColor={visuals.emacsNodeColor}
-                                        borderRadius="sm"
-                                        height={6}
-                                        width={6}
-                                      ></Box>
-                                    }
-                                  </MenuButton>
-                                  <Portal>
-                                    {' '}
-                                    <MenuList minWidth={10} zIndex="popover" bgColor="gray.200">
-                                      <MenuItem
-                                        key={'none'}
-                                        onClick={() =>
-                                          setVisuals({ ...visuals, emacsNodeColor: '' })
-                                        }
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        display="flex"
-                                      >
-                                        <Box borderRadius="sm" height={6} width={6}></Box>
-                                      </MenuItem>
-                                      {colorList.map((color) => (
-                                        <MenuItem
-                                          key={color}
-                                          onClick={() =>
-                                            setVisuals({ ...visuals, emacsNodeColor: color })
-                                          }
-                                          justifyContent="space-between"
-                                          alignItems="center"
-                                          display="flex"
-                                        >
-                                          <Box
-                                            bgColor={color}
-                                            borderRadius="sm"
-                                            height={6}
-                                            width={6}
-                                          ></Box>
-                                        </MenuItem>
-                                      ))}
-                                    </MenuList>
-                                  </Portal>
-                                </Menu>
-                              </Flex>
+                              <ColorMenu
+                                colorList={colorList}
+                                label="Link highlight"
+                                visuals={visuals}
+                                setVisuals={setVisuals}
+                                value="linkHighlight"
+                                visValue={visuals.linkHighlight}
+                              />
+                              <ColorMenu
+                                colorList={colorList}
+                                label="Node highlight"
+                                visuals={visuals}
+                                setVisuals={setVisuals}
+                                value="nodeHighlight"
+                                visValue={visuals.nodeHighlight}
+                              />
+                              <ColorMenu
+                                colorList={colorList}
+                                label="Background"
+                                visuals={visuals}
+                                setVisuals={setVisuals}
+                                value="backgroundColor"
+                                visValue={visuals.backgroundColor}
+                              />
+                              <ColorMenu
+                                colorList={colorList}
+                                label="Emacs node"
+                                visuals={visuals}
+                                setVisuals={setVisuals}
+                                value="emacsNodeColor"
+                                visValue={visuals.emacsNodeColor}
+                              />
                             </Box>
                           </VStack>
                         </AccordionPanel>
@@ -862,6 +685,41 @@ export const Tweaks = (props: TweakProps) => {
                           onChange={(value) => setVisuals({ ...visuals, linkOpacity: value })}
                         />
                       )}
+                      <EnableSection
+                        label="Dash cite links"
+                        infoText="Add dashes to citation links made with org-roam-bibtex"
+                        value={visuals.citeDashes}
+                        onChange={() => setVisuals({ ...visuals, citeDashes: !visuals.citeDashes })}
+                      >
+                        <SliderWithInfo
+                          label="Dash length"
+                          value={visuals.citeDashLength / 10}
+                          onChange={(value) =>
+                            setVisuals({ ...visuals, citeDashLength: value * 10 })
+                          }
+                        />
+                        <SliderWithInfo
+                          label="Gap length"
+                          value={visuals.citeGapLength / 5}
+                          onChange={(value) => setVisuals({ ...visuals, citeGapLength: value * 5 })}
+                        />
+                      </EnableSection>
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Citation node color"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'citeNodeColor'}
+                        visValue={visuals.citeNodeColor}
+                      />
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Citationlink color"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'citeLinkColor'}
+                        visValue={visuals.citeLinkColor}
+                      />
                       <Box>
                         <Flex alignItems="center" justifyContent="space-between">
                           <Text>Labels</Text>
@@ -906,108 +764,22 @@ export const Tweaks = (props: TweakProps) => {
                             paddingLeft={2}
                             color="gray.800"
                           >
-                            <Flex alignItems="center" justifyContent="space-between">
-                              <Text>Text</Text>
-                              <Menu matchWidth>
-                                <MenuButton
-                                  as={Button}
-                                  rightIcon={<ChevronDownIcon />}
-                                  color="black"
-                                  colorScheme=""
-                                >
-                                  {
-                                    <Box
-                                      bgColor={visuals.labelTextColor}
-                                      borderRadius="sm"
-                                      height={6}
-                                      width={6}
-                                    ></Box>
-                                  }
-                                </MenuButton>
-                                <Portal>
-                                  {' '}
-                                  <MenuList minW={10} zIndex="popover" bg="gray.200">
-                                    {grays.map((color) => (
-                                      <MenuItem
-                                        key={color}
-                                        onClick={() =>
-                                          setVisuals({
-                                            ...visuals,
-                                            labelTextColor: color,
-                                          })
-                                        }
-                                      >
-                                        <Box
-                                          bgColor={color}
-                                          borderRadius="sm"
-                                          height={6}
-                                          width={6}
-                                        ></Box>
-                                      </MenuItem>
-                                    ))}
-                                  </MenuList>
-                                </Portal>
-                              </Menu>
-                            </Flex>
-                            <Flex alignItems="center" justifyContent="space-between">
-                              <Text>Background</Text>
-                              <Menu placement="right">
-                                <MenuButton
-                                  as={Button}
-                                  rightIcon={<ChevronDownIcon />}
-                                  color="black"
-                                  colorScheme=""
-                                >
-                                  {
-                                    <Box
-                                      bgColor={visuals.labelBackgroundColor}
-                                      borderRadius="sm"
-                                      height={6}
-                                      width={6}
-                                    ></Box>
-                                  }
-                                </MenuButton>
-                                <Portal>
-                                  {' '}
-                                  <MenuList minW={10} zIndex="popover" bg="gray.200">
-                                    <MenuItem
-                                      onClick={() =>
-                                        setVisuals({
-                                          ...visuals,
-                                          labelBackgroundColor: '',
-                                        })
-                                      }
-                                      justifyContent="space-between"
-                                      alignItems="center"
-                                      display="flex"
-                                    >
-                                      None
-                                    </MenuItem>
-                                    {grays.map((color) => (
-                                      <MenuItem
-                                        key={color}
-                                        onClick={() =>
-                                          setVisuals({
-                                            ...visuals,
-                                            labelBackgroundColor: color,
-                                          })
-                                        }
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        display="flex"
-                                      >
-                                        <Box
-                                          bgColor={color}
-                                          borderRadius="sm"
-                                          height={6}
-                                          width={6}
-                                        ></Box>
-                                      </MenuItem>
-                                    ))}
-                                  </MenuList>
-                                </Portal>
-                              </Menu>
-                            </Flex>
+                            <ColorMenu
+                              colorList={colorList}
+                              label="Text"
+                              visuals={visuals}
+                              setVisuals={setVisuals}
+                              value="labelTextColor"
+                              visValue={visuals.labelTextColor}
+                            />
+                            <ColorMenu
+                              colorList={colorList}
+                              label="Text"
+                              visuals={visuals}
+                              setVisuals={setVisuals}
+                              value="labelBackgroundColor"
+                              visValue={visuals.labelBackgroundColor}
+                            />
                             <Collapse in={!!visuals.labelBackgroundColor} animateOpacity>
                               <Box paddingTop={2}>
                                 <SliderWithInfo
@@ -1055,81 +827,14 @@ export const Tweaks = (props: TweakProps) => {
                           step={0.01}
                           onChange={(value) => setVisuals({ ...visuals, arrowsPos: value })}
                         />
-                        <Flex alignItems="center" justifyContent="space-between">
-                          <Text>Arrow Color</Text>
-                          <Menu placement="right">
-                            <MenuButton
-                              as={Button}
-                              colorScheme=""
-                              color="black"
-                              rightIcon={<ChevronDownIcon />}
-                            >
-                              {
-                                <Box
-                                  bgColor={visuals.arrowsColor}
-                                  borderRadius="sm"
-                                  height={6}
-                                  width={6}
-                                ></Box>
-                              }
-                            </MenuButton>
-                            <Portal>
-                              {' '}
-                              <MenuList minW={10} zIndex="popover" bgColor="gray.200">
-                                <MenuItem
-                                  onClick={() => setVisuals({ ...visuals, arrowsColor: '' })}
-                                  justifyContent="space-between"
-                                  alignItems="center"
-                                  display="flex"
-                                >
-                                  <Box height={6} width={6}></Box>
-                                </MenuItem>
-                                {colorList.map((color) => (
-                                  <MenuItem
-                                    key={color}
-                                    onClick={() =>
-                                      setVisuals({
-                                        ...visuals,
-                                        arrowsColor: color,
-                                      })
-                                    }
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    display="flex"
-                                  >
-                                    <Box
-                                      bgColor={color}
-                                      borderRadius="sm"
-                                      height={6}
-                                      width={6}
-                                    ></Box>
-                                  </MenuItem>
-                                ))}
-                                {grays.map((color) => (
-                                  <MenuItem
-                                    key={color}
-                                    onClick={() =>
-                                      setVisuals({
-                                        ...visuals,
-                                        arrowsColor: color,
-                                      })
-                                    }
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    display="flex"
-                                  >
-                                    <Box
-                                      bgColor={color}
-                                      borderRadius="sm"
-                                      height={6}
-                                      width={6}
-                                    ></Box>
-                                  </MenuItem>
-                                ))}
-                              </MenuList>
-                            </Portal>
-                          </Menu>
-                        </Flex>
+                        <ColorMenu
+                          colorList={colorList}
+                          label="Arrow Color"
+                          visuals={visuals}
+                          setVisuals={setVisuals}
+                          value="arrowsColor"
+                          visValue={visuals.arrowsColor}
+                        />
                       </EnableSection>
                       <EnableSection
                         label="Directional Particles"
@@ -1483,5 +1188,57 @@ export const DropDownMenu = (props: DropDownMenuProps) => {
         </MenuList>
       </Portal>
     </Menu>
+  )
+}
+
+export interface ColorMenuProps {
+  label: string
+  colorList: string[]
+  value: string
+  visuals: typeof initialVisuals
+  visValue: string
+  setVisuals?: any
+}
+
+export const ColorMenu = (props: ColorMenuProps) => {
+  const { label, colorList, value, visuals, visValue, setVisuals } = props
+  return (
+    <Flex alignItems="center" justifyContent="space-between">
+      <Text>{label}</Text>
+      <Menu placement="right">
+        <MenuButton as={Button} colorScheme="" color="black" rightIcon={<ChevronDownIcon />}>
+          {<Box bgColor={visValue} borderRadius="sm" height={6} width={6}></Box>}
+        </MenuButton>
+        <Portal>
+          {' '}
+          <MenuList minW={10} zIndex="popover" bgColor="gray.200">
+            <MenuItem
+              onClick={() => setVisuals({ ...visuals, [value]: '' })}
+              justifyContent="space-between"
+              alignItems="center"
+              display="flex"
+            >
+              <Box height={6} width={6}></Box>
+            </MenuItem>
+            {colorList.map((color: string) => (
+              <MenuItem
+                key={color}
+                onClick={() =>
+                  setVisuals({
+                    ...visuals,
+                    [value]: color,
+                  })
+                }
+                justifyContent="space-between"
+                alignItems="center"
+                display="flex"
+              >
+                <Box bgColor={color} borderRadius="sm" height={6} width={6}></Box>
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Portal>
+      </Menu>
+    </Flex>
   )
 }

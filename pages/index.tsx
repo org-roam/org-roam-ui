@@ -413,13 +413,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return false
       }
 
-      return links.some((link) => !['parent', 'cite', 'ref'].includes(link.type))
+      return links.some((link) => !['parent', 'ref'].includes(link.type))
     })
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((linkArg) => {
       const link = linkArg as OrgRoamLink
-      return link.type !== 'cite' && (filter.parents || link.type !== 'parent')
+      return filter.parents || link.type !== 'parent'
     })
 
     const scopedNodes = filteredNodes.filter((node) => {
@@ -530,6 +530,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       visuals.linkColorScheme || [],
       visuals.linkHighlight || [],
       visuals.nodeHighlight || [],
+      visuals.citeNodeColor || [],
+      visuals.citeLinkColor || [],
     )
 
     return Object.fromEntries(
@@ -618,13 +620,16 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
       return getThemeColor(visuals.emacsNodeColor)
     }
+    if (visuals.citeNodeColor && node.properties.ROAM_REFS) {
+      return getThemeColor(visuals.citeNodeColor)
+    }
     if (!needsHighlighting) {
-      return getThemeColor(getNodeColorById(node.id))
+      return getThemeColor(getNodeColorById(node.id as string))
     }
     if (!visuals.nodeHighlight) {
-      return getThemeColor(getNodeColorById(node.id))
+      return getThemeColor(getNodeColorById(node.id as string))
     }
-    return highlightColors[getNodeColorById(node.id)][visuals.nodeHighlight](opacity)
+    return highlightColors[getNodeColorById(node.id as string)][visuals.nodeHighlight](opacity)
   }
 
   const hexToRGBA = (hex: string, opacity: number) =>
@@ -746,6 +751,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode.current)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
+      const roamLink = link as OrgRoamLink
+      if (visuals.citeLinkColor && roamLink.type === 'cite') {
+        return getThemeColor(visuals.citeLinkColor)
+      }
+
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
     },
     linkWidth: (link) => {
@@ -824,7 +834,17 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           }}
         />
       ) : (
-        <ForceGraph2D ref={graphRef} {...graphCommonProps} />
+        <ForceGraph2D
+          ref={graphRef}
+          {...graphCommonProps}
+          linkLineDash={(link) => {
+            const linkArg = link as OrgRoamLink
+            if (!visuals.citeDashes || linkArg.type !== 'cite') {
+              return null
+            }
+            return [visuals.citeDashLength, visuals.citeGapLength]
+          }}
+        />
       )}
     </div>
   )

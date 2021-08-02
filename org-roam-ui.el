@@ -152,7 +152,7 @@ This serves the web-build and API over HTTP."
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
-  (let* ((nodes-columns [id file title level])
+  (let* ((nodes-columns [id file title level properties])
          (links-columns [links:source links:dest links:type refs:node-id])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
          ;; Left outer join on refs means any id link (or cite link without a
@@ -168,7 +168,7 @@ This serves the web-build and API over HTTP."
          (links-db-rows (seq-map (lambda (l)
                                    (pcase-let ((`(,source ,dest ,type ,node-id) l))
                                      (if node-id
-                                         (list source node-id "id")
+                                         (list source node-id "cite")
                                        (list source dest type)))) links-db-rows))
          (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows)))))
