@@ -30,6 +30,7 @@ import {
   initialBehavior,
   initialMouse,
   algos,
+  TagColors,
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 
@@ -140,6 +141,7 @@ export function GraphPage() {
   const { setEmacsTheme } = useContext(ThemeContext)
 
   const [threeDim, setThreeDim] = usePersistantState('3d', false)
+  const [tagColors, setTagColors] = usePersistantState<TagColors>('tagCols', {})
   const [scope, setScope] = useState<Scope>({ nodeIds: [] })
   const scopeRef = useRef<Scope>({ nodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
@@ -272,6 +274,8 @@ export function GraphPage() {
           setMouse,
           behavior,
           setBehavior,
+          tagColors,
+          setTagColors,
         }}
         tags={tagsRef.current}
       />
@@ -292,6 +296,7 @@ export function GraphPage() {
             mouse,
             scope,
             setScope,
+            tagColors,
           }}
         />
       </Box>
@@ -313,6 +318,7 @@ export interface GraphProps {
   scope: Scope
   setScope: any
   webSocket: any
+  tagColors: { [tag: string]: string }
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -330,6 +336,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     scope,
     setScope,
     webSocket,
+    tagColors,
   } = props
 
   // react-force-graph does not track window size
@@ -639,6 +646,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
       return getThemeColor(visuals.emacsNodeColor)
+    }
+    if (tagColors && node.tags.some((tag) => tagColors[tag])) {
+      const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
+      return getThemeColor(tagColor)
     }
     if (visuals.citeNodeColor && node.properties.ROAM_REFS) {
       return getThemeColor(visuals.citeNodeColor)

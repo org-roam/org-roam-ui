@@ -35,7 +35,6 @@ export const initialFilter = {
   orphans: false,
   parents: true,
   tags: [],
-  tagColors: [],
   nodes: [],
   links: [],
   date: [],
@@ -87,6 +86,10 @@ export const initialVisuals = {
   citeGapLength: 15,
   citeLinkColor: 'gray.600',
   citeNodeColor: 'black',
+}
+
+export interface TagColors {
+  [tag: string]: string
 }
 
 export const initialBehavior = {

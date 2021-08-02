@@ -17,6 +17,7 @@
     "@lilib/hooks": "^0.1.1",
     "@react-hook/window-size": "^3.0.7",
     "@types/color": "^3.0.2",
+    "chakra-ui-autocomplete": "^1.4.2",
     "d3-force-3d": "^3.0.2",
     "d3-interpolate": "^3.0.1",
     "es6-tween": "^5.5.11",

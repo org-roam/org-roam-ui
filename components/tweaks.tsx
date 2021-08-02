@@ -8,6 +8,7 @@ import {
   ArrowRightIcon,
   AddIcon,
   DeleteIcon,
+  CheckCircleIcon,
 } from '@chakra-ui/icons'
 import {
   Accordion,
@@ -42,6 +43,8 @@ import {
   SlideFade,
   Input,
 } from '@chakra-ui/react'
+import { CUIAutoComplete } from 'chakra-ui-autocomplete'
+
 import React, { useState, useContext } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import {
@@ -50,6 +53,7 @@ import {
   initialVisuals,
   initialMouse,
   initialBehavior,
+  TagColors,
 } from './config'
 
 import { ThemeContext } from '../util/themecontext'
@@ -68,6 +72,8 @@ export interface TweakProps {
   behavior: typeof initialBehavior
   setBehavior: any
   tags: string[]
+  tagColors: TagColors
+  setTagColors: any
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -85,6 +91,8 @@ export const Tweaks = (props: TweakProps) => {
     behavior,
     setBehavior,
     tags,
+    tagColors,
+    setTagColors,
   } = props
   const [showTweaks, setShowTweaks] = useState(true)
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
@@ -97,9 +105,6 @@ export const Tweaks = (props: TweakProps) => {
     'blue.500',
     'pink.500',
     'purple.500',
-    'gray.400',
-    'gray.500',
-    'gray.600',
     'white',
     'gray.100',
     'gray.200',
@@ -229,22 +234,35 @@ export const Tweaks = (props: TweakProps) => {
                       ></Switch>
                     </Flex>
                   </VStack>
-                  <Accordion allowToggle allowMultiple paddingLeft={3}>
+                  <Accordion padding={0} allowToggle allowMultiple paddingLeft={3}>
                     <AccordionItem>
                       <AccordionButton>
                         Tag filters
                         <AccordionIcon />
                       </AccordionButton>
-                      <AccordionPanel>
-                        <TagPanel filter={filter} setFilter={setFilter} tags={tags} />
+                      <AccordionPanel pr={0} mr={0}>
+                        <TagPanel
+                          highlightColor={highlightColor}
+                          filter={filter}
+                          setFilter={setFilter}
+                          tags={tags}
+                        />
                       </AccordionPanel>
                     </AccordionItem>
                     <AccordionItem>
                       <AccordionButton>
-                        Tag colors
+                        Tag Colors
                         <AccordionIcon />
                       </AccordionButton>
-                      <AccordionPanel></AccordionPanel>
+                      <AccordionPanel pr={0} mr={0}>
+                        <TagColorPanel
+                          tags={tags}
+                          colorList={colorList}
+                          tagColors={tagColors}
+                          setTagColors={setTagColors}
+                          highlightColor={highlightColor}
+                        />
+                      </AccordionPanel>
                     </AccordionItem>
                   </Accordion>
                 </AccordionPanel>
@@ -1271,49 +1289,165 @@ export interface TagPanelProps {
   tags: string[]
   filter: typeof initialFilter
   setFilter: any
+  highlightColor: string
 }
 
 export const TagPanel = (props: TagPanelProps) => {
-  const { filter, setFilter, tags } = props
-  const [tagFilterText, setTagFilterText] = useState('')
+  const { filter, setFilter, tags, highlightColor } = props
+  const tagArray = tags.map((tag) => {
+    return { value: tag, label: tag }
+  })
+  // .concat[{ value: 'placeholder', label: 'New filter' }]
+
+  const [selectedItems, setSelectedItems] = useState<typeof tagArray>([])
 
   return (
-    <VStack>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Input
-          placeHolder="New tag..."
-          value={tagFilterText}
-          onChange={(v) => setTagFilterText(v.target.value)}
-        />
-        <IconButton
-          onClick={() => {
-            if (!tags.includes(tagFilterText)) {
-              return
-            }
-            setFilter({ ...filter, tags: [...filter.tags, tagFilterText] })
-            setTagFilterText('')
-          }}
-          aria-label="add tag"
-          icon={<AddIcon />}
-        />
-      </Flex>
-      {filter.tags.map((tag) => {
-        return (
-          <Flex aignItems="center" justifyContent="space-between">
-            {tag}
-            <IconButton
-              aria-label={'delete tag ' + tag}
-              icon={<DeleteIcon />}
-              onClick={() =>
-                setFilter({
-                  ...filter,
-                  tags: filter.tags.filter((t) => t !== tag),
-                })
-              }
-            />
-          </Flex>
-        )
-      })}
-    </VStack>
+    <CUIAutoComplete
+      items={tagArray}
+      label="Add tag to filter"
+      placeholder=" "
+      onCreateItem={(item) => null}
+      disableCreateItem={true}
+      selectedItems={selectedItems}
+      onSelectedItemsChange={(changes) => {
+        if (changes.selectedItems) {
+          setSelectedItems(changes.selectedItems)
+          setFilter({ ...filter, tags: selectedItems.map((item) => item.value) })
+        }
+      }}
+      listItemStyleProps={{ overflow: 'hidden' }}
+      highlightItemBg="gray.400"
+      toggleButtonStyleProps={{ variant: 'outline' }}
+      inputStyleProps={{
+        focusBorderColor: highlightColor,
+        color: 'gray.800',
+        borderColor: 'gray.600',
+      }}
+      tagStyleProps={{
+        rounded: 'full',
+        bg: highlightColor,
+        height: 8,
+        paddingLeft: 4,
+        fontWeight: 'bold',
+      }}
+      hideToggleButton
+      itemRenderer={(selected) => selected.label}
+    />
+  )
+}
+
+export interface TagColorPanelProps {
+  tags: string[]
+  highlightColor: string
+  colorList: string[]
+  tagColors: TagColors
+  setTagColors: any
+}
+export const TagColorPanel = (props: TagColorPanelProps) => {
+  const { colorList, tagColors, setTagColors, highlightColor, tags } = props
+  const tagArray = tags.map((tag) => {
+    return { value: tag, label: tag }
+  })
+
+  const [selectedItems, setSelectedItems] = useState<typeof tagArray>([])
+
+  return (
+    <Box>
+      <CUIAutoComplete
+        items={tagArray}
+        label="Add tag to filter"
+        placeholder=" "
+        disableCreateItem={true}
+        selectedItems={selectedItems}
+        onSelectedItemsChange={(changes) => {
+          if (changes.selectedItems) {
+            setSelectedItems(Array.from(new Set(changes.selectedItems)))
+            setTagColors(
+              Object.fromEntries(
+                Array.from(new Set(changes.selectedItems)).map((item) => {
+                  return [item.label, tagColors[item.label] ?? 'gray.600']
+                }),
+              ),
+            )
+          }
+        }}
+        listItemStyleProps={{ overflow: 'hidden' }}
+        highlightItemBg="gray.400"
+        toggleButtonStyleProps={{ variant: 'outline' }}
+        inputStyleProps={{
+          focusBorderColor: highlightColor,
+          color: 'gray.800',
+          borderColor: 'gray.600',
+        }}
+        tagStyleProps={{
+          display: 'none',
+          rounded: 'full',
+          bg: highlightColor,
+          height: 8,
+          paddingLeft: 4,
+          fontWeight: 'bold',
+        }}
+        hideToggleButton
+        itemRenderer={(selected) => selected.label}
+      />
+      <VStack
+        spacing={2}
+        justifyContent="flex-start"
+        divider={<StackDivider borderColor="gray.500" />}
+        align="stretch"
+        color="gray.800"
+      >
+        {Object.keys(tagColors).map((tag) => {
+          return (
+            <Flex key={tag} alignItems="center" justifyContent="space-between" width="100%" pl={2}>
+              <Box width="100%">
+                <Text fontWeight="bold">{tag}</Text>
+              </Box>
+              <Menu isLazy placement="right">
+                <MenuButton as={Button} colorScheme="" color="black">
+                  {<Box bgColor={tagColors[tag]} borderRadius="sm" height={6} width={6}></Box>}
+                </MenuButton>
+                <Portal>
+                  {' '}
+                  <MenuList minW={10} zIndex="popover" bgColor="gray.200">
+                    {colorList.map((color: string) => (
+                      <MenuItem
+                        key={color}
+                        onClick={() =>
+                          setTagColors({
+                            ...tagColors,
+                            [tag]: color,
+                          })
+                        }
+                        justifyContent="space-between"
+                        alignItems="center"
+                        display="flex"
+                      >
+                        <Box bgColor={color} borderRadius="sm" height={6} width={6}></Box>
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Portal>
+              </Menu>
+              <IconButton
+                aria-label="Delete tag color"
+                variant="ghost"
+                icon={<DeleteIcon />}
+                onClick={() => {
+                  setTagColors(
+                    Object.fromEntries(
+                      Array.from(new Set(selectedItems)).map((item) => {
+                        return [item.label, tagColors[item.label] ?? 'gray.600']
+                      }),
+                    ),
+                  )
+                  setSelectedItems(selectedItems.filter((item) => item.value !== tag))
+                }}
+              />
+            </Flex>
+          )
+        })}
+      </VStack>
+    </Box>
   )
 }
