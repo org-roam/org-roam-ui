@@ -53,9 +53,16 @@ Then something along the following to your `config.el`
 
 (use-package! org-roam-ui
     :after org-roam ;; or :after org
-    :hook (org-roam . org-roam-ui-mode)
+    :hook
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
     :config
-)
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 ```
 
@@ -68,11 +75,18 @@ We recommend only loading org-roam-ui after loading org(-roam) as starting the s
   :straight
     (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
     :after org-roam
-    :hook (org-roam . org-roam-ui-mode))
-```
+    :hook
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
-TODO
-You probably know how to do this
+```
 
 ## Usage
 
@@ -142,8 +156,7 @@ You can also provide your own theme if you do not like syncing nor like the defa
 
 ```emacs-lisp
 (setq org-roam-ui-custom-theme
-    (list
-        (bg . "#1E2029")
+    '((bg . "#1E2029")
         (bg-alt . "#282a36")
         (fg . "#f8f8f2")
         (fg-alt . "#6272a4")
@@ -158,6 +171,14 @@ You can also provide your own theme if you do not like syncing nor like the defa
 ```
 
 You can optionally provide `(base1 . "#XXXXXX")` arguments after the last one to also set the background shades, otherwise ORUI will guess based on the provides bg and fg.
+
+### Open on start
+
+By default, org-roam-ui will try to open itself in your default browser. To disable this, set
+
+```emacs-lisp
+(setq org-roam-ui-open-on-start nil)
+```
 
 ## Disclaimers ‼
 
