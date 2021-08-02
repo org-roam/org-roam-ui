@@ -81,6 +81,11 @@ export const initialVisuals = {
   labelTextColor: 'black',
   labelBackgroundColor: 'white',
   labelBackgroundOpacity: 0.7,
+  citeDashes: true,
+  citeDashLength: 35,
+  citeGapLength: 15,
+  citeLinkColor: 'gray.600',
+  citeNodeColor: 'black',
 }
 
 export const initialBehavior = {
