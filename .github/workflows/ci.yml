@@ -18,6 +18,8 @@ jobs:
           repository: "${{ github.repository }}"
       - name: "[bulid]"
         run: |
+          git config --global url."https://github.com/".insteadOf git@github.com:
+          git config --global url."https://".insteadOf git://
           yarn
           yarn build
 ...
