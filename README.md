@@ -190,6 +190,18 @@ By default, org-roam-ui will try to open itself in your default browser. To disa
 
 ## FAQ 🗨
 
+## Q: Aaaaand it broke: what do?
+
+Sorry! This is still alpha software, so expect it to break from time to time. Best thing you can try is to remove your settings by going to "Storage > Local Storage" on Firefox or "Application > Local Storage" on Chromium and deleting everything there.
+
+If the issue still persists, please file a bug report with
+
+1. Your browsers console log
+2. Your browsers
+3. What you were doing when it broke
+
+and we'll try to help you ASAP!
+
 ### Q: Graph Slow! Faster?
 
 While we try to optimize the display of the graph, there is only so much we can do. For largish networks (>2k nodes) dragging the graph around a lot can cause some performance issues, but there are a few things you can do to speed it up.
@@ -228,7 +240,7 @@ In our experience, once the graph has actually settled and nothing needs to be r
 
 ### Q: Some of my links are not showing up?
 
-At the moment we aren't showing citation links made with `org-roam-bibtex` yet, but we will soon!
+Links which do not refer to a valid id are filtered out to prevent crashes. In the future we will handle this a bit more gracefully by notifying you about this, but for now we're just removing them.
 
 ### Q: Will you implement X?
 
@@ -297,8 +309,8 @@ https://user-images.githubusercontent.com/21983833/127747234-d0588cdf-623f-4d13-
 
 In no particular order
 
-- Citation links + customization
-- Tag filtering/coloring
+- ~~Citation links + customization~~
+- ~~Tag filtering/coloring~~
 - Local graph show Nth neighbor
 - More colors
 - Colorization options (by neighbors, centrality, etc)
