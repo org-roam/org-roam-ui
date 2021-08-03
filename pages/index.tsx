@@ -70,6 +70,14 @@ export default function Home() {
   return <GraphPage />
 }
 
+function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
+  // we need to cover both because force-graph modifies the original data
+  // but if we supply the original data on each render, the graph will re-render sporadically
+  const sourceId = typeof link.source === 'object' ? (link.source.id! as string) : (link.source as string)
+  const targetId = typeof link.target === 'object' ? (link.target.id! as string) : (link.target as string)
+  return [sourceId, targetId]
+}
+
 export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
@@ -416,6 +424,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       if (filter.tags.length && node.tags.length) {
         return !filter.tags.some((tag) => node.tags.indexOf(tag) > -1)
       }
+      if (filter.fileless_cites && node.properties.FILELESS) {
+        return false
+      }
 
       if (!filter.orphans) {
         return true
@@ -434,14 +445,16 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
-      if (filter.tags.length) {
-        const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-        const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
-        return (
+      const [sourceId, targetId] = normalizeLinkEnds(link)
+      if (
+        !(
           filteredNodeIds.includes(sourceId as string) &&
           filteredNodeIds.includes(targetId as string)
         )
+      ) {
+        return false
       }
+
       const linkRoam = link as OrgRoamLink
       return filter.parents || linkRoam.type !== 'parent'
     })
@@ -464,8 +477,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const scopedLinks = filteredGraphData.filteredLinks.filter((link) => {
       // we need to cover both because force-graph modifies the original data
       // but if we supply the original data on each render, the graph will re-render sporadically
-      const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-      const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+      const [sourceId, targetId] = normalizeLinkEnds(link)
       return (
         scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
       )
@@ -651,8 +663,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
       return getThemeColor(tagColor)
     }
-    if (visuals.citeNodeColor && node.properties.ROAM_REFS) {
+    if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
       return getThemeColor(visuals.citeNodeColor)
+    }
+    if (visuals.refNodeColor && node.properties.ROAM_REFS) {
+      return getThemeColor(visuals.refNodeColor)
     }
     if (!needsHighlighting) {
       return getThemeColor(getNodeColorById(node.id as string))
@@ -783,6 +798,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
       const roamLink = link as OrgRoamLink
+      if (visuals.refLinkColor && roamLink.type === 'ref') {
+        return getThemeColor(visuals.refLinkColor)
+      }
       if (visuals.citeLinkColor && roamLink.type === 'cite') {
         return getThemeColor(visuals.citeLinkColor)
       }
@@ -870,10 +888,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           {...graphCommonProps}
           linkLineDash={(link) => {
             const linkArg = link as OrgRoamLink
-            if (!visuals.citeDashes || linkArg.type !== 'cite') {
-              return null
+            if (visuals.citeDashes && linkArg.type === 'cite') {
+              return [visuals.citeDashLength, visuals.citeGapLength]
             }
-            return [visuals.citeDashLength, visuals.citeGapLength]
+            if (visuals.refDashes && linkArg.type == 'ref') {
+              return [visuals.refDashLength, visuals.refGapLength]
+            }
+            return null
           }}
         />
       )}

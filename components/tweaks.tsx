@@ -233,6 +233,15 @@ export const Tweaks = (props: TweakProps) => {
                         isChecked={filter.parents}
                       ></Switch>
                     </Flex>
+                    <Flex justifyContent="space-between">
+                      <Text>Citations without note files</Text>
+                      <Switch
+                        onChange={() => {
+                          setFilter({ ...filter, fileless_cites: !filter.fileless_cites })
+                        }}
+                        isChecked={filter.fileless_cites}
+                      ></Switch>
+                    </Flex>
                   </VStack>
                   <Accordion padding={0} allowToggle allowMultiple paddingLeft={3}>
                     <AccordionItem>
@@ -761,6 +770,42 @@ export const Tweaks = (props: TweakProps) => {
                         setVisuals={setVisuals}
                         value={'citeLinkColor'}
                         visValue={visuals.citeLinkColor}
+                      />
+
+                      <EnableSection
+                        label="Dash ref links"
+                        infoText="Add dashes to citation links, whose target has a note, made with org-roam-bibtex"
+                        value={visuals.refDashes}
+                        onChange={() => setVisuals({ ...visuals, refDashes: !visuals.refDashes })}
+                      >
+                        <SliderWithInfo
+                          label="Dash length"
+                          value={visuals.refDashLength / 10}
+                          onChange={(value) =>
+                            setVisuals({ ...visuals, refDashLength: value * 10 })
+                          }
+                        />
+                        <SliderWithInfo
+                          label="Gap length"
+                          value={visuals.refGapLength / 5}
+                          onChange={(value) => setVisuals({ ...visuals, refGapLength: value * 5 })}
+                        />
+                      </EnableSection>
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Reference node color"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'refNodeColor'}
+                        visValue={visuals.refNodeColor}
+                      />
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Referencelink color"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'refLinkColor'}
+                        visValue={visuals.refLinkColor}
                       />
                       <Box>
                         <Flex alignItems="center" justifyContent="space-between">

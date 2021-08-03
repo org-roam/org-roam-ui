@@ -157,6 +157,9 @@ This serves the web-build and API over HTTP."
     (org-roam-ui--send-graphdata))
   )
 
+(defun org-roam-ui--create-fake-node (ref)
+  (list ref ref ref 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
+
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
   (let* ((nodes-columns [id file title level properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
@@ -174,14 +177,17 @@ This serves the web-build and API over HTTP."
                                              :from links
                                              :left :outer :join refs :on (= links:dest refs:ref)
                                              :where (or (= links:type "id") (= links:type "cite"))]))
-         ;; Convert any cite links that have nodes with associated refs to a
-         ;; standard id link while removing the 'nil `refs:node-id' from all
-         ;; other links
+         ;; Convert any cite links that have nodes with associated refs to an
+         ;; id based link of type `ref' while removing the 'nil `refs:node-id'
+         ;; from all other links
          (links-db-rows (seq-map (lambda (l)
                                    (pcase-let ((`(,source ,dest ,type ,node-id) l))
                                      (if node-id
-                                         (list source node-id "cite")
+                                         (list source node-id "ref")
                                        (list source dest type)))) links-db-rows))
+         (links-with-empty-refs (seq-filter (lambda (l) (equal (nth 2 l) "cite")) links-db-rows))
+         (fake-nodes (delete-dups (seq-map (lambda (l) (org-roam-ui--create-fake-node (nth 1 l))) links-with-empty-refs)))
+         (nodes-db-rows (append nodes-db-rows fake-nodes))
          (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
                                   (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
