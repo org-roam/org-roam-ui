@@ -8,15 +8,21 @@ defaults:
   run:
     shell: "bash"
 jobs:
-  build:
-    name: "[ci|build]"
+  lint-test-build:
+    name: "[ci|lint-test-build]"
     runs-on: "ubuntu-18.04"
     steps:
-      - name: "[build|checkout] ${{ github.repository }} project"
+      - name: "[checkout] ${{ github.repository }} project"
         uses: "actions/checkout@v2"
         with:
           repository: "${{ github.repository }}"
-      - name: "[bulid]"
+      - name: "[lint]"
+        run: |
+          echo TBA some linting
+      - name: "[test]"
+        run: |
+          echo TBA some testing
+      - name: "[build]"
         run: |
           git config --global url."https://github.com/".insteadOf ssh://git@github.com/
           git config --global url."https://".insteadOf git://
