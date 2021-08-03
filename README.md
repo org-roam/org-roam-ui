@@ -11,7 +11,7 @@ Org-Roam-UI is meant a successor of [org-roam-server](https://github.com/org-roa
 `org-roam-ui` is not (yet!) on MELPA.
 
 Should your Emacs miss any of the dependencies, please install them manually!
-org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >27 for fast JSON parsing.
+org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >= 27 for fast JSON parsing.
 
 ### Manually
 
