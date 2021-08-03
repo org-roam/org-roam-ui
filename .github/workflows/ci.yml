@@ -16,10 +16,6 @@ jobs:
         uses: "actions/checkout@v2"
         with:
           repository: "${{ github.repository }}"
-          fetch-depth: 1
-          clean: true
-          lfs: false
-          submodules: false
       - name: "[bulid]"
         run: |
           yarn
