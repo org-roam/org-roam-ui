@@ -1825,7 +1825,11 @@
             o = r.map(function (e) {
               return { value: e, label: e }
             }),
-            s = (0, u.useState)([]),
+            s = (0, u.useState)(
+              n.tags.map(function (e) {
+                return { value: e, label: e }
+              }),
+            ),
             a = s[0],
             c = s[1]
           return (0, l.jsx)(ee.CUIAutoComplete, {
@@ -1845,7 +1849,7 @@
                     ie({}, n),
                     {},
                     {
-                      tags: a.map(function (e) {
+                      tags: e.selectedItems.map(function (e) {
                         return e.value
                       }),
                     },
@@ -1877,7 +1881,11 @@
             o = e.tags.map(function (e) {
               return { value: e, label: e }
             }),
-            s = (0, u.useState)([]),
+            s = (0, u.useState)(
+              Object.keys(t).map(function (e) {
+                return { value: e, label: e }
+              }),
+            ),
             c = s[0],
             d = s[1]
           return (0, l.jsxs)(j.xu, {

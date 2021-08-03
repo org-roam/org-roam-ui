@@ -1299,7 +1299,11 @@ export const TagPanel = (props: TagPanelProps) => {
   })
   // .concat[{ value: 'placeholder', label: 'New filter' }]
 
-  const [selectedItems, setSelectedItems] = useState<typeof tagArray>([])
+  const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
+    filter.tags.map((tag) => {
+      return { value: tag, label: tag }
+    }),
+  )
 
   return (
     <CUIAutoComplete
@@ -1312,7 +1316,7 @@ export const TagPanel = (props: TagPanelProps) => {
       onSelectedItemsChange={(changes) => {
         if (changes.selectedItems) {
           setSelectedItems(changes.selectedItems)
-          setFilter({ ...filter, tags: selectedItems.map((item) => item.value) })
+          setFilter({ ...filter, tags: changes.selectedItems.map((item) => item.value) })
         }
       }}
       listItemStyleProps={{ overflow: 'hidden' }}
@@ -1349,7 +1353,11 @@ export const TagColorPanel = (props: TagColorPanelProps) => {
     return { value: tag, label: tag }
   })
 
-  const [selectedItems, setSelectedItems] = useState<typeof tagArray>([])
+  const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
+    Object.keys(tagColors).map((tag) => {
+      return { value: tag, label: tag }
+    }),
+  )
 
   return (
     <Box>
