@@ -84,7 +84,7 @@ export function GraphPage() {
   const tagsRef = useRef<Tags>([])
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
-    tagsRef.current = orgRoamGraphData.tags
+    tagsRef.current = orgRoamGraphData.tags ?? []
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
         ...acc,
