@@ -86,6 +86,7 @@ export const initialVisuals = {
   citeDashLength: 35,
   citeGapLength: 15,
   citeLinkColor: 'gray.600',
+  citeLinkHighlightColor: '',
   citeNodeColor: 'black',
 }
 

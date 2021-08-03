@@ -764,11 +764,19 @@ export const Tweaks = (props: TweakProps) => {
                       />
                       <ColorMenu
                         colorList={colorList}
-                        label="Citationlink color"
+                        label="Citation link color"
                         visuals={visuals}
                         setVisuals={setVisuals}
                         value={'citeLinkColor'}
                         visValue={visuals.citeLinkColor}
+                      />
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Citation link highlight"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'citeLinkHighlightColor'}
+                        visValue={visuals.citeLinkHighlightColor}
                       />
                       <Box>
                         <Flex alignItems="center" justifyContent="space-between">

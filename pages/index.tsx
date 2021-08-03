@@ -411,6 +411,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
   const filteredGraphData = useMemo(() => {
+    hiddenNodeIdsRef.current = {}
     const filteredNodes = graphData.nodes
       .filter((nodeArg) => {
         const node = nodeArg as OrgRoamNode
@@ -580,6 +581,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       visuals.nodeHighlight || [],
       visuals.citeNodeColor || [],
       visuals.citeLinkColor || [],
+      visuals.citeLinkHighlightColor || [],
     )
 
     return Object.fromEntries(
@@ -805,8 +807,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
       const roamLink = link as OrgRoamLink
       if (visuals.citeLinkColor && roamLink.type === 'cite') {
-        return needsHighlighting
-          ? '#ffffff' /*highlightColors[visuals.citeLinkColor][visuals.citeLinkHighlightColor] */
+        return needsHighlighting && (visuals.citeLinkHighlightColor || visuals.linkHighlight)
+          ? highlightColors[visuals.citeLinkColor][
+              visuals.citeLinkHighlightColor || visuals.linkHighlight
+            ](opacity)
           : getThemeColor(visuals.citeLinkColor)
       }
 
