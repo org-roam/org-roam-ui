@@ -2183,8 +2183,9 @@
                 switch (t.type) {
                   case 'graphdata':
                     return (function (e) {
-                      F.current = e.tags
-                      var n = e.nodes.reduce(function (e, n) {
+                      var n
+                      F.current = null !== (n = e.tags) && void 0 !== n ? n : []
+                      var t = e.nodes.reduce(function (e, n) {
                           var t
                           return xe(
                             xe({}, e),
@@ -2199,9 +2200,9 @@
                             ),
                           )
                         }, {}),
-                        t = Object.keys(n).flatMap(function (e) {
-                          var t,
-                            r = null !== (t = n[e]) && void 0 !== t ? t : [],
+                        r = Object.keys(t).flatMap(function (e) {
+                          var n,
+                            r = null !== (n = t[e]) && void 0 !== n ? n : [],
                             i = r.find(function (e) {
                               return 0 === e.level
                             }),
@@ -2219,12 +2220,12 @@
                           return [e.id, e]
                         }),
                       )
-                      var r = [].concat((0, s.Z)(e.links), (0, s.Z)(t)).filter(function (e) {
+                      var i = [].concat((0, s.Z)(e.links), (0, s.Z)(r)).filter(function (e) {
                         var n = e.source,
                           t = e.target
                         return B.current[n] && B.current[t]
                       })
-                      A.current = r.reduce(function (e, n) {
+                      A.current = i.reduce(function (e, n) {
                         var t, r, i
                         return xe(
                           xe({}, e),
@@ -2249,9 +2250,9 @@
                           i),
                         )
                       }, {})
-                      var i = xe(xe({}, e), {}, { links: r }),
-                        o = JSON.parse(JSON.stringify(i))
-                      C(o)
+                      var o = xe(xe({}, e), {}, { links: i }),
+                        l = JSON.parse(JSON.stringify(o))
+                      C(l)
                     })(t.data)
                   case 'theme':
                     return M(t.data)
