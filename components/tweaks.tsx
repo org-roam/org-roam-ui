@@ -821,6 +821,7 @@ export const Tweaks = (props: TweakProps) => {
                         setVisuals={setVisuals}
                         value={'refLinkColor'}
                         visValue={visuals.refLinkColor}
+                      />
                       <ColorMenu
                         colorList={colorList}
                         label="Reference link highlight"

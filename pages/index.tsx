@@ -73,8 +73,10 @@ export default function Home() {
 function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
   // we need to cover both because force-graph modifies the original data
   // but if we supply the original data on each render, the graph will re-render sporadically
-  const sourceId = typeof link.source === 'object' ? (link.source.id! as string) : (link.source as string)
-  const targetId = typeof link.target === 'object' ? (link.target.id! as string) : (link.target as string)
+  const sourceId =
+    typeof link.source === 'object' ? (link.source.id! as string) : (link.source as string)
+  const targetId =
+    typeof link.target === 'object' ? (link.target.id! as string) : (link.target as string)
   return [sourceId, targetId]
 }
 
@@ -418,6 +420,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }, [centralHighlightedNode.current, linksByNodeId])
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
+  const filteredLinksByNodeId = useRef<LinksByNodeId>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
     const filteredNodes = graphData.nodes
@@ -440,7 +443,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         if (filter.fileless_cites && node.properties.FILELESS) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
-      }
+        }
         return true
       })
       .filter((nodeArg) => {
@@ -463,13 +466,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           return false
         }
 
-        return unhiddenLinks.some((link) => !['parent', 'ref'].includes(link.type))
+        return unhiddenLinks.some((link) => !['parent'].includes(link.type))
       })
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
       const [sourceId, targetId] = normalizeLinkEnds(link)
-      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length){
+      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length || filter.fileless_cites) {
         return (
           filteredNodeIds.includes(sourceId as string) &&
           filteredNodeIds.includes(targetId as string)
@@ -592,6 +595,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       visuals.citeNodeColor || [],
       visuals.citeLinkColor || [],
       visuals.citeLinkHighlightColor || [],
+      visuals.refNodeColor || [],
+      visuals.refLinkColor || [],
+      visuals.refLinkHighlightColor || [],
     )
 
     return Object.fromEntries(
@@ -625,7 +631,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const getNodeColorById = (id: string) => {
     const linklen = linksByNodeId[id!]?.length ?? 0
     const parentCiteNeighbors = linklen
-      ? linksByNodeId[id!]?.filter((link) => link.type === 'parent' || link.type === 'cite').length
+      ? linksByNodeId[id!]?.filter((link) => link.type === 'parent').length
       : 0
     const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
 
@@ -819,6 +825,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
       const roamLink = link as OrgRoamLink
+
       if (visuals.refLinkColor && roamLink.type === 'ref') {
         return needsHighlighting && (visuals.refLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.refLinkColor][

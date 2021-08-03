@@ -93,7 +93,7 @@ export const initialVisuals = {
   refDashLength: 35,
   refGapLength: 15,
   refLinkColor: 'gray.400',
-  refLinkHighlightColor: ''.
+  refLinkHighlightColor: '',
   refNodeColor: 'black',
 }
 
