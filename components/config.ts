@@ -35,7 +35,8 @@ export const initialFilter = {
   orphans: false,
   parents: true,
   fileless_cites: false,
-  tags: [],
+  tagsBlacklist: [],
+  tagsWhitelist: [],
   nodes: [],
   links: [],
   date: [],
@@ -86,11 +87,13 @@ export const initialVisuals = {
   citeDashLength: 35,
   citeGapLength: 15,
   citeLinkColor: 'gray.600',
+  citeLinkHighlightColor: '',
   citeNodeColor: 'black',
   refDashes: true,
   refDashLength: 35,
   refGapLength: 15,
-  refLinkColor: 'gray.200',
+  refLinkColor: 'gray.400',
+  refLinkHighlightColor: ''.
   refNodeColor: 'black',
 }
 

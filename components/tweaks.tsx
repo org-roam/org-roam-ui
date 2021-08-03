@@ -255,6 +255,14 @@ export const Tweaks = (props: TweakProps) => {
                           filter={filter}
                           setFilter={setFilter}
                           tags={tags}
+                          mode="blacklist"
+                        />
+                        <TagPanel
+                          highlightColor={highlightColor}
+                          filter={filter}
+                          setFilter={setFilter}
+                          tags={tags}
+                          mode="whitelist"
                         />
                       </AccordionPanel>
                     </AccordionItem>
@@ -765,13 +773,20 @@ export const Tweaks = (props: TweakProps) => {
                       />
                       <ColorMenu
                         colorList={colorList}
-                        label="Citationlink color"
+                        label="Citation link color"
                         visuals={visuals}
                         setVisuals={setVisuals}
                         value={'citeLinkColor'}
                         visValue={visuals.citeLinkColor}
                       />
-
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Reference link highlight"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'citeLinkHighlightColor'}
+                        visValue={visuals.citeLinkHighlightColor}
+                      />
                       <EnableSection
                         label="Dash ref links"
                         infoText="Add dashes to citation links, whose target has a note, made with org-roam-bibtex"
@@ -801,11 +816,18 @@ export const Tweaks = (props: TweakProps) => {
                       />
                       <ColorMenu
                         colorList={colorList}
-                        label="Referencelink color"
+                        label="Reference link color"
                         visuals={visuals}
                         setVisuals={setVisuals}
                         value={'refLinkColor'}
                         visValue={visuals.refLinkColor}
+                      <ColorMenu
+                        colorList={colorList}
+                        label="Reference link highlight"
+                        visuals={visuals}
+                        setVisuals={setVisuals}
+                        value={'refLinkHighlightColor'}
+                        visValue={visuals.refLinkHighlightColor}
                       />
                       <Box>
                         <Flex alignItems="center" justifyContent="space-between">
@@ -1335,21 +1357,26 @@ export interface TagPanelProps {
   filter: typeof initialFilter
   setFilter: any
   highlightColor: string
+  mode: string
 }
 
 export const TagPanel = (props: TagPanelProps) => {
-  const { filter, setFilter, tags, highlightColor } = props
+  const { filter, setFilter, tags, highlightColor, mode } = props
   const tagArray = tags.map((tag) => {
     return { value: tag, label: tag }
   })
-  // .concat[{ value: 'placeholder', label: 'New filter' }]
 
-  const [selectedItems, setSelectedItems] = useState<typeof tagArray>([])
+  const currentTags = mode === 'blacklist' ? 'tagsBlacklist' : 'tagsWhitelist'
+  const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
+    filter[currentTags].map((tag) => {
+      return { value: tag, label: tag }
+    }),
+  )
 
   return (
     <CUIAutoComplete
       items={tagArray}
-      label="Add tag to filter"
+      label={'Add tag to ' + mode}
       placeholder=" "
       onCreateItem={(item) => null}
       disableCreateItem={true}
@@ -1357,7 +1384,7 @@ export const TagPanel = (props: TagPanelProps) => {
       onSelectedItemsChange={(changes) => {
         if (changes.selectedItems) {
           setSelectedItems(changes.selectedItems)
-          setFilter({ ...filter, tags: selectedItems.map((item) => item.value) })
+          setFilter({ ...filter, [currentTags]: changes.selectedItems.map((item) => item.value) })
         }
       }}
       listItemStyleProps={{ overflow: 'hidden' }}
@@ -1394,7 +1421,11 @@ export const TagColorPanel = (props: TagColorPanelProps) => {
     return { value: tag, label: tag }
   })
 
-  const [selectedItems, setSelectedItems] = useState<typeof tagArray>([])
+  const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
+    Object.keys(tagColors).map((tag) => {
+      return { value: tag, label: tag }
+    }),
+  )
 
   return (
     <Box>
