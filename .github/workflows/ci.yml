@@ -1,0 +1,29 @@
+---
+# File : ci.yml
+
+name: "ci"
+on:
+  push:
+defaults:
+  run:
+    shell: "bash"
+jobs:
+  build:
+    name: "[ci|build]"
+    runs-on: "ubuntu-18.04"
+    steps:
+      - name: "[build|checkout] ${{ github.repository }} project"
+        uses: "actions/checkout@v2"
+        with:
+          repository: "${{ github.repository }}"
+          token: "${{ github.token }}"
+          fetch-depth: 1
+          clean: true
+          lfs: false
+          persist-credentials: false
+          submodules: false
+      - name: "[bulid]"
+        run: |
+          yarn
+...
+# End of ci.yml
