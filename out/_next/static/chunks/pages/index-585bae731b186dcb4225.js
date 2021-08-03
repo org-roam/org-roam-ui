@@ -93,7 +93,15 @@
           gravity: 0.3,
           gravityOn: !0,
         },
-        I = { orphans: !1, parents: !0, tags: [], nodes: [], links: [], date: [] },
+        I = {
+          orphans: !1,
+          parents: !0,
+          tagsBlacklist: [],
+          tagsWhitelist: [],
+          nodes: [],
+          links: [],
+          date: [],
+        },
         O = {
           particles: !1,
           particlesNumber: 0,
@@ -148,16 +156,16 @@
         R = t(83986),
         D = t(48931),
         P = t(67546),
-        E = t(93441),
-        Z = t(6569),
-        H = t(24189),
-        B = t(2827),
-        A = t(90454),
-        F = t(48420),
+        Z = t(93441),
+        E = t(6569),
+        B = t(24189),
+        H = t(2827),
+        F = t(90454),
+        A = t(48420),
         M = t(96699),
         V = t(40155),
-        X = t(56769),
-        W = t(336),
+        W = t(56769),
+        X = t(336),
         _ = t(72026),
         U = t(94096),
         Q = t(64115),
@@ -217,8 +225,8 @@
             y = C[0],
             k = C[1],
             w = (0, u.useContext)(te.N),
-            H = w.highlightColor,
-            B = w.setHighlightColor,
+            B = w.highlightColor,
+            H = w.setHighlightColor,
             $ = [
               'red.500',
               'orange.500',
@@ -242,7 +250,7 @@
             ]
           return (0, l.jsxs)(l.Fragment, {
             children: [
-              (0, l.jsx)(A.R, {
+              (0, l.jsx)(F.R, {
                 in: !y,
                 children: (0, l.jsx)(j.xu, {
                   position: 'absolute',
@@ -250,7 +258,7 @@
                   marginTop: 10,
                   marginLeft: 10,
                   display: y ? 'none' : 'block',
-                  children: (0, l.jsx)(F.h, {
+                  children: (0, l.jsx)(A.h, {
                     'aria-label': 'Settings',
                     icon: (0, l.jsx)(T.e, {}),
                     onClick: function () {
@@ -259,7 +267,7 @@
                   }),
                 }),
               }),
-              (0, l.jsx)(A.R, {
+              (0, l.jsx)(F.R, {
                 in: y,
                 children: (0, l.jsxs)(j.xu, {
                   bg: 'alt.100',
@@ -297,7 +305,7 @@
                           children: [
                             (0, l.jsx)(M.u, {
                               label: 'Reset settings to defaults',
-                              children: (0, l.jsx)(F.h, {
+                              children: (0, l.jsx)(A.h, {
                                 'aria-label': 'Reset Defaults',
                                 icon: (0, l.jsx)(R.A, {}),
                                 onClick: function () {
@@ -307,7 +315,7 @@
                                 size: 'sm',
                               }),
                             }),
-                            (0, l.jsx)(F.h, {
+                            (0, l.jsx)(A.h, {
                               size: 'sm',
                               icon: (0, l.jsx)(D.T, {}),
                               'aria-label': 'Close Tweak Panel',
@@ -332,24 +340,24 @@
                           ie(
                             ie({}, t),
                             {},
-                            { style: ie(ie({}, n), {}, { borderRadius: 10 }), bg: H },
+                            { style: ie(ie({}, n), {}, { borderRadius: 10 }), bg: B },
                           ),
                         )
                       },
-                      children: (0, l.jsxs)(X.UQ, {
+                      children: (0, l.jsxs)(W.UQ, {
                         allowMultiple: !0,
                         allowToggle: !0,
                         color: 'black',
                         children: [
-                          (0, l.jsxs)(X.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsxs)(X.KF, {
+                              (0, l.jsxs)(W.KF, {
                                 children: [
-                                  (0, l.jsx)(X.XE, { marginRight: 2 }),
-                                  (0, l.jsx)(W.X, { size: 'sm', children: 'Filter' }),
+                                  (0, l.jsx)(W.XE, { marginRight: 2 }),
+                                  (0, l.jsx)(X.X, { size: 'sm', children: 'Filter' }),
                                 ],
                               }),
-                              (0, l.jsxs)(X.Hk, {
+                              (0, l.jsxs)(W.Hk, {
                                 children: [
                                   (0, l.jsxs)(_.gC, {
                                     spacing: 2,
@@ -387,35 +395,45 @@
                                       }),
                                     ],
                                   }),
-                                  (0, l.jsxs)(X.UQ, {
+                                  (0, l.jsxs)(W.UQ, {
                                     padding: 0,
                                     allowToggle: !0,
                                     allowMultiple: !0,
                                     paddingLeft: 3,
                                     children: [
-                                      (0, l.jsxs)(X.Qd, {
+                                      (0, l.jsxs)(W.Qd, {
                                         children: [
-                                          (0, l.jsxs)(X.KF, {
-                                            children: ['Tag filters', (0, l.jsx)(X.XE, {})],
+                                          (0, l.jsxs)(W.KF, {
+                                            children: ['Tag filters', (0, l.jsx)(W.XE, {})],
                                           }),
-                                          (0, l.jsx)(X.Hk, {
+                                          (0, l.jsxs)(W.Hk, {
                                             pr: 0,
                                             mr: 0,
-                                            children: (0, l.jsx)(ue, {
-                                              highlightColor: H,
-                                              filter: o,
-                                              setFilter: a,
-                                              tags: m,
-                                            }),
+                                            children: [
+                                              (0, l.jsx)(ue, {
+                                                highlightColor: B,
+                                                filter: o,
+                                                setFilter: a,
+                                                tags: m,
+                                                mode: 'blacklist',
+                                              }),
+                                              (0, l.jsx)(ue, {
+                                                highlightColor: B,
+                                                filter: o,
+                                                setFilter: a,
+                                                tags: m,
+                                                mode: 'whitelist',
+                                              }),
+                                            ],
                                           }),
                                         ],
                                       }),
-                                      (0, l.jsxs)(X.Qd, {
+                                      (0, l.jsxs)(W.Qd, {
                                         children: [
-                                          (0, l.jsxs)(X.KF, {
-                                            children: ['Tag Colors', (0, l.jsx)(X.XE, {})],
+                                          (0, l.jsxs)(W.KF, {
+                                            children: ['Tag Colors', (0, l.jsx)(W.XE, {})],
                                           }),
-                                          (0, l.jsx)(X.Hk, {
+                                          (0, l.jsx)(W.Hk, {
                                             pr: 0,
                                             mr: 0,
                                             children: (0, l.jsx)(de, {
@@ -423,7 +441,7 @@
                                               colorList: $,
                                               tagColors: v,
                                               setTagColors: b,
-                                              highlightColor: H,
+                                              highlightColor: B,
                                             }),
                                           }),
                                         ],
@@ -434,20 +452,20 @@
                               }),
                             ],
                           }),
-                          (0, l.jsxs)(X.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsx)(X.KF, {
+                              (0, l.jsx)(W.KF, {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 children: (0, l.jsxs)(j.xu, {
                                   display: 'flex',
                                   children: [
-                                    (0, l.jsx)(X.XE, { marginRight: 2 }),
-                                    (0, l.jsx)(W.X, { size: 'sm', children: 'Physics' }),
+                                    (0, l.jsx)(W.XE, { marginRight: 2 }),
+                                    (0, l.jsx)(X.X, { size: 'sm', children: 'Physics' }),
                                   ],
                                 }),
                               }),
-                              (0, l.jsxs)(X.Hk, {
+                              (0, l.jsxs)(W.Hk, {
                                 children: [
                                   (0, l.jsxs)(_.gC, {
                                     spacing: 2,
@@ -526,18 +544,18 @@
                                     ],
                                   }),
                                   (0, l.jsx)(j.xu, {
-                                    children: (0, l.jsx)(X.UQ, {
+                                    children: (0, l.jsx)(W.UQ, {
                                       paddingLeft: 3,
                                       allowToggle: !0,
-                                      children: (0, l.jsxs)(X.Qd, {
+                                      children: (0, l.jsxs)(W.Qd, {
                                         children: [
-                                          (0, l.jsxs)(X.KF, {
+                                          (0, l.jsxs)(W.KF, {
                                             children: [
                                               (0, l.jsx)(Q.x, { children: 'Advanced' }),
-                                              (0, l.jsx)(X.XE, { marginRight: 2 }),
+                                              (0, l.jsx)(W.XE, { marginRight: 2 }),
                                             ],
                                           }),
-                                          (0, l.jsx)(X.Hk, {
+                                          (0, l.jsx)(W.Hk, {
                                             children: (0, l.jsxs)(_.gC, {
                                               spacing: 2,
                                               justifyContent: 'flex-start',
@@ -594,36 +612,36 @@
                               }),
                             ],
                           }),
-                          (0, l.jsxs)(X.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsxs)(X.KF, {
+                              (0, l.jsxs)(W.KF, {
                                 children: [
-                                  (0, l.jsx)(X.XE, { marginRight: 2 }),
-                                  (0, l.jsx)(W.X, { size: 'sm', children: 'Visual' }),
+                                  (0, l.jsx)(W.XE, { marginRight: 2 }),
+                                  (0, l.jsx)(X.X, { size: 'sm', children: 'Visual' }),
                                 ],
                               }),
-                              (0, l.jsx)(X.Hk, {
+                              (0, l.jsx)(W.Hk, {
                                 children: (0, l.jsxs)(_.gC, {
                                   justifyContent: 'flex-start',
                                   align: 'stretch',
                                   children: [
-                                    (0, l.jsx)(X.UQ, {
+                                    (0, l.jsx)(W.UQ, {
                                       allowToggle: !0,
                                       defaultIndex: [0],
                                       paddingLeft: 3,
-                                      children: (0, l.jsxs)(X.Qd, {
+                                      children: (0, l.jsxs)(W.Qd, {
                                         children: [
-                                          (0, l.jsx)(X.KF, {
+                                          (0, l.jsx)(W.KF, {
                                             children: (0, l.jsxs)(U.k, {
                                               justifyContent: 'space-between',
                                               w: '100%',
                                               children: [
                                                 (0, l.jsx)(Q.x, { children: 'Colors' }),
-                                                (0, l.jsx)(X.XE, { marginRight: 2 }),
+                                                (0, l.jsx)(W.XE, { marginRight: 2 }),
                                               ],
                                             }),
                                           }),
-                                          (0, l.jsx)(X.Hk, {
+                                          (0, l.jsx)(W.Hk, {
                                             children: (0, l.jsx)(_.gC, {
                                               spacing: 2,
                                               justifyContent: 'flex-start',
@@ -641,7 +659,7 @@
                                                       (0, l.jsx)(Q.x, { children: 'Nodes' }),
                                                       (0, l.jsx)(M.u, {
                                                         label: 'Shuffle node colors',
-                                                        children: (0, l.jsx)(F.h, {
+                                                        children: (0, l.jsx)(A.h, {
                                                           'aria-label': 'Shuffle node colors',
                                                           size: 'sm',
                                                           icon: (0, l.jsx)(P.n, {}),
@@ -681,9 +699,9 @@
                                                       }),
                                                       (0, l.jsx)(M.u, {
                                                         label: 'Cycle node colors',
-                                                        children: (0, l.jsx)(F.h, {
+                                                        children: (0, l.jsx)(A.h, {
                                                           'aria-label': 'Shift node colors',
-                                                          icon: (0, l.jsx)(E.L, {}),
+                                                          icon: (0, l.jsx)(Z.L, {}),
                                                           size: 'sm',
                                                           variant: 'ghost',
                                                           onClick: function () {
@@ -718,7 +736,7 @@
                                                             as: V.z,
                                                             colorScheme: '',
                                                             color: 'black',
-                                                            rightIcon: (0, l.jsx)(Z.v, {}),
+                                                            rightIcon: (0, l.jsx)(E.v, {}),
                                                             children: (0, l.jsx)(U.k, {
                                                               height: 6,
                                                               width: 6,
@@ -816,7 +834,7 @@
                                                             as: V.z,
                                                             colorScheme: '',
                                                             color: 'black',
-                                                            rightIcon: (0, l.jsx)(Z.v, {}),
+                                                            rightIcon: (0, l.jsx)(E.v, {}),
                                                             children: (0, l.jsx)(j.xu, {
                                                               children: d.linkColorScheme
                                                                 ? (0, l.jsx)(j.xu, {
@@ -937,9 +955,9 @@
                                                             as: V.z,
                                                             colorScheme: '',
                                                             color: 'black',
-                                                            rightIcon: (0, l.jsx)(Z.v, {}),
+                                                            rightIcon: (0, l.jsx)(E.v, {}),
                                                             children: (0, l.jsx)(j.xu, {
-                                                              bgColor: H,
+                                                              bgColor: B,
                                                               borderRadius: 'sm',
                                                               height: 6,
                                                               width: 6,
@@ -957,7 +975,7 @@
                                                                     K.sN,
                                                                     {
                                                                       onClick: function () {
-                                                                        return B(e)
+                                                                        return H(e)
                                                                       },
                                                                       justifyContent:
                                                                         'space-between',
@@ -1136,7 +1154,7 @@
                                                       as: V.z,
                                                       colorScheme: '',
                                                       color: 'black',
-                                                      rightIcon: (0, l.jsx)(Z.v, {}),
+                                                      rightIcon: (0, l.jsx)(E.v, {}),
                                                       children: d.labels
                                                         ? d.labels < 2
                                                           ? 'On Highlight'
@@ -1415,15 +1433,15 @@
                               }),
                             ],
                           }),
-                          (0, l.jsxs)(X.Qd, {
+                          (0, l.jsxs)(W.Qd, {
                             children: [
-                              (0, l.jsxs)(X.KF, {
+                              (0, l.jsxs)(W.KF, {
                                 children: [
-                                  (0, l.jsx)(X.XE, { marginRight: 2 }),
-                                  (0, l.jsx)(W.X, { size: 'sm', children: 'Behavior' }),
+                                  (0, l.jsx)(W.XE, { marginRight: 2 }),
+                                  (0, l.jsx)(X.X, { size: 'sm', children: 'Behavior' }),
                                 ],
                               }),
-                              (0, l.jsx)(X.Hk, {
+                              (0, l.jsx)(W.Hk, {
                                 children: (0, l.jsxs)(_.gC, {
                                   spacing: 2,
                                   justifyContent: 'flex-start',
@@ -1450,7 +1468,7 @@
                                           children: [
                                             (0, l.jsx)(K.j2, {
                                               as: V.z,
-                                              rightIcon: (0, l.jsx)(Z.v, {}),
+                                              rightIcon: (0, l.jsx)(E.v, {}),
                                               colorScheme: '',
                                               color: 'black',
                                               children: (0, l.jsx)(Q.x, {
@@ -1514,7 +1532,7 @@
                                           children: [
                                             (0, l.jsx)(K.j2, {
                                               as: V.z,
-                                              rightIcon: (0, l.jsx)(Z.v, {}),
+                                              rightIcon: (0, l.jsx)(E.v, {}),
                                               colorScheme: '',
                                               color: 'black',
                                               children: (0, l.jsx)(Q.x, {
@@ -1578,7 +1596,7 @@
                                           children: [
                                             (0, l.jsx)(K.j2, {
                                               as: V.z,
-                                              rightIcon: (0, l.jsx)(Z.v, {}),
+                                              rightIcon: (0, l.jsx)(E.v, {}),
                                               colorScheme: '',
                                               color: 'black',
                                               children: (0, l.jsx)(Q.x, {
@@ -1663,7 +1681,7 @@
               color: 'gray.100',
               bg: 'gray.800',
               hasArrow: !0,
-              children: (0, l.jsx)(H.h, {}),
+              children: (0, l.jsx)(B.h, {}),
             }),
           })
         },
@@ -1763,7 +1781,7 @@
                     as: V.z,
                     colorScheme: '',
                     color: 'black',
-                    rightIcon: (0, l.jsx)(Z.v, {}),
+                    rightIcon: (0, l.jsx)(E.v, {}),
                     children: (0, l.jsx)(j.xu, {
                       bgColor: o,
                       borderRadius: 'sm',
@@ -1822,37 +1840,41 @@
             t = e.setFilter,
             r = e.tags,
             i = e.highlightColor,
-            o = r.map(function (e) {
+            o = e.mode,
+            s = r.map(function (e) {
               return { value: e, label: e }
             }),
-            s = (0, u.useState)(
-              n.tags.map(function (e) {
+            c = 'blacklist' === o ? 'tagsBlacklist' : 'tagsWhitelist',
+            d = (0, u.useState)(
+              n[c].map(function (e) {
                 return { value: e, label: e }
               }),
             ),
-            a = s[0],
-            c = s[1]
+            h = d[0],
+            g = d[1]
           return (0, l.jsx)(ee.CUIAutoComplete, {
-            items: o,
-            label: 'Add tag to filter',
+            items: s,
+            label: 'Add tag to ' + o,
             placeholder: ' ',
             onCreateItem: function (e) {
               return null
             },
             disableCreateItem: !0,
-            selectedItems: a,
+            selectedItems: h,
             onSelectedItemsChange: function (e) {
               e.selectedItems &&
-                (c(e.selectedItems),
+                (g(e.selectedItems),
                 t(
                   ie(
                     ie({}, n),
                     {},
-                    {
-                      tags: e.selectedItems.map(function (e) {
+                    (0, a.Z)(
+                      {},
+                      c,
+                      e.selectedItems.map(function (e) {
                         return e.value
                       }),
-                    },
+                    ),
                   ),
                 ))
             },
@@ -1998,10 +2020,10 @@
                             }),
                           ],
                         }),
-                        (0, l.jsx)(F.h, {
+                        (0, l.jsx)(A.h, {
                           'aria-label': 'Delete tag color',
                           variant: 'ghost',
-                          icon: (0, l.jsx)(B.p, {}),
+                          icon: (0, l.jsx)(H.p, {}),
                           onClick: function () {
                             r(
                               Object.fromEntries(
@@ -2097,17 +2119,17 @@
           R = T[0],
           D = T[1],
           P = d('mouse', L),
-          E = (0, c.Z)(P, 2),
-          Z = E[0],
-          H = E[1],
-          B = (0, u.useRef)({}),
-          A = (0, u.useRef)({}),
-          F = (0, u.useRef)([]),
+          Z = (0, c.Z)(P, 2),
+          E = Z[0],
+          B = Z[1],
+          H = (0, u.useRef)({}),
+          F = (0, u.useRef)({}),
+          A = (0, u.useRef)([]),
           M = (0, u.useContext)(te.N).setEmacsTheme,
           V = d('3d', !1),
-          X = (0, c.Z)(V, 2),
-          W = X[0],
-          _ = X[1],
+          W = (0, c.Z)(V, 2),
+          X = W[0],
+          _ = W[1],
           U = d('tagCols', {}),
           Q = (0, c.Z)(U, 2),
           q = Q[0],
@@ -2128,7 +2150,7 @@
             o = ne.current,
             l = $.current,
             a = ee.current,
-            c = null !== (t = A.current[n]) && void 0 !== t ? t : [],
+            c = null !== (t = F.current[n]) && void 0 !== t ? t : [],
             u = Object.fromEntries(
               [n]
                 .concat(
@@ -2192,7 +2214,7 @@
                   case 'graphdata':
                     return (function (e) {
                       var n
-                      F.current = null !== (n = e.tags) && void 0 !== n ? n : []
+                      A.current = null !== (n = e.tags) && void 0 !== n ? n : []
                       var t = e.nodes.reduce(function (e, n) {
                           var t
                           return xe(
@@ -2223,7 +2245,7 @@
                               })
                             : []
                         })
-                      B.current = Object.fromEntries(
+                      H.current = Object.fromEntries(
                         e.nodes.map(function (e) {
                           return [e.id, e]
                         }),
@@ -2231,9 +2253,9 @@
                       var i = [].concat((0, s.Z)(e.links), (0, s.Z)(r)).filter(function (e) {
                         var n = e.source,
                           t = e.target
-                        return B.current[n] && B.current[t]
+                        return H.current[n] && H.current[t]
                       })
-                      A.current = i.reduce(function (e, n) {
+                      F.current = i.reduce(function (e, n) {
                         var t, r, i
                         return xe(
                           xe({}, e),
@@ -2308,14 +2330,14 @@
                         {
                           physics: t,
                           setPhysics: r,
-                          threeDim: W,
+                          threeDim: X,
                           setThreeDim: _,
                           filter: h,
                           setFilter: g,
                           visuals: p,
                           setVisuals: m,
-                          mouse: Z,
-                          setMouse: H,
+                          mouse: E,
+                          setMouse: B,
                           behavior: R,
                           setBehavior: D,
                           tagColors: q,
@@ -2323,7 +2345,7 @@
                         },
                       ),
                       {},
-                      { tags: F.current },
+                      { tags: A.current },
                     ),
                   ),
                   (0, l.jsx)(j.xu, {
@@ -2334,19 +2356,19 @@
                       xe(
                         {
                           ref: ne,
-                          nodeById: B.current,
-                          linksByNodeId: A.current,
+                          nodeById: H.current,
+                          linksByNodeId: F.current,
                           webSocket: re.current,
                         },
                         {
                           physics: t,
                           graphData: b,
-                          threeDim: W,
+                          threeDim: X,
                           emacsNodeId: k,
                           filter: h,
                           visuals: p,
                           behavior: R,
-                          mouse: Z,
+                          mouse: E,
                           scope: J,
                           setScope: Y,
                           tagColors: q,
@@ -2362,53 +2384,53 @@
       var Ce = (0, u.forwardRef)(function (e, n) {
         var t = e.physics,
           r = e.graphData,
-          a = e.threeDim,
-          d = e.linksByNodeId,
-          h = e.filter,
-          j = e.emacsNodeId,
-          m = e.nodeById,
-          v = e.visuals,
-          b = (e.behavior, e.mouse),
-          C = e.scope,
-          y = e.setScope,
-          k = e.webSocket,
-          S = e.tagColors,
-          I = (0, f.iP)(),
-          O = (0, c.Z)(I, 2),
-          N = O[0],
-          L = O[1],
-          z = (0, u.useState)(null),
-          T = z[0],
-          R = z[1],
-          D = (0, p.useTheme)(),
-          P = (0, u.useContext)(te.N).emacsTheme,
+          d = e.threeDim,
+          h = e.linksByNodeId,
+          j = e.filter,
+          m = e.emacsNodeId,
+          v = e.nodeById,
+          b = e.visuals,
+          C = (e.behavior, e.mouse),
+          y = e.scope,
+          k = e.setScope,
+          S = e.webSocket,
+          I = e.tagColors,
+          O = (0, f.iP)(),
+          N = (0, c.Z)(O, 2),
+          L = N[0],
+          z = N[1],
+          T = (0, u.useState)(null),
+          R = T[0],
+          D = T[1],
+          P = (0, p.useTheme)(),
+          Z = (0, u.useContext)(te.N).emacsTheme,
           E = function (e, n) {
             switch (e) {
-              case b.local:
-                if (C.nodeIds.includes(n.id)) break
-                y(function (e) {
+              case C.local:
+                if (y.nodeIds.includes(n.id)) break
+                k(function (e) {
                   return xe(xe({}, e), {}, { nodeIds: [].concat((0, s.Z)(e.nodeIds), [n.id]) })
                 })
                 break
-              case b.follow:
-                k.send(n.id)
+              case C.follow:
+                S.send(n.id)
             }
           },
-          Z = (0, u.useRef)(null)
+          B = (0, u.useRef)(null)
         ;(0, u.useEffect)(
           function () {
-            j && R(m[j])
+            m && D(v[m])
           },
-          [j],
+          [m],
         ),
-          (Z.current = T)
+          (B.current = R)
         var H = (0, u.useMemo)(
             function () {
-              if (!Z.current) return {}
-              var e = d[Z.current.id]
+              if (!B.current) return {}
+              var e = h[B.current.id]
               return e
                 ? Object.fromEntries(
-                    [Z.current.id]
+                    [B.current.id]
                       .concat(
                         (0, s.Z)(
                           e.flatMap(function (e) {
@@ -2422,69 +2444,84 @@
                   )
                 : {}
             },
-            [Z.current, d],
+            [B.current, h],
           ),
-          B = (0, u.useMemo)(
+          F = (0, u.useRef)({}),
+          A = (0, u.useMemo)(
             function () {
-              var e = r.nodes.filter(function (e) {
-                  var n,
-                    t = e,
-                    r = null !== (n = d[t.id]) && void 0 !== n ? n : []
-                  return h.tags.length && t.tags.length
-                    ? !h.tags.some(function (e) {
-                        return t.tags.indexOf(e) > -1
+              var e = r.nodes
+                  .filter(function (e) {
+                    var n = e
+                    return j.tagsBlacklist.length &&
+                      j.tagsBlacklist.some(function (e) {
+                        return n.tags.indexOf(e) > -1
                       })
-                    : !h.orphans ||
-                        (h.parents
-                          ? 0 !== r.length
-                          : 0 !== r.length &&
-                            r.some(function (e) {
-                              return !['parent', 'ref'].includes(e.type)
-                            }))
-                }),
+                      ? ((F.current = xe(xe({}, F.current), {}, (0, a.Z)({}, n.id, n))), !1)
+                      : !(
+                          j.tagsWhitelist.length > 0 &&
+                          !j.tagsWhitelist.some(function (e) {
+                            return n.tags.indexOf(e) > -1
+                          })
+                        ) || ((F.current = xe(xe({}, F.current), {}, (0, a.Z)({}, n.id, n))), !1)
+                  })
+                  .filter(function (e) {
+                    var n,
+                      t = (null !== (n = h[e.id]) && void 0 !== n ? n : []).filter(function (e) {
+                        return !F.current[e.source] && !F.current[e.target]
+                      })
+                    return (
+                      !j.orphans ||
+                      (j.parents
+                        ? 0 !== t.length
+                        : 0 !== t.length &&
+                          t.some(function (e) {
+                            return !['parent', 'ref'].includes(e.type)
+                          }))
+                    )
+                  }),
                 n = e.map(function (e) {
                   return e.id
                 })
               return {
                 filteredNodes: e,
                 filteredLinks: r.links.filter(function (e) {
-                  if (h.tags.length) {
+                  if (j.tagsBlacklist.length || j.tagsWhitelist.length) {
                     var t = 'object' === typeof e.source ? e.source.id : e.source,
                       r = 'object' === typeof e.target ? e.target.id : e.target
                     return n.includes(t) && n.includes(r)
                   }
                   var i = e
-                  return h.parents || 'parent' !== i.type
+                  return j.parents || 'parent' !== i.type
                 }),
               }
             },
-            [h, r],
+            [j, r],
           ),
-          A = (0, u.useMemo)(
+          M = (0, u.useMemo)(
             function () {
-              var e = B.filteredNodes.filter(function (e) {
+              var e = A.filteredNodes.filter(function (e) {
                   var n,
-                    t = null !== (n = d[e.id]) && void 0 !== n ? n : []
+                    t = null !== (n = h[e.id]) && void 0 !== n ? n : []
                   return (
-                    C.nodeIds.includes(e.id) ||
+                    y.nodeIds.includes(e.id) ||
                     t.some(function (e) {
-                      return C.nodeIds.includes(e.source) || C.nodeIds.includes(e.target)
+                      return y.nodeIds.includes(e.source) || y.nodeIds.includes(e.target)
                     })
                   )
                 }),
                 n = e.map(function (e) {
                   return e.id
                 }),
-                t = B.filteredLinks.filter(function (e) {
+                t = A.filteredLinks.filter(function (e) {
                   var t = 'object' === typeof e.source ? e.source.id : e.source,
                     r = 'object' === typeof e.target ? e.target.id : e.target
                   return n.includes(t) && n.includes(r)
                 })
-              return 0 === C.nodeIds.length
-                ? { nodes: B.filteredNodes, links: B.filteredLinks }
+              return 0 === y.nodeIds.length
+                ? { nodes: A.filteredNodes, links: A.filteredLinks }
                 : { nodes: e, links: t }
             },
-            [h, C, r],
+            [j, y, r],
           )
         ;(0, u.useEffect)(function () {
           ;(0, o.Z)(
@@ -2500,8 +2537,8 @@
                         t.gravityOn
                           ? (r.d3Force('x', o.forceX().strength(t.gravity)),
                             r.d3Force('y', o.forceY().strength(t.gravity)),
-                            a && r.d3Force('z', o.forceZ().strength(t.gravity)))
-                          : (r.d3Force('x', null), r.d3Force('y', null), a && r.d3Force('z', null)),
+                            d && r.d3Force('z', o.forceZ().strength(t.gravity)))
+                          : (r.d3Force('x', null), r.d3Force('y', null), d && r.d3Force('z', null)),
                         t.centering
                           ? r.d3Force('center', o.forceCenter().strength(t.centeringStrength))
                           : r.d3Force('center', null),
@@ -2527,75 +2564,75 @@
             },
             [t],
           )
-        var F = (0, u.useRef)(0),
-          M = (0, u.useState)(1),
-          V = M[0],
-          X = M[1],
-          W = (0, x._7)(
+        var V = (0, u.useRef)(0),
+          W = (0, u.useState)(1),
+          X = W[0],
+          _ = W[1],
+          U = (0, x._7)(
             function (e) {
-              return X(e)
+              return _(e)
             },
-            { duration: v.animationSpeed, algorithm: w[v.algorithmName] },
+            { duration: b.animationSpeed, algorithm: w[b.algorithmName] },
           ),
-          _ = (0, c.Z)(W, 2),
-          U = _[0],
-          Q = _[1],
-          q = (0, x._7)(
+          Q = (0, c.Z)(U, 2),
+          q = Q[0],
+          K = Q[1],
+          G = (0, x._7)(
             function (e) {
-              return X(Math.min(V, -1 * (e - 1)))
+              return _(Math.min(X, -1 * (e - 1)))
             },
-            { duration: v.animationSpeed, algorithm: w[v.algorithmName] },
+            { duration: b.animationSpeed, algorithm: w[b.algorithmName] },
           ),
-          K = (0, c.Z)(q, 2),
-          G = K[0],
-          J = K[1],
-          Y = (0, u.useRef)(null)
+          J = (0, c.Z)(G, 2),
+          Y = J[0],
+          $ = J[1],
+          ee = (0, u.useRef)(null)
         ;(0, u.useEffect)(
           function () {
-            if ((T && (Y.current = T), !v.highlightAnim)) return X(T ? 1 : 0)
-            T ? U() : (Q(), V > 0.5 ? G() : X(0))
+            if ((R && (ee.current = R), !b.highlightAnim)) return _(R ? 1 : 0)
+            R ? q() : (K(), X > 0.5 ? Y() : _(0))
           },
-          [T],
+          [R],
         )
-        var $ = function (e) {
-            if (D)
+        var ne = function (e) {
+            if (P)
               return e.split('.').reduce(function (e, n) {
                 return e[n]
-              }, D.colors)
+              }, P.colors)
           },
-          ee = (0, u.useMemo)(
+          re = (0, u.useMemo)(
             function () {
-              var e = v.nodeColorScheme.concat(
-                v.linkColorScheme || [],
-                v.linkHighlight || [],
-                v.nodeHighlight || [],
-                v.citeNodeColor || [],
-                v.citeLinkColor || [],
+              var e = b.nodeColorScheme.concat(
+                b.linkColorScheme || [],
+                b.linkHighlight || [],
+                b.nodeHighlight || [],
+                b.citeNodeColor || [],
+                b.citeLinkColor || [],
               )
               return Object.fromEntries(
                 e.map(function (n) {
-                  var t = $(n),
+                  var t = ne(n),
                     r = e.map(function (e) {
-                      return [e, g.Z(t, $(e))]
+                      return [e, g.Z(t, ne(e))]
                     })
                   return [n, Object.fromEntries(r)]
                 }),
               )
             },
-            [v.nodeColorScheme, v.linkHighlight, v.nodeHighlight, v.linkColorScheme, P],
+            [b.nodeColorScheme, b.linkHighlight, b.nodeHighlight, b.linkColorScheme, Z],
           ),
-          ne = (0, u.useMemo)(
+          ie = (0, u.useMemo)(
             function () {
               var e,
                 n,
                 t,
                 r =
-                  null !== (e = d[null === (n = Y.current) || void 0 === n ? void 0 : n.id]) &&
+                  null !== (e = h[null === (n = ee.current) || void 0 === n ? void 0 : n.id]) &&
                   void 0 !== e
                     ? e
                     : []
               return Object.fromEntries(
-                [null === (t = Y.current) || void 0 === t ? void 0 : t.id]
+                [null === (t = ee.current) || void 0 === t ? void 0 : t.id]
                   .concat(
                     (0, s.Z)(
                       r.flatMap(function (e) {
@@ -2608,9 +2645,9 @@
                   }),
               )
             },
-            [JSON.stringify(T), Y.current],
+            [JSON.stringify(R), ee.current],
           ),
-          re = function (e) {
+          oe = function (e) {
             var n,
               t,
               r,
@@ -2618,26 +2655,26 @@
               o,
               l,
               s =
-                null !== (n = null === (t = d[e]) || void 0 === t ? void 0 : t.length) &&
+                null !== (n = null === (t = h[e]) || void 0 === t ? void 0 : t.length) &&
                 void 0 !== n
                   ? n
                   : 0,
               a = s
-                ? null === (r = d[e]) || void 0 === r
+                ? null === (r = h[e]) || void 0 === r
                   ? void 0
                   : r.filter(function (e) {
                       return 'parent' === e.type || 'cite' === e.type
                     }).length
                 : 0,
-              c = h.parents ? s : s - a
-            return v.nodeColorScheme[
-              ((i = c), (o = 0), (l = v.nodeColorScheme.length - 1), Math.min(Math.max(i, o), l))
+              c = j.parents ? s : s - a
+            return b.nodeColorScheme[
+              ((i = c), (o = 0), (l = b.nodeColorScheme.length - 1), Math.min(Math.max(i, o), l))
             ]
           },
-          ie = function (e, n) {
-            return d[e] > d[n] ? re(e) : re(n)
+          le = function (e, n) {
+            return h[e] > h[n] ? oe(e) : oe(n)
           },
-          oe = function (e, n) {
+          se = function (e, n) {
             return (
               'rgba(' +
               (e = e.replace('#', ''))
@@ -2650,92 +2687,92 @@
               ')'
             )
           },
-          le = (0, u.useMemo)(
+          ae = (0, u.useMemo)(
             function () {
-              return $(v.labelTextColor)
+              return ne(b.labelTextColor)
             },
-            [v.labelTextColor, P],
+            [b.labelTextColor, Z],
           ),
-          se = (0, u.useMemo)(
+          ce = (0, u.useMemo)(
             function () {
-              return $(v.labelBackgroundColor)
+              return ne(b.labelBackgroundColor)
             },
-            [v.labelBackgroundColor, P],
+            [b.labelBackgroundColor, Z],
           ),
-          ae = {
-            graphData: A,
-            width: N,
-            height: L,
-            backgroundColor: D.colors.gray[v.backgroundColor],
+          ue = {
+            graphData: M,
+            width: L,
+            height: z,
+            backgroundColor: P.colors.gray[b.backgroundColor],
             nodeLabel: function (e) {
               return e.title
             },
             nodeColor: function (e) {
               return (function (e) {
-                var n = H[e.id] || ne[e.id]
-                if (v.emacsNodeColor && e.id === j) return $(v.emacsNodeColor)
+                var n = H[e.id] || ie[e.id]
+                if (b.emacsNodeColor && e.id === m) return ne(b.emacsNodeColor)
                 if (
-                  S &&
+                  I &&
                   e.tags.some(function (e) {
-                    return S[e]
+                    return I[e]
                   })
                 ) {
                   var t =
-                    S[
+                    I[
                       e.tags.filter(function (e) {
-                        return S[e]
+                        return I[e]
                       })[0]
                     ]
-                  return $(t)
+                  return ne(t)
                 }
-                return v.citeNodeColor && e.properties.ROAM_REFS
-                  ? $(v.citeNodeColor)
-                  : n && v.nodeHighlight
-                  ? ee[re(e.id)][v.nodeHighlight](V)
-                  : $(re(e.id))
+                return b.citeNodeColor && e.properties.ROAM_REFS
+                  ? ne(b.citeNodeColor)
+                  : n && b.nodeHighlight
+                  ? re[oe(e.id)][b.nodeHighlight](X)
+                  : ne(oe(e.id))
               })(e)
             },
-            nodeRelSize: v.nodeRel,
+            nodeRelSize: b.nodeRel,
             nodeVal: function (e) {
               var n,
-                t = null !== (n = d[e.id]) && void 0 !== n ? n : [],
+                t = null !== (n = h[e.id]) && void 0 !== n ? n : [],
                 r = t.length
                   ? t.filter(function (e) {
-                      return 'parent' === e.type || 'cite' === e.type
+                      return 'parent' === e.type
                     }).length
                   : 0
               return (
-                (3 + t.length - (h.parents ? 0 : r)) *
-                (H[e.id] || ne[e.id] ? 1 + V * (v.highlightNodeSize - 1) : 1)
+                (3 + t.length - (j.parents ? 0 : r)) *
+                (H[e.id] || ie[e.id] ? 1 + X * (b.highlightNodeSize - 1) : 1)
               )
             },
             nodeCanvasObject: function (e, n, t) {
-              if (e && v.labels) {
-                var r = ne[e.id]
-                if (!(t <= v.labelScale || 1 === v.labels) || H[e.id] || r) {
+              if (e && b.labels) {
+                var r = ie[e.id]
+                if (!(t <= b.labelScale || 1 === b.labels) || H[e.id] || r) {
                   var i = e.title,
                     o = i.substring(0, Math.min(i.length, 40)),
                     l = 12 / t,
                     a = [1.1 * n.measureText(o).width, l].map(function (e) {
                       return e + 0.5 * l
                     }),
-                    c = Math.min((3 * (t - v.labelScale)) / v.labelScale, 1),
+                    c = Math.min((3 * (t - b.labelScale)) / b.labelScale, 1),
                     u = function () {
-                      return 1 === v.labels || t <= v.labelScale
-                        ? V
-                        : H[e.id] || ne[e.id]
-                        ? Math.max(c, V)
-                        : 1 * c * (-1 * (0.5 * V - 1))
+                      return 1 === b.labels || t <= b.labelScale
+                        ? X
+                        : H[e.id] || ie[e.id]
+                        ? Math.max(c, X)
+                        : 1 * c * (-1 * (0.5 * X - 1))
                     }
-                  if (v.labelBackgroundColor && v.labelBackgroundOpacity) {
-                    var d = u() * v.labelBackgroundOpacity,
-                      h = oe(se, d)
+                  if (b.labelBackgroundColor && b.labelBackgroundOpacity) {
+                    var d = u() * b.labelBackgroundOpacity,
+                      h = se(ce, d)
                     ;(n.fillStyle = h),
                       n.fillRect.apply(n, [e.x - a[0] / 2, e.y - a[1] / 2].concat((0, s.Z)(a)))
                   }
                   var g = u()
                   ;(n.textAlign = 'center'), (n.textBaseline = 'middle')
-                  var f = oe(le, g)
+                  var f = se(ae, g)
                   ;(n.fillStyle = f),
                     (n.font = ''.concat(l, 'px Sans-Serif')),
                     n.fillText(o, e.x, e.y)
@@ -2745,90 +2782,92 @@
             nodeCanvasObjectMode: function () {
               return 'after'
             },
-            linkDirectionalParticles: v.particles ? v.particlesNumber : void 0,
-            linkDirectionalArrowLength: v.arrows ? v.arrowsLength : void 0,
-            linkDirectionalArrowRelPos: v.arrowsPos,
-            linkDirectionalArrowColor: v.arrowsColor
+            linkDirectionalParticles: b.particles ? b.particlesNumber : void 0,
+            linkDirectionalArrowLength: b.arrows ? b.arrowsLength : void 0,
+            linkDirectionalArrowRelPos: b.arrowsPos,
+            linkDirectionalArrowColor: b.arrowsColor
               ? function (e) {
-                  return $(v.arrowsColor)
+                  return ne(b.arrowsColor)
                 }
               : void 0,
             linkColor: function (e) {
               var n = 'object' === typeof e.source ? e.source.id : e.source,
                 t = 'object' === typeof e.target ? e.target.id : e.target,
-                r = ye(e, Z.current),
-                i = ye(e, Y.current),
+                r = ye(e, B.current),
+                i = ye(e, ee.current),
                 o = r || i,
                 l = e
-              return v.citeLinkColor && 'cite' === l.type
-                ? $(v.citeLinkColor)
+              return b.citeLinkColor && 'cite' === l.type
+                ? o
+                  ? '#ffffff'
+                  : ne(b.citeLinkColor)
                 : (function (e, n, t) {
-                    if (!v.linkHighlight && !v.linkColorScheme && !t) {
-                      var r = ie(e, n)
-                      return $(r)
+                    if (!b.linkHighlight && !b.linkColorScheme && !t) {
+                      var r = le(e, n)
+                      return ne(r)
                     }
-                    if (!t && !v.linkColorScheme) {
-                      var i = ie(e, n)
-                      return $(i)
+                    if (!t && !b.linkColorScheme) {
+                      var i = le(e, n)
+                      return ne(i)
                     }
-                    if (!t) return $(v.linkColorScheme)
-                    if (!v.linkHighlight && !v.linkColorScheme) {
-                      var o = ie(e, n)
-                      return $(o)
+                    if (!t) return ne(b.linkColorScheme)
+                    if (!b.linkHighlight && !b.linkColorScheme) {
+                      var o = le(e, n)
+                      return ne(o)
                     }
-                    return v.linkHighlight
-                      ? v.linkColorScheme
-                        ? ee[v.linkColorScheme][v.linkHighlight](V)
-                        : ee[ie(e, n)][v.linkHighlight](V)
-                      : $(v.linkColorScheme)
+                    return b.linkHighlight
+                      ? b.linkColorScheme
+                        ? re[b.linkColorScheme][b.linkHighlight](X)
+                        : re[le(e, n)][b.linkHighlight](X)
+                      : ne(b.linkColorScheme)
                   })(n, t, o)
             },
             linkWidth: function (e) {
-              var n = ye(e, Z.current),
-                t = ye(e, Y.current)
-              return n || t ? v.linkWidth * (1 + V * (v.highlightLinkSize - 1)) : v.linkWidth
+              var n = ye(e, B.current),
+                t = ye(e, ee.current)
+              return n || t ? b.linkWidth * (1 + X * (b.highlightLinkSize - 1)) : b.linkWidth
             },
-            linkDirectionalParticleWidth: v.particlesWidth,
+            linkDirectionalParticleWidth: b.particlesWidth,
             d3AlphaDecay: t.alphaDecay,
             d3AlphaMin: t.alphaMin,
             d3VelocityDecay: t.velocityDecay,
             onNodeClick: function (e, n) {
-              var t = n.timeStamp - F.current < 400
-              return (F.current = n.timeStamp), E(t ? 'double' : 'click', e)
+              var t = n.timeStamp - V.current < 400
+              return (V.current = n.timeStamp), E(t ? 'double' : 'click', e)
             },
             onBackgroundClick: function () {
-              R(null),
-                0 !== C.nodeIds.length &&
-                  y(function (e) {
+              D(null),
+                0 !== y.nodeIds.length &&
+                  k(function (e) {
                     return xe(xe({}, e), {}, { nodeIds: [] })
                   })
             },
             onNodeHover: function (e) {
-              v.highlight && (T || (J(), X(0)), R(e))
+              b.highlight && (R || ($(), _(0)), D(e))
             },
             onNodeRightClick: function (e) {
               E('right', e)
             },
           }
         return (0, l.jsx)('div', {
-          children: a
+          children: d
             ? (0, l.jsx)(
                 me,
                 xe(
-                  xe({ ref: n }, ae),
+                  xe({ ref: n }, ue),
                   {},
                   {
                     nodeThreeObjectExtend: !0,
-                    backgroundColor: D.colors.white,
-                    nodeOpacity: v.nodeOpacity,
-                    nodeResolution: v.nodeResolution,
-                    linkOpacity: v.linkOpacity,
+                    backgroundColor: P.colors.white,
+                    nodeOpacity: b.nodeOpacity,
+                    nodeResolution: b.nodeResolution,
+                    linkOpacity: b.linkOpacity,
                     nodeThreeObject: function (e) {
-                      if (v.labels && (!(v.labels < 3) || H[e.id])) {
+                      if (b.labels && (!(b.labels < 3) || H[e.id])) {
                         var n = new he.Z(e.title.substring(0, 40))
                         return (
-                          (n.color = $(v.labelTextColor)),
-                          (n.backgroundColor = $(v.labelBackgroundColor)),
+                          (n.color = ne(b.labelTextColor)),
+                          (n.backgroundColor = ne(b.labelBackgroundColor)),
                           (n.padding = 2),
                           (n.textHeight = 8),
                           n
@@ -2841,13 +2880,13 @@
             : (0, l.jsx)(
                 je,
                 xe(
-                  xe({ ref: n }, ae),
+                  xe({ ref: n }, ue),
                   {},
                   {
                     linkLineDash: function (e) {
                       var n = e
-                      return v.citeDashes && 'cite' === n.type
-                        ? [v.citeDashLength, v.citeGapLength]
+                      return b.citeDashes && 'cite' === n.type
+                        ? [b.citeDashLength, b.citeGapLength]
                         : null
                     },
                   },

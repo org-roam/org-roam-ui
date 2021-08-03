@@ -409,32 +409,53 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
   }, [centralHighlightedNode.current, linksByNodeId])
 
+  const hiddenNodeIdsRef = useRef<NodeById>({})
   const filteredGraphData = useMemo(() => {
-    const filteredNodes = graphData.nodes.filter((nodeArg) => {
-      const node = nodeArg as OrgRoamNode
-      const links = linksByNodeId[node.id as string] ?? []
-      if (filter.tags.length && node.tags.length) {
-        return !filter.tags.some((tag) => node.tags.indexOf(tag) > -1)
-      }
-
-      if (!filter.orphans) {
+    const filteredNodes = graphData.nodes
+      .filter((nodeArg) => {
+        const node = nodeArg as OrgRoamNode
+        if (
+          filter.tagsBlacklist.length &&
+          filter.tagsBlacklist.some((tag) => node.tags.indexOf(tag) > -1)
+        ) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+        if (
+          filter.tagsWhitelist.length > 0 &&
+          !filter.tagsWhitelist.some((tag) => node.tags.indexOf(tag) > -1)
+        ) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
         return true
-      }
+      })
+      .filter((nodeArg) => {
+        const node = nodeArg as OrgRoamNode
+        const links = linksByNodeId[node.id as string] ?? []
+        const unhiddenLinks = links.filter(
+          (link) =>
+            !hiddenNodeIdsRef.current[link.source] && !hiddenNodeIdsRef.current[link.target],
+        )
 
-      if (filter.parents) {
-        return links.length !== 0
-      }
+        if (!filter.orphans) {
+          return true
+        }
 
-      if (links.length === 0) {
-        return false
-      }
+        if (filter.parents) {
+          return unhiddenLinks.length !== 0
+        }
 
-      return links.some((link) => !['parent', 'ref'].includes(link.type))
-    })
+        if (unhiddenLinks.length === 0) {
+          return false
+        }
+
+        return unhiddenLinks.some((link) => !['parent', 'ref'].includes(link.type))
+      })
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
-      if (filter.tags.length) {
+      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length) {
         const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
         const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
         return (
@@ -696,7 +717,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     nodeVal: (node) => {
       const links = linksByNodeId[node.id!] ?? []
       const parentNeighbors = links.length
-        ? links.filter((link) => link.type === 'parent' || link.type === 'cite').length
+        ? links.filter((link) => link.type === 'parent').length
         : 0
       const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
       const highlightSize =
@@ -784,7 +805,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
       const roamLink = link as OrgRoamLink
       if (visuals.citeLinkColor && roamLink.type === 'cite') {
-        return getThemeColor(visuals.citeLinkColor)
+        return needsHighlighting
+          ? '#ffffff' /*highlightColors[visuals.citeLinkColor][visuals.citeLinkHighlightColor] */
+          : getThemeColor(visuals.citeLinkColor)
       }
 
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)

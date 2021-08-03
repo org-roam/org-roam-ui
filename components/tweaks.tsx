@@ -246,6 +246,14 @@ export const Tweaks = (props: TweakProps) => {
                           filter={filter}
                           setFilter={setFilter}
                           tags={tags}
+                          mode="blacklist"
+                        />
+                        <TagPanel
+                          highlightColor={highlightColor}
+                          filter={filter}
+                          setFilter={setFilter}
+                          tags={tags}
+                          mode="whitelist"
                         />
                       </AccordionPanel>
                     </AccordionItem>
@@ -1290,17 +1298,18 @@ export interface TagPanelProps {
   filter: typeof initialFilter
   setFilter: any
   highlightColor: string
+  mode: string
 }
 
 export const TagPanel = (props: TagPanelProps) => {
-  const { filter, setFilter, tags, highlightColor } = props
+  const { filter, setFilter, tags, highlightColor, mode } = props
   const tagArray = tags.map((tag) => {
     return { value: tag, label: tag }
   })
-  // .concat[{ value: 'placeholder', label: 'New filter' }]
 
+  const currentTags = mode === 'blacklist' ? 'tagsBlacklist' : 'tagsWhitelist'
   const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
-    filter.tags.map((tag) => {
+    filter[currentTags].map((tag) => {
       return { value: tag, label: tag }
     }),
   )
@@ -1308,7 +1317,7 @@ export const TagPanel = (props: TagPanelProps) => {
   return (
     <CUIAutoComplete
       items={tagArray}
-      label="Add tag to filter"
+      label={'Add tag to ' + mode}
       placeholder=" "
       onCreateItem={(item) => null}
       disableCreateItem={true}
@@ -1316,7 +1325,7 @@ export const TagPanel = (props: TagPanelProps) => {
       onSelectedItemsChange={(changes) => {
         if (changes.selectedItems) {
           setSelectedItems(changes.selectedItems)
-          setFilter({ ...filter, tags: changes.selectedItems.map((item) => item.value) })
+          setFilter({ ...filter, [currentTags]: changes.selectedItems.map((item) => item.value) })
         }
       }}
       listItemStyleProps={{ overflow: 'hidden' }}
