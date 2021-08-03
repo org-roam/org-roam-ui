@@ -34,6 +34,7 @@ export const initialPhysics = {
 export const initialFilter = {
   orphans: false,
   parents: true,
+  fileless_cites: false,
   tagsBlacklist: [],
   tagsWhitelist: [],
   nodes: [],
@@ -88,6 +89,12 @@ export const initialVisuals = {
   citeLinkColor: 'gray.600',
   citeLinkHighlightColor: '',
   citeNodeColor: 'black',
+  refDashes: true,
+  refDashLength: 35,
+  refGapLength: 15,
+  refLinkColor: 'gray.400',
+  refLinkHighlightColor: '',
+  refNodeColor: 'black',
 }
 
 export interface TagColors {

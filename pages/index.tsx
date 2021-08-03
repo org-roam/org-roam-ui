@@ -70,6 +70,16 @@ export default function Home() {
   return <GraphPage />
 }
 
+function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
+  // we need to cover both because force-graph modifies the original data
+  // but if we supply the original data on each render, the graph will re-render sporadically
+  const sourceId =
+    typeof link.source === 'object' ? (link.source.id! as string) : (link.source as string)
+  const targetId =
+    typeof link.target === 'object' ? (link.target.id! as string) : (link.target as string)
+  return [sourceId, targetId]
+}
+
 export function GraphPage() {
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
@@ -410,6 +420,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }, [centralHighlightedNode.current, linksByNodeId])
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
+  const filteredLinksByNodeId = useRef<LinksByNodeId>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
     const filteredNodes = graphData.nodes
@@ -426,6 +437,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           filter.tagsWhitelist.length > 0 &&
           !filter.tagsWhitelist.some((tag) => node.tags.indexOf(tag) > -1)
         ) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+        if (filter.fileless_cites && node.properties.FILELESS) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -451,14 +466,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           return false
         }
 
-        return unhiddenLinks.some((link) => !['parent', 'ref'].includes(link.type))
+        return unhiddenLinks.some((link) => !['parent'].includes(link.type))
       })
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
-      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length) {
-        const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-        const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+      const [sourceId, targetId] = normalizeLinkEnds(link)
+      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length || filter.fileless_cites) {
         return (
           filteredNodeIds.includes(sourceId as string) &&
           filteredNodeIds.includes(targetId as string)
@@ -486,8 +500,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const scopedLinks = filteredGraphData.filteredLinks.filter((link) => {
       // we need to cover both because force-graph modifies the original data
       // but if we supply the original data on each render, the graph will re-render sporadically
-      const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
-      const targetId = typeof link.target === 'object' ? link.target.id! : (link.target as string)
+      const [sourceId, targetId] = normalizeLinkEnds(link)
       return (
         scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
       )
@@ -582,6 +595,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       visuals.citeNodeColor || [],
       visuals.citeLinkColor || [],
       visuals.citeLinkHighlightColor || [],
+      visuals.refNodeColor || [],
+      visuals.refLinkColor || [],
+      visuals.refLinkHighlightColor || [],
     )
 
     return Object.fromEntries(
@@ -615,7 +631,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const getNodeColorById = (id: string) => {
     const linklen = linksByNodeId[id!]?.length ?? 0
     const parentCiteNeighbors = linklen
-      ? linksByNodeId[id!]?.filter((link) => link.type === 'parent' || link.type === 'cite').length
+      ? linksByNodeId[id!]?.filter((link) => link.type === 'parent').length
       : 0
     const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
 
@@ -674,8 +690,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
       return getThemeColor(tagColor)
     }
-    if (visuals.citeNodeColor && node.properties.ROAM_REFS) {
+    if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
       return getThemeColor(visuals.citeNodeColor)
+    }
+    if (visuals.refNodeColor && node.properties.ROAM_REFS) {
+      return getThemeColor(visuals.refNodeColor)
     }
     if (!needsHighlighting) {
       return getThemeColor(getNodeColorById(node.id as string))
@@ -806,6 +825,14 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
       const needsHighlighting = linkIsHighlighted || linkWasHighlighted
       const roamLink = link as OrgRoamLink
+
+      if (visuals.refLinkColor && roamLink.type === 'ref') {
+        return needsHighlighting && (visuals.refLinkHighlightColor || visuals.linkHighlight)
+          ? highlightColors[visuals.refLinkColor][
+              visuals.refLinkHighlightColor || visuals.linkHighlight
+            ](opacity)
+          : getThemeColor(visuals.refLinkColor)
+      }
       if (visuals.citeLinkColor && roamLink.type === 'cite') {
         return needsHighlighting && (visuals.citeLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.citeLinkColor][
@@ -897,10 +924,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           {...graphCommonProps}
           linkLineDash={(link) => {
             const linkArg = link as OrgRoamLink
-            if (!visuals.citeDashes || linkArg.type !== 'cite') {
-              return null
+            if (visuals.citeDashes && linkArg.type === 'cite') {
+              return [visuals.citeDashLength, visuals.citeGapLength]
             }
-            return [visuals.citeDashLength, visuals.citeGapLength]
+            if (visuals.refDashes && linkArg.type == 'ref') {
+              return [visuals.refDashLength, visuals.refGapLength]
+            }
+            return null
           }}
         />
       )}
