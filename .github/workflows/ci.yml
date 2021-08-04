@@ -29,5 +29,5 @@ jobs:
           git config --global url."https://".insteadOf ssh://
           yarn
           yarn build
----
+...
 # End of ci.yml
