@@ -107,6 +107,14 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
+(defcustom org-roam-ui-ref-title-template "%^{author-abbrev} (%^{year}) %^{title}"
+  "A template for title creation, used for references without an associated nodes.
+
+This uses `orb--pre-expand-template' under the hood and therefore only org-style
+capture `%^{...}' are supported."
+  :group 'org-roam-ui
+  :type 'string)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
@@ -169,14 +177,12 @@ Requires `org-roam-bibtex' and `bibtex-completion' (a dependency of `orb') to be
 loaded. Returns `ref' if an entry could not be found."
   (if (and org-roam-ui-find-ref-title
            (fboundp 'bibtex-completion-get-entry)
-           (boundp 'orb-bibtex-entry-get-value-function))
+           (fboundp 'orb--pre-expand-template))
       (if-let ((entry (bibtex-completion-get-entry ref)))
-          (concat
-           (funcall orb-bibtex-entry-get-value-function "author-abbrev" entry ref)
-           " ("
-           (funcall orb-bibtex-entry-get-value-function "year" entry ref)
-           ") "
-           (funcall orb-bibtex-entry-get-value-function "title" entry ref))
+          ;; Create a fake capture template list, only the actual capture at 3
+          ;; matters. Interpolate the bibtex entries, and extract the filled
+          ;; template from the return value.
+          (nth 3 (orb--pre-expand-template `("" "" plain ,org-roam-ui-ref-title-template) entry))
         ref)
     ref))
 
