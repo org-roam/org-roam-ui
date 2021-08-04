@@ -1,5 +1,7 @@
 # org-roam-ui: an org-roam frontend
 
+[![ci](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml)
+
 ![image](https://user-images.githubusercontent.com/21983833/127746882-4ba00691-3be4-49d6-8c8c-e139a14596c2.png)
 
 Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](https://github.com/org-roam/org-roam) notes.
