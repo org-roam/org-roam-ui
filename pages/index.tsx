@@ -615,6 +615,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     visuals.linkHighlight,
     visuals.nodeHighlight,
     visuals.linkColorScheme,
+    visuals.refLinkColor,
+    visuals.refNodeColor,
+    visuals.citeNodeColor,
+    visuals.refLinkHighlightColor,
+    visuals.citeLinkHighlightColor,
+    visuals.citeLinkColor,
     emacsTheme,
   ])
 
