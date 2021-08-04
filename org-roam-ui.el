@@ -102,7 +102,7 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
-(defcustom org-roam-ui-find-ref-title nil
+(defcustom org-roam-ui-find-ref-title t
   "Should org-roam-ui use `org-roam-bibtex' to try to find the title of a reference in the bibliography?"
   :group 'org-roam-ui
   :type 'boolean)
@@ -171,7 +171,12 @@ loaded. Returns `ref' if an entry could not be found."
            (fboundp 'bibtex-completion-get-entry)
            (boundp 'orb-bibtex-entry-get-value-function))
       (if-let ((entry (bibtex-completion-get-entry ref)))
-          (funcall orb-bibtex-entry-get-value-function "title" entry ref)
+          (concat
+           (funcall orb-bibtex-entry-get-value-function "author-abbrev" entry ref)
+           " ("
+           (funcall orb-bibtex-entry-get-value-function "year" entry ref)
+           ") "
+           (funcall orb-bibtex-entry-get-value-function "title" entry ref))
         ref)
     ref))
 
