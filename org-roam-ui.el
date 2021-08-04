@@ -102,6 +102,11 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
+(defcustom org-roam-ui-find-ref-title t
+  "Should org-roam-ui use `org-roam-bibtex' to try to find the title of a reference in the bibliography?"
+  :group 'org-roam-ui
+  :type 'boolean)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
@@ -157,8 +162,26 @@ This serves the web-build and API over HTTP."
     (org-roam-ui--send-graphdata))
   )
 
+(defun org-roam-ui--find-ref-title (ref)
+  "Find the title of the bibtex entry keyed by `ref'.
+
+Requires `org-roam-bibtex' and `bibtex-completion' (a dependency of `orb') to be
+loaded. Returns `ref' if an entry could not be found."
+  (if (and org-roam-ui-find-ref-title
+           (fboundp 'bibtex-completion-get-entry)
+           (boundp 'orb-bibtex-entry-get-value-function))
+      (if-let ((entry (bibtex-completion-get-entry ref)))
+          (concat
+           (funcall orb-bibtex-entry-get-value-function "author-abbrev" entry ref)
+           " ("
+           (funcall orb-bibtex-entry-get-value-function "year" entry ref)
+           ") "
+           (funcall orb-bibtex-entry-get-value-function "title" entry ref))
+        ref)
+    ref))
+
 (defun org-roam-ui--create-fake-node (ref)
-  (list ref ref ref 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
+  (list ref ref (org-roam-ui--find-ref-title ref) 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
@@ -186,7 +209,8 @@ This serves the web-build and API over HTTP."
                                          (list source node-id "ref")
                                        (list source dest type)))) links-db-rows))
          (links-with-empty-refs (seq-filter (lambda (l) (equal (nth 2 l) "cite")) links-db-rows))
-         (fake-nodes (delete-dups (seq-map (lambda (l) (org-roam-ui--create-fake-node (nth 1 l))) links-with-empty-refs)))
+         (empty-refs (delete-dups (seq-map (lambda (l) (nth 1 l)) links-with-empty-refs)))
+         (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
          (nodes-db-rows (append nodes-db-rows fake-nodes))
          (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
