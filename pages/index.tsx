@@ -722,6 +722,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       visuals.refNodeColor || [],
       visuals.refLinkColor || [],
       visuals.refLinkHighlightColor || [],
+      visuals.backgroundColor || [],
     )
 
     return Object.fromEntries(
@@ -745,6 +746,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     visuals.refLinkHighlightColor,
     visuals.citeLinkHighlightColor,
     visuals.citeLinkColor,
+    visuals.backgroundColor,
     emacsTheme,
   ])
 
@@ -810,6 +812,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   const getNodeColor = (node: OrgRoamNode) => {
+    const isHighlightingHappening = !!highlightedNodes.length
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
@@ -879,7 +882,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const parentNeighbors = links.length
         ? links.filter((link) => link.type === 'parent').length
         : 0
-      const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
+      const basicSize =
+        3 + links.length * visuals.nodeSizeLinks - (!filter.parents ? parentNeighbors : 0)
+      if (visuals.highlightNodeSize === 1) {
+        return basicSize
+      }
       const highlightSize =
         highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
           ? 1 + opacity * (visuals.highlightNodeSize - 1)
@@ -983,6 +990,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
     },
     linkWidth: (link) => {
+      if (visuals.highlightLinkSize === 1) {
+        return visuals.linkWidth
+      }
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode.current)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
 

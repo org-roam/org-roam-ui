@@ -711,6 +711,13 @@ export const Tweaks = (props: TweakProps) => {
                         value={visuals.nodeRel}
                         onChange={(value) => setVisuals({ ...visuals, nodeRel: value })}
                       />
+                      <SliderWithInfo
+                        label="Node connections size scale"
+                        value={visuals.nodeSizeLinks}
+                        min={0}
+                        max={2}
+                        onChange={(value) => setVisuals({ ...visuals, nodeSizeLinks: value })}
+                      />
                       {threeDim && (
                         <>
                           <SliderWithInfo

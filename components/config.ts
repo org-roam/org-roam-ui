@@ -95,6 +95,7 @@ export const initialVisuals = {
   refLinkColor: 'gray.400',
   refLinkHighlightColor: '',
   refNodeColor: 'black',
+  nodeSizeLinks: 2,
 }
 
 export interface TagColors {
