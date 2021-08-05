@@ -90,7 +90,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                             </>
                         }
                         {!node?.properties.FILELESS ? (
-                            <MenuItem icon={<EditIcon />} onClick={() => openNodeInEmacs(node)}>Open in Emacs</MenuItem>
+                            <MenuItem icon={<EditIcon />} onClick={() => openNodeInEmacs(node as OrgRoamNode)}>Open in Emacs</MenuItem>
                         ) : (
                             <MenuItem icon={<AddIcon />}>Create node</MenuItem>
                         )}
