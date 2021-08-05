@@ -1130,6 +1130,9 @@ export const Tweaks = (props: TweakProps) => {
                         <Portal>
                           {' '}
                           <MenuList bgColor="gray.200" zIndex="popover">
+                            <MenuItem onClick={() => setBehavior({ ...behavior, follow: 'color' })}>
+                              Just coloring the currently opened node
+                            </MenuItem>
                             <MenuItem onClick={() => setBehavior({ ...behavior, follow: 'local' })}>
                               Opening the local graph
                             </MenuItem>

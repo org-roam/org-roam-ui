@@ -161,7 +161,7 @@ export function GraphPage() {
 
     const newNodes = [
       ...currentGraphData.nodes.map((node: NodeObject) => {
-        const newNode = nodeByIdRef.current[node.id!] ?? false
+        const newNode = nodeByIdRef.current[node?.id!] ?? false
         if (!newNode) {
           return
         }
@@ -169,9 +169,21 @@ export function GraphPage() {
       }),
       ...Object.keys(nodeByIdRef.current)
         .filter((id) => !oldNodeById[id])
-        .map((id) => nodeByIdRef.current[id] as NodeObject),
+        .map((id) => {
+          console.log(id)
+          return nodeByIdRef.current[id] as NodeObject
+        }),
     ]
 
+    const nodeIndex = newNodes.reduce((acc, node, index) => {
+      const id = node?.id as string
+      return {
+        ...acc,
+        [id]: index,
+      }
+    }, {})
+    console.log(newNodes)
+    console.log(nodeIndex)
     /* const currentGraphIndexByLink = currentGraphData.links.reduce<{[key: string]: number}>((acc, link, index) => {
 *   const [source, target] = normalizeLinkEnds(link)
 *     const sourceTarget=source+target
@@ -180,33 +192,56 @@ export function GraphPage() {
 *  [sourceTarget]: index
 * }
 },{}) */
+    const newLinks = [
+      ...currentGraphData!.links.filter((link) => {
+        const [source, target] = normalizeLinkEnds(link)
+        if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
+          return false
+        }
+        if (
+          !linksByNodeIdRef.current[source]!.some(
+            (link) => link.target === target || link.source === target,
+          ) &&
+          !linksByNodeIdRef.current[target]!.some(
+            (link) => link.target === source || link.source === source,
+          )
+        ) {
+          return false
+        }
+        return true
+      }),
+      ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
+        if (!oldLinksByNodeId[id]!) {
+          return linksByNodeIdRef.current![id!]!
+        }
+        return (
+          linksByNodeIdRef.current![id]!.filter((link) => {
+            const [source, target] = normalizeLinkEnds(link)
+            return !oldLinksByNodeId[id]!.some(
+              (oldLink) => oldLink.source === source && oldLink.target === target,
+            )!
+          }) ?? []
+        )
+      }),
+    ]
 
-    /* const newLinks = graphData!.links.filter(link => {
-     *   const [source, target] = normalizeLinkEnds(link)
-     *   if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
-     *     return false
-     *   }
-     *   if (!linksByNodeIdRef.current[source]!.some(link => link.target === target || link.source === target)
-     *     && !linksByNodeIdRef.current[target]!.some(link => link.target === source || link.source === source)) {
-     *     return false
-     *   }
-     *   return true
-     * })
-     * console.log(newLinks)
-     * console.log(currentGraphData.links) */
-    /* ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
-if (!oldLinksByNodeId[id]!) {
-return linksByNodeIdRef.current![id!]!
-}
-return linksByNodeIdRef.current![id]!.filter(link => {
-const [source, target] = normalizeLinkEnds(link)
-return !oldLinksByNodeId[id]!.some(oldLink => oldLink.source === source && oldLink.target === target)!
-}) ?? []
-})] */
+    const newerLinks = links.map((link) => {
+      const [source, target] = normalizeLinkEnds(link)
+      return {
+        ...link,
+        source: newNodes[nodeIndex[source]],
+        target: newNodes[nodeIndex[target]],
+      }
+    })
     const fg = graphRef.current
-    fg.cooldownTicks = 0
-    setGraphData({ nodes: newNodes as NodeObject[], links: links })
+    setGraphData({ nodes: newNodes as NodeObject[], links: newerLinks })
   }
+  useEffect(() => {
+    if (!graphData) {
+      return
+    }
+    currentGraphDataRef.current = graphData
+  }, [graphData])
 
   const { setEmacsTheme } = useContext(ThemeContext)
 
@@ -225,6 +260,9 @@ return !oldLinksByNodeId[id]!.some(oldLink => oldLink.source === source && oldLi
     speed: number = 2000,
     padding: number = 200,
   ) => {
+    if (command === 'color') {
+      return
+    }
     const fg = graphRef.current
     const sr = scopeRef.current
     const bh = behaviorRef.current
@@ -442,11 +480,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   const deleteNodeInEmacs = (node: OrgRoamNode) => {
-    console.log('deletin')
     if (node.level !== 0) {
       return
     }
-    console.log('deletin')
     sendMessageToEmacs('delete', { id: node.id, file: node.file })
   }
 
@@ -509,6 +545,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     hiddenNodeIdsRef.current = {}
     const filteredNodes = graphData?.nodes
       ?.filter((nodeArg) => {
+        //sometimes there will be some undefined nodes in the mix
+        // should probably fix the actual issue, but this is a fix
+        if (!nodeArg) {
+          return
+        }
         const node = nodeArg as OrgRoamNode
         if (
           filter.tagsBlacklist.length &&
@@ -530,9 +571,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         }
         return true
       })
-      .filter((nodeArg) => {
-        const node = nodeArg as OrgRoamNode
-        const links = linksByNodeId[node.id as string] ?? []
+      .filter((node) => {
+        const links = linksByNodeId[node?.id as string] ?? []
         const unhiddenLinks = links.filter(
           (link) =>
             !hiddenNodeIdsRef.current[link.source] && !hiddenNodeIdsRef.current[link.target],
@@ -822,7 +862,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     setContextPos([event.pageX, event.pageY])
     setRightClickedNode(node)
     onOpen()
-    console.log(event)
   }
 
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
@@ -1059,7 +1098,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
 function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   return (
-    (link.source as NodeObject).id! === node?.id! || (link.target as NodeObject).id! === node?.id!
+    (link.source as NodeObject)?.id! === node?.id! || (link.target as NodeObject)?.id! === node?.id!
   )
 }
 
