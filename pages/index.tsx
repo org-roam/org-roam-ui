@@ -21,7 +21,7 @@ import { GraphData, NodeObject, LinkObject } from 'force-graph'
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import { Box, useTheme } from '@chakra-ui/react'
+import { Box, useDisclosure, useTheme } from '@chakra-ui/react'
 
 import {
   initialPhysics,
@@ -33,11 +33,13 @@ import {
   TagColors,
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
+import { ContextMenu } from '../components/contextmenu'
 
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import SpriteText from 'three-spritetext'
 
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { sendJson } from 'next/dist/next-server/server/api-utils'
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -92,8 +94,14 @@ export function GraphPage() {
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
   const tagsRef = useRef<Tags>([])
+  const graphRef = useRef<any>(null)
+
+  const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+    const currentGraphData = currentGraphDataRef.current
+    const oldNodeById = nodeByIdRef.current
+    const oldLinksByNodeId = linksByNodeIdRef.current
     tagsRef.current = orgRoamGraphData.tags ?? []
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
@@ -141,11 +149,63 @@ export function GraphPage() {
       links,
     }
 
-    // react-force-graph modifies the graph data implicitly,
-    // so we make sure there's no overlap between the objects we pass it and
-    // nodeByIdRef, linksByNodeIdRef
-    const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
-    setGraphData(orgRoamGraphDataClone)
+    if (!currentGraphData.nodes.length) {
+      // react-force-graph modifies the graph data implicitly,
+      // so we make sure there's no overlap between the objects we pass it and
+      // nodeByIdRef, linksByNodeIdRef
+      const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
+      currentGraphDataRef.current = orgRoamGraphDataClone
+      setGraphData(orgRoamGraphDataClone)
+      return
+    }
+
+    const newNodes = [
+      ...currentGraphData.nodes.map((node: NodeObject) => {
+        const newNode = nodeByIdRef.current[node.id!] ?? false
+        if (!newNode) {
+          return
+        }
+        return { ...node, ...newNode }
+      }),
+      ...Object.keys(nodeByIdRef.current)
+        .filter((id) => !oldNodeById[id])
+        .map((id) => nodeByIdRef.current[id] as NodeObject),
+    ]
+
+    /* const currentGraphIndexByLink = currentGraphData.links.reduce<{[key: string]: number}>((acc, link, index) => {
+*   const [source, target] = normalizeLinkEnds(link)
+*     const sourceTarget=source+target
+*     return  {
+*         ...acc,
+*  [sourceTarget]: index
+* }
+},{}) */
+
+    /* const newLinks = graphData!.links.filter(link => {
+     *   const [source, target] = normalizeLinkEnds(link)
+     *   if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
+     *     return false
+     *   }
+     *   if (!linksByNodeIdRef.current[source]!.some(link => link.target === target || link.source === target)
+     *     && !linksByNodeIdRef.current[target]!.some(link => link.target === source || link.source === source)) {
+     *     return false
+     *   }
+     *   return true
+     * })
+     * console.log(newLinks)
+     * console.log(currentGraphData.links) */
+    /* ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
+if (!oldLinksByNodeId[id]!) {
+return linksByNodeIdRef.current![id!]!
+}
+return linksByNodeIdRef.current![id]!.filter(link => {
+const [source, target] = normalizeLinkEnds(link)
+return !oldLinksByNodeId[id]!.some(oldLink => oldLink.source === source && oldLink.target === target)!
+}) ?? []
+})] */
+    const fg = graphRef.current
+    fg.cooldownTicks = 0
+    setGraphData({ nodes: newNodes as NodeObject[], links: links })
   }
 
   const { setEmacsTheme } = useContext(ThemeContext)
@@ -156,7 +216,6 @@ export function GraphPage() {
   const scopeRef = useRef<Scope>({ nodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
-  const graphRef = useRef<any>(null)
   const WebSocketRef = useRef<any>(null)
 
   scopeRef.current = scope
@@ -269,7 +328,7 @@ export function GraphPage() {
   }
 
   return (
-    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%">
+    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%" overflow="hidden">
       <Tweaks
         {...{
           physics,
@@ -289,7 +348,7 @@ export function GraphPage() {
         }}
         tags={tagsRef.current}
       />
-      <Box position="absolute" alignItems="top">
+      <Box position="absolute" alignItems="top" overflow="hidden">
         <Graph
           ref={graphRef}
           nodeById={nodeByIdRef.current!}
@@ -360,21 +419,46 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const { emacsTheme } = useContext<ThemeContextProps>(ThemeContext)
 
-  const handleClick = (click: string, node: NodeObject) => {
+  const handleLocal = (node: OrgRoamNode, add: string) => {
+    if (scope.nodeIds.includes(node.id as string)) {
+      return
+    }
+    if (add === 'replace') {
+      setScope({ nodeIds: [node.id] })
+      return
+    }
+    setScope((currentScope: Scope) => ({
+      ...currentScope,
+      nodeIds: [...currentScope.nodeIds, node.id as string],
+    }))
+    return
+  }
+
+  const sendMessageToEmacs = (command: string, data: {}) => {
+    webSocket.send(JSON.stringify({ command: command, data: data }))
+  }
+  const openNodeInEmacs = (node: OrgRoamNode) => {
+    sendMessageToEmacs('open', { id: node.id })
+  }
+
+  const deleteNodeInEmacs = (node: OrgRoamNode) => {
+    console.log('deletin')
+    if (node.level !== 0) {
+      return
+    }
+    console.log('deletin')
+    sendMessageToEmacs('delete', { id: node.id, file: node.file })
+  }
+
+  const handleClick = (click: string, node: OrgRoamNode) => {
     switch (click) {
       //mouse.highlight:
       case mouse.local: {
-        if (scope.nodeIds.includes(node.id as string)) {
-          break
-        }
-        setScope((currentScope: Scope) => ({
-          ...currentScope,
-          nodeIds: [...currentScope.nodeIds, node.id as string],
-        }))
+        handleLocal(node, behavior.localSame)
         break
       }
       case mouse.follow: {
-        webSocket.send(node.id)
+        openNodeInEmacs(node)
         break
       }
       default:
@@ -423,8 +507,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const filteredLinksByNodeId = useRef<LinksByNodeId>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
-    const filteredNodes = graphData.nodes
-      .filter((nodeArg) => {
+    const filteredNodes = graphData?.nodes
+      ?.filter((nodeArg) => {
         const node = nodeArg as OrgRoamNode
         if (
           filter.tagsBlacklist.length &&
@@ -538,7 +622,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         physics.collision ? d3.forceCollide().radius(physics.collisionStrength) : null,
       )
     })()
-  })
+  }, [physics])
 
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
@@ -731,6 +815,16 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     [visuals.labelBackgroundColor, emacsTheme],
   )
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
+  const [contextPos, setContextPos] = useState([0, 0])
+  const openContextMenu = (node: OrgRoamNode, event: any) => {
+    setContextPos([event.pageX, event.pageY])
+    setRightClickedNode(node)
+    onOpen()
+    console.log(event)
+  }
+
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -863,7 +957,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     d3AlphaMin: physics.alphaMin,
     d3VelocityDecay: physics.velocityDecay,
 
-    onNodeClick: (node: NodeObject, event: any) => {
+    onNodeClick: (nodeArg: NodeObject, event: any) => {
+      const node = nodeArg as OrgRoamNode
+      onClose()
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
       lastNodeClickRef.current = event.timeStamp
       if (isDoubleClick) {
@@ -872,6 +968,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       return handleClick('click', node)
     },
     onBackgroundClick: () => {
+      onClose()
       setHoverNode(null)
       if (scope.nodeIds.length === 0) {
         return
@@ -892,13 +989,29 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }
       setHoverNode(node)
     },
-    onNodeRightClick: (node) => {
-      handleClick('right', node)
+    onNodeRightClick: (nodeArg, event) => {
+      const node = nodeArg as OrgRoamNode
+      openContextMenu(node, event)
+
+      //handleClick('right', node)
     },
   }
 
   return (
-    <div>
+    <Box overflow="hidden">
+      {isOpen && (
+        <ContextMenu
+          scope={scope}
+          node={rightClickedNode!}
+          nodeType={rightClickedNode?.id}
+          background={false}
+          coordinates={contextPos}
+          handleLocal={handleLocal}
+          menuClose={onClose}
+          openNodeInEmacs={openNodeInEmacs}
+          deleteNodeInEmacs={deleteNodeInEmacs}
+        />
+      )}
       {threeDim ? (
         <ForceGraph3D
           ref={graphRef}
@@ -940,7 +1053,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           }}
         />
       )}
-    </div>
+    </Box>
   )
 })
 

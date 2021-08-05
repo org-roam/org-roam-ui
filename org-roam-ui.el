@@ -141,9 +141,22 @@ This serves the web-build and API over HTTP."
             (when org-roam-ui-follow
               (org-roam-ui-follow-mode 1))))
         :on-message (lambda (_websocket frame)
+                      (let* ((msg (json-parse-string (websocket-frame-text frame) :object-type 'alist))
+                             (command (alist-get 'command msg))
+                             (data (alist-get 'data msg)))
+                        (message "%s" (websocket-frame-text frame))
+                (cond ((string= command "open")
                     (org-roam-node-visit
                         (org-roam-populate (org-roam-node-create
-                        :id (websocket-frame-text frame)))))
+                        :id (alist-get 'id data)))))
+                      ((string= command "delete")
+                       (progn
+                       (delete-file (alist-get 'file data)
+                       (message "Deleted %s" (alist-get 'file data))))
+                       (org-roam-db-sync)
+                       (org-roam-ui--update-graphdata "node" "deleted" (alist-get 'id data))
+                        )
+                (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (org-roam-ui-follow-mode -1)
@@ -217,9 +230,10 @@ loaded. Returns `ref' if an entry could not be found."
                                   (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
+
 (defun org-roam-ui--update-current-node ()
   "Send the current node data to the web-socket."
-  (when (and (websocket-openp oru-ws) (org-roam-buffer-p))
+  (when (and (websocket-openp oru-ws) (org-roam-buffer-p) (file-exists-p (buffer-file-name)))
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
