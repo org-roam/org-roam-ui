@@ -107,6 +107,20 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
+(defcustom org-roam-ui-retitle-ref-nodes t
+  "Should org-roam-ui use `org-roam-bibtex' to try to update the title of a
+reference node that has an underlying note, using information from the bibliography."
+  :group 'org-roam-ui
+  :type 'boolean)
+
+(defcustom org-roam-ui-ref-title-template "%^{author-abbrev} (%^{year}) %^{title}"
+  "A template for title creation, used for references without an associated nodes.
+
+This uses `orb--pre-expand-template' under the hood and therefore only org-style
+capture `%^{...}' are supported."
+  :group 'org-roam-ui
+  :type 'string)
+
 (defcustom org-roam-ui-browser-function #'browse-url
   "When non-nil launch org-roam-ui with a different browser function.
 Takes a function name, such as #'browse-url-chromium.
@@ -201,16 +215,53 @@ Requires `org-roam-bibtex' and `bibtex-completion' (a dependency of `orb') to be
 loaded. Returns `ref' if an entry could not be found."
   (if (and org-roam-ui-find-ref-title
            (fboundp 'bibtex-completion-get-entry)
-           (boundp 'orb-bibtex-entry-get-value-function))
+           (fboundp 'orb--pre-expand-template))
       (if-let ((entry (bibtex-completion-get-entry ref)))
-          (concat
-           (funcall orb-bibtex-entry-get-value-function "author-abbrev" entry ref)
-           " ("
-           (funcall orb-bibtex-entry-get-value-function "year" entry ref)
-           ") "
-           (funcall orb-bibtex-entry-get-value-function "title" entry ref))
+          ;; Create a fake capture template list, only the actual capture at 3
+          ;; matters. Interpolate the bibtex entries, and extract the filled
+          ;; template from the return value.
+          (nth 3 (orb--pre-expand-template `("" "" plain ,org-roam-ui-ref-title-template) entry))
         ref)
     ref))
+
+(defun org-roam-ui--replace-nth (el n lst)
+  "Non-destructively replace the `n'th element of `lst' with `el'."
+  (let ((head (butlast lst (- (length lst) n)))
+        (tail (nthcdr (+ n 1) lst)))
+    (append head (list el) tail)))
+
+(defun org-roam-ui--citekey-to-ref (citekey)
+  "Convert a citekey property (most likely with a `cite:' prefix) to just a key
+
+This method is mostly taken from `org-roam-bibtex' see https://github.com/org-roam/org-roam-bibtex/blob/919ec8d837a7a3bd25232bdba17a0208efaefb2a/orb-utils.el#L289
+but is has been adapted to operate on a sting instead of a node. Requires
+`org-ref' to be loaded. Returns the `key' or `nil' if the format does not match
+the `org-ref-cite-re'"
+  (if-let ((boundp 'org-ref-cite-re)
+           (citekey-list (split-string-and-unquote citekey)))
+      (catch 'found
+        (dolist (c citekey-list)
+          (when (string-match org-ref-cite-re c)
+            (throw 'found (match-string 2 c)))))))
+
+(defun org-roam-ui--retitle-node (node)
+  "Replace the title of citation nodes with associated notes.
+
+A new title is created using information from the bibliography and formatted
+according to `org-roam-ui-ref-title-template', just like the citation nodes with
+a note are. It requires `org-roam-bibtex' and it's dependencies
+(`bibtex-completion' and `org-ref') to be loaded.
+
+Returns the node with an updated title if the current node is a reference node
+and the key was found in the bibliography, otherwise the node is returned
+unchanged."
+  (if-let* (org-roam-ui-retitle-ref-nodes
+            (boundp 'org-ref-cite-re)
+            (citekey (cdr (assoc "ROAM_REFS" (nth 4 node))))
+            (ref (org-roam-ui--citekey-to-ref citekey))
+            (title (org-roam-ui--find-ref-title ref)))
+      (org-roam-ui--replace-nth title 2 node)
+    node))
 
 (defun org-roam-ui--create-fake-node (ref)
   (list ref ref (org-roam-ui--find-ref-title ref) 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
@@ -243,6 +294,10 @@ loaded. Returns `ref' if an entry could not be found."
          (links-with-empty-refs (seq-filter (lambda (l) (equal (nth 2 l) "cite")) links-db-rows))
          (empty-refs (delete-dups (seq-map (lambda (l) (nth 1 l)) links-with-empty-refs)))
          (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
+         ;; Try to update real nodes that are reference with a title build from
+         ;; their bibliography entry. Check configuration here for avoid unneeded
+         ;; iteration though nodes.
+         (nodes-db-rows (if org-roam-ui-retitle-ref-nodes (seq-map 'org-roam-ui--retitle-node nodes-db-rows) nodes-db-rows))
          (nodes-db-rows (append nodes-db-rows fake-nodes))
          (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
