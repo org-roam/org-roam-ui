@@ -31,6 +31,7 @@ import {
   initialMouse,
   algos,
   TagColors,
+  colorList,
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
 import { ContextMenu } from '../components/contextmenu'
@@ -130,11 +131,39 @@ export function GraphPage() {
     nodeByIdRef.current = Object.fromEntries(orgRoamGraphData.nodes.map((node) => [node.id, node]))
 
     const dirtyLinks = [...orgRoamGraphData.links, ...fileLinks]
-    const links = dirtyLinks.filter((link) => {
+    const nonExistantNodes: OrgRoamNode[] = []
+    const links = dirtyLinks.map((link) => {
       const sourceId = link.source as string
       const targetId = link.target as string
-      return nodeByIdRef.current[sourceId] && nodeByIdRef.current[targetId]
+      if (!nodeByIdRef.current[sourceId]) {
+        nonExistantNodes.push({
+          id: sourceId,
+          tags: ['bad'],
+          properties: { FILELESS: 'yes', bad: 'yes' },
+          file: '',
+          title: sourceId,
+          level: 0,
+        })
+        return { ...link, type: 'bad' }
+      }
+      if (!nodeByIdRef.current[targetId]) {
+        nonExistantNodes.push({
+          id: targetId,
+          tags: ['bad'],
+          properties: { FILELESS: 'yes', bad: 'yes' },
+          file: '',
+          title: targetId,
+          level: 0,
+        })
+        return { ...link, type: 'bad' }
+      }
+      return link
     })
+
+    nodeByIdRef.current = {
+      ...nodeByIdRef.current,
+      ...Object.fromEntries(nonExistantNodes.map((node) => [node.id, node])),
+    }
 
     linksByNodeIdRef.current = links.reduce<LinksByNodeId>((acc, link) => {
       return {
@@ -144,8 +173,9 @@ export function GraphPage() {
       }
     }, {})
 
-    const orgRoamGraphDataWithFileLinks = {
-      ...orgRoamGraphData,
+    const nodes = [...orgRoamGraphData.nodes, ...nonExistantNodes]
+    const orgRoamGraphDataWithFileLinksAndBadNdes = {
+      nodes,
       links,
     }
 
@@ -153,7 +183,10 @@ export function GraphPage() {
       // react-force-graph modifies the graph data implicitly,
       // so we make sure there's no overlap between the objects we pass it and
       // nodeByIdRef, linksByNodeIdRef
-      const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
+      const orgRoamGraphDataClone = JSON.parse(
+        JSON.stringify(orgRoamGraphDataWithFileLinksAndBadNdes),
+      )
+      console.log(orgRoamGraphDataClone)
       currentGraphDataRef.current = orgRoamGraphDataClone
       setGraphData(orgRoamGraphDataClone)
       return
@@ -175,7 +208,7 @@ export function GraphPage() {
         }),
     ]
 
-    const nodeIndex = newNodes.reduce((acc, node, index) => {
+    const nodeIndex = newNodes.reduce<{ [id: string]: number }>((acc, node, index) => {
       const id = node?.id as string
       return {
         ...acc,
@@ -192,45 +225,45 @@ export function GraphPage() {
 *  [sourceTarget]: index
 * }
 },{}) */
-    const newLinks = [
-      ...currentGraphData!.links.filter((link) => {
-        const [source, target] = normalizeLinkEnds(link)
-        if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
-          return false
-        }
-        if (
-          !linksByNodeIdRef.current[source]!.some(
-            (link) => link.target === target || link.source === target,
-          ) &&
-          !linksByNodeIdRef.current[target]!.some(
-            (link) => link.target === source || link.source === source,
-          )
-        ) {
-          return false
-        }
-        return true
-      }),
-      ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
-        if (!oldLinksByNodeId[id]!) {
-          return linksByNodeIdRef.current![id!]!
-        }
-        return (
-          linksByNodeIdRef.current![id]!.filter((link) => {
-            const [source, target] = normalizeLinkEnds(link)
-            return !oldLinksByNodeId[id]!.some(
-              (oldLink) => oldLink.source === source && oldLink.target === target,
-            )!
-          }) ?? []
-        )
-      }),
-    ]
-
+    /* const newLinks = [
+     *   ...currentGraphData!.links.filter((link) => {
+     *     const [source, target] = normalizeLinkEnds(link)
+     *     if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
+     *       return false
+     *     }
+     *     if (
+     *       !linksByNodeIdRef.current[source]!.some(
+     *         (link) => link.target === target || link.source === target,
+     *       ) &&
+     *       !linksByNodeIdRef.current[target]!.some(
+     *         (link) => link.target === source || link.source === source,
+     *       )
+     *     ) {
+     *       return false
+     *     }
+     *     return true
+     *   }),
+     *   ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
+     *     if (!oldLinksByNodeId[id]!) {
+     *       return linksByNodeIdRef.current![id!]!
+     *     }
+     *     return (
+     *       linksByNodeIdRef.current![id]!.filter((link) => {
+     *         const [source, target] = normalizeLinkEnds(link)
+     *         return !oldLinksByNodeId[id]!.some(
+     *           (oldLink) => oldLink.source === source && oldLink.target === target,
+     *         )!
+     *       }) ?? []
+     *     )
+     *   }),
+     * ]
+     */
     const newerLinks = links.map((link) => {
       const [source, target] = normalizeLinkEnds(link)
       return {
         ...link,
-        source: newNodes[nodeIndex[source]],
-        target: newNodes[nodeIndex[target]],
+        source: newNodes[nodeIndex![source]],
+        target: newNodes[nodeIndex![target]],
       }
     })
     const fg = graphRef.current
@@ -486,6 +519,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     sendMessageToEmacs('delete', { id: node.id, file: node.file })
   }
 
+  const createNodeInEmacs = (node: OrgRoamNode) => {
+    sendMessageToEmacs('create', { id: node.id, title: node.title, ref: node.properties.ROAM_REFS })
+  }
+
   const handleClick = (click: string, node: OrgRoamNode) => {
     switch (click) {
       //mouse.highlight:
@@ -565,7 +602,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
-        if (filter.fileless_cites && node.properties.FILELESS) {
+        if (filter.filelessCites && node.properties.FILELESS) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+        if (filter.bad && node.properties.bad) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -596,7 +637,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
       const [sourceId, targetId] = normalizeLinkEnds(link)
-      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length || filter.fileless_cites) {
+      if (
+        filter.bad ||
+        filter.tagsBlacklist.length ||
+        filter.tagsWhitelist.length ||
+        filter.filelessCites
+      ) {
         return (
           filteredNodeIds.includes(sourceId as string) &&
           filteredNodeIds.includes(targetId as string)
@@ -712,43 +758,17 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   const highlightColors = useMemo(() => {
-    const allColors = visuals.nodeColorScheme.concat(
-      visuals.linkColorScheme || [],
-      visuals.linkHighlight || [],
-      visuals.nodeHighlight || [],
-      visuals.citeNodeColor || [],
-      visuals.citeLinkColor || [],
-      visuals.citeLinkHighlightColor || [],
-      visuals.refNodeColor || [],
-      visuals.refLinkColor || [],
-      visuals.refLinkHighlightColor || [],
-      visuals.backgroundColor || [],
-    )
-
     return Object.fromEntries(
-      allColors.map((color) => {
+      colorList.map((color) => {
         const color1 = getThemeColor(color)
-        const crisscross = allColors.map((color2) => [
+        const crisscross = colorList.map((color2) => [
           color2,
           d3int.interpolate(color1, getThemeColor(color2)),
         ])
         return [color, Object.fromEntries(crisscross)]
       }),
     )
-  }, [
-    visuals.nodeColorScheme,
-    visuals.linkHighlight,
-    visuals.nodeHighlight,
-    visuals.linkColorScheme,
-    visuals.refLinkColor,
-    visuals.refNodeColor,
-    visuals.citeNodeColor,
-    visuals.refLinkHighlightColor,
-    visuals.citeLinkHighlightColor,
-    visuals.citeLinkColor,
-    visuals.backgroundColor,
-    emacsTheme,
-  ])
+  }, [emacsTheme])
 
   const previouslyHighlightedNodes = useMemo(() => {
     const previouslyHighlightedLinks = linksByNodeId[lastHoverNode.current?.id!] ?? []
@@ -788,11 +808,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     if (!needsHighlighting && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor)
+      return highlightColors[nodeColor][visuals.backgroundColor](visuals.highlightFade * opacity)
     }
 
     if (!needsHighlighting) {
-      return getThemeColor(visuals.linkColorScheme)
+      return highlightColors[visuals.linkColorScheme][visuals.backgroundColor](
+        visuals.highlightFade * opacity,
+      )
     }
 
     if (!visuals.linkHighlight && !visuals.linkColorScheme) {
@@ -821,16 +843,26 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
     if (tagColors && node.tags.some((tag) => tagColors[tag])) {
       const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
-      return getThemeColor(tagColor)
+      return highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
     }
     if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
-      return getThemeColor(visuals.citeNodeColor)
+      return needsHighlighting
+        ? getThemeColor(visuals.citeNodeColor)
+        : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
+            visuals.highlightFade * opacity,
+          )
     }
     if (visuals.refNodeColor && node.properties.ROAM_REFS) {
-      return getThemeColor(visuals.refNodeColor)
+      return needsHighlighting
+        ? getThemeColor(visuals.refNodeColor)
+        : highlightColors[visuals.refNodeColor][visuals.backgroundColor](
+            visuals.highlightFade * opacity,
+          )
     }
     if (!needsHighlighting) {
-      return getThemeColor(getNodeColorById(node.id as string))
+      return highlightColors[getNodeColorById(node.id as string)][visuals.backgroundColor](
+        visuals.highlightFade * opacity,
+      )
     }
     if (!visuals.nodeHighlight) {
       return getThemeColor(getNodeColorById(node.id as string))
@@ -858,6 +890,22 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     [visuals.labelBackgroundColor, emacsTheme],
   )
 
+  const nodeSize = (node: NodeObject) => {
+    const links = linksByNodeId[node.id!] ?? []
+    const parentNeighbors = links.length ? links.filter((link) => link.type === 'parent').length : 0
+    const basicSize =
+      3 + links.length * visuals.nodeSizeLinks - (!filter.parents ? parentNeighbors : 0)
+    if (visuals.highlightNodeSize === 1) {
+      return basicSize
+    }
+    const highlightSize =
+      highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+        ? 1 + opacity * (visuals.highlightNodeSize - 1)
+        : 1
+    return basicSize * highlightSize
+  }
+
+  const [dragging, setDragging] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
   const [contextPos, setContextPos] = useState([0, 0])
@@ -878,23 +926,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
-      const links = linksByNodeId[node.id!] ?? []
-      const parentNeighbors = links.length
-        ? links.filter((link) => link.type === 'parent').length
-        : 0
-      const basicSize =
-        3 + links.length * visuals.nodeSizeLinks - (!filter.parents ? parentNeighbors : 0)
-      if (visuals.highlightNodeSize === 1) {
-        return basicSize
-      }
-      const highlightSize =
-        highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-          ? 1 + opacity * (visuals.highlightNodeSize - 1)
-          : 1
-      return basicSize * highlightSize
+      return nodeSize(node)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!node) {
+        return
+      }
+      if (dragging) {
         return
       }
 
@@ -914,7 +952,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const nodeTitle = (node as OrgRoamNode).title!
       const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 40))
       // const label = 'label'
-      const fontSize = 12 / globalScale
+      const fontSize = 14 / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
       const textWidth = ctx.measureText(label).width
       const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
         number,
@@ -933,16 +971,16 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         }
         return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
           ? Math.max(fadeFactor, opacity)
-          : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
+          : 1 * fadeFactor * (-1 * (visuals.highlightFade * opacity - 1))
       }
-
+      const nodeS = 8 * Math.cbrt(nodeSize(node) * visuals.nodeRel)
       if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
         const backgroundOpacity = getLabelOpacity() * visuals.labelBackgroundOpacity
         const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
         ctx.fillStyle = labelBackground
         ctx.fillRect(
           node.x! - bckgDimensions[0] / 2,
-          node.y! - bckgDimensions[1] / 2,
+          node.y! - bckgDimensions[1] / 2 + nodeS,
           ...bckgDimensions,
         )
       }
@@ -954,7 +992,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const labelText = hexToRGBA(labelTextColor, textOpacity)
       ctx.fillStyle = labelText
       ctx.font = `${fontSize}px Sans-Serif`
-      ctx.fillText(label, node.x!, node.y!)
+      ctx.fillText(label, node.x!, node.y! + nodeS)
     },
     nodeCanvasObjectMode: () => 'after',
 
@@ -977,14 +1015,18 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           ? highlightColors[visuals.refLinkColor][
               visuals.refLinkHighlightColor || visuals.linkHighlight
             ](opacity)
-          : getThemeColor(visuals.refLinkColor)
+          : highlightColors[visuals.refLinkColor][visuals.backgroundColor](
+              visuals.highlightFade * opacity,
+            )
       }
       if (visuals.citeLinkColor && roamLink.type === 'cite') {
         return needsHighlighting && (visuals.citeLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.citeLinkColor][
               visuals.citeLinkHighlightColor || visuals.linkHighlight
             ](opacity)
-          : getThemeColor(visuals.citeLinkColor)
+          : highlightColors[visuals.citeLinkColor][visuals.backgroundColor](
+              visuals.highlightFade * opacity,
+            )
       }
 
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
@@ -1044,6 +1086,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
       //handleClick('right', node)
     },
+    onNodeDrag: (node) => {
+      onClose()
+      setHoverNode(node)
+      setDragging(true)
+    },
+    onNodeDragEnd: (node) => {
+      setHoverNode(null)
+      setDragging(false)
+    },
   }
 
   return (
@@ -1059,6 +1110,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           menuClose={onClose}
           openNodeInEmacs={openNodeInEmacs}
           deleteNodeInEmacs={deleteNodeInEmacs}
+          createNodeInEmacs={createNodeInEmacs}
         />
       )}
       {threeDim ? (

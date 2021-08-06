@@ -54,6 +54,7 @@ export default interface ContextMenuProps {
   menuClose: () => void
   scope: { nodeIds: string[] }
   deleteNodeInEmacs: (node: OrgRoamNode) => void
+  createNodeInEmacs: (node: OrgRoamNode) => void
 }
 
 export const ContextMenu = (props: ContextMenuProps) => {
@@ -67,6 +68,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     scope,
     openNodeInEmacs,
     deleteNodeInEmacs,
+    createNodeInEmacs,
   } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
   const copyRef = useRef<any>()
@@ -104,7 +106,9 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 Open in Emacs
               </MenuItem>
             ) : (
-              <MenuItem icon={<AddIcon />}>Create node</MenuItem>
+              <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(node)}>
+                Create node
+              </MenuItem>
             )}
             {node?.properties.ROAM_REFS && (
               <MenuItem icon={<ExternalLinkIcon />}>Open in Zotero</MenuItem>

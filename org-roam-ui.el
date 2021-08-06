@@ -144,7 +144,6 @@ This serves the web-build and API over HTTP."
                       (let* ((msg (json-parse-string (websocket-frame-text frame) :object-type 'alist))
                              (command (alist-get 'command msg))
                              (data (alist-get 'data msg)))
-                        (message "%s" (websocket-frame-text frame))
                 (cond ((string= command "open")
                     (org-roam-node-visit
                         (org-roam-populate (org-roam-node-create
@@ -155,6 +154,14 @@ This serves the web-build and API over HTTP."
                        (delete-file (alist-get 'file data))
                        (org-roam-db-sync)
                        (org-roam-ui--send-graphdata)))
+                      ((string= command "create")
+
+                       (progn
+                        (if (and (fboundp #'orb-edit-note) (alist-get 'ROAM_REFS data))
+                        (orb-edit-note (alist-get 'id data)))
+      (org-roam-capture-
+       :node (org-roam-node-create :title (alist-get 'title data))
+       :props '(:finalize find-file))))
                 (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
