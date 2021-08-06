@@ -107,6 +107,13 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
+(defcustom org-roam-ui-browser-function #'browse-url
+  "When non-nil launch org-roam-ui with a different browser function.
+Takes a function name, such as #'browse-url-chromium.
+Defaults to #'browse-url."
+  :group 'org-roam-ui
+  :type 'function)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
@@ -126,14 +133,14 @@ This serves the web-build and API over HTTP."
       (message "You are running org-roam %s. Org-roam-ui is only compatible with v2, please upgrade." (org-roam-version))
       (setq org-roam-ui-mode -1))
     (message "Org-roam is either not installed or not running. Please fix this.")
-      (setq org-roam-ui-mode -1)))
+      (setq org-roam-ui-mode -1))
   (cond
    (org-roam-ui-mode
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
     (when org-roam-ui-open-on-start
-      (browse-url "http://localhost:35901"))
+      (funcall org-roam-ui-browser-function "http://localhost:35901"))
     (setq org-roam-ui-ws
         (websocket-server
          35903
