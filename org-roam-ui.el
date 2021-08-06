@@ -150,6 +150,9 @@ This serves the web-build and API over HTTP."
       (setq org-roam-ui-mode -1))
   (cond
    (org-roam-ui-mode
+   ;;; check if the default keywords actually exist on `orb-preformat-keywords'
+   ;;; else add them
+    (org-roam-ui--check-orb-keywords)
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
@@ -207,6 +210,14 @@ This serves the web-build and API over HTTP."
   (when (org-roam-buffer-p)
     (org-roam-ui--send-graphdata))
   )
+
+
+(defun org-roam-ui--check-orb-keywords ()
+  "Check if the default keywords are in `orb-preformat-keywords', if not, add them."
+  (when (and org-roam-ui-retitle-ref-nodes (boundp 'orb-preformat-keywords))
+  (dolist (keyword '("author-abbrev" "year" "title"))
+    (unless (seq-contains-p orb-preformat-keywords keyword)
+      (setq orb-preformat-keywords (append orb-preformat-keywords (list keyword)))))))
 
 (defun org-roam-ui--find-ref-title (ref)
   "Find the title of the bibtex entry keyed by `ref'.
