@@ -121,6 +121,13 @@ capture `%^{...}' are supported."
   :group 'org-roam-ui
   :type 'string)
 
+(defcustom org-roam-ui-browser-function #'browse-url
+  "When non-nil launch org-roam-ui with a different browser function.
+Takes a function name, such as #'browse-url-chromium.
+Defaults to #'browse-url."
+  :group 'org-roam-ui
+  :type 'function)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 (defvar oru-ws nil
@@ -135,13 +142,19 @@ This serves the web-build and API over HTTP."
   :global t
   :group 'org-roam-ui
   :init-value nil
+  (if (fboundp #'org-roam-version)
+    (unless (eq (seq-first (org-roam-version)) 50)
+      (message "You are running org-roam %s. Org-roam-ui is only compatible with v2, please upgrade." (org-roam-version))
+      (setq org-roam-ui-mode -1))
+    (message "Org-roam is either not installed or not running. Please fix this.")
+      (setq org-roam-ui-mode -1))
   (cond
    (org-roam-ui-mode
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
     (when org-roam-ui-open-on-start
-      (browse-url "http://localhost:35901"))
+      (funcall org-roam-ui-browser-function "http://localhost:35901"))
     (setq org-roam-ui-ws
         (websocket-server
          35903
@@ -155,9 +168,28 @@ This serves the web-build and API over HTTP."
             (when org-roam-ui-follow
               (org-roam-ui-follow-mode 1))))
         :on-message (lambda (_websocket frame)
+                      (let* ((msg (json-parse-string (websocket-frame-text frame) :object-type 'alist))
+                             (command (alist-get 'command msg))
+                             (data (alist-get 'data msg)))
+                (cond ((string= command "open")
                     (org-roam-node-visit
                         (org-roam-populate (org-roam-node-create
-                        :id (websocket-frame-text frame)))))
+                        :id (alist-get 'id data)))))
+                      ((string= command "delete")
+                       (progn
+                       (message "Deleted %s" (alist-get 'file data))
+                       (delete-file (alist-get 'file data))
+                       (org-roam-db-sync)
+                       (org-roam-ui--send-graphdata)))
+                      ((string= command "create")
+
+                       (progn
+                        (if (and (fboundp #'orb-edit-note) (alist-get 'ROAM_REFS data))
+                        (orb-edit-note (alist-get 'id data)))
+      (org-roam-capture-
+       :node (org-roam-node-create :title (alist-get 'title data))
+       :props '(:finalize find-file))))
+                (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (org-roam-ui-follow-mode -1)
@@ -272,9 +304,10 @@ unchanged."
                                   (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
+
 (defun org-roam-ui--update-current-node ()
   "Send the current node data to the web-socket."
-  (when (and (websocket-openp oru-ws) (org-roam-buffer-p))
+  (when (and (websocket-openp oru-ws) (org-roam-buffer-p) (file-exists-p (buffer-file-name)))
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)

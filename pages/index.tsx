@@ -21,7 +21,7 @@ import { GraphData, NodeObject, LinkObject } from 'force-graph'
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import { Box, useTheme } from '@chakra-ui/react'
+import { Box, useDisclosure, useTheme } from '@chakra-ui/react'
 
 import {
   initialPhysics,
@@ -31,13 +31,16 @@ import {
   initialMouse,
   algos,
   TagColors,
+  colorList,
 } from '../components/config'
 import { Tweaks } from '../components/tweaks'
+import { ContextMenu } from '../components/contextmenu'
 
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import SpriteText from 'three-spritetext'
 
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { sendJson } from 'next/dist/next-server/server/api-utils'
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -92,8 +95,14 @@ export function GraphPage() {
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
   const tagsRef = useRef<Tags>([])
+  const graphRef = useRef<any>(null)
+
+  const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
+    const currentGraphData = currentGraphDataRef.current
+    const oldNodeById = nodeByIdRef.current
+    const oldLinksByNodeId = linksByNodeIdRef.current
     tagsRef.current = orgRoamGraphData.tags ?? []
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
@@ -122,11 +131,39 @@ export function GraphPage() {
     nodeByIdRef.current = Object.fromEntries(orgRoamGraphData.nodes.map((node) => [node.id, node]))
 
     const dirtyLinks = [...orgRoamGraphData.links, ...fileLinks]
-    const links = dirtyLinks.filter((link) => {
+    const nonExistantNodes: OrgRoamNode[] = []
+    const links = dirtyLinks.map((link) => {
       const sourceId = link.source as string
       const targetId = link.target as string
-      return nodeByIdRef.current[sourceId] && nodeByIdRef.current[targetId]
+      if (!nodeByIdRef.current[sourceId]) {
+        nonExistantNodes.push({
+          id: sourceId,
+          tags: ['bad'],
+          properties: { FILELESS: 'yes', bad: 'yes' },
+          file: '',
+          title: sourceId,
+          level: 0,
+        })
+        return { ...link, type: 'bad' }
+      }
+      if (!nodeByIdRef.current[targetId]) {
+        nonExistantNodes.push({
+          id: targetId,
+          tags: ['bad'],
+          properties: { FILELESS: 'yes', bad: 'yes' },
+          file: '',
+          title: targetId,
+          level: 0,
+        })
+        return { ...link, type: 'bad' }
+      }
+      return link
     })
+
+    nodeByIdRef.current = {
+      ...nodeByIdRef.current,
+      ...Object.fromEntries(nonExistantNodes.map((node) => [node.id, node])),
+    }
 
     linksByNodeIdRef.current = links.reduce<LinksByNodeId>((acc, link) => {
       return {
@@ -136,17 +173,108 @@ export function GraphPage() {
       }
     }, {})
 
-    const orgRoamGraphDataWithFileLinks = {
-      ...orgRoamGraphData,
+    const nodes = [...orgRoamGraphData.nodes, ...nonExistantNodes]
+    const orgRoamGraphDataWithFileLinksAndBadNdes = {
+      nodes,
       links,
     }
 
-    // react-force-graph modifies the graph data implicitly,
-    // so we make sure there's no overlap between the objects we pass it and
-    // nodeByIdRef, linksByNodeIdRef
-    const orgRoamGraphDataClone = JSON.parse(JSON.stringify(orgRoamGraphDataWithFileLinks))
-    setGraphData(orgRoamGraphDataClone)
+    if (!currentGraphData.nodes.length) {
+      // react-force-graph modifies the graph data implicitly,
+      // so we make sure there's no overlap between the objects we pass it and
+      // nodeByIdRef, linksByNodeIdRef
+      const orgRoamGraphDataClone = JSON.parse(
+        JSON.stringify(orgRoamGraphDataWithFileLinksAndBadNdes),
+      )
+      console.log(orgRoamGraphDataClone)
+      currentGraphDataRef.current = orgRoamGraphDataClone
+      setGraphData(orgRoamGraphDataClone)
+      return
+    }
+
+    const newNodes = [
+      ...currentGraphData.nodes.map((node: NodeObject) => {
+        const newNode = nodeByIdRef.current[node?.id!] ?? false
+        if (!newNode) {
+          return
+        }
+        return { ...node, ...newNode }
+      }),
+      ...Object.keys(nodeByIdRef.current)
+        .filter((id) => !oldNodeById[id])
+        .map((id) => {
+          console.log(id)
+          return nodeByIdRef.current[id] as NodeObject
+        }),
+    ]
+
+    const nodeIndex = newNodes.reduce<{ [id: string]: number }>((acc, node, index) => {
+      const id = node?.id as string
+      return {
+        ...acc,
+        [id]: index,
+      }
+    }, {})
+    console.log(newNodes)
+    console.log(nodeIndex)
+    /* const currentGraphIndexByLink = currentGraphData.links.reduce<{[key: string]: number}>((acc, link, index) => {
+*   const [source, target] = normalizeLinkEnds(link)
+*     const sourceTarget=source+target
+*     return  {
+*         ...acc,
+*  [sourceTarget]: index
+* }
+},{}) */
+    /* const newLinks = [
+     *   ...currentGraphData!.links.filter((link) => {
+     *     const [source, target] = normalizeLinkEnds(link)
+     *     if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
+     *       return false
+     *     }
+     *     if (
+     *       !linksByNodeIdRef.current[source]!.some(
+     *         (link) => link.target === target || link.source === target,
+     *       ) &&
+     *       !linksByNodeIdRef.current[target]!.some(
+     *         (link) => link.target === source || link.source === source,
+     *       )
+     *     ) {
+     *       return false
+     *     }
+     *     return true
+     *   }),
+     *   ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
+     *     if (!oldLinksByNodeId[id]!) {
+     *       return linksByNodeIdRef.current![id!]!
+     *     }
+     *     return (
+     *       linksByNodeIdRef.current![id]!.filter((link) => {
+     *         const [source, target] = normalizeLinkEnds(link)
+     *         return !oldLinksByNodeId[id]!.some(
+     *           (oldLink) => oldLink.source === source && oldLink.target === target,
+     *         )!
+     *       }) ?? []
+     *     )
+     *   }),
+     * ]
+     */
+    const newerLinks = links.map((link) => {
+      const [source, target] = normalizeLinkEnds(link)
+      return {
+        ...link,
+        source: newNodes[nodeIndex![source]],
+        target: newNodes[nodeIndex![target]],
+      }
+    })
+    const fg = graphRef.current
+    setGraphData({ nodes: newNodes as NodeObject[], links: newerLinks })
   }
+  useEffect(() => {
+    if (!graphData) {
+      return
+    }
+    currentGraphDataRef.current = graphData
+  }, [graphData])
 
   const { setEmacsTheme } = useContext(ThemeContext)
 
@@ -156,7 +284,6 @@ export function GraphPage() {
   const scopeRef = useRef<Scope>({ nodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
-  const graphRef = useRef<any>(null)
   const WebSocketRef = useRef<any>(null)
 
   scopeRef.current = scope
@@ -166,6 +293,9 @@ export function GraphPage() {
     speed: number = 2000,
     padding: number = 200,
   ) => {
+    if (command === 'color') {
+      return
+    }
     const fg = graphRef.current
     const sr = scopeRef.current
     const bh = behaviorRef.current
@@ -269,7 +399,7 @@ export function GraphPage() {
   }
 
   return (
-    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%">
+    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%" overflow="hidden">
       <Tweaks
         {...{
           physics,
@@ -289,7 +419,7 @@ export function GraphPage() {
         }}
         tags={tagsRef.current}
       />
-      <Box position="absolute" alignItems="top">
+      <Box position="absolute" alignItems="top" overflow="hidden">
         <Graph
           ref={graphRef}
           nodeById={nodeByIdRef.current!}
@@ -360,21 +490,48 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const { emacsTheme } = useContext<ThemeContextProps>(ThemeContext)
 
-  const handleClick = (click: string, node: NodeObject) => {
+  const handleLocal = (node: OrgRoamNode, add: string) => {
+    if (scope.nodeIds.includes(node.id as string)) {
+      return
+    }
+    if (add === 'replace') {
+      setScope({ nodeIds: [node.id] })
+      return
+    }
+    setScope((currentScope: Scope) => ({
+      ...currentScope,
+      nodeIds: [...currentScope.nodeIds, node.id as string],
+    }))
+    return
+  }
+
+  const sendMessageToEmacs = (command: string, data: {}) => {
+    webSocket.send(JSON.stringify({ command: command, data: data }))
+  }
+  const openNodeInEmacs = (node: OrgRoamNode) => {
+    sendMessageToEmacs('open', { id: node.id })
+  }
+
+  const deleteNodeInEmacs = (node: OrgRoamNode) => {
+    if (node.level !== 0) {
+      return
+    }
+    sendMessageToEmacs('delete', { id: node.id, file: node.file })
+  }
+
+  const createNodeInEmacs = (node: OrgRoamNode) => {
+    sendMessageToEmacs('create', { id: node.id, title: node.title, ref: node.properties.ROAM_REFS })
+  }
+
+  const handleClick = (click: string, node: OrgRoamNode) => {
     switch (click) {
       //mouse.highlight:
       case mouse.local: {
-        if (scope.nodeIds.includes(node.id as string)) {
-          break
-        }
-        setScope((currentScope: Scope) => ({
-          ...currentScope,
-          nodeIds: [...currentScope.nodeIds, node.id as string],
-        }))
+        handleLocal(node, behavior.localSame)
         break
       }
       case mouse.follow: {
-        webSocket.send(node.id)
+        openNodeInEmacs(node)
         break
       }
       default:
@@ -423,8 +580,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const filteredLinksByNodeId = useRef<LinksByNodeId>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
-    const filteredNodes = graphData.nodes
-      .filter((nodeArg) => {
+    const filteredNodes = graphData?.nodes
+      ?.filter((nodeArg) => {
+        //sometimes there will be some undefined nodes in the mix
+        // should probably fix the actual issue, but this is a fix
+        if (!nodeArg) {
+          return
+        }
         const node = nodeArg as OrgRoamNode
         if (
           filter.tagsBlacklist.length &&
@@ -440,15 +602,18 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
-        if (filter.fileless_cites && node.properties.FILELESS) {
+        if (filter.filelessCites && node.properties.FILELESS) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+        if (filter.bad && node.properties.bad) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
         return true
       })
-      .filter((nodeArg) => {
-        const node = nodeArg as OrgRoamNode
-        const links = linksByNodeId[node.id as string] ?? []
+      .filter((node) => {
+        const links = linksByNodeId[node?.id as string] ?? []
         const unhiddenLinks = links.filter(
           (link) =>
             !hiddenNodeIdsRef.current[link.source] && !hiddenNodeIdsRef.current[link.target],
@@ -472,7 +637,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
       const [sourceId, targetId] = normalizeLinkEnds(link)
-      if (filter.tagsBlacklist.length || filter.tagsWhitelist.length || filter.fileless_cites) {
+      if (
+        filter.bad ||
+        filter.tagsBlacklist.length ||
+        filter.tagsWhitelist.length ||
+        filter.filelessCites
+      ) {
         return (
           filteredNodeIds.includes(sourceId as string) &&
           filteredNodeIds.includes(targetId as string)
@@ -538,7 +708,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         physics.collision ? d3.forceCollide().radius(physics.collisionStrength) : null,
       )
     })()
-  })
+  }, [physics])
 
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
@@ -588,41 +758,17 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   const highlightColors = useMemo(() => {
-    const allColors = visuals.nodeColorScheme.concat(
-      visuals.linkColorScheme || [],
-      visuals.linkHighlight || [],
-      visuals.nodeHighlight || [],
-      visuals.citeNodeColor || [],
-      visuals.citeLinkColor || [],
-      visuals.citeLinkHighlightColor || [],
-      visuals.refNodeColor || [],
-      visuals.refLinkColor || [],
-      visuals.refLinkHighlightColor || [],
-    )
-
     return Object.fromEntries(
-      allColors.map((color) => {
+      colorList.map((color) => {
         const color1 = getThemeColor(color)
-        const crisscross = allColors.map((color2) => [
+        const crisscross = colorList.map((color2) => [
           color2,
           d3int.interpolate(color1, getThemeColor(color2)),
         ])
         return [color, Object.fromEntries(crisscross)]
       }),
     )
-  }, [
-    visuals.nodeColorScheme,
-    visuals.linkHighlight,
-    visuals.nodeHighlight,
-    visuals.linkColorScheme,
-    visuals.refLinkColor,
-    visuals.refNodeColor,
-    visuals.citeNodeColor,
-    visuals.refLinkHighlightColor,
-    visuals.citeLinkHighlightColor,
-    visuals.citeLinkColor,
-    emacsTheme,
-  ])
+  }, [emacsTheme])
 
   const previouslyHighlightedNodes = useMemo(() => {
     const previouslyHighlightedLinks = linksByNodeId[lastHoverNode.current?.id!] ?? []
@@ -662,11 +808,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     if (!needsHighlighting && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor)
+      return highlightColors[nodeColor][visuals.backgroundColor](visuals.highlightFade * opacity)
     }
 
     if (!needsHighlighting) {
-      return getThemeColor(visuals.linkColorScheme)
+      return highlightColors[visuals.linkColorScheme][visuals.backgroundColor](
+        visuals.highlightFade * opacity,
+      )
     }
 
     if (!visuals.linkHighlight && !visuals.linkColorScheme) {
@@ -686,6 +834,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   const getNodeColor = (node: OrgRoamNode) => {
+    const isHighlightingHappening = !!highlightedNodes.length
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
@@ -694,16 +843,26 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
     if (tagColors && node.tags.some((tag) => tagColors[tag])) {
       const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
-      return getThemeColor(tagColor)
+      return highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
     }
     if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
-      return getThemeColor(visuals.citeNodeColor)
+      return needsHighlighting
+        ? getThemeColor(visuals.citeNodeColor)
+        : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
+            visuals.highlightFade * opacity,
+          )
     }
     if (visuals.refNodeColor && node.properties.ROAM_REFS) {
-      return getThemeColor(visuals.refNodeColor)
+      return needsHighlighting
+        ? getThemeColor(visuals.refNodeColor)
+        : highlightColors[visuals.refNodeColor][visuals.backgroundColor](
+            visuals.highlightFade * opacity,
+          )
     }
     if (!needsHighlighting) {
-      return getThemeColor(getNodeColorById(node.id as string))
+      return highlightColors[getNodeColorById(node.id as string)][visuals.backgroundColor](
+        visuals.highlightFade * opacity,
+      )
     }
     if (!visuals.nodeHighlight) {
       return getThemeColor(getNodeColorById(node.id as string))
@@ -731,6 +890,31 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     [visuals.labelBackgroundColor, emacsTheme],
   )
 
+  const nodeSize = (node: NodeObject) => {
+    const links = linksByNodeId[node.id!] ?? []
+    const parentNeighbors = links.length ? links.filter((link) => link.type === 'parent').length : 0
+    const basicSize =
+      3 + links.length * visuals.nodeSizeLinks - (!filter.parents ? parentNeighbors : 0)
+    if (visuals.highlightNodeSize === 1) {
+      return basicSize
+    }
+    const highlightSize =
+      highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+        ? 1 + opacity * (visuals.highlightNodeSize - 1)
+        : 1
+    return basicSize * highlightSize
+  }
+
+  const [dragging, setDragging] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
+  const [contextPos, setContextPos] = useState([0, 0])
+  const openContextMenu = (node: OrgRoamNode, event: any) => {
+    setContextPos([event.pageX, event.pageY])
+    setRightClickedNode(node)
+    onOpen()
+  }
+
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scopedGraphData,
     width: windowWidth,
@@ -742,19 +926,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
-      const links = linksByNodeId[node.id!] ?? []
-      const parentNeighbors = links.length
-        ? links.filter((link) => link.type === 'parent').length
-        : 0
-      const basicSize = 3 + links.length - (!filter.parents ? parentNeighbors : 0)
-      const highlightSize =
-        highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-          ? 1 + opacity * (visuals.highlightNodeSize - 1)
-          : 1
-      return basicSize * highlightSize
+      return nodeSize(node)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!node) {
+        return
+      }
+      if (dragging) {
         return
       }
 
@@ -774,7 +952,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const nodeTitle = (node as OrgRoamNode).title!
       const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 40))
       // const label = 'label'
-      const fontSize = 12 / globalScale
+      const fontSize = 14 / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
       const textWidth = ctx.measureText(label).width
       const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
         number,
@@ -793,16 +971,16 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         }
         return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
           ? Math.max(fadeFactor, opacity)
-          : 1 * fadeFactor * (-1 * (0.5 * opacity - 1))
+          : 1 * fadeFactor * (-1 * (visuals.highlightFade * opacity - 1))
       }
-
+      const nodeS = 8 * Math.cbrt(nodeSize(node) * visuals.nodeRel)
       if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
         const backgroundOpacity = getLabelOpacity() * visuals.labelBackgroundOpacity
         const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
         ctx.fillStyle = labelBackground
         ctx.fillRect(
           node.x! - bckgDimensions[0] / 2,
-          node.y! - bckgDimensions[1] / 2,
+          node.y! - bckgDimensions[1] / 2 + nodeS,
           ...bckgDimensions,
         )
       }
@@ -814,7 +992,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const labelText = hexToRGBA(labelTextColor, textOpacity)
       ctx.fillStyle = labelText
       ctx.font = `${fontSize}px Sans-Serif`
-      ctx.fillText(label, node.x!, node.y!)
+      ctx.fillText(label, node.x!, node.y! + nodeS)
     },
     nodeCanvasObjectMode: () => 'after',
 
@@ -837,19 +1015,26 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           ? highlightColors[visuals.refLinkColor][
               visuals.refLinkHighlightColor || visuals.linkHighlight
             ](opacity)
-          : getThemeColor(visuals.refLinkColor)
+          : highlightColors[visuals.refLinkColor][visuals.backgroundColor](
+              visuals.highlightFade * opacity,
+            )
       }
       if (visuals.citeLinkColor && roamLink.type === 'cite') {
         return needsHighlighting && (visuals.citeLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.citeLinkColor][
               visuals.citeLinkHighlightColor || visuals.linkHighlight
             ](opacity)
-          : getThemeColor(visuals.citeLinkColor)
+          : highlightColors[visuals.citeLinkColor][visuals.backgroundColor](
+              visuals.highlightFade * opacity,
+            )
       }
 
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
     },
     linkWidth: (link) => {
+      if (visuals.highlightLinkSize === 1) {
+        return visuals.linkWidth
+      }
       const linkIsHighlighted = isLinkRelatedToNode(link, centralHighlightedNode.current)
       const linkWasHighlighted = isLinkRelatedToNode(link, lastHoverNode.current)
 
@@ -863,7 +1048,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     d3AlphaMin: physics.alphaMin,
     d3VelocityDecay: physics.velocityDecay,
 
-    onNodeClick: (node: NodeObject, event: any) => {
+    onNodeClick: (nodeArg: NodeObject, event: any) => {
+      const node = nodeArg as OrgRoamNode
+      onClose()
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
       lastNodeClickRef.current = event.timeStamp
       if (isDoubleClick) {
@@ -872,6 +1059,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       return handleClick('click', node)
     },
     onBackgroundClick: () => {
+      onClose()
       setHoverNode(null)
       if (scope.nodeIds.length === 0) {
         return
@@ -892,13 +1080,39 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }
       setHoverNode(node)
     },
-    onNodeRightClick: (node) => {
-      handleClick('right', node)
+    onNodeRightClick: (nodeArg, event) => {
+      const node = nodeArg as OrgRoamNode
+      openContextMenu(node, event)
+
+      //handleClick('right', node)
+    },
+    onNodeDrag: (node) => {
+      onClose()
+      setHoverNode(node)
+      setDragging(true)
+    },
+    onNodeDragEnd: (node) => {
+      setHoverNode(null)
+      setDragging(false)
     },
   }
 
   return (
-    <div>
+    <Box overflow="hidden">
+      {isOpen && (
+        <ContextMenu
+          scope={scope}
+          node={rightClickedNode!}
+          nodeType={rightClickedNode?.id}
+          background={false}
+          coordinates={contextPos}
+          handleLocal={handleLocal}
+          menuClose={onClose}
+          openNodeInEmacs={openNodeInEmacs}
+          deleteNodeInEmacs={deleteNodeInEmacs}
+          createNodeInEmacs={createNodeInEmacs}
+        />
+      )}
       {threeDim ? (
         <ForceGraph3D
           ref={graphRef}
@@ -940,13 +1154,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           }}
         />
       )}
-    </div>
+    </Box>
   )
 })
 
 function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   return (
-    (link.source as NodeObject).id! === node?.id! || (link.target as NodeObject).id! === node?.id!
+    (link.source as NodeObject)?.id! === node?.id! || (link.target as NodeObject)?.id! === node?.id!
   )
 }
 
