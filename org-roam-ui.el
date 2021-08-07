@@ -185,14 +185,13 @@ This serves the web-build and API over HTTP."
                        (org-roam-db-sync)
                        (org-roam-ui--send-graphdata)))
                       ((string= command "create")
-
                        (progn
                         (if (and (fboundp #'orb-edit-note) (alist-get 'ROAM_REFS data))
-                        (orb-edit-note (alist-get 'id data)))
-      (org-roam-capture-
-       :node (org-roam-node-create :title (alist-get 'title data))
-       :props '(:finalize find-file))))
-                (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
+                            (orb-edit-note (alist-get 'id data)))
+                        (org-roam-capture-
+                         :node (org-roam-node-create :title (alist-get 'title data))
+                         :props '(:finalize find-file))))
+                      (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (org-roam-ui-follow-mode -1)

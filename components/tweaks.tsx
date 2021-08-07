@@ -124,7 +124,7 @@ export const Tweaks = (props: TweakProps) => {
       zIndex={300}
       position="relative"
       boxShadow="xl"
-      maxH={0.95 * globalThis.innerHeight}
+      maxH={0.92 * globalThis.innerHeight}
     >
       <Box
         display="flex"
@@ -819,8 +819,8 @@ export const Tweaks = (props: TweakProps) => {
                           {!visuals.labels
                             ? 'Never'
                             : visuals.labels < 2
-                            ? 'On Highlight'
-                            : 'Always'}
+                              ? 'On Highlight'
+                              : 'Always'}
                         </MenuButton>
                         <Portal>
                           {' '}
@@ -876,7 +876,7 @@ export const Tweaks = (props: TweakProps) => {
                         />
                         <ColorMenu
                           colorList={colorList}
-                          label="Text"
+                          label="Background"
                           visuals={visuals}
                           setVisuals={setVisuals}
                           value="labelBackgroundColor"
@@ -1287,7 +1287,7 @@ export const DropDownMenu = (props: DropDownMenuProps) => {
         {' '}
         <MenuList zIndex="popover">
           {textArray.map((option, i) => {
-            ;<MenuItem onClick={onClickArray[i]}> {option} </MenuItem>
+            ; <MenuItem onClick={onClickArray[i]}> {option} </MenuItem>
           })}
         </MenuList>
       </Portal>
