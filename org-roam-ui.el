@@ -267,7 +267,8 @@ Returns the node with an updated title if the current node is a reference node
 and the key was found in the bibliography, otherwise the node is returned
 unchanged."
   (if-let* (org-roam-ui-retitle-ref-nodes
-            (boundp 'org-ref-cite-re)
+            ;; set a fake var because if-let(((boundp 'fake-var))) returns true
+            (orcr (boundp 'org-ref-cite-re))
             (citekey (cdr (assoc "ROAM_REFS" (nth 4 node))))
             (ref (org-roam-ui--citekey-to-ref citekey))
             (title (org-roam-ui--find-ref-title ref)))
