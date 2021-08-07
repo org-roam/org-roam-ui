@@ -128,7 +128,15 @@ Org-Roam-UI exposes a few variables, but most of the customization is done in th
 
 #### Following
 
-ORUI follows you around Emacs by default. To disable this, set
+ORUI follows you around Emacs in a local view by default.
+
+If you want to roam in a global graph, set
+
+```emacs-lisp
+(setq org-roam-ui-follow-method 'global)
+```
+
+To disable this, set
 
 ```emacs-lisp
 (setq org-roam-ui-follow nil)
