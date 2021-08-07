@@ -220,7 +220,7 @@ While we try to optimize the display of the graph, there is only so much we can 
 
 As much as it saddens us to say, Firefox's rendering engine is quite a bit slower than its Chromium cousins. Compare the performance of the two and see if that's the main issue first.
 
-#### Turn of the particles
+#### Turn off the particles
 
 I know, very cool to see those little guys travel up and down your notes, but very slow, especially in 3D mode.
 
