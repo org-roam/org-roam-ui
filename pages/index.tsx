@@ -950,9 +950,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }
 
       const nodeTitle = (node as OrgRoamNode).title!
-      const label = nodeTitle.substring(0, Math.min(nodeTitle.length, 40))
+      const label =
+        nodeTitle.length > visuals.labelLength
+          ? nodeTitle.substring(0, visuals.labelLength) + '...'
+          : nodeTitle
       // const label = 'label'
-      const fontSize = 14 / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
+      const fontSize = visuals.labelFontSize / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
       const textWidth = ctx.measureText(label).width
       const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
         number,

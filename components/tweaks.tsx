@@ -850,6 +850,22 @@ export const Tweaks = (props: TweakProps) => {
                         paddingLeft={2}
                         color="gray.800"
                       >
+                        <SliderWithInfo
+                          label="Label font size"
+                          value={visuals.labelFontSize}
+                          min={5}
+                          max={20}
+                          step={0.5}
+                          onChange={(value) => setVisuals({ ...visuals, labelFontSize: value })}
+                        />
+                        <SliderWithInfo
+                          label="Maximum label characters"
+                          value={visuals.labelLength}
+                          min={10}
+                          max={100}
+                          step={1}
+                          onChange={(value) => setVisuals({ ...visuals, labelLength: value })}
+                        />
                         <ColorMenu
                           colorList={colorList}
                           label="Text"

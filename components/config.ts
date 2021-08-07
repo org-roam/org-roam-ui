@@ -58,6 +58,8 @@ export const initialVisuals = {
   nodeResolution: 12,
   labels: 2,
   labelScale: 1.5,
+  labelFontSize: 13,
+  labelLength: 40,
   highlight: true,
   highlightNodeSize: 2,
   highlightLinkSize: 2,
