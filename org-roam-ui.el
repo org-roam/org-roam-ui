@@ -38,6 +38,7 @@
 (require 'org-roam)
 (require 'websocket)
 
+;;;; Customization
 (defgroup org-roam-ui nil
   "UI in Org-roam."
   :group 'org-roam
@@ -90,6 +91,14 @@ E.g. '((bg . \"#1E2029\")
   "If true, org-roam-ui will follow you around in the graph."
   :group 'org-roam-ui
   :type 'boolean)
+
+(defcustom org-roam-ui-follow-method 'local
+  "The display method of follow-mode.
+When equals `local', follow the node in a local view,
+when equals `global', focus on the node in the global graph."
+  :type '(choice
+          (const :tag "Local" local)
+          (const :tag "Global" global)))
 
 (defcustom org-roam-ui-update-on-save t
   "If true, org-roam-ui will send new data when you save an org-roam-buffer.
@@ -249,8 +258,15 @@ loaded. Returns `ref' if an entry could not be found."
                                   (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
     (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
 
-
 (defun org-roam-ui--update-current-node ()
+  "Focus on the current node in the graph."
+  (cond
+   ((eq org-roam-ui-follow-method 'local)
+    (org-roam-ui--update-current-node-local))
+   ((eq org-roam-ui-follow-method 'global)
+    (org-roam-ui--update-current-node-global))))
+
+(defun org-roam-ui--update-current-node-global ()
   "Send the current node data to the web-socket."
   (when (and (websocket-openp oru-ws) (org-roam-buffer-p) (file-exists-p (buffer-file-name)))
   (let* ((node (org-roam-id-at-point)))
@@ -259,6 +275,12 @@ loaded. Returns `ref' if an entry could not be found."
       (websocket-send-text oru-ws (json-encode `((type . "command") (data
 . ((commandName . "follow") (id . ,node))))))))))
 
+(defun org-roam-ui--update-current-node-local ()
+  "Update the local graph view of the current node."
+  (let* ((node (org-roam-id-at-point)))
+    (when (and node (websocket-openp oru-ws) (org-roam-buffer-p) (file-exists-p (buffer-file-name)))
+      (websocket-send-text oru-ws (json-encode `((type . "command")
+                                                 (data . ((commandName . "local") (id . ,node)))))))))
 
 ;; (defun org-roam-ui-sync-theme--advice ()
 ;;   "Function which is called after load-theme to sync your current theme with org-roam-ui."
