@@ -45,7 +45,7 @@ import {
 } from '@chakra-ui/react'
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import {
   initialPhysics,
@@ -58,6 +58,7 @@ import {
 } from './config'
 
 import { ThemeContext } from '../util/themecontext'
+import { usePersistantState } from '../util/persistant-state'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -95,8 +96,15 @@ export const Tweaks = (props: TweakProps) => {
     tagColors,
     setTagColors,
   } = props
-  const [showTweaks, setShowTweaks] = useState(true)
+  const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
+
+  const setVisualsCallback = useCallback((val) => setVisuals(val), [])
+  const setPhysicsCallback = useCallback((val: number, phys: string, scale: number) => {
+    setPhysics((curr: typeof initialPhysics) => {
+      return { ...curr, [phys]: val / scale }
+    })
+  }, [])
 
   return !showTweaks ? (
     <Box
@@ -125,6 +133,7 @@ export const Tweaks = (props: TweakProps) => {
       position="relative"
       boxShadow="xl"
       maxH={0.92 * globalThis.innerHeight}
+      marginBottom={10}
     >
       <Box
         display="flex"
@@ -197,7 +206,9 @@ export const Tweaks = (props: TweakProps) => {
                   <Text>Orphans</Text>
                   <Switch
                     onChange={() => {
-                      setFilter({ ...filter, orphans: !filter.orphans })
+                      setFilter((curr: typeof initialFilter) => {
+                        return { ...curr, orphans: !curr.orphans }
+                      })
                     }}
                     isChecked={filter.orphans}
                   ></Switch>
@@ -298,15 +309,26 @@ export const Tweaks = (props: TweakProps) => {
                   value={physics.gravityOn}
                   onChange={() => setPhysics({ ...physics, gravityOn: !physics.gravityOn })}
                 >
+                  <Flex justifyContent="space-between">
+                    <Text>Also in local</Text>
+                    <Switch
+                      onChange={() => {
+                        setPhysics((curr: typeof initialPhysics) => {
+                          return { ...curr, gravityLocal: !curr.gravityLocal }
+                        })
+                      }}
+                      isChecked={physics.gravityLocal}
+                    ></Switch>
+                  </Flex>
                   <SliderWithInfo
                     label="Strength"
                     value={physics.gravity * 10}
-                    onChange={(v) => setPhysics({ ...physics, gravity: v / 10 })}
+                    onChange={(v: number) => setPhysicsCallback(v, 'gravity', 10)}
                   />
                 </EnableSection>
                 <SliderWithInfo
                   value={-physics.charge / 100}
-                  onChange={(value) => setPhysics({ ...physics, charge: -100 * value })}
+                  onChange={(v) => setPhysicsCallback(v, 'gravity', -1 / 100)}
                   label="Repulsive Force"
                 />
                 <EnableSection
@@ -317,20 +339,20 @@ export const Tweaks = (props: TweakProps) => {
                 >
                   <SliderWithInfo
                     value={physics.collisionStrength / 5}
-                    onChange={(value) => setPhysics({ ...physics, collisionStrength: value * 5 })}
+                    onChange={(v) => setPhysicsCallback(v, 'collisionStrength', 1 / 5)}
                     label="Collision Radius"
                     infoText="Easy with this one, high values can lead to a real jiggly mess"
                   />
                 </EnableSection>
                 <SliderWithInfo
                   value={physics.linkStrength * 5}
-                  onChange={(value) => setPhysics({ ...physics, linkStrength: value / 5 })}
+                  onChange={(v) => setPhysicsCallback(v, 'linkStrength', 5)}
                   label="Link Force"
                 />
                 <SliderWithInfo
                   label="Link Iterations"
                   value={physics.linkIts}
-                  onChange={(value) => setPhysics({ ...physics, linkIts: value })}
+                  onChange={(v) => setPhysicsCallback(v, 'linkIts', 1)}
                   min={0}
                   max={6}
                   step={1}
@@ -339,7 +361,7 @@ export const Tweaks = (props: TweakProps) => {
                 <SliderWithInfo
                   label="Viscosity"
                   value={physics.velocityDecay * 10}
-                  onChange={(value) => setPhysics({ ...physics, velocityDecay: value / 10 })}
+                  onChange={(v) => setPhysicsCallback(v, 'velocityDecay', 10)}
                 />
               </VStack>
               <Box>
@@ -361,7 +383,7 @@ export const Tweaks = (props: TweakProps) => {
                         <SliderWithInfo
                           label="Stabilization rate"
                           value={physics.alphaDecay * 50}
-                          onChange={(value) => setPhysics({ ...physics, alphaDecay: value / 50 })}
+                          onChange={(v) => setPhysicsCallback(v, 'alphaDecay', 50)}
                         />
                         <EnableSection
                           label="Center nodes"
@@ -374,7 +396,7 @@ export const Tweaks = (props: TweakProps) => {
                             value={physics.centeringStrength}
                             max={2}
                             step={0.01}
-                            onChange={(v) => setPhysics({ ...physics, centeringStrength: v })}
+                            onChange={(v) => setPhysicsCallback(v, 'centeringStrength', 1)}
                           />
                         </EnableSection>
                       </VStack>
@@ -445,7 +467,7 @@ export const Tweaks = (props: TweakProps) => {
                                 }}
                               />
                             </Tooltip>
-                            <Menu placement="right" closeOnSelect={false} matchWidth>
+                            <Menu isLazy placement="right" closeOnSelect={false} matchWidth>
                               <MenuButton
                                 width={20}
                                 as={Button}
@@ -509,7 +531,7 @@ export const Tweaks = (props: TweakProps) => {
                           </Flex>
                           <Flex alignItems="center" justifyContent="space-between">
                             <Text>Links</Text>
-                            <Menu placement="right">
+                            <Menu isLazy placement="right">
                               <MenuButton
                                 as={Button}
                                 colorScheme=""
@@ -595,7 +617,7 @@ export const Tweaks = (props: TweakProps) => {
                           </Flex>
                           <Flex alignItems="center" justifyContent="space-between">
                             <Text>Accent</Text>
-                            <Menu placement="right">
+                            <Menu isLazy placement="right">
                               <MenuButton
                                 as={Button}
                                 colorScheme=""
@@ -637,32 +659,28 @@ export const Tweaks = (props: TweakProps) => {
                           <ColorMenu
                             colorList={colorList}
                             label="Link highlight"
-                            visuals={visuals}
-                            setVisuals={setVisuals}
+                            setVisuals={setVisualsCallback}
                             value="linkHighlight"
                             visValue={visuals.linkHighlight}
                           />
                           <ColorMenu
                             colorList={colorList}
                             label="Node highlight"
-                            visuals={visuals}
-                            setVisuals={setVisuals}
+                            setVisuals={setVisualsCallback}
                             value="nodeHighlight"
                             visValue={visuals.nodeHighlight}
                           />
                           <ColorMenu
                             colorList={colorList}
                             label="Background"
-                            visuals={visuals}
-                            setVisuals={setVisuals}
+                            setVisuals={setVisualsCallback}
                             value="backgroundColor"
                             visValue={visuals.backgroundColor}
                           />
                           <ColorMenu
                             colorList={colorList}
                             label="Emacs node"
-                            visuals={visuals}
-                            setVisuals={setVisuals}
+                            setVisuals={setVisualsCallback}
                             value="emacsNodeColor"
                             visValue={visuals.emacsNodeColor}
                           />
@@ -744,24 +762,21 @@ export const Tweaks = (props: TweakProps) => {
                   <ColorMenu
                     colorList={colorList}
                     label="Citation node color"
-                    visuals={visuals}
-                    setVisuals={setVisuals}
+                    setVisuals={setVisualsCallback}
                     value={'citeNodeColor'}
                     visValue={visuals.citeNodeColor}
                   />
                   <ColorMenu
                     colorList={colorList}
                     label="Citation link color"
-                    visuals={visuals}
-                    setVisuals={setVisuals}
+                    setVisuals={setVisualsCallback}
                     value={'citeLinkColor'}
                     visValue={visuals.citeLinkColor}
                   />
                   <ColorMenu
                     colorList={colorList}
                     label="Reference link highlight"
-                    visuals={visuals}
-                    setVisuals={setVisuals}
+                    setVisuals={setVisualsCallback}
                     value={'citeLinkHighlightColor'}
                     visValue={visuals.citeLinkHighlightColor}
                   />
@@ -785,31 +800,28 @@ export const Tweaks = (props: TweakProps) => {
                   <ColorMenu
                     colorList={colorList}
                     label="Reference node color"
-                    visuals={visuals}
-                    setVisuals={setVisuals}
+                    setVisuals={setVisualsCallback}
                     value={'refNodeColor'}
                     visValue={visuals.refNodeColor}
                   />
                   <ColorMenu
                     colorList={colorList}
                     label="Reference link color"
-                    visuals={visuals}
-                    setVisuals={setVisuals}
+                    setVisuals={setVisualsCallback}
                     value={'refLinkColor'}
                     visValue={visuals.refLinkColor}
                   />
                   <ColorMenu
                     colorList={colorList}
                     label="Reference link highlight"
-                    visuals={visuals}
-                    setVisuals={setVisuals}
+                    setVisuals={setVisualsCallback}
                     value={'refLinkHighlightColor'}
                     visValue={visuals.refLinkHighlightColor}
                   />
                   <Box>
                     <Flex alignItems="center" justifyContent="space-between">
                       <Text>Labels</Text>
-                      <Menu placement="right">
+                      <Menu isLazy placement="right">
                         <MenuButton
                           as={Button}
                           colorScheme=""
@@ -819,8 +831,8 @@ export const Tweaks = (props: TweakProps) => {
                           {!visuals.labels
                             ? 'Never'
                             : visuals.labels < 2
-                              ? 'On Highlight'
-                              : 'Always'}
+                            ? 'On Highlight'
+                            : 'Always'}
                         </MenuButton>
                         <Portal>
                           {' '}
@@ -869,16 +881,14 @@ export const Tweaks = (props: TweakProps) => {
                         <ColorMenu
                           colorList={colorList}
                           label="Text"
-                          visuals={visuals}
-                          setVisuals={setVisuals}
+                          setVisuals={setVisualsCallback}
                           value="labelTextColor"
                           visValue={visuals.labelTextColor}
                         />
                         <ColorMenu
                           colorList={colorList}
                           label="Background"
-                          visuals={visuals}
-                          setVisuals={setVisuals}
+                          setVisuals={setVisualsCallback}
                           value="labelBackgroundColor"
                           visValue={visuals.labelBackgroundColor}
                         />
@@ -932,8 +942,8 @@ export const Tweaks = (props: TweakProps) => {
                     <ColorMenu
                       colorList={colorList}
                       label="Arrow Color"
-                      visuals={visuals}
-                      setVisuals={setVisuals}
+                      key="arrow"
+                      setVisuals={setVisualsCallback}
                       value="arrowsColor"
                       visValue={visuals.arrowsColor}
                     />
@@ -1045,7 +1055,7 @@ export const Tweaks = (props: TweakProps) => {
                     <Text>Expand Node</Text>
                     <InfoTooltip infoText="View only the node and its direct neighbors" />
                   </Flex>
-                  <Menu placement="right">
+                  <Menu isLazy placement="right">
                     <MenuButton
                       as={Button}
                       rightIcon={<ChevronDownIcon />}
@@ -1077,7 +1087,7 @@ export const Tweaks = (props: TweakProps) => {
                 </Flex>
                 <Flex alignItems="center" justifyContent="space-between">
                   <Text>Open in Emacs</Text>
-                  <Menu placement="right">
+                  <Menu isLazy placement="right">
                     <MenuButton
                       as={Button}
                       rightIcon={<ChevronDownIcon />}
@@ -1111,7 +1121,7 @@ export const Tweaks = (props: TweakProps) => {
                 </Flex>
                 <Flex alignItems="center" justifyContent="space-between">
                   <Text>Follow Emacs by...</Text>
-                  <Menu placement="right">
+                  <Menu isLazy placement="right">
                     <MenuButton
                       as={Button}
                       rightIcon={<ChevronDownIcon />}
@@ -1136,37 +1146,35 @@ export const Tweaks = (props: TweakProps) => {
                     </Portal>
                   </Menu>
                 </Flex>
-                {/* <Flex alignItems="center" justifyContent="space-between">
-                      <Flex>
-                        <Text>Follow local graph</Text>
-                        <InfoTooltip infoText="When in local mode and opening a node that already exists in Emacs, should I add that local graph or open the new one?" />
-                      </Flex>
-                      <Menu placement="right">
-                        <MenuButton
-                          as={Button}
-                          rightIcon={<ChevronDownIcon />}
-                          colorScheme=""
-                          color="black"
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Flex>
+                    <Text>Local graph</Text>
+                    <InfoTooltip infoText="When in local mode and clicking a new node, should I add that node's local graph or open the new one?" />
+                  </Flex>
+                  <Menu isLazy placement="right">
+                    <MenuButton
+                      as={Button}
+                      rightIcon={<ChevronDownIcon />}
+                      colorScheme=""
+                      color="black"
+                    >
+                      <Text>{behavior.localSame === 'add' ? 'Add' : 'Replace'}</Text>
+                    </MenuButton>
+                    <Portal>
+                      {' '}
+                      <MenuList bgColor="gray.200" zIndex="popover">
+                        <MenuItem
+                          onClick={() => setBehavior({ ...behavior, localSame: 'replace' })}
                         >
-                          <Text>{behavior.localSame === 'add' ? 'Add' : 'New'}</Text>
-                        </MenuButton>
-                        <Portal>
-                          {' '}
-                          <MenuList bgColor="gray.200" zIndex="popover">
-                            <MenuItem
-                              onClick={() => setBehavior({ ...behavior, localSame: 'new' })}
-                            >
-                              Open that nodes graph
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => setBehavior({ ...behavior, localSame: 'add' })}
-                            >
-                              Add node to local graph
-                            </MenuItem>
-                          </MenuList>
-                        </Portal>
-                      </Menu>
-                    </Flex> */}
+                          Open that nodes graph
+                        </MenuItem>
+                        <MenuItem onClick={() => setBehavior({ ...behavior, localSame: 'add' })}>
+                          Add node to local graph
+                        </MenuItem>
+                      </MenuList>
+                    </Portal>
+                  </Menu>
+                </Flex>
                 <SliderWithInfo
                   label="Zoom speed"
                   value={behavior.zoomSpeed}
@@ -1225,7 +1233,7 @@ export const SliderWithInfo = ({
   const { onChange, label, infoText } = rest
   const { highlightColor } = useContext(ThemeContext)
   return (
-    <Box>
+    <Box key={label}>
       <Box display="flex" alignItems="flex-end">
         <Text>{label}</Text>
         {infoText && <InfoTooltip infoText={infoText} />}
@@ -1253,7 +1261,7 @@ export interface EnableSectionProps {
 export const EnableSection = (props: EnableSectionProps) => {
   const { value, onChange, label, infoText, children } = props
   return (
-    <Box paddingTop={2}>
+    <Box paddingTop={2} key={label}>
       <Box display="flex" justifyContent="space-between" paddingBottom={2}>
         <Box display="flex" alignItems="center">
           <Text>{label}</Text>
@@ -1279,7 +1287,7 @@ export interface DropDownMenuProps {
 export const DropDownMenu = (props: DropDownMenuProps) => {
   const { textArray, onClickArray, displayValue } = props
   return (
-    <Menu placement="right">
+    <Menu isLazy placement="right">
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
         {displayValue}
       </MenuButton>
@@ -1287,7 +1295,7 @@ export const DropDownMenu = (props: DropDownMenuProps) => {
         {' '}
         <MenuList zIndex="popover">
           {textArray.map((option, i) => {
-            ; <MenuItem onClick={onClickArray[i]}> {option} </MenuItem>
+            ;<MenuItem onClick={onClickArray[i]}> {option} </MenuItem>
           })}
         </MenuList>
       </Portal>
@@ -1299,17 +1307,27 @@ export interface ColorMenuProps {
   label: string
   colorList: string[]
   value: string
-  visuals: typeof initialVisuals
   visValue: string
   setVisuals?: any
 }
 
 export const ColorMenu = (props: ColorMenuProps) => {
-  const { label, colorList, value, visuals, visValue, setVisuals } = props
+  const { label, colorList, value, visValue, setVisuals } = props
+
+  const clickCallback = useCallback(
+    (color) =>
+      setVisuals((curr: typeof initialVisuals) => {
+        return {
+          ...curr,
+          [value]: color,
+        }
+      }),
+    [],
+  )
   return (
     <Flex alignItems="center" justifyContent="space-between">
       <Text>{label}</Text>
-      <Menu placement="right">
+      <Menu isLazy placement="right">
         <MenuButton as={Button} colorScheme="" color="black" rightIcon={<ChevronDownIcon />}>
           {<Box bgColor={visValue} borderRadius="sm" height={6} width={6}></Box>}
         </MenuButton>
@@ -1317,7 +1335,7 @@ export const ColorMenu = (props: ColorMenuProps) => {
           {' '}
           <MenuList minW={10} zIndex="popover" bgColor="gray.200">
             <MenuItem
-              onClick={() => setVisuals({ ...visuals, [value]: '' })}
+              onClick={() => clickCallback('')}
               justifyContent="space-between"
               alignItems="center"
               display="flex"
@@ -1327,12 +1345,7 @@ export const ColorMenu = (props: ColorMenuProps) => {
             {colorList.map((color: string) => (
               <MenuItem
                 key={color}
-                onClick={() =>
-                  setVisuals({
-                    ...visuals,
-                    [value]: color,
-                  })
-                }
+                onClick={() => clickCallback(color)}
                 justifyContent="space-between"
                 alignItems="center"
                 display="flex"

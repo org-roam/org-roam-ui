@@ -20,15 +20,16 @@ export const initialPhysics = {
   collision: true,
   collisionStrength: 20,
   centering: true,
-  centeringStrength: 0.05,
+  centeringStrength: 0.2,
   linkStrength: 0.3,
   linkIts: 1,
-  alphaDecay: 0.1,
+  alphaDecay: 0.05,
   alphaTarget: 0,
   alphaMin: 0,
   velocityDecay: 0.25,
   gravity: 0.3,
   gravityOn: true,
+  gravityLocal: false,
 }
 
 export const initialFilter = {
@@ -117,6 +118,7 @@ export const initialMouse = {
   highlight: 'hover',
   local: 'click',
   follow: 'double',
+  context: 'right',
 }
 
 export const colorList = [

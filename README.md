@@ -208,6 +208,10 @@ and we'll try to help you ASAP!
 
 While we try to optimize the display of the graph, there is only so much we can do. For largish networks (>2k nodes) dragging the graph around a lot can cause some performance issues, but there are a few things you can do to speed it up.
 
+#### Close the tweaks panel
+
+At the time of writing (Aug 8) it is very much not optimized, and shifting between global and local mode or 2d or 3d is noticeably slower with the tweaks panel open than without. This will be fixed in a future release.
+
 #### Use a Chromium based browser
 
 As much as it saddens us to say, Firefox's rendering engine is quite a bit slower than its Chromium cousins. Compare the performance of the two and see if that's the main issue first.

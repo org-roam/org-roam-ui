@@ -84,6 +84,10 @@ function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
 }
 
 export function GraphPage() {
+  const [threeDim, setThreeDim] = usePersistantState('3d', false)
+  const [tagColors, setTagColors] = usePersistantState<TagColors>('tagCols', {})
+  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
+
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
   const [visuals, setVisuals] = usePersistantState('visuals', initialVisuals)
@@ -102,7 +106,6 @@ export function GraphPage() {
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
     const currentGraphData = currentGraphDataRef.current
     const oldNodeById = nodeByIdRef.current
-    const oldLinksByNodeId = linksByNodeIdRef.current
     tagsRef.current = orgRoamGraphData.tags ?? []
     const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
       return {
@@ -186,7 +189,6 @@ export function GraphPage() {
       const orgRoamGraphDataClone = JSON.parse(
         JSON.stringify(orgRoamGraphDataWithFileLinksAndBadNdes),
       )
-      console.log(orgRoamGraphDataClone)
       currentGraphDataRef.current = orgRoamGraphDataClone
       setGraphData(orgRoamGraphDataClone)
       return
@@ -203,7 +205,6 @@ export function GraphPage() {
       ...Object.keys(nodeByIdRef.current)
         .filter((id) => !oldNodeById[id])
         .map((id) => {
-          console.log(id)
           return nodeByIdRef.current[id] as NodeObject
         }),
     ]
@@ -215,49 +216,7 @@ export function GraphPage() {
         [id]: index,
       }
     }, {})
-    console.log(newNodes)
-    console.log(nodeIndex)
-    /* const currentGraphIndexByLink = currentGraphData.links.reduce<{[key: string]: number}>((acc, link, index) => {
-*   const [source, target] = normalizeLinkEnds(link)
-*     const sourceTarget=source+target
-*     return  {
-*         ...acc,
-*  [sourceTarget]: index
-* }
-},{}) */
-    /* const newLinks = [
-     *   ...currentGraphData!.links.filter((link) => {
-     *     const [source, target] = normalizeLinkEnds(link)
-     *     if (!nodeByIdRef.current[source] || !nodeByIdRef.current[target]) {
-     *       return false
-     *     }
-     *     if (
-     *       !linksByNodeIdRef.current[source]!.some(
-     *         (link) => link.target === target || link.source === target,
-     *       ) &&
-     *       !linksByNodeIdRef.current[target]!.some(
-     *         (link) => link.target === source || link.source === source,
-     *       )
-     *     ) {
-     *       return false
-     *     }
-     *     return true
-     *   }),
-     *   ...Object.keys(linksByNodeIdRef.current).flatMap((id) => {
-     *     if (!oldLinksByNodeId[id]!) {
-     *       return linksByNodeIdRef.current![id!]!
-     *     }
-     *     return (
-     *       linksByNodeIdRef.current![id]!.filter((link) => {
-     *         const [source, target] = normalizeLinkEnds(link)
-     *         return !oldLinksByNodeId[id]!.some(
-     *           (oldLink) => oldLink.source === source && oldLink.target === target,
-     *         )!
-     *       }) ?? []
-     *     )
-     *   }),
-     * ]
-     */
+
     const newerLinks = links.map((link) => {
       const [source, target] = normalizeLinkEnds(link)
       return {
@@ -278,9 +237,6 @@ export function GraphPage() {
 
   const { setEmacsTheme } = useContext(ThemeContext)
 
-  const [threeDim, setThreeDim] = usePersistantState('3d', false)
-  const [tagColors, setTagColors] = usePersistantState<TagColors>('tagCols', {})
-  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
   const scopeRef = useRef<Scope>({ nodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
@@ -306,28 +262,28 @@ export function GraphPage() {
       ),
     )
     if (command === 'zoom') {
-      console.log(sr)
       if (sr.nodeIds.length) {
-        console.log('emptying')
-        console.log('scope ' + sr.nodeIds)
         setScope({ nodeIds: [] })
       }
-      setTimeout(() => fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]), 50)
+      setTimeout(
+        () => fg.zoomToFit(speed, padding, (node: NodeObject) => nodes[node.id as string]),
+        50,
+      )
       return
     }
     if (!sr.nodeIds.length) {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
-        /* fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]) */
-        fg.centerAt(0, 0, speed)
+        fg.centerAt(0, 0, 10)
+        fg.zoomToFit(1, padding)
       }, 50)
       return
     }
     if (bh.localSame !== 'add') {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
-        /* fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]) */
-        fg.centerAt(0, 0, speed)
+        fg.centerAt(0, 0, 10)
+        fg.zoomToFit(1, padding)
       }, 50)
       return
     }
@@ -341,8 +297,8 @@ export function GraphPage() {
     ) {
       setScope({ nodeIds: [emacsNode] })
       setTimeout(() => {
-        /* fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]) */
-        fg.centerAt(0, 0, speed)
+        fg.centerAt(0, 0, 10)
+        fg.zoomToFit(1, padding)
       }, 50)
       return
     }
@@ -350,10 +306,14 @@ export function GraphPage() {
       ...currentScope,
       nodeIds: [...currentScope.nodeIds, emacsNode as string],
     }))
-    setTimeout(() => fg.zoomToFit(speed, padding, (node: OrgRoamNode) => nodes[node.id!]), 50)
+    setTimeout(() => {
+      fg.centerAt(0, 0, 10)
+      fg.zoomToFit(1, padding)
+    }, 50)
   }
 
   useEffect(() => {
+    // initialize websocket
     WebSocketRef.current = new ReconnectingWebSocket('ws://localhost:35903')
     WebSocketRef.current.addEventListener('open', (event: any) => {
       console.log('Connection with Emacs established')
@@ -393,6 +353,19 @@ export function GraphPage() {
       }
     })
   }, [])
+
+  useEffect(() => {
+    const fg = graphRef.current
+    if (!fg || scope.nodeIds.length > 1) {
+      return
+    }
+    if (!scope.nodeIds.length) {
+      return
+    }
+    setTimeout(() => {
+      fg.zoomToFit(5, 200)
+    }, 50)
+  }, [scope.nodeIds])
 
   if (!graphData) {
     return null
@@ -486,16 +459,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
 
+  const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
+  const [contextPos, setContextPos] = useState([0, 0])
+
   const theme = useTheme()
 
   const { emacsTheme } = useContext<ThemeContextProps>(ThemeContext)
 
   const handleLocal = (node: OrgRoamNode, add: string) => {
-    if (scope.nodeIds.includes(node.id as string)) {
-      return
-    }
     if (add === 'replace') {
       setScope({ nodeIds: [node.id] })
+      return
+    }
+    if (scope.nodeIds.includes(node.id as string)) {
       return
     }
     setScope((currentScope: Scope) => ({
@@ -523,7 +499,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     sendMessageToEmacs('create', { id: node.id, title: node.title, ref: node.properties.ROAM_REFS })
   }
 
-  const handleClick = (click: string, node: OrgRoamNode) => {
+  const openContextMenu = (node: OrgRoamNode, event: any) => {
+    setContextPos([event.pageX, event.pageY])
+    setRightClickedNode(node)
+    onOpen()
+  }
+
+  const handleClick = (click: string, node: OrgRoamNode, event: any) => {
     switch (click) {
       //mouse.highlight:
       case mouse.local: {
@@ -534,18 +516,38 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         openNodeInEmacs(node)
         break
       }
+      case mouse.context: {
+        openContextMenu(node, event)
+      }
       default:
         break
     }
   }
-  const getNeighborNodes = (id: string) => {
-    const links = linksByNodeId[id]! ?? []
-    return Object.fromEntries(
-      [id as string, ...links.flatMap((link) => [link.source, link.target])].map((nodeId) => [
-        nodeId,
-        {},
-      ]),
-    )
+  const findNthNeighbors = (ids: string[], n: number) => {
+    let queue = [ids[0]]
+    let todo: string[] = []
+    const completed = [ids[0]]
+    Array.from({ length: n }, () => {
+      queue.forEach((node) => {
+        const links = linksByNodeId[node as string] ?? []
+        links.forEach((link) => {
+          const [sourceId, targetId] = normalizeLinkEnds(link)
+          if (!completed.includes(sourceId)) {
+            todo.push(sourceId)
+            return
+          }
+          if (!completed.includes(targetId)) {
+            todo.push(targetId)
+            return
+          }
+          return
+        })
+      })
+      queue = todo
+      todo.forEach((neighbor) => neighbor && completed.push(neighbor))
+      todo = []
+    })
+    return completed
   }
 
   const centralHighlightedNode = useRef<NodeObject | null>(null)
@@ -577,7 +579,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }, [centralHighlightedNode.current, linksByNodeId])
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
-  const filteredLinksByNodeId = useRef<LinksByNodeId>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
     const filteredNodes = graphData?.nodes
@@ -638,57 +639,79 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const filteredLinks = graphData.links.filter((link) => {
       const [sourceId, targetId] = normalizeLinkEnds(link)
       if (
-        filter.bad ||
-        filter.tagsBlacklist.length ||
-        filter.tagsWhitelist.length ||
-        filter.filelessCites
+        !filteredNodeIds.includes(sourceId as string) ||
+        !filteredNodeIds.includes(targetId as string)
       ) {
-        return (
-          filteredNodeIds.includes(sourceId as string) &&
-          filteredNodeIds.includes(targetId as string)
-        )
+        return false
       }
       const linkRoam = link as OrgRoamLink
       return filter.parents || linkRoam.type !== 'parent'
     })
-    return { filteredNodes, filteredLinks }
+    return { nodes: filteredNodes, links: filteredLinks }
   }, [filter, graphData])
 
-  const scopedGraphData = useMemo(() => {
-    const scopedNodes = filteredGraphData.filteredNodes.filter((node) => {
-      const links = linksByNodeId[node.id as string] ?? []
-      return (
-        scope.nodeIds.includes(node.id as string) ||
-        links.some((link) => {
-          return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
-        })
-      )
-    })
+  const [scopedGraphData, setScopedGraphData] = useState<GraphData>({ nodes: [], links: [] })
 
+  useEffect(() => {
+    if (!scope.nodeIds.length) {
+      return
+    }
+    const oldScopedNodes = scope.nodeIds.length > 1 ? scopedGraphData.nodes : []
+    const oldScopedNodeIds = oldScopedNodes.map((node) => node.id as string)
+    const neighbs = findNthNeighbors(scope.nodeIds, 1)
+    const newScopedNodes = filteredGraphData.nodes
+      .filter((node) => {
+        if (oldScopedNodes.length) {
+          if (oldScopedNodeIds.includes(node.id as string)) {
+            return false
+          }
+          const links = linksByNodeId[node.id as string] ?? []
+          return links.some((link) => {
+            return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
+          })
+        }
+        return neighbs.includes(node.id as string)
+        // this creates new nodes, to separate them from the nodes in the global graph
+        // and positions them in the center, so that the camera is not so jumpy
+      })
+      .map((node) => {
+        return { ...node, x: 0, y: 0, vy: 0, vx: 0 }
+      })
+    const scopedNodes = [...oldScopedNodes, ...newScopedNodes]
     const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-    const scopedLinks = filteredGraphData.filteredLinks.filter((link) => {
-      // we need to cover both because force-graph modifies the original data
-      // but if we supply the original data on each render, the graph will re-render sporadically
-      const [sourceId, targetId] = normalizeLinkEnds(link)
-      return (
-        scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
-      )
-    })
-
-    return scope.nodeIds.length === 0
-      ? { nodes: filteredGraphData.filteredNodes, links: filteredGraphData.filteredLinks }
-      : {
-          nodes: scopedNodes,
-          links: scopedLinks,
+    const oldScopedLinks = scope.nodeIds.length > 1 ? scopedGraphData.links : []
+    const newScopedLinks = filteredGraphData.links
+      .filter((link) => {
+        // we need to cover both because force-graph modifies the original data
+        // but if we supply the original data on each render, the graph will re-render sporadically
+        const [sourceId, targetId] = normalizeLinkEnds(link)
+        if (
+          oldScopedLinks.length &&
+          oldScopedNodeIds.includes(targetId) &&
+          oldScopedNodeIds.includes(sourceId)
+        ) {
+          return false
         }
+        return (
+          scopedNodeIds.includes(sourceId as string) && scopedNodeIds.includes(targetId as string)
+        )
+      })
+      .map((link) => {
+        const [sourceId, targetId] = normalizeLinkEnds(link)
+        return { source: sourceId, target: targetId }
+      })
+
+    const scopedLinks = [...oldScopedLinks, ...newScopedLinks]
+
+    setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
   }, [filter, scope, graphData])
 
   useEffect(() => {
     ;(async () => {
       const fg = graphRef.current
       const d3 = await d3promise
-      if (physics.gravityOn) {
+      if (physics.gravityOn && !(scope.nodeIds.length && !physics.gravityLocal)) {
         fg.d3Force('x', d3.forceX().strength(physics.gravity))
         fg.d3Force('y', d3.forceY().strength(physics.gravity))
         threeDim && fg.d3Force('z', d3.forceZ().strength(physics.gravity))
@@ -708,18 +731,18 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         physics.collision ? d3.forceCollide().radius(physics.collisionStrength) : null,
       )
     })()
-  }, [physics])
+  }, [physics, threeDim, scope])
 
   // Normally the graph doesn't update when you just change the physics parameters
   // This forces the graph to make a small update when you do
   useEffect(() => {
     graphRef.current?.d3ReheatSimulation()
-  }, [physics])
+  }, [physics, scope.nodeIds.length])
 
   //shitty handler to check for doubleClicks
   const lastNodeClickRef = useRef(0)
 
-  const [opacity, setOpacity] = useState<number>(1)
+  const [opacity, setOpacity] = useState(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: visuals.animationSpeed,
     algorithm: algos[visuals.algorithmName],
@@ -907,19 +930,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const [dragging, setDragging] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
-  const [contextPos, setContextPos] = useState([0, 0])
-  const openContextMenu = (node: OrgRoamNode, event: any) => {
-    setContextPos([event.pageX, event.pageY])
-    setRightClickedNode(node)
-    onOpen()
-  }
 
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
-    graphData: scopedGraphData,
+    graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
     width: windowWidth,
     height: windowHeight,
     backgroundColor: theme.colors.gray[visuals.backgroundColor],
+    warmupTicks: scope.nodeIds.length === 1 ? 100 : 0,
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode)
@@ -1057,9 +1074,9 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
       lastNodeClickRef.current = event.timeStamp
       if (isDoubleClick) {
-        return handleClick('double', node)
+        return handleClick('double', node, event)
       }
-      return handleClick('click', node)
+      return handleClick('click', node, event)
     },
     onBackgroundClick: () => {
       onClose()
@@ -1085,9 +1102,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
     onNodeRightClick: (nodeArg, event) => {
       const node = nodeArg as OrgRoamNode
-      openContextMenu(node, event)
 
-      //handleClick('right', node)
+      handleClick('right', node, event)
     },
     onNodeDrag: (node) => {
       onClose()

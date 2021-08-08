@@ -241,7 +241,7 @@ loaded. Returns `ref' if an entry could not be found."
     (append head (list el) tail)))
 
 (defun org-roam-ui--citekey-to-ref (citekey)
-  "Convert a citekey property (most likely with a `cite:' prefix) to just a key
+  "Convert a CITEKY property (most likely with a `cite:' prefix) to just a key.
 
 This method is mostly taken from `org-roam-bibtex' see https://github.com/org-roam/org-roam-bibtex/blob/919ec8d837a7a3bd25232bdba17a0208efaefb2a/orb-utils.el#L289
 but is has been adapted to operate on a sting instead of a node. Requires
