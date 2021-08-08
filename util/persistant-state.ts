@@ -14,13 +14,16 @@ export function usePersistantState<V>(
   if (calculatedDefaultValue !== storageValue) {
     storage.update(calculatedDefaultValue)
   }
-
-  const [value, setValue] = useState<V>(calculatedDefaultValue)
+  const calculatedDefaultValueObject =
+    typeof storageValue === 'object'
+      ? { ...storageValue, ...calculatedDefaultValue }
+      : calculatedDefaultValue
+  const [value, setValue] = useState<V>(calculatedDefaultValueObject)
 
   // change state gracefully when changing the storageKey
   useEffect(() => {
-    if (value !== calculatedDefaultValue) {
-      setValue(calculatedDefaultValue)
+    if (value !== calculatedDefaultValueObject) {
+      setValue(calculatedDefaultValueObject)
     }
   }, [storageKey])
   const set = (newValueOrFn: V | ((v: V) => V)) => {
