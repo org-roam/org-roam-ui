@@ -108,13 +108,12 @@ This can lead to some jank."
   :type 'boolean)
 
 (defcustom org-roam-ui-retitle-ref-nodes t
-  "Should org-roam-ui use `org-roam-bibtex' to try to update the title of a
-reference node that has an underlying note, using information from the bibliography."
+  "Should org-roam-ui use `org-roam-bibtex' try to retitle reference nodes?"
   :group 'org-roam-ui
   :type 'boolean)
 
 (defcustom org-roam-ui-ref-title-template "%^{author-abbrev} (%^{year}) %^{title}"
-  "A template for title creation, used for references without an associated nodes.
+  "A template for title creation, used for references without associated nodes.
 
 This uses `orb--pre-expand-template' under the hood and therefore only org-style
 capture `%^{...}' are supported."
@@ -130,8 +129,12 @@ Defaults to #'browse-url."
 
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
+
 (defvar oru-ws nil
   "The websocket for org-roam-ui.")
+
+(defvar org-roam-ui-ws
+  "The websocket server for org-roam-ui.")
 
 ;;;###autoload
 (define-minor-mode
@@ -201,14 +204,12 @@ This serves the web-build and API over HTTP."
     (websocket-server-close org-roam-ui-ws)
     (httpd-stop)
     (remove-hook 'after-save-hook #'org-roam-ui--on-save)
-    (org-roam-ui-follow-mode -1)
-    ))))
+    (org-roam-ui-follow-mode -1)))))
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer."
   (when (org-roam-buffer-p)
-    (org-roam-ui--send-graphdata))
-  )
+    (org-roam-ui--send-graphdata)))
 
 
 (defun org-roam-ui--check-orb-keywords ()
@@ -219,7 +220,7 @@ This serves the web-build and API over HTTP."
       (setq orb-preformat-keywords (append orb-preformat-keywords (list keyword)))))))
 
 (defun org-roam-ui--find-ref-title (ref)
-  "Find the title of the bibtex entry keyed by `ref'.
+  "Find the title of the bibtex entry keyed by `REF'.
 
 Requires `org-roam-bibtex' and `bibtex-completion' (a dependency of `orb') to be
 loaded. Returns `ref' if an entry could not be found."
@@ -235,17 +236,18 @@ loaded. Returns `ref' if an entry could not be found."
     ref))
 
 (defun org-roam-ui--replace-nth (el n lst)
-  "Non-destructively replace the `n'th element of `lst' with `el'."
+  "Non-destructively replace the `N'th element of `LST' with `EL'."
   (let ((head (butlast lst (- (length lst) n)))
         (tail (nthcdr (+ n 1) lst)))
     (append head (list el) tail)))
 
 (defun org-roam-ui--citekey-to-ref (citekey)
-  "Convert a CITEKY property (most likely with a `cite:' prefix) to just a key.
+  "Convert a CITEKEY property (most likely with a `cite:' prefix) to just a key.
 
-This method is mostly taken from `org-roam-bibtex' see https://github.com/org-roam/org-roam-bibtex/blob/919ec8d837a7a3bd25232bdba17a0208efaefb2a/orb-utils.el#L289
+This method is mostly taken from `org-roam-bibtex'
+see https://github.com/org-roam/org-roam-bibtex/blob/919ec8d837a7a3bd25232bdba17a0208efaefb2a/orb-utils.el#L289
 but is has been adapted to operate on a sting instead of a node. Requires
-`org-ref' to be loaded. Returns the `key' or `nil' if the format does not match
+`org-ref' to be loaded. Returns the `key' or nil if the format does not match
 the `org-ref-cite-re'"
   (if-let ((boundp 'org-ref-cite-re)
            (citekey-list (split-string-and-unquote citekey)))
@@ -255,12 +257,12 @@ the `org-ref-cite-re'"
             (throw 'found (match-string 2 c)))))))
 
 (defun org-roam-ui--retitle-node (node)
-  "Replace the title of citation nodes with associated notes.
+  "Replace the title of citation NODE with associated notes.
 
 A new title is created using information from the bibliography and formatted
 according to `org-roam-ui-ref-title-template', just like the citation nodes with
 a note are. It requires `org-roam-bibtex' and it's dependencies
-(`bibtex-completion' and `org-ref') to be loaded.
+\(`bibtex-completion' and `org-ref'\) to be loaded.
 
 Returns the node with an updated title if the current node is a reference node
 and the key was found in the bibliography, otherwise the node is returned
@@ -275,6 +277,7 @@ unchanged."
     node))
 
 (defun org-roam-ui--create-fake-node (ref)
+  "Create a fake node for REF without a source note."
   (list ref ref (org-roam-ui--find-ref-title ref) 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
 
 (defun org-roam-ui--send-graphdata ()
@@ -322,14 +325,9 @@ unchanged."
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
-      (websocket-send-text oru-ws (json-encode `((type . "command") (data
-. ((commandName . "follow") (id . ,node))))))))))
-
-
-;; (defun org-roam-ui-sync-theme--advice ()
-;;   "Function which is called after load-theme to sync your current theme with org-roam-ui."
-;;   (message "Syncing theme")
-;;   (websocket-send-text oru-ws (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
+      (websocket-send-text oru-ws (json-encode `((type . "command")
+                                                 (data. ((commandName . "follow")
+                                                         (id . ,node))))))))))
 
 
 (defun org-roam-ui--update-theme ()
@@ -347,16 +345,6 @@ unchanged."
      org-roam-ui-custom-theme))
   ui-theme))
 
-;; (defservlet* graph application/json ()
-;;   (let* ((nodes-columns [id file title level])
-;;          (links-columns [source dest type])
-;;          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :from nodes]))
-;;          (links-db-rows (org-roam-db-query `[:select ,links-columns :from links :where (or (= type "id") (= type "cite"))]))
-;;          (response (json-encode `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-columns nil)) nodes-db-rows))
-;;                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))))))
-;;     (insert response)
-;;     (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*")))
-
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
 ROWS is the sql result, while COLUMN-NAMES is the columns to use."
@@ -372,7 +360,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
                   res)
       (setq rows nil)))
     res))
-
 
 ;; (defservlet* id/:id text/html ()
 ;;   (let ((node (org-roam-populate (org-roam-node-create :id id)))
@@ -413,8 +400,7 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
         `(cyan . ,(face-foreground font-lock-constant-face))
         `(blue . ,(face-foreground font-lock-keyword-face))
         `(violet . ,(face-foreground font-lock-constant-face))
-        `(magenta . ,(face-foreground font-lock-preprocessor-face))
-        ))
+        `(magenta . ,(face-foreground font-lock-preprocessor-face))))
 
 
 ;;;; commands
@@ -440,7 +426,7 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
   (websocket-send-text oru-ws (json-encode `((type . "command") (data .
-      ((commandName . "local") (id . ,node)))))))
+      ((commandName . "local") (id . ,node) (speed . ,speed) (padding . ,padding)))))))
   (message "No node found."))
 
 
@@ -456,8 +442,7 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
     (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
     (message "Org-Roam-UI will now follow you around."))
       (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
-      (message "Org-Roam-UI will now leave you alone.")
-  ))
+      (message "Org-Roam-UI will now leave you alone.")))
 
 
 (defun orui-sync-theme ()
