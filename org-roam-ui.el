@@ -138,7 +138,7 @@ Defaults to #'browse-url."
   org-roam-ui-mode
   "Enable org-roam-ui.
 This serves the web-build and API over HTTP."
-  :lighter "org-roam-ui "
+  :lighter " org-roam-ui"
   :global t
   :group 'org-roam-ui
   :init-value nil
@@ -447,7 +447,7 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
 ;;;###autoload
 (define-minor-mode org-roam-ui-follow-mode
   "Set whether ORUI should follow your every move in Emacs."
-  :lighter "org-roam-ui "
+  :lighter " org-roam-ui"
   :global t
   :group 'org-roam-ui
   :init-value nil
