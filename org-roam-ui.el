@@ -317,6 +317,9 @@ unchanged."
                      /* Make sure the position of the child node is after the position of the parent, this stops cases where another node with the
                         same name as the parent is found later in the file. */
                      AND nodes.pos > N.pos
+                     /* Make sure the level of the parent node is less than the level of the current node, this avoid cases where there is a sibling
+                        node that has the same name as the parent, but appears closer (smaller pos_diff) to the actual node in the file. */
+                     AND N.level < nodes.level
                  )
                  /* Get the (src, dest) tuples for our links. */
                  SELECT results.src, results.dst
