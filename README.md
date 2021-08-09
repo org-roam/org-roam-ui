@@ -128,7 +128,15 @@ Org-Roam-UI exposes a few variables, but most of the customization is done in th
 
 #### Following
 
-ORUI follows you around Emacs by default. To disable this, set
+ORUI follows you around Emacs in a local view by default.
+
+If you want to roam in a global graph, set
+
+```emacs-lisp
+(setq org-roam-ui-follow-method 'global)
+```
+
+To disable this, set
 
 ```emacs-lisp
 (setq org-roam-ui-follow nil)
@@ -216,7 +224,7 @@ At the time of writing (Aug 8) it is very much not optimized, and shifting betwe
 
 As much as it saddens us to say, Firefox's rendering engine is quite a bit slower than its Chromium cousins. Compare the performance of the two and see if that's the main issue first.
 
-#### Turn of the particles
+#### Turn off the particles
 
 I know, very cool to see those little guys travel up and down your notes, but very slow, especially in 3D mode.
 
