@@ -17,10 +17,11 @@ org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >= 2
 
 ### Manually
 
-Install `websocket.el`
+Install `websocket.el` and `simple-httpd`
 
 ```emacs-lisp
 M-x package-install websocket
+M-x package-install simple-httpd
 ```
 
 Clone the repo:
@@ -33,7 +34,6 @@ git clone git@github.com:org-roam/org-roam-ui.git
 Load in Emacs (add to config):
 
 ```lisp
-(require 'websocket)
 (add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
 (load-library "org-roam-ui")
 ```
