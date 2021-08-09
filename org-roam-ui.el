@@ -155,7 +155,7 @@ This serves the web-build and API over HTTP."
    (org-roam-ui-mode
    ;;; check if the default keywords actually exist on `orb-preformat-keywords'
    ;;; else add them
-    (org-roam-ui--check-orb-keywords)
+    ;; (org-roam-ui--check-orb-keywords)   ;
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
@@ -226,8 +226,10 @@ Requires `org-roam-bibtex' and `bibtex-completion' (a dependency of `orb') to be
 loaded. Returns `ref' if an entry could not be found."
   (if (and org-roam-ui-find-ref-title
            (fboundp 'bibtex-completion-get-entry)
-           (fboundp 'orb--pre-expand-template))
-      (if-let ((entry (bibtex-completion-get-entry ref)))
+           (fboundp 'orb--pre-expand-template)
+           (boundp 'orb-preformat-keywords))
+      (if-let ((entry (bibtex-completion-get-entry ref))
+               (orb-preformat-keywords (append orb-preformat-keywords '("author-abbrev" "year" "title"))))
           ;; Create a fake capture template list, only the actual capture at 3
           ;; matters. Interpolate the bibtex entries, and extract the filled
           ;; template from the return value.
