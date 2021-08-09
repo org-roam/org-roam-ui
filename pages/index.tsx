@@ -1038,12 +1038,20 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     onNodeClick: (nodeArg: NodeObject, event: any) => {
       const node = nodeArg as OrgRoamNode
       contextMenu.onClose()
-      const isDoubleClick = event.timeStamp - lastNodeClickRef.current < 400
+      const doubleClickTimeBuffer = 200
+      const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
       lastNodeClickRef.current = event.timeStamp
       if (isDoubleClick) {
         return handleClick('double', node, event)
       }
-      return handleClick('click', node, event)
+
+      const prevNodeClickTime = lastNodeClickRef.current
+      return setTimeout(() => {
+        if (lastNodeClickRef.current !== prevNodeClickTime) {
+          return
+        }
+        return handleClick('click', node, event)
+      }, doubleClickTimeBuffer)
     },
     onBackgroundClick: () => {
       contextMenu.onClose()
