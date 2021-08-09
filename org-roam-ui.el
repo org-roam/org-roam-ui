@@ -127,6 +127,11 @@ Defaults to #'browse-url."
   :group 'org-roam-ui
   :type 'function)
 
+(defcustom org-roam-ui-hierarchical-links t
+  "Should org-roam-ui include the implied links from the org hierarchy?"
+  :group 'org-roam-ui
+  :type 'boolean)
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 
@@ -282,6 +287,65 @@ unchanged."
   "Create a fake node for REF without a source note."
   (list ref ref (org-roam-ui--find-ref-title ref) 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
 
+
+(defun org-roam-ui--create-hierarchical-links ()
+  "Create explicit links of type 'hierarchy' from the implied links in the org hierarchy."
+  (let ((links (org-roam-db-query
+                "WITH hierarchy as ( /* Create a cte for easy access later. */
+                     /* Link all nodes to their file node, include 0 as the file node level and the distance between the node and the file start. */
+                     SELECT nodes.id as src, parent.id as dst, parent.level, (nodes.pos - parent.pos) as pos_diff
+                     FROM nodes
+                     INNER JOIN nodes as parent
+                     /* Node and it's file will have the same file. */
+                     ON nodes.file = parent.file
+                     /* Make sure we don't include a link where the src and dst are both the file node */
+                     AND nodes.title != parent.title
+                     /* Make sure we only get links to the file node (level 0) */
+                     WHERE parent.level = 0
+                   UNION  /* Combine this two tables */
+                     /* Link nodes to the parents in the org hierarchy, along with the level of the parent and the distance between the two nodes. */
+                     SELECT nodes.id as src, N.id as dst, N.level, (nodes.pos - N.pos)
+                     FROM nodes
+                     INNER JOIN nodes as N
+                     /* olp is a string rep of the lisp list for headlines to go though to hit this node. We do a like query to find any node that is
+                        part of the olp for this node. The olp and the titles should be surrounded by quotes in the db, so we shouldn't have to worry
+                        about partial matches making links. */
+                     ON nodes.olp LIKE '%%' || N.title || '%%'
+                     /* Make sure the node we are find in our olp is in the same file, avoid clashes where a node with the same title is in a
+                        different file (in another file means it is clearly not in the same bit of the org hierarchy lol). */
+                     AND nodes.file = N.file
+                     /* Make sure the position of the child node is after the position of the parent, this stops cases where another node with the
+                        same name as the parent is found later in the file. */
+                     AND nodes.pos > N.pos
+                 )
+                 /* Get the (src, dest) tuples for our links. */
+                 SELECT results.src, results.dst
+                 FROM hierarchy as results
+                 INNER JOIN (
+                   /* Find the node that matches (has the highest level, same title as the olp, etc), and has the minimum distance to our node. This
+                      lets us link to the most recent org headline, even if another headline (with the same title and level) appeared earlier in the file. */
+                   SELECT pos.src, min(pos.pos_diff) as selected_pos_diff, pos.level
+                   FROM hierarchy as pos
+                   INNER JOIN (
+                     /* Find the highest level node in the olp for this node, this lets us select the most recent headline instead of their parent headlines. */
+                     /* Change this aggregation from MAX -> MIN to get links to the file instead (these links are currently shown in the UI) */
+                     SELECT inner_hierarchy.src, max(inner_hierarchy.level) AS selected_level
+                     FROM hierarchy as inner_hierarchy
+                     GROUP BY inner_hierarchy.src
+                   ) as grouped_hierarchy
+                   /* Our group by on the source node and level gives us a (src, level) tuple that we can use to filter our table to only include
+                      the (src, dest, level) tuples where the src and level match our aggregation, this lets us select things like the 3rd level over the 2nd. */
+                   ON pos.src = grouped_hierarchy.src
+                   AND pos.level = grouped_hierarchy.selected_level
+                   GROUP BY pos.src
+                ) as grouped_pos
+                /* Our group by on the source node and position difference gives us a (src, pos_diff) tuple that we can use to filter out nodes that have the
+                   same level and title as our node, but appeared earlier in the file. */
+                ON results.src = grouped_pos.src
+                AND results.pos_diff = grouped_pos.selected_pos_diff
+                AND results.level = grouped_pos.level")))
+    (seq-map (lambda (l) (append l '("hierarchy"))) links)))
+
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
   (let* ((nodes-columns [id file title level properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
@@ -307,6 +371,7 @@ unchanged."
                                      (if node-id
                                          (list source node-id "ref")
                                        (list source dest type)))) links-db-rows))
+         (hierarchy-links (if org-roam-ui-hierarchical-links (org-roam-ui--create-hierarchical-links)))
          (links-with-empty-refs (seq-filter (lambda (l) (equal (nth 2 l) "cite")) links-db-rows))
          (empty-refs (delete-dups (seq-map (lambda (l) (nth 1 l)) links-with-empty-refs)))
          (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
@@ -315,6 +380,7 @@ unchanged."
          ;; iteration though nodes.
          (nodes-db-rows (if org-roam-ui-retitle-ref-nodes (seq-map 'org-roam-ui--retitle-node nodes-db-rows) nodes-db-rows))
          (nodes-db-rows (append nodes-db-rows fake-nodes))
+         (links-db-rows (append links-db-rows hierarchy-links))
          (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
                                   (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
