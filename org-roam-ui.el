@@ -328,7 +328,7 @@ unchanged."
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
       (websocket-send-text oru-ws (json-encode `((type . "command")
-                                                 (data. ((commandName . "follow")
+                                                 (data . ((commandName . "follow")
                                                          (id . ,node))))))))))
 
 
