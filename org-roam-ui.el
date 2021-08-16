@@ -271,7 +271,7 @@ unchanged."
   (if-let* (org-roam-ui-retitle-ref-nodes
             ;; set a fake var because if-let(((boundp 'fake-var))) returns true
             (orcr (boundp 'org-ref-cite-re))
-            (citekey (cdr (assoc "ROAM_REFS" (nth 4 node))))
+            (citekey (cdr (assoc "ROAM_REFS" (nth 5 node))))
             (ref (org-roam-ui--citekey-to-ref citekey))
             (title (org-roam-ui--find-ref-title ref)))
       (org-roam-ui--replace-nth title 2 node)
@@ -279,12 +279,12 @@ unchanged."
 
 (defun org-roam-ui--create-fake-node (ref)
   "Create a fake node for REF without a source note."
-  (list ref ref (org-roam-ui--find-ref-title ref) 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
+  (list ref ref (org-roam-ui--find-ref-title ref) 0 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
-  (let* ((nodes-columns [id file title level properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
-         (nodes-names [id file title level properties tags])
+  (let* ((nodes-columns [id file title level pos properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
+         (nodes-names [id file title level pos properties tags])
          (links-columns [links:source links:dest links:type refs:node-id])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :as tags
                      :from nodes
@@ -306,8 +306,8 @@ unchanged."
                                      (if node-id
                                          (list source node-id "ref")
                                        (list source dest type)))) links-db-rows))
-         (links-with-empty-refs (seq-filter (lambda (l) (string-match-p "cite" (nth 2 l))) links-db-rows))
-         (empty-refs (delete-dups (seq-map (lambda (l) (nth 1 l)) links-with-empty-refs)))
+         (links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) links-db-rows))
+         (empty-refs (delete-dups (seq-map (lambda (link) (nth 1 link)) links-with-empty-refs)))
          (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
          ;; Try to update real nodes that are reference with a title build from
          ;; their bibliography entry. Check configuration here for avoid unneeded

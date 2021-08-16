@@ -202,6 +202,60 @@ export const Tweaks = (props: TweakProps) => {
                 paddingLeft={7}
                 color="gray.800"
               >
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Text>Link children to...</Text>
+                  <Menu isLazy placement="right">
+                    <MenuButton
+                      as={Button}
+                      rightIcon={<ChevronDownIcon />}
+                      colorScheme=""
+                      color="black"
+                    >
+                      {(() => {
+                        switch (filter.parent) {
+                          case 'parent':
+                            return <Text>File</Text>
+                          case 'heading':
+                            return <Text>Heading</Text>
+                          default:
+                            return <Text>Nothing</Text>
+                        }
+                      })()}
+                    </MenuButton>
+                    <Portal>
+                      {' '}
+                      <MenuList bgColor="gray.200" zIndex="popover">
+                        <MenuItem
+                          onClick={() =>
+                            setFilter((curr: typeof initialFilter) => ({ ...curr, parent: '' }))
+                          }
+                        >
+                          Nothing
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() =>
+                            setFilter((curr: typeof initialFilter) => ({
+                              ...curr,
+                              parent: 'parent',
+                            }))
+                          }
+                        >
+                          Parent file node
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() =>
+                            setFilter((curr: typeof initialFilter) => ({
+                              ...curr,
+                              parent: 'heading',
+                            }))
+                          }
+                        >
+                          Next highest heading node
+                        </MenuItem>
+                      </MenuList>
+                    </Portal>
+                  </Menu>
+                </Flex>
                 <Flex justifyContent="space-between">
                   <Text>Orphans</Text>
                   <Switch
@@ -211,15 +265,6 @@ export const Tweaks = (props: TweakProps) => {
                       })
                     }}
                     isChecked={filter.orphans}
-                  ></Switch>
-                </Flex>
-                <Flex justifyContent="space-between">
-                  <Text>Link nodes with parent file</Text>
-                  <Switch
-                    onChange={() => {
-                      setFilter({ ...filter, parents: !filter.parents })
-                    }}
-                    isChecked={filter.parents}
                   ></Switch>
                 </Flex>
                 <Flex justifyContent="space-between">
@@ -328,7 +373,7 @@ export const Tweaks = (props: TweakProps) => {
                 </EnableSection>
                 <SliderWithInfo
                   value={-physics.charge / 100}
-                  onChange={(v) => setPhysicsCallback(v, 'gravity', -1 / 100)}
+                  onChange={(v) => setPhysicsCallback(v, 'charge', -1 / 100)}
                   label="Repulsive Force"
                 />
                 <EnableSection

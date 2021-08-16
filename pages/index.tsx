@@ -102,6 +102,44 @@ export function GraphPage() {
       }
     }, {})
 
+    const headingLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
+      const nodesInFile = nodesByFile[file] ?? []
+      // "file node" as opposed to "heading node"
+      const fileNode = nodesInFile.find((node) => node.level === 0)
+      const headingNodes = nodesInFile.filter((node) => node.level !== 0)
+
+      if (!fileNode) {
+        return []
+      }
+      return headingNodes.map((headingNode) => {
+        const smallerHeadings = nodesInFile.filter((node) => {
+          if (node.level >= headingNode.level) {
+            return false
+          }
+          return true
+        })
+        const smallerPos = smallerHeadings.map((node) => {
+          if (node.pos >= headingNode.pos) {
+            return 0
+          }
+          return node.pos
+        })
+
+        const target = nodesInFile.find((node) => {
+          return node.pos === Math.max(...smallerPos)
+        })
+
+        return {
+          source: headingNode.id,
+          target: target!.id,
+          type: 'heading',
+        }
+      })
+    })
+
+    // we want to support both linking to only the file node and to the next heading
+    // to do this we need both links, as we can't really toggle between them without
+    // recalculating the entire graph otherwise
     const fileLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
       const nodesInFile = nodesByFile[file] ?? []
       // "file node" as opposed to "heading node"
@@ -111,17 +149,17 @@ export function GraphPage() {
       if (!fileNode) {
         return []
       }
-
-      return headingNodes.map((headingNode) => ({
-        source: headingNode.id,
-        target: fileNode.id,
-        type: 'parent',
-      }))
+      return headingNodes.map((headingNode) => {
+        return {
+          source: headingNode.id,
+          target: fileNode.id,
+          type: 'parent',
+        }
+      })
     })
 
     nodeByIdRef.current = Object.fromEntries(orgRoamGraphData.nodes.map((node) => [node.id, node]))
-
-    const dirtyLinks = [...orgRoamGraphData.links, ...fileLinks]
+    const dirtyLinks = [...orgRoamGraphData.links, ...headingLinks, ...fileLinks]
     const nonExistantNodes: OrgRoamNode[] = []
     const links = dirtyLinks.map((link) => {
       const sourceId = link.source as string
@@ -134,6 +172,7 @@ export function GraphPage() {
           file: '',
           title: sourceId,
           level: 0,
+          pos: 0,
         })
         return { ...link, type: 'bad' }
       }
@@ -145,6 +184,7 @@ export function GraphPage() {
           file: '',
           title: targetId,
           level: 0,
+          pos: 0,
         })
         return { ...link, type: 'bad' }
       }
@@ -548,24 +588,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     setHoverNode(nodeById[emacsNodeId] as NodeObject)
   }, [emacsNodeId])
 
-  centralHighlightedNode.current = hoverNode
-  const highlightedNodes = useMemo(() => {
-    if (!centralHighlightedNode.current) {
-      return {}
-    }
-
-    const links = linksByNodeId[centralHighlightedNode.current.id!]
-    if (!links) {
-      return {}
-    }
-
-    return Object.fromEntries(
-      [
-        centralHighlightedNode.current.id! as string,
-        ...links.flatMap((link) => [link.source, link.target]),
-      ].map((nodeId) => [nodeId, {}]),
-    )
-  }, [centralHighlightedNode.current, linksByNodeId])
+  const filteredLinksByNodeIdRef = useRef<LinksByNodeId>({})
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
   const filteredGraphData = useMemo(() => {
@@ -608,7 +631,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           return true
         }
 
-        if (filter.parents) {
+        if (filter.parent) {
           return unhiddenLinks.length !== 0
         }
 
@@ -616,7 +639,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           return false
         }
 
-        return unhiddenLinks.some((link) => !['parent'].includes(link.type))
+        return unhiddenLinks.some((link) => !['parent', 'heading'].includes(link.type))
       })
 
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
@@ -629,8 +652,22 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return false
       }
       const linkRoam = link as OrgRoamLink
-      return filter.parents || linkRoam.type !== 'parent'
+      if (!filter.parent) {
+        return !['parent', 'heading'].includes(linkRoam.type)
+      }
+      return linkRoam.type !== ['parent', 'heading'].find((type) => type !== filter.parent)
     })
+
+    filteredLinksByNodeIdRef.current = filteredLinks.reduce<LinksByNodeId>((acc, linkArg) => {
+      const link = linkArg as OrgRoamLink
+      const [sourceId, targetId] = normalizeLinkEnds(link)
+      return {
+        ...acc,
+        [sourceId]: [...(acc[sourceId] ?? []), link],
+        [targetId]: [...(acc[targetId] ?? []), link],
+      }
+    }, {})
+
     return { nodes: filteredNodes, links: filteredLinks }
   }, [filter, graphData])
 
@@ -690,6 +727,25 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
   }, [filter, scope, graphData])
+
+  centralHighlightedNode.current = hoverNode
+  const highlightedNodes = useMemo(() => {
+    if (!centralHighlightedNode.current) {
+      return {}
+    }
+
+    const links = filteredLinksByNodeIdRef.current[centralHighlightedNode.current.id!]
+    if (!links) {
+      return {}
+    }
+
+    return Object.fromEntries(
+      [
+        centralHighlightedNode.current.id! as string,
+        ...links.flatMap((link) => [link.source, link.target]),
+      ].map((nodeId) => [nodeId, {}]),
+    )
+  }, [centralHighlightedNode.current, linksByNodeId])
 
   useEffect(() => {
     ;(async () => {
@@ -788,18 +844,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }, [JSON.stringify(hoverNode), lastHoverNode.current])
 
   const getNodeColorById = (id: string) => {
-    const linklen = linksByNodeId[id!]?.length ?? 0
-    const parentCiteNeighbors = linklen
-      ? linksByNodeId[id!]?.filter((link) => link.type === 'parent').length
-      : 0
-    const neighbors = filter.parents ? linklen : linklen - parentCiteNeighbors!
+    const linklen = filteredLinksByNodeIdRef.current[id!]?.length ?? 0
+    /* const parentCiteNeighbors = linklen
+     *   ? linksByNodeId[id!]?.filter((link) => ['parent', 'heading', 'cite', 'ref'].includes(link.type)).length
+     *   : 0
+     * const neighbors = filter.parent ? linklen : linklen - parentCiteNeighbors! */
 
     return visuals.nodeColorScheme[
-      numberWithinRange(neighbors, 0, visuals.nodeColorScheme.length - 1)
+      numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
     ]
   }
   const getLinkNodeColor = (sourceId: string, targetId: string) => {
-    return linksByNodeId[sourceId]! > linksByNodeId[targetId]!
+    return filteredLinksByNodeIdRef.current[sourceId]!.length >
+      filteredLinksByNodeIdRef.current[targetId]!.length
       ? getNodeColorById(sourceId)
       : getNodeColorById(targetId)
   }
@@ -883,10 +940,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   )
 
   const nodeSize = (node: NodeObject) => {
-    const links = linksByNodeId[node.id!] ?? []
+    const links = filteredLinksByNodeIdRef.current[node.id!] ?? []
     const parentNeighbors = links.length ? links.filter((link) => link.type === 'parent').length : 0
     const basicSize =
-      3 + links.length * visuals.nodeSizeLinks - (!filter.parents ? parentNeighbors : 0)
+      3 + links.length * visuals.nodeSizeLinks - (!filter.parent ? parentNeighbors : 0)
     if (visuals.highlightNodeSize === 1) {
       return basicSize
     }

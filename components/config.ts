@@ -34,7 +34,7 @@ export const initialPhysics = {
 
 export const initialFilter = {
   orphans: false,
-  parents: true,
+  parent: 'heading',
   filelessCites: false,
   tagsBlacklist: [],
   tagsWhitelist: [],

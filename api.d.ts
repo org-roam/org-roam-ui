@@ -9,6 +9,7 @@ export type OrgRoamNode = {
   file: string
   title: string
   level: number
+  pos: number
   properties: {
     [key: string]: string | number
   }
