@@ -297,7 +297,7 @@ unchanged."
          (links-db-rows (org-roam-db-query `[:select ,links-columns
                                              :from links
                                              :left :outer :join refs :on (= links:dest refs:ref)
-                                             :where (in links:type ["cite", "citet", "citep", "id"])]))
+                                             :where (or (= links:type "id") (like links:type "%cite%"))]))
          ;; Convert any cite links that have nodes with associated refs to an
          ;; id based link of type `ref' while removing the 'nil `refs:node-id'
          ;; from all other links
@@ -326,13 +326,7 @@ unchanged."
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
-<<<<<<< HEAD
       (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
-=======
-      (websocket-send-text oru-ws (json-encode `((type . "command")
-                                                 (data . ((commandName . "follow")
-                                                         (id . ,node))))))))))
->>>>>>> b153f4fee99e36dec0fb56d987026d53bf97a0e8
 
 
 (defun org-roam-ui--update-theme ()
