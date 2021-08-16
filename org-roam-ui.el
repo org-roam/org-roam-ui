@@ -279,12 +279,12 @@ unchanged."
 
 (defun org-roam-ui--create-fake-node (ref)
   "Create a fake node for REF without a source note."
-  (list ref ref (org-roam-ui--find-ref-title ref) 0 0 `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
+  (list ref ref (org-roam-ui--find-ref-title ref) 0 0 'nil `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui."
-  (let* ((nodes-columns [id file title level pos properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
-         (nodes-names [id file title level pos properties tags])
+  (let* ((nodes-columns [id file title level pos olp properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
+         (nodes-names [id file title level pos olp properties tags])
          (links-columns [links:source links:dest links:type refs:node-id])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :as tags
                      :from nodes

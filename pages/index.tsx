@@ -113,25 +113,22 @@ export function GraphPage() {
       }
       return headingNodes.map((headingNode) => {
         const smallerHeadings = nodesInFile.filter((node) => {
-          if (node.level >= headingNode.level) {
+          if (
+            node.level >= headingNode.level ||
+            node.pos >= headingNode.pos ||
+            !headingNode.olp?.includes(node.title) ||
+            node.level >= headingNode.level - headingNode.olp.reverse().indexOf(node.title)
+          ) {
             return false
           }
           return true
         })
-        const smallerPos = smallerHeadings.map((node) => {
-          if (node.pos >= headingNode.pos) {
-            return 0
-          }
-          return node.pos
-        })
 
-        const target = nodesInFile.find((node) => {
-          return node.pos === Math.max(...smallerPos)
-        })
+        const target = smallerHeadings.slice(-1)[0]
 
         return {
           source: headingNode.id,
-          target: target!.id,
+          target: target?.id || fileNode.id,
           type: 'heading',
         }
       })
@@ -173,6 +170,7 @@ export function GraphPage() {
           title: sourceId,
           level: 0,
           pos: 0,
+          olp: null,
         })
         return { ...link, type: 'bad' }
       }
@@ -185,6 +183,7 @@ export function GraphPage() {
           title: targetId,
           level: 0,
           pos: 0,
+          olp: null,
         })
         return { ...link, type: 'bad' }
       }
