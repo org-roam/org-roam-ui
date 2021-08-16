@@ -141,7 +141,7 @@ Defaults to #'browse-url."
   org-roam-ui-mode
   "Enable org-roam-ui.
 This serves the web-build and API over HTTP."
-  :lighter "org-roam-ui "
+  :lighter " org-roam-ui"
   :global t
   :group 'org-roam-ui
   :init-value nil
@@ -326,7 +326,13 @@ unchanged."
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
+<<<<<<< HEAD
       (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
+=======
+      (websocket-send-text oru-ws (json-encode `((type . "command")
+                                                 (data . ((commandName . "follow")
+                                                         (id . ,node))))))))))
+>>>>>>> b153f4fee99e36dec0fb56d987026d53bf97a0e8
 
 
 (defun org-roam-ui--update-theme ()
@@ -432,7 +438,7 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
 ;;;###autoload
 (define-minor-mode org-roam-ui-follow-mode
   "Set whether ORUI should follow your every move in Emacs."
-  :lighter "org-roam-ui "
+  :lighter " org-roam-ui"
   :global t
   :group 'org-roam-ui
   :init-value nil
