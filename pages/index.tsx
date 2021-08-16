@@ -1006,7 +1006,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
               visuals.highlightFade * opacity,
             )
       }
-      if (visuals.citeLinkColor && roamLink.type.includes('cite')) {
+      if (visuals.citeLinkColor && roamLink.type?.includes('cite')) {
         return needsHighlighting && (visuals.citeLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.citeLinkColor][
               visuals.citeLinkHighlightColor || visuals.linkHighlight
@@ -1138,7 +1138,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           {...graphCommonProps}
           linkLineDash={(link) => {
             const linkArg = link as OrgRoamLink
-            if (visuals.citeDashes && linkArg.type.includes('cite')) {
+            if (visuals.citeDashes && linkArg.type?.includes('cite')) {
               return [visuals.citeDashLength, visuals.citeGapLength]
             }
             if (visuals.refDashes && linkArg.type == 'ref') {
