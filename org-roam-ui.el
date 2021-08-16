@@ -133,8 +133,8 @@ Defaults to #'browse-url."
 (defvar oru-ws nil
   "The websocket for org-roam-ui.")
 
-(defvar org-roam-ui-ws
-  "The websocket server for org-roam-ui.")
+;; (defvar org-roam-ui-ws nil
+;;   "The websocket server for org-roam-ui.")
 
 ;;;###autoload
 (define-minor-mode
@@ -155,7 +155,6 @@ This serves the web-build and API over HTTP."
    (org-roam-ui-mode
    ;;; check if the default keywords actually exist on `orb-preformat-keywords'
    ;;; else add them
-    ;; (org-roam-ui--check-orb-keywords)   ;
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
@@ -298,7 +297,7 @@ unchanged."
          (links-db-rows (org-roam-db-query `[:select ,links-columns
                                              :from links
                                              :left :outer :join refs :on (= links:dest refs:ref)
-                                             :where (or (= links:type "id") (= links:type "cite"))]))
+                                             :where (in links:type ["cite", "citet", "citep", "id"])]))
          ;; Convert any cite links that have nodes with associated refs to an
          ;; id based link of type `ref' while removing the 'nil `refs:node-id'
          ;; from all other links
@@ -307,7 +306,7 @@ unchanged."
                                      (if node-id
                                          (list source node-id "ref")
                                        (list source dest type)))) links-db-rows))
-         (links-with-empty-refs (seq-filter (lambda (l) (equal (nth 2 l) "cite")) links-db-rows))
+         (links-with-empty-refs (seq-filter (lambda (l) (string-match-p "cite" (nth 2 l))) links-db-rows))
          (empty-refs (delete-dups (seq-map (lambda (l) (nth 1 l)) links-with-empty-refs)))
          (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
          ;; Try to update real nodes that are reference with a title build from
@@ -327,9 +326,7 @@ unchanged."
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
-      (websocket-send-text oru-ws (json-encode `((type . "command")
-                                                 (data. ((commandName . "follow")
-                                                         (id . ,node))))))))))
+      (websocket-send-text oru-ws (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
 
 
 (defun org-roam-ui--update-theme ()
