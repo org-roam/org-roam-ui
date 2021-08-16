@@ -8,6 +8,10 @@ Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](htt
 
 Org-Roam-UI is meant a successor of [org-roam-server](https://github.com/org-roam/org-roam-server) that extends functionality of org-roam with a Web app that runs side-by-side with Emacs.
 
+## Changelog
+
+For major new features/bugfixes we will update [changelog](https://github.com/org-roam/org-roam-ui/discussions/30).
+
 ## Installation
 
 `org-roam-ui` is not (yet!) on MELPA.
@@ -244,13 +248,10 @@ I know, it looks cool, but man is it slow.
 
 In our experience, once the graph has actually settled and nothing needs to be rendered again, looking around should pose little trouble. At the moment there is no way of "saving" the graph configuration, but we are exploring the possibility. The graph layout algorithm is deterministic however, so barring any changes to the data it should produce the same results each time.
 
-### Q: Some of my links are not showing up?
-
-Links which do not refer to a valid id are filtered out to prevent crashes. In the future we will handle this a bit more gracefully by notifying you about this, but for now we're just removing them.
-
 ### Q: Will you implement X?
 
-Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! Please post feature requests in [this discussion](https://github.com/org-roam/org-roam-ui/discussions/6) or upvote those already posted, this way we can adjust our priorities somewhat!
+Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! 
+If your feature is not already on the [project board](https://github.com/org-roam/org-roam-ui/projects/2), please post minor feature requests such as "I want to be able to color this specific node" in [the minor feature requests discussion](https://github.com/org-roam/org-roam-ui/discussions/6) and *major* feature requests (e.g. "I want to publish my graph) in [the major feature requests discussion](https://github.com/org-roam/org-roam-ui/discussions/66) or upvote those already posted, this way we can adjust our priorities somewhat!
 
 ### Q: This doesn't work with org-roam v1/org-brain/Zettledelft!
 
