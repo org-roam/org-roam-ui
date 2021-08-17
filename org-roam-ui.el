@@ -158,8 +158,6 @@ This serves the web-build and API over HTTP."
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui/app-build-dir)
     (httpd-start)
-    (when org-roam-ui-open-on-start
-      (funcall org-roam-ui-browser-function "http://localhost:35901"))
     (setq org-roam-ui-ws
         (websocket-server
          35903
@@ -197,7 +195,8 @@ This serves the web-build and API over HTTP."
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (org-roam-ui-follow-mode -1)
-            (message "Connection with org-roam-ui closed.")))))
+            (message "Connection with org-roam-ui closed."))))
+     (when org-roam-ui-open-on-start (orui-open)))
    (t
     (progn
     (websocket-server-close org-roam-ui-ws)
@@ -403,6 +402,13 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 
 
 ;;;; commands
+;;;###autoload
+(defun orui-open ()
+  "Ensure `org-roam-ui-mode' is enabled, then open the `org-roam-ui' webpage."
+  (interactive)
+  (or org-roam-ui-mode (org-roam-ui-mode))
+  (funcall org-roam-ui-browser-function (format "http://localhost:%d" org-roam-ui-port)))
+
 ;;;###autoload
 (defun orui-node-zoom (&optional id speed padding)
   "Move the view of the graph to current node.
