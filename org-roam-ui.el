@@ -196,7 +196,7 @@ This serves the web-build and API over HTTP."
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
             (org-roam-ui-follow-mode -1)
             (message "Connection with org-roam-ui closed."))))
-     (when org-roam-ui-open-on-start (org-roam-ui-open)))
+     (when org-roam-ui-open-on-start (orui-open)))
    (t
     (progn
     (websocket-server-close org-roam-ui-ws)
@@ -403,8 +403,8 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 
 ;;;; commands
 ;;;###autoload
-(defun org-roam-ui-open ()
-  "Ensure `org-roam-ui-mode' is enabled, then open the roam graph."
+(defun orui-open ()
+  "Ensure `org-roam-ui-mode' is enabled, then open the `org-roam-ui' webpage."
   (interactive)
   (or org-roam-ui-mode (org-roam-ui-mode))
   (funcall org-roam-ui-browser-function (format "http://localhost:%d" org-roam-ui-port)))
