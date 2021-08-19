@@ -59,7 +59,6 @@ Then something along the following to your `config.el`
 
 (use-package! org-roam-ui
     :after org-roam ;; or :after org
-    :hook
 ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;;         a hookable mode anymore, you're advised to pick something yourself
 ;;         if you don't care about startup time, use
@@ -81,7 +80,6 @@ We recommend only loading org-roam-ui after loading org(-roam) as starting the s
   :straight
     (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
     :after org-roam
-    :hook
 ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;;         a hookable mode anymore, you're advised to pick something yourself
 ;;         if you don't care about startup time, use
