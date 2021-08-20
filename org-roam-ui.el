@@ -321,7 +321,7 @@ unchanged."
 
 (defun org-roam-ui--update-current-node ()
   "Send the current node data to the web-socket."
-  (when (and (websocket-openp oru-ws) (org-roam-buffer-p) (file-exists-p (buffer-file-name)))
+  (when (and (websocket-openp oru-ws) (org-roam-buffer-p) (buffer-file-name))
   (let* ((node (org-roam-id-at-point)))
     (unless (string= org-roam-ui--ws-current-node node)
     (setq org-roam-ui--ws-current-node node)
