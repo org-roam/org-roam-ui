@@ -146,7 +146,7 @@ This serves the web-build and API over HTTP."
   :group 'org-roam-ui
   :init-value nil
   (if (fboundp #'org-roam-version)
-    (unless (eq (seq-first (org-roam-version)) 50)
+    (when (eq (seq-first (org-roam-version)) 49)
       (message "You are running org-roam %s. Org-roam-ui is only compatible with v2, please upgrade." (org-roam-version))
       (setq org-roam-ui-mode -1))
     (message "Org-roam is either not installed or not running. Please fix this.")
