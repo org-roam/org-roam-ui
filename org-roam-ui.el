@@ -284,28 +284,32 @@ unchanged."
   "Get roam data, make JSON, send through websocket to org-roam-ui."
   (let* ((nodes-columns [id file title level pos olp properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
          (nodes-names [id file title level pos olp properties tags])
-         (links-columns [links:source links:dest links:type refs:node-id])
+         (links-columns [links:source links:dest links:type])
+         (cites-columns [citations:node-id citations:cite-key refs:node-id])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :as tags
                      :from nodes
                      :left-join tags
                      :on (= id node_id)
                      :group :by id]))
+(links-db-rows (org-roam-db-query `[:select ,links-columns
+                                             :from links
+                                             :where (= links:type "id")]))
          ;; Left outer join on refs means any id link (or cite link without a
          ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
          ;; cite link where a node has that `:ROAM_REFS:' will have a value.
-         (links-db-rows (org-roam-db-query `[:select ,links-columns
-                                             :from links
-                                             :left :outer :join refs :on (= links:dest refs:ref)
-                                             :where (or (= links:type "id") (like links:type "%cite%"))]))
+         (cites-db-rows (org-roam-db-query `[:select ,cites-columns
+                                             :from citations
+                                             :left :outer :join refs :on (= citations:cite-key refs:ref)]))
          ;; Convert any cite links that have nodes with associated refs to an
          ;; id based link of type `ref' while removing the 'nil `refs:node-id'
          ;; from all other links
-         (links-db-rows (seq-map (lambda (l)
-                                   (pcase-let ((`(,source ,dest ,type ,node-id) l))
+         (cites-db-rows (seq-map (lambda (l)
+                                   (pcase-let ((`(,source ,dest ,node-id) l))
                                      (if node-id
                                          (list source node-id "ref")
-                                       (list source dest type)))) links-db-rows))
-         (links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) links-db-rows))
+                                       (list source dest "cite")))) cites-db-rows))
+         (links-db-rows (append links-db-rows cites-db-rows))
+         (links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) cites-db-rows))
          (empty-refs (delete-dups (seq-map (lambda (link) (nth 1 link)) links-with-empty-refs)))
          (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
          ;; Try to update real nodes that are reference with a title build from
