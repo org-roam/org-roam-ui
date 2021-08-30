@@ -291,36 +291,52 @@ unchanged."
                      :left-join tags
                      :on (= id node_id)
                      :group :by id]))
-(links-db-rows (org-roam-db-query `[:select ,links-columns
+         links-db-rows
+         cites-db-rows
+         links-with-empty-refs)
+         ;; Put this check in until Doom upgrades to the latest org-roam
+         (if (fboundp 'org-roam-db-map-citations)
+             (setq links-db-rows (org-roam-db-query `[:select ,links-columns
                                              :from links
-                                             :where (= links:type "id")]))
+                                             :where (= links:type "id")])
          ;; Left outer join on refs means any id link (or cite link without a
          ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
          ;; cite link where a node has that `:ROAM_REFS:' will have a value.
-         (cites-db-rows (org-roam-db-query `[:select ,cites-columns
+                    cites-db-rows (org-roam-db-query `[:select ,cites-columns
                                              :from citations
-                                             :left :outer :join refs :on (= citations:cite-key refs:ref)]))
+                                             :left :outer :join refs :on (= citations:cite-key refs:ref)])
          ;; Convert any cite links that have nodes with associated refs to an
          ;; id based link of type `ref' while removing the 'nil `refs:node-id'
          ;; from all other links
-         (cites-db-rows (seq-map (lambda (l)
+                    cites-db-rows (seq-map (lambda (l)
                                    (pcase-let ((`(,source ,dest ,node-id) l))
                                      (if node-id
                                          (list source node-id "ref")
-                                       (list source dest "cite")))) cites-db-rows))
-         (links-db-rows (append links-db-rows cites-db-rows))
-         (links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) cites-db-rows))
-         (empty-refs (delete-dups (seq-map (lambda (link) (nth 1 link)) links-with-empty-refs)))
-         (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
+                                       (list source dest "cite")))) cites-db-rows)
+                    links-db-rows (append links-db-rows cites-db-rows)
+                    links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) cites-db-rows))
+           (setq links-db-rows (org-roam-db-query `[:select [links:source links:dest links:type refs:node-id]
+                                             :from links
+                                             :left :outer :join refs :on (= links:dest refs:ref)
+                                             :where (or (= links:type "id") (like links:type "%cite%"))])
+                 links-db-rows (seq-map (lambda (l)
+                                   (pcase-let ((`(,source ,dest ,type ,node-id) l))
+                                     (if node-id
+                                         (list source node-id "ref")
+                                       (list source dest type)))) links-db-rows)
+                links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) links-db-rows)))
+         (let* ((empty-refs (delete-dups (seq-map (lambda (link) (nth 1 link)) links-with-empty-refs)))
+                (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
          ;; Try to update real nodes that are reference with a title build from
          ;; their bibliography entry. Check configuration here for avoid unneeded
          ;; iteration though nodes.
-         (nodes-db-rows (if org-roam-ui-retitle-ref-nodes (seq-map 'org-roam-ui--retitle-node nodes-db-rows) nodes-db-rows))
-         (nodes-db-rows (append nodes-db-rows fake-nodes))
-         (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
+                (nodes-db-rows (if org-roam-ui-retitle-ref-nodes (seq-map 'org-roam-ui--retitle-node nodes-db-rows) nodes-db-rows))
+                (nodes-db-rows (append nodes-db-rows fake-nodes))
+                (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
                                   (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
                                   (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
-    (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response))))))
+    (websocket-send-text oru-ws (json-encode `((type . "graphdata") (data . ,response)))))))
+
 
 
 (defun org-roam-ui--update-current-node ()
