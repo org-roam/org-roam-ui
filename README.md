@@ -206,6 +206,10 @@ If the issue still persists, please file a bug report with
 
 and we'll try to help you ASAP!
 
+## Q: Clicking 'Open in Emacs' gives an error around json-parse-string, how do I fix this?
+
+If you receive an error, in emacs, stating `function definition is void json-parse-string`, then you must compile emacs with json support.  This is not automatically done on systems such as Gentoo.
+
 ### Q: Graph Slow! Faster?
 
 While we try to optimize the display of the graph, there is only so much we can do. For largish networks (>2k nodes) dragging the graph around a lot can cause some performance issues, but there are a few things you can do to speed it up.
