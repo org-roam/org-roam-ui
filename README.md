@@ -46,7 +46,10 @@ Load in Emacs (add to config):
 
 Add the following to your `package.el`
 
+Org-roam-ui tries to keep up with the latest features of `org-roam`, which conflicts with Doom Emacs's desire for
+stability. To make sure nothing breaks, use the latest version of `org-roam` by unpinning it.
 ```emacs-lisp
+(unpin! org-roam)
 (package! websocket)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 ```
