@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: "[BUG]"
 labels: bug
-assignees: ''
+assignees: ThomasFKJorna
 
 ---
 
@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Which specific things did you do which lead to said bug? E.g. what did you click, which commands did you call, etc.
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
