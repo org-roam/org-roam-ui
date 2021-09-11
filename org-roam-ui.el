@@ -175,13 +175,9 @@ This serves the web-build and API over HTTP."
                              (command (alist-get 'command msg))
                              (data (alist-get 'data msg)))
                 (cond ((string= command "open")
-                    (let ((should-open-in-new-window nil))
-                        (if (string-match "^[0-9]\\{14\\}-.*\.org$" (buffer-name))
-                                (setq should-open-in-new-window nil)
-                                (setq should-open-in-new-window t))
                         (org-roam-node-visit
                                 (org-roam-populate (org-roam-node-create
-                                :id (alist-get 'id data))) should-open-in-new-window)))
+                                :id (alist-get 'id data))) (not (org-roam-buffer-p))))
                       ((string= command "delete")
                        (progn
                        (message "Deleted %s" (alist-get 'file data))
