@@ -175,9 +175,9 @@ This serves the web-build and API over HTTP."
                              (command (alist-get 'command msg))
                              (data (alist-get 'data msg)))
                 (cond ((string= command "open")
-                    (org-roam-node-visit
-                        (org-roam-populate (org-roam-node-create
-                        :id (alist-get 'id data)))))
+                        (org-roam-node-visit
+                                (org-roam-populate (org-roam-node-create
+                                :id (alist-get 'id data))) (not (org-roam-buffer-p))))
                       ((string= command "delete")
                        (progn
                        (message "Deleted %s" (alist-get 'file data))
