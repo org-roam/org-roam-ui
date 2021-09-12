@@ -116,15 +116,21 @@ export function GraphPage() {
           if (
             node.level >= headingNode.level ||
             node.pos >= headingNode.pos ||
-            !headingNode.olp?.includes(node.title) ||
-            node.level >= headingNode.level - headingNode.olp.reverse().indexOf(node.title)
+            !headingNode.olp?.includes(node.title) //||
+            //  node.level >= headingNode.level - headingNode.olp.reverse().indexOf(node.title)
           ) {
             return false
           }
           return true
         })
 
-        const target = smallerHeadings.slice(-1)[0]
+        // get the nearest heading
+        const target = smallerHeadings.reduce((acc, node) => {
+          if (node.level > acc.level) {
+            acc = node
+          }
+          return acc
+        }, fileNode)
 
         return {
           source: headingNode.id,
@@ -557,7 +563,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const completed = [ids[0]]
     Array.from({ length: n }, () => {
       queue.forEach((node) => {
-        const links = linksByNodeId[node as string] ?? []
+        const links = filteredLinksByNodeIdRef.current[node as string] ?? []
         links.forEach((link) => {
           const [sourceId, targetId] = normalizeLinkEnds(link)
           if (!completed.includes(sourceId)) {
@@ -654,7 +660,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       if (!filter.parent) {
         return !['parent', 'heading'].includes(linkRoam.type)
       }
-      return linkRoam.type !== ['parent', 'heading'].find((type) => type !== filter.parent)
+      if (filter.parent === 'heading') {
+        return linkRoam.type !== 'parent'
+      }
+      return linkRoam.type !== 'heading'
     })
 
     filteredLinksByNodeIdRef.current = filteredLinks.reduce<LinksByNodeId>((acc, linkArg) => {
@@ -685,7 +694,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           if (oldScopedNodeIds.includes(node.id as string)) {
             return false
           }
-          const links = linksByNodeId[node.id as string] ?? []
+          const links = filteredLinksByNodeIdRef.current[node.id as string] ?? []
           return links.some((link) => {
             return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
           })
@@ -737,14 +746,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     if (!links) {
       return {}
     }
-
     return Object.fromEntries(
       [
         centralHighlightedNode.current.id! as string,
         ...links.flatMap((link) => [link.source, link.target]),
       ].map((nodeId) => [nodeId, {}]),
     )
-  }, [centralHighlightedNode.current, linksByNodeId])
+  }, [centralHighlightedNode.current, filteredLinksByNodeIdRef.current])
 
   useEffect(() => {
     ;(async () => {
@@ -832,15 +840,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
   }, [emacsTheme])
 
+  // FIXME: Somehow the "linksByNodeId" call causes parent nodes to be always highlighted
+  // Replacing this with "linksByNodeIdRef.current" should solve this, but instead leads to no
+  // highlighting whatsoever.
   const previouslyHighlightedNodes = useMemo(() => {
-    const previouslyHighlightedLinks = linksByNodeId[lastHoverNode.current?.id!] ?? []
+    const previouslyHighlightedLinks =
+      filteredLinksByNodeIdRef.current[lastHoverNode.current?.id!] ?? []
     return Object.fromEntries(
       [
         lastHoverNode.current?.id! as string,
-        ...previouslyHighlightedLinks.flatMap((link) => [link.source, link.target]),
+        ...previouslyHighlightedLinks.flatMap((link) => normalizeLinkEnds(link)),
       ].map((nodeId) => [nodeId, {}]),
     )
-  }, [JSON.stringify(hoverNode), lastHoverNode.current])
+  }, [JSON.stringify(hoverNode), lastHoverNode.current, filteredLinksByNodeIdRef.current])
 
   const getNodeColorById = (id: string) => {
     const linklen = filteredLinksByNodeIdRef.current[id!]?.length ?? 0
