@@ -95,7 +95,9 @@ export function GraphPage() {
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
     const oldNodeById = nodeByIdRef.current
     tagsRef.current = orgRoamGraphData.tags ?? []
-    const nodesByFile = orgRoamGraphData.nodes.reduce<NodesByFile>((acc, node) => {
+    const importNodes = orgRoamGraphData.nodes ?? []
+    const importLinks = orgRoamGraphData.links ?? []
+    const nodesByFile = importNodes.reduce<NodesByFile>((acc, node) => {
       return {
         ...acc,
         [node.file]: [...(acc[node.file] ?? []), node],
@@ -161,8 +163,8 @@ export function GraphPage() {
       })
     })
 
-    nodeByIdRef.current = Object.fromEntries(orgRoamGraphData.nodes.map((node) => [node.id, node]))
-    const dirtyLinks = [...orgRoamGraphData.links, ...headingLinks, ...fileLinks]
+    nodeByIdRef.current = Object.fromEntries(importNodes.map((node) => [node.id, node]))
+    const dirtyLinks = [...importLinks, ...headingLinks, ...fileLinks]
     const nonExistantNodes: OrgRoamNode[] = []
     const links = dirtyLinks.map((link) => {
       const sourceId = link.source as string
@@ -209,7 +211,7 @@ export function GraphPage() {
       }
     }, {})
 
-    const nodes = [...orgRoamGraphData.nodes, ...nonExistantNodes]
+    const nodes = [...importNodes, ...nonExistantNodes]
     const orgRoamGraphDataProcessed = {
       nodes,
       links,
