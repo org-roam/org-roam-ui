@@ -61,6 +61,8 @@ export const initialVisuals = {
   labelScale: 1.5,
   labelFontSize: 13,
   labelLength: 40,
+  labelWordWrap: 25,
+  labelLineSpace: 1,
   highlight: true,
   highlightNodeSize: 2,
   highlightLinkSize: 2,

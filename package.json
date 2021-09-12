@@ -47,7 +47,8 @@
     "uniorg-parse": "^0.3.0",
     "uniorg-rehype": "^0.3.0",
     "uniorg-slug": "^0.3.0",
-    "use-constant": "^1.1.0"
+    "use-constant": "^1.1.0",
+    "word-wrap": "^1.2.3"
   },
   "devDependencies": {
     "@types/d3-interpolate": "^3.0.1",

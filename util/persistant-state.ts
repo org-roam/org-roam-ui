@@ -11,13 +11,15 @@ export function usePersistantState<V>(
 
   const storageValue = storage.get()
   const calculatedDefaultValue = storageValue !== undefined ? storageValue : defaultValue
-  if (calculatedDefaultValue !== storageValue) {
-    storage.update(calculatedDefaultValue)
-  }
   const calculatedDefaultValueObject =
-    typeof storageValue === 'object'
-      ? { ...storageValue, ...calculatedDefaultValue }
+    storageValue != null &&
+    typeof storageValue === 'object' &&
+    Array.isArray(storageValue) === false
+      ? { ...defaultValue, ...storageValue }
       : calculatedDefaultValue
+  if (calculatedDefaultValueObject !== storageValue) {
+    storage.update(calculatedDefaultValueObject)
+  }
   const [value, setValue] = useState<V>(calculatedDefaultValueObject)
 
   // change state gracefully when changing the storageKey

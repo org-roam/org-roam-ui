@@ -38,7 +38,7 @@ import { ContextMenu } from '../components/contextmenu'
 
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import SpriteText from 'three-spritetext'
-
+import wrap from 'word-wrap'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 // react-force-graph fails on import when server-rendered
@@ -1005,10 +1005,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }
 
       const nodeTitle = (node as OrgRoamNode).title!
-      const label =
-        nodeTitle.length > visuals.labelLength
-          ? nodeTitle.substring(0, visuals.labelLength) + '...'
-          : nodeTitle
+      const label = nodeTitle.substring(0, visuals.labelLength)
       const fontSize = visuals.labelFontSize / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
       const textWidth = ctx.measureText(label).width
       const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
@@ -1049,7 +1046,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       const labelText = hexToRGBA(labelTextColor, textOpacity)
       ctx.fillStyle = labelText
       ctx.font = `${fontSize}px Sans-Serif`
-      ctx.fillText(label, node.x!, node.y! + nodeS)
+      const wordsArray = wrap(label, { width: visuals.labelWordWrap }).split('\n')
+
+      const truncatedWords =
+        nodeTitle.length > visuals.labelLength
+          ? [...wordsArray.slice(0, -1), `${wordsArray.slice(-1)}...`]
+          : wordsArray
+      truncatedWords.forEach((word, index) => {
+        ctx.fillText(word, node.x!, node.y! + nodeS + visuals.labelLineSpace * fontSize * index)
+      })
     },
     nodeCanvasObjectMode: () => 'after',
 

@@ -733,351 +733,474 @@ export const Tweaks = (props: TweakProps) => {
                       </VStack>
                     </AccordionPanel>
                   </AccordionItem>
-                </Accordion>
-                <VStack
-                  spacing={2}
-                  justifyContent="flex-start"
-                  divider={<StackDivider borderColor="gray.500" />}
-                  align="stretch"
-                  paddingLeft={7}
-                  color="gray.800"
-                >
-                  <SliderWithInfo
-                    label="Node size"
-                    value={visuals.nodeRel}
-                    onChange={(value) => setVisuals({ ...visuals, nodeRel: value })}
-                  />
-                  <SliderWithInfo
-                    label="Node connections size scale"
-                    value={visuals.nodeSizeLinks}
-                    min={0}
-                    max={2}
-                    onChange={(value) => setVisuals({ ...visuals, nodeSizeLinks: value })}
-                  />
-                  {threeDim && (
-                    <>
-                      <SliderWithInfo
-                        label="Node opacity"
-                        value={visuals.nodeOpacity}
-                        min={0}
-                        max={1}
-                        onChange={(value) => setVisuals({ ...visuals, nodeOpacity: value })}
-                      />
-                      <SliderWithInfo
-                        label="Node resolution"
-                        value={visuals.nodeResolution}
-                        min={5}
-                        max={32}
-                        step={1}
-                        onChange={(value) => setVisuals({ ...visuals, nodeResolution: value })}
-                      />
-                    </>
-                  )}
-                  <SliderWithInfo
-                    label="Link width"
-                    value={visuals.linkWidth}
-                    onChange={(value) => setVisuals({ ...visuals, linkWidth: value })}
-                  />
-                  {threeDim && (
-                    <SliderWithInfo
-                      label="Link opacity"
-                      min={0}
-                      max={1}
-                      value={visuals.linkOpacity}
-                      onChange={(value) => setVisuals({ ...visuals, linkOpacity: value })}
-                    />
-                  )}
-                  <EnableSection
-                    label="Dash cite links"
-                    infoText="Add dashes to citation links made with org-roam-bibtex"
-                    value={visuals.citeDashes}
-                    onChange={() => setVisuals({ ...visuals, citeDashes: !visuals.citeDashes })}
-                  >
-                    <SliderWithInfo
-                      label="Dash length"
-                      value={visuals.citeDashLength / 10}
-                      onChange={(value) => setVisuals({ ...visuals, citeDashLength: value * 10 })}
-                    />
-                    <SliderWithInfo
-                      label="Gap length"
-                      value={visuals.citeGapLength / 5}
-                      onChange={(value) => setVisuals({ ...visuals, citeGapLength: value * 5 })}
-                    />
-                  </EnableSection>
-                  <ColorMenu
-                    colorList={colorList}
-                    label="Citation node color"
-                    setVisuals={setVisualsCallback}
-                    value={'citeNodeColor'}
-                    visValue={visuals.citeNodeColor}
-                  />
-                  <ColorMenu
-                    colorList={colorList}
-                    label="Citation link color"
-                    setVisuals={setVisualsCallback}
-                    value={'citeLinkColor'}
-                    visValue={visuals.citeLinkColor}
-                  />
-                  <ColorMenu
-                    colorList={colorList}
-                    label="Reference link highlight"
-                    setVisuals={setVisualsCallback}
-                    value={'citeLinkHighlightColor'}
-                    visValue={visuals.citeLinkHighlightColor}
-                  />
-                  <EnableSection
-                    label="Dash ref links"
-                    infoText="Add dashes to citation links, whose target has a note, made with org-roam-bibtex"
-                    value={visuals.refDashes}
-                    onChange={() => setVisuals({ ...visuals, refDashes: !visuals.refDashes })}
-                  >
-                    <SliderWithInfo
-                      label="Dash length"
-                      value={visuals.refDashLength / 10}
-                      onChange={(value) => setVisuals({ ...visuals, refDashLength: value * 10 })}
-                    />
-                    <SliderWithInfo
-                      label="Gap length"
-                      value={visuals.refGapLength / 5}
-                      onChange={(value) => setVisuals({ ...visuals, refGapLength: value * 5 })}
-                    />
-                  </EnableSection>
-                  <ColorMenu
-                    colorList={colorList}
-                    label="Reference node color"
-                    setVisuals={setVisualsCallback}
-                    value={'refNodeColor'}
-                    visValue={visuals.refNodeColor}
-                  />
-                  <ColorMenu
-                    colorList={colorList}
-                    label="Reference link color"
-                    setVisuals={setVisualsCallback}
-                    value={'refLinkColor'}
-                    visValue={visuals.refLinkColor}
-                  />
-                  <ColorMenu
-                    colorList={colorList}
-                    label="Reference link highlight"
-                    setVisuals={setVisualsCallback}
-                    value={'refLinkHighlightColor'}
-                    visValue={visuals.refLinkHighlightColor}
-                  />
-                  <Box>
-                    <Flex alignItems="center" justifyContent="space-between">
-                      <Text>Labels</Text>
-                      <Menu isLazy placement="right">
-                        <MenuButton
-                          as={Button}
-                          colorScheme=""
-                          color="black"
-                          rightIcon={<ChevronDownIcon />}
-                        >
-                          {!visuals.labels
-                            ? 'Never'
-                            : visuals.labels < 2
-                            ? 'On Highlight'
-                            : 'Always'}
-                        </MenuButton>
-                        <Portal>
-                          {' '}
-                          <MenuList zIndex="popover" bgColor="gray.200">
-                            <MenuItem onClick={() => setVisuals({ ...visuals, labels: 0 })}>
-                              Never
-                            </MenuItem>
-                            <MenuItem onClick={() => setVisuals({ ...visuals, labels: 1 })}>
-                              On Highlight
-                            </MenuItem>
-                            <MenuItem onClick={() => setVisuals({ ...visuals, labels: 2 })}>
-                              Always
-                            </MenuItem>
-                            <MenuItem onClick={() => setVisuals({ ...visuals, labels: 3 })}>
-                              Always (even in 3D)
-                            </MenuItem>
-                          </MenuList>
-                        </Portal>
-                      </Menu>
-                    </Flex>
-                    <Collapse in={visuals.labels > 0} animateOpacity>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Flex justifyContent="space-between" w="100%">
+                        <Text>Nodes & Links</Text>
+                        <AccordionIcon marginRight={2} />
+                      </Flex>
+                    </AccordionButton>
+                    <AccordionPanel>
                       <VStack
-                        spacing={1}
+                        spacing={2}
                         justifyContent="flex-start"
-                        divider={<StackDivider borderColor="gray.400" />}
+                        divider={<StackDivider borderColor="gray.500" />}
                         align="stretch"
-                        paddingLeft={2}
                         color="gray.800"
                       >
-                        <SliderWithInfo
-                          label="Label font size"
-                          value={visuals.labelFontSize}
-                          min={5}
-                          max={20}
-                          step={0.5}
-                          onChange={(value) => setVisuals({ ...visuals, labelFontSize: value })}
-                        />
-                        <SliderWithInfo
-                          label="Maximum label characters"
-                          value={visuals.labelLength}
-                          min={10}
-                          max={100}
-                          step={1}
-                          onChange={(value) => setVisuals({ ...visuals, labelLength: value })}
-                        />
-                        <ColorMenu
-                          colorList={colorList}
-                          label="Text"
-                          setVisuals={setVisualsCallback}
-                          value="labelTextColor"
-                          visValue={visuals.labelTextColor}
-                        />
-                        <ColorMenu
-                          colorList={colorList}
-                          label="Background"
-                          setVisuals={setVisualsCallback}
-                          value="labelBackgroundColor"
-                          visValue={visuals.labelBackgroundColor}
-                        />
-                        <Collapse in={!!visuals.labelBackgroundColor} animateOpacity>
-                          <Box paddingTop={2}>
+                        <Box>
+                          <SliderWithInfo
+                            label="Node size"
+                            value={visuals.nodeRel}
+                            onChange={(value) => setVisuals({ ...visuals, nodeRel: value })}
+                          />
+                          <SliderWithInfo
+                            label="Node connections size scale"
+                            value={visuals.nodeSizeLinks}
+                            min={0}
+                            max={2}
+                            onChange={(value) => setVisuals({ ...visuals, nodeSizeLinks: value })}
+                          />
+                          {threeDim && (
+                            <>
+                              <SliderWithInfo
+                                label="Node opacity"
+                                value={visuals.nodeOpacity}
+                                min={0}
+                                max={1}
+                                onChange={(value) => setVisuals({ ...visuals, nodeOpacity: value })}
+                              />
+                              <SliderWithInfo
+                                label="Node resolution"
+                                value={visuals.nodeResolution}
+                                min={5}
+                                max={32}
+                                step={1}
+                                onChange={(value) =>
+                                  setVisuals({ ...visuals, nodeResolution: value })
+                                }
+                              />
+                            </>
+                          )}
+                          <SliderWithInfo
+                            label="Link width"
+                            value={visuals.linkWidth}
+                            onChange={(value) => setVisuals({ ...visuals, linkWidth: value })}
+                          />
+                          {threeDim && (
                             <SliderWithInfo
-                              label="Background opacity"
-                              value={visuals.labelBackgroundOpacity}
-                              onChange={(value) => {
-                                console.log(visuals.labelBackgroundOpacity)
-                                setVisuals({ ...visuals, labelBackgroundOpacity: value })
-                              }}
+                              label="Link opacity"
+                              min={0}
+                              max={1}
+                              value={visuals.linkOpacity}
+                              onChange={(value) => setVisuals({ ...visuals, linkOpacity: value })}
+                            />
+                          )}
+                          <EnableSection
+                            label="Link arrows"
+                            value={visuals.arrows}
+                            onChange={() => setVisuals({ ...visuals, arrows: !visuals.arrows })}
+                          >
+                            <SliderWithInfo
+                              label="Arrow size"
+                              value={visuals.arrowsLength / 10}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, arrowsLength: 10 * value })
+                              }
+                            />
+                            <SliderWithInfo
+                              label="Arrow Position"
+                              value={visuals.arrowsPos}
                               min={0}
                               max={1}
                               step={0.01}
+                              onChange={(value) => setVisuals({ ...visuals, arrowsPos: value })}
                             />
-                          </Box>
-                        </Collapse>
-                        <Collapse in={visuals.labels > 1} animateOpacity>
-                          <Box paddingTop={2}>
+                            <ColorMenu
+                              colorList={colorList}
+                              label="Arrow Color"
+                              key="arrow"
+                              setVisuals={setVisualsCallback}
+                              value="arrowsColor"
+                              visValue={visuals.arrowsColor}
+                            />
+                          </EnableSection>
+                          <EnableSection
+                            label="Directional Particles"
+                            value={visuals.particles}
+                            onChange={() =>
+                              setVisuals({ ...visuals, particles: !visuals.particles })
+                            }
+                          >
                             <SliderWithInfo
-                              label="Label Appearance Scale"
-                              value={visuals.labelScale * 5}
+                              label="Particle Number"
+                              value={visuals.particlesNumber}
+                              max={5}
+                              step={1}
                               onChange={(value) =>
-                                setVisuals({ ...visuals, labelScale: value / 5 })
+                                setVisuals({ ...visuals, particlesNumber: value })
                               }
                             />
-                          </Box>
-                        </Collapse>
+                            <SliderWithInfo
+                              label="Particle Size"
+                              value={visuals.particlesWidth}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, particlesWidth: value })
+                              }
+                            />
+                          </EnableSection>
+                        </Box>
                       </VStack>
-                    </Collapse>
-                  </Box>
-                  <EnableSection
-                    label="Link arrows"
-                    value={visuals.arrows}
-                    onChange={() => setVisuals({ ...visuals, arrows: !visuals.arrows })}
-                  >
-                    <SliderWithInfo
-                      label="Arrow size"
-                      value={visuals.arrowsLength / 10}
-                      onChange={(value) => setVisuals({ ...visuals, arrowsLength: 10 * value })}
-                    />
-                    <SliderWithInfo
-                      label="Arrow Position"
-                      value={visuals.arrowsPos}
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      onChange={(value) => setVisuals({ ...visuals, arrowsPos: value })}
-                    />
-                    <ColorMenu
-                      colorList={colorList}
-                      label="Arrow Color"
-                      key="arrow"
-                      setVisuals={setVisualsCallback}
-                      value="arrowsColor"
-                      visValue={visuals.arrowsColor}
-                    />
-                  </EnableSection>
-                  <EnableSection
-                    label="Directional Particles"
-                    value={visuals.particles}
-                    onChange={() => setVisuals({ ...visuals, particles: !visuals.particles })}
-                  >
-                    <SliderWithInfo
-                      label="Particle Number"
-                      value={visuals.particlesNumber}
-                      max={5}
-                      step={1}
-                      onChange={(value) => setVisuals({ ...visuals, particlesNumber: value })}
-                    />
-                    <SliderWithInfo
-                      label="Particle Size"
-                      value={visuals.particlesWidth}
-                      onChange={(value) => setVisuals({ ...visuals, particlesWidth: value })}
-                    />
-                  </EnableSection>
-                  <EnableSection
-                    label="Highlight"
-                    onChange={() => setVisuals({ ...visuals, highlight: !visuals.highlight })}
-                    value={visuals.highlight}
-                  >
-                    <VStack
-                      spacing={1}
+                    </AccordionPanel>
+                  </AccordionItem>
+                  {/* <VStack
+                      spacing={2}
                       justifyContent="flex-start"
-                      divider={<StackDivider borderColor="gray.400" />}
+                      divider={<StackDivider borderColor="gray.500" />}
                       align="stretch"
-                      paddingLeft={0}
-                    >
-                      <SliderWithInfo
-                        label="Highlight Link Thickness"
-                        value={visuals.highlightLinkSize}
-                        onChange={(value) => setVisuals({ ...visuals, highlightLinkSize: value })}
-                      />
-                      <SliderWithInfo
-                        label="Highlight Node Size"
-                        value={visuals.highlightNodeSize}
-                        onChange={(value) => setVisuals({ ...visuals, highlightNodeSize: value })}
-                      />
-                      <SliderWithInfo
-                        min={0}
-                        max={1}
-                        label="Highlight Fade"
-                        value={visuals.highlightFade}
-                        onChange={(value) => setVisuals({ ...visuals, highlightFade: value })}
-                      />
-                      {/*<Flex justifyContent="space-between">
+                      paddingLeft={7}
+                      color="gray.800"
+                      > */}
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Flex justifyContent="space-between" w="100%">
+                        <Text>Labels</Text>
+                        <AccordionIcon marginRight={2} />
+                      </Flex>
+                    </AccordionButton>
+                    <AccordionPanel>
+                      <VStack
+                        spacing={2}
+                        justifyContent="flex-start"
+                        divider={<StackDivider borderColor="gray.500" />}
+                        align="stretch"
+                        color="gray.800"
+                      >
+                        <Box>
+                          <Flex alignItems="center" justifyContent="space-between">
+                            <Text>Show labels</Text>
+                            <Menu isLazy placement="right">
+                              <MenuButton
+                                as={Button}
+                                colorScheme=""
+                                color="black"
+                                rightIcon={<ChevronDownIcon />}
+                              >
+                                {!visuals.labels
+                                  ? 'Never'
+                                  : visuals.labels < 2
+                                  ? 'On Highlight'
+                                  : 'Always'}
+                              </MenuButton>
+                              <Portal>
+                                {' '}
+                                <MenuList zIndex="popover" bgColor="gray.200">
+                                  <MenuItem onClick={() => setVisuals({ ...visuals, labels: 0 })}>
+                                    Never
+                                  </MenuItem>
+                                  <MenuItem onClick={() => setVisuals({ ...visuals, labels: 1 })}>
+                                    On Highlight
+                                  </MenuItem>
+                                  <MenuItem onClick={() => setVisuals({ ...visuals, labels: 2 })}>
+                                    Always
+                                  </MenuItem>
+                                  <MenuItem onClick={() => setVisuals({ ...visuals, labels: 3 })}>
+                                    Always (even in 3D)
+                                  </MenuItem>
+                                </MenuList>
+                              </Portal>
+                            </Menu>
+                          </Flex>
+                          <VStack
+                            spacing={1}
+                            justifyContent="flex-start"
+                            divider={<StackDivider borderColor="gray.400" />}
+                            align="stretch"
+                            paddingLeft={2}
+                            color="gray.800"
+                          >
+                            <SliderWithInfo
+                              label="Label font size"
+                              value={visuals.labelFontSize}
+                              min={5}
+                              max={20}
+                              step={0.5}
+                              onChange={(value) => setVisuals({ ...visuals, labelFontSize: value })}
+                            />
+                            <SliderWithInfo
+                              label="Max. label characters"
+                              value={visuals.labelLength}
+                              min={10}
+                              max={100}
+                              step={1}
+                              onChange={(value) => setVisuals({ ...visuals, labelLength: value })}
+                            />
+                            <SliderWithInfo
+                              label="Max. label line length"
+                              value={visuals.labelWordWrap}
+                              min={10}
+                              max={100}
+                              step={1}
+                              onChange={(value) => setVisuals({ ...visuals, labelWordWrap: value })}
+                            />
+                            <SliderWithInfo
+                              label="Space between label lines"
+                              value={visuals.labelLineSpace}
+                              min={0.2}
+                              max={3}
+                              step={0.1}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, labelLineSpace: value })
+                              }
+                            />
+                            <ColorMenu
+                              colorList={colorList}
+                              label="Text"
+                              setVisuals={setVisualsCallback}
+                              value="labelTextColor"
+                              visValue={visuals.labelTextColor}
+                            />
+                            <ColorMenu
+                              colorList={colorList}
+                              label="Background"
+                              setVisuals={setVisualsCallback}
+                              value="labelBackgroundColor"
+                              visValue={visuals.labelBackgroundColor}
+                            />
+                            <Collapse in={!!visuals.labelBackgroundColor} animateOpacity>
+                              <Box paddingTop={2}>
+                                <SliderWithInfo
+                                  label="Background opacity"
+                                  value={visuals.labelBackgroundOpacity}
+                                  onChange={(value) => {
+                                    console.log(visuals.labelBackgroundOpacity)
+                                    setVisuals({ ...visuals, labelBackgroundOpacity: value })
+                                  }}
+                                  min={0}
+                                  max={1}
+                                  step={0.01}
+                                />
+                              </Box>
+                            </Collapse>
+                            <Collapse in={visuals.labels > 1} animateOpacity>
+                              <Box paddingTop={2}>
+                                <SliderWithInfo
+                                  label="Label Appearance Scale"
+                                  value={visuals.labelScale * 5}
+                                  onChange={(value) =>
+                                    setVisuals({ ...visuals, labelScale: value / 5 })
+                                  }
+                                />
+                              </Box>
+                            </Collapse>
+                          </VStack>
+                        </Box>
+                      </VStack>
+                    </AccordionPanel>
+                  </AccordionItem>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Flex justifyContent="space-between" w="100%">
+                        <Text>Highlighting</Text>
+                        <AccordionIcon marginRight={2} />
+                      </Flex>
+                    </AccordionButton>
+                    <AccordionPanel>
+                      <VStack
+                        spacing={2}
+                        justifyContent="flex-start"
+                        divider={<StackDivider borderColor="gray.500" />}
+                        align="stretch"
+                        color="gray.800"
+                      >
+                        <Box>
+                          <EnableSection
+                            label="Highlight"
+                            onChange={() =>
+                              setVisuals({ ...visuals, highlight: !visuals.highlight })
+                            }
+                            value={visuals.highlight}
+                          >
+                            <VStack
+                              spacing={1}
+                              justifyContent="flex-start"
+                              divider={<StackDivider borderColor="gray.400" />}
+                              align="stretch"
+                              paddingLeft={0}
+                            >
+                              <SliderWithInfo
+                                label="Highlight Link Thickness"
+                                value={visuals.highlightLinkSize}
+                                onChange={(value) =>
+                                  setVisuals({ ...visuals, highlightLinkSize: value })
+                                }
+                              />
+                              <SliderWithInfo
+                                label="Highlight Node Size"
+                                value={visuals.highlightNodeSize}
+                                onChange={(value) =>
+                                  setVisuals({ ...visuals, highlightNodeSize: value })
+                                }
+                              />
+                              <SliderWithInfo
+                                min={0}
+                                max={1}
+                                label="Highlight Fade"
+                                value={visuals.highlightFade}
+                                onChange={(value) =>
+                                  setVisuals({ ...visuals, highlightFade: value })
+                                }
+                              />
+                              {/*<Flex justifyContent="space-between">
                           <Text> Highlight node color </Text>
                         </Flex>
                         <Flex justifyContent="space-between">
                           <Text> Highlight link color </Text>
                             </Flex>*/}
-                      <EnableSection
-                        label="Highlight Animation"
-                        onChange={() => {
-                          setVisuals({ ...visuals, highlightAnim: !visuals.highlightAnim })
-                        }}
-                        value={visuals.highlightAnim}
+                              <EnableSection
+                                label="Highlight Animation"
+                                onChange={() => {
+                                  setVisuals({ ...visuals, highlightAnim: !visuals.highlightAnim })
+                                }}
+                                value={visuals.highlightAnim}
+                              >
+                                <SliderWithInfo
+                                  label="Animation speed"
+                                  onChange={(v) => setVisuals({ ...visuals, animationSpeed: v })}
+                                  value={visuals.animationSpeed}
+                                  infoText="Slower speed has a chance of being buggy"
+                                  min={50}
+                                  max={1000}
+                                  step={10}
+                                />
+                                <Select
+                                  placeholder={visuals.algorithmName}
+                                  onChange={(v) => {
+                                    setVisuals({ ...visuals, algorithmName: v.target.value })
+                                  }}
+                                >
+                                  {visuals.algorithmOptions.map((opt: string) => (
+                                    <option key={opt} value={opt}>
+                                      {opt}
+                                    </option>
+                                  ))}
+                                </Select>
+                              </EnableSection>
+                            </VStack>
+                          </EnableSection>
+                        </Box>
+                      </VStack>
+                    </AccordionPanel>
+                  </AccordionItem>
+                  <AccordionItem>
+                    <AccordionButton>
+                      <Flex justifyContent="space-between" w="100%">
+                        <Text>Citations</Text>
+                        <AccordionIcon marginRight={2} />
+                      </Flex>
+                    </AccordionButton>
+                    <AccordionPanel>
+                      <VStack
+                        spacing={2}
+                        justifyContent="flex-start"
+                        divider={<StackDivider borderColor="gray.500" />}
+                        align="stretch"
+                        color="gray.800"
                       >
-                        <SliderWithInfo
-                          label="Animation speed"
-                          onChange={(v) => setVisuals({ ...visuals, animationSpeed: v })}
-                          value={visuals.animationSpeed}
-                          infoText="Slower speed has a chance of being buggy"
-                          min={50}
-                          max={1000}
-                          step={10}
-                        />
-                        <Select
-                          placeholder={visuals.algorithmName}
-                          onChange={(v) => {
-                            setVisuals({ ...visuals, algorithmName: v.target.value })
-                          }}
-                        >
-                          {visuals.algorithmOptions.map((opt: string) => (
-                            <option key={opt} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                        </Select>
-                      </EnableSection>
-                    </VStack>
-                  </EnableSection>
-                </VStack>
+                        <Box>
+                          <EnableSection
+                            label="Dash cite links"
+                            infoText="Add dashes to citation links made with org-roam-bibtex"
+                            value={visuals.citeDashes}
+                            onChange={() =>
+                              setVisuals({ ...visuals, citeDashes: !visuals.citeDashes })
+                            }
+                          >
+                            <SliderWithInfo
+                              label="Dash length"
+                              value={visuals.citeDashLength / 10}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, citeDashLength: value * 10 })
+                              }
+                            />
+                            <SliderWithInfo
+                              label="Gap length"
+                              value={visuals.citeGapLength / 5}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, citeGapLength: value * 5 })
+                              }
+                            />
+                          </EnableSection>
+                          <ColorMenu
+                            colorList={colorList}
+                            label="Citation node color"
+                            setVisuals={setVisualsCallback}
+                            value={'citeNodeColor'}
+                            visValue={visuals.citeNodeColor}
+                          />
+                          <ColorMenu
+                            colorList={colorList}
+                            label="Citation link color"
+                            setVisuals={setVisualsCallback}
+                            value={'citeLinkColor'}
+                            visValue={visuals.citeLinkColor}
+                          />
+                          <ColorMenu
+                            colorList={colorList}
+                            label="Reference link highlight"
+                            setVisuals={setVisualsCallback}
+                            value={'citeLinkHighlightColor'}
+                            visValue={visuals.citeLinkHighlightColor}
+                          />
+                          <EnableSection
+                            label="Dash ref links"
+                            infoText="Add dashes to citation links, whose target has a note, made with org-roam-bibtex"
+                            value={visuals.refDashes}
+                            onChange={() =>
+                              setVisuals({ ...visuals, refDashes: !visuals.refDashes })
+                            }
+                          >
+                            <SliderWithInfo
+                              label="Dash length"
+                              value={visuals.refDashLength / 10}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, refDashLength: value * 10 })
+                              }
+                            />
+                            <SliderWithInfo
+                              label="Gap length"
+                              value={visuals.refGapLength / 5}
+                              onChange={(value) =>
+                                setVisuals({ ...visuals, refGapLength: value * 5 })
+                              }
+                            />
+                          </EnableSection>
+                          <ColorMenu
+                            colorList={colorList}
+                            label="Reference node color"
+                            setVisuals={setVisualsCallback}
+                            value={'refNodeColor'}
+                            visValue={visuals.refNodeColor}
+                          />
+                          <ColorMenu
+                            colorList={colorList}
+                            label="Reference link color"
+                            setVisuals={setVisualsCallback}
+                            value={'refLinkColor'}
+                            visValue={visuals.refLinkColor}
+                          />
+                          <ColorMenu
+                            colorList={colorList}
+                            label="Reference link highlight"
+                            setVisuals={setVisualsCallback}
+                            value={'refLinkHighlightColor'}
+                            visValue={visuals.refLinkHighlightColor}
+                          />
+                        </Box>
+                      </VStack>
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
               </VStack>
             </AccordionPanel>
           </AccordionItem>
