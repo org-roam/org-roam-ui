@@ -964,17 +964,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
         ? 1 + opacity * (visuals.highlightNodeSize - 1)
         : 1
-    return basicSize * highlightSize
+    return (basicSize * highlightSize) / Math.pow(zoom, visuals.nodeZoomSize)
   }
 
   const [dragging, setDragging] = useState(false)
 
+  const [zoom, setZoom] = useState(1)
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
     width: windowWidth,
     height: windowHeight,
     backgroundColor: theme.colors.gray[visuals.backgroundColor],
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
+    onZoom: ({ k, x, y }) => setZoom(k),
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode)

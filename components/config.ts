@@ -103,6 +103,7 @@ export const initialVisuals = {
   refLinkHighlightColor: '',
   refNodeColor: 'black',
   nodeSizeLinks: 0.5,
+  nodeZoomSize: 1.3,
 }
 
 export interface TagColors {

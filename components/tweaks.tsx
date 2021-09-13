@@ -761,6 +761,19 @@ export const Tweaks = (props: TweakProps) => {
                             max={2}
                             onChange={(value) => setVisuals({ ...visuals, nodeSizeLinks: value })}
                           />
+                          <SliderWithInfo
+                            label="Node zoom invariance"
+                            value={visuals.nodeZoomSize}
+                            min={0}
+                            max={2}
+                            infoText="How much the graph will try to keep the nodesize consistent across zoom scales. 0 is no consistency, node will always be their true size, 1 is linear, 2 is quadratic."
+                            onChange={(value) =>
+                              setVisuals((prev: typeof initialVisuals) => ({
+                                ...prev,
+                                nodeZoomSize: value,
+                              }))
+                            }
+                          />
                           {threeDim && (
                             <>
                               <SliderWithInfo
