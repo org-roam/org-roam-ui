@@ -964,7 +964,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
         ? 1 + opacity * (visuals.highlightNodeSize - 1)
         : 1
-    return (basicSize * highlightSize) / Math.pow(zoom, visuals.nodeZoomSize)
+    return basicSize * highlightSize
   }
 
   const [dragging, setDragging] = useState(false)
@@ -983,7 +983,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
-      return nodeSize(node)
+      return nodeSize(node) / Math.pow(zoom, visuals.nodeZoomSize)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!node) {
