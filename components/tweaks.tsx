@@ -62,6 +62,9 @@ import { ColorMenu } from './ColorMenu'
 
 import { ThemeContext } from '../util/themecontext'
 import { usePersistantState } from '../util/persistant-state'
+import { SliderWithInfo } from './SliderWithInfo'
+import { EnableSection } from './EnableSection'
+import { InfoTooltip } from './InfoTooltip'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -1258,83 +1261,6 @@ export const Tweaks = (props: TweakProps) => {
           </AccordionItem>
         </Accordion>
       </Scrollbars>
-    </Box>
-  )
-}
-
-export interface InfoTooltipProps {
-  infoText?: string | boolean
-}
-export const InfoTooltip = (props: InfoTooltipProps) => {
-  const { infoText } = props
-  return (
-    <Box paddingLeft="1">
-      <Tooltip label={infoText} placement="top" color="gray.100" bg="gray.800" hasArrow>
-        <InfoOutlineIcon />
-      </Tooltip>
-    </Box>
-  )
-}
-export interface SliderWithInfoProps {
-  min?: number
-  max?: number
-  step?: number
-  value: number
-  onChange: (arg0: number) => void
-  label: string
-  infoText?: string
-}
-export const SliderWithInfo = ({
-  min = 0,
-  max = 10,
-  step = 0.1,
-  value = 1,
-  ...rest
-}: SliderWithInfoProps) => {
-  const { onChange, label, infoText } = rest
-  const { highlightColor } = useContext(ThemeContext)
-  return (
-    <Box key={label}>
-      <Box display="flex" alignItems="flex-end">
-        <Text>{label}</Text>
-        {infoText && <InfoTooltip infoText={infoText} />}
-      </Box>
-      <Slider value={value} onChange={onChange} min={min} max={max} step={step}>
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip bg={highlightColor} label={value.toFixed(1)}>
-          <SliderThumb bg="white" />
-        </Tooltip>
-      </Slider>
-    </Box>
-  )
-}
-
-export interface EnableSectionProps {
-  label: string
-  value: boolean | number
-  onChange: () => void
-  infoText?: string
-  children: React.ReactNode
-}
-
-export const EnableSection = (props: EnableSectionProps) => {
-  const { value, onChange, label, infoText, children } = props
-  return (
-    <Box paddingTop={2} key={label}>
-      <Box display="flex" justifyContent="space-between" paddingBottom={2}>
-        <Box display="flex" alignItems="center">
-          <Text>{label}</Text>
-          {infoText && <InfoTooltip infoText={infoText} />}
-        </Box>
-        <Switch isChecked={!!value} onChange={onChange} />
-      </Box>
-      <Collapse in={!!value} animateOpacity>
-        <Box paddingLeft={4} paddingTop={2} paddingBottom={2}>
-          {children}
-        </Box>
-      </Collapse>
     </Box>
   )
 }
