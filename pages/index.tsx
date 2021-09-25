@@ -33,7 +33,7 @@ import {
   TagColors,
   colorList,
 } from '../components/config'
-import { Tweaks } from '../components/tweaks'
+import { Tweaks } from '../components/Tweaks'
 import { ContextMenu } from '../components/contextmenu'
 
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'

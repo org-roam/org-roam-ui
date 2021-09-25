@@ -1,7 +1,7 @@
 import { Box, StackDivider, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { ColorMenu } from './ColorMenu'
-import { colorList, initialVisuals } from './config'
+import { colorList, initialVisuals } from '../config'
 import { EnableSection } from './EnableSection'
 import { SliderWithInfo } from './SliderWithInfo'
 

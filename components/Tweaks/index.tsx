@@ -22,12 +22,12 @@ import {
   initialBehavior,
   TagColors,
   colorList,
-} from './config'
+} from '../config'
 
 import FilterPanel from './FilterPanel'
 
-import { ThemeContext } from '../util/themecontext'
-import { usePersistantState } from '../util/persistant-state'
+import { ThemeContext } from '../../util/themecontext'
+import { usePersistantState } from '../../util/persistant-state'
 import { PhysicsPanel } from './PhysicsPanel'
 import { VisualsPanel } from './VisualsPanel'
 import { BehaviorPanel } from './BehaviorPanel'

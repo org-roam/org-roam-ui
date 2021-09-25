@@ -12,7 +12,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import React from 'react'
-import { initialBehavior, initialMouse } from './config'
+import { initialBehavior, initialMouse } from '../config'
 import { InfoTooltip } from './InfoTooltip'
 import { SliderWithInfo } from './SliderWithInfo'
 

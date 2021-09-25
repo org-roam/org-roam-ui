@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { TagPanel } from './TagPanel'
-import { initialFilter, TagColors } from './config'
+import { initialFilter, TagColors } from '../config'
 import { TagColorPanel } from './TagColorPanel'
 
 export interface FilterPanelProps {

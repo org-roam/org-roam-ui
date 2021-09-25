@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react'
 import React, { useContext } from 'react'
-import { ThemeContext } from '../util/themecontext'
+import { ThemeContext } from '../../util/themecontext'
 import { InfoTooltip } from './InfoTooltip'
 
 export interface SliderWithInfoProps {

@@ -1,34 +1,17 @@
-import { ArrowRightIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Text,
   Accordion,
   AccordionButton,
   AccordionItem,
-  Box,
   Flex,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  Portal,
-  Tooltip,
   VStack,
   AccordionIcon,
   AccordionPanel,
-  MenuItem,
-  Collapse,
-  StackDivider,
-  Button,
 } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import { ColorMenu } from './ColorMenu'
-import { EnableSection } from './EnableSection'
-import { SliderWithInfo } from './SliderWithInfo'
 import { HighlightingPanel } from './HighlightingPanel'
 import { ColorsPanel } from './ColorsPanel'
-import { colorList, initialVisuals } from './config'
+import { initialVisuals } from '../config'
 import { NodesNLinksPanel } from './NodesNLinksPanel'
 import { LabelsPanel } from './LabelsPanel'
 import { CitationsPanel } from './CitationsPanel'

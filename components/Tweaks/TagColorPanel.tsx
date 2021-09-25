@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 import React, { useState } from 'react'
-import { TagColors } from './config'
+import { TagColors } from '../config'
 
 export interface TagColorPanelProps {
   tags: string[]

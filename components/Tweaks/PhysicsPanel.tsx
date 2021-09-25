@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import { initialPhysics } from './config'
+import { initialPhysics } from '../config'
 import { EnableSection } from './EnableSection'
 import { SliderWithInfo } from './SliderWithInfo'
 
