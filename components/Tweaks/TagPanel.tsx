@@ -1,6 +1,6 @@
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 import React, { useState } from 'react'
-import { initialFilter } from './config'
+import { initialFilter } from '../config'
 
 export interface TagPanelProps {
   tags: string[]
