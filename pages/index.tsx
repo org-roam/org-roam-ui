@@ -766,7 +766,10 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         ...links.flatMap((link) => [link.source, link.target]),
       ].map((nodeId) => [nodeId, {}]),
     )
-  }, [centralHighlightedNode.current, filteredLinksByNodeIdRef.current])
+  }, [
+    JSON.stringify(centralHighlightedNode.current),
+    JSON.stringify(filteredLinksByNodeIdRef.current),
+  ])
 
   useEffect(() => {
     ;(async () => {
@@ -854,9 +857,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     )
   }, [emacsTheme])
 
-  // FIXME: Somehow the "linksByNodeId" call causes parent nodes to be always highlighted
-  // Replacing this with "linksByNodeIdRef.current" should solve this, but instead leads to no
-  // highlighting whatsoever.
   const previouslyHighlightedNodes = useMemo(() => {
     const previouslyHighlightedLinks =
       filteredLinksByNodeIdRef.current[lastHoverNode.current?.id!] ?? []
@@ -1268,9 +1268,7 @@ function hexToRGBA(hex: string, opacity: number) {
     'rgba(' +
     (hex = hex.replace('#', ''))
       .match(new RegExp('(.{' + hex.length / 3 + '})', 'g'))!
-      .map(function (l) {
-        return parseInt(hex.length % 2 ? l + l : l, 16)
-      })
+      .map((l) => parseInt(hex.length % 2 ? l + l : l, 16))
       .concat(isFinite(opacity) ? opacity : 1)
       .join(',') +
     ')'
