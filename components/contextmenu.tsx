@@ -55,6 +55,7 @@ export default interface ContextMenuProps {
   scope: { nodeIds: string[] }
   deleteNodeInEmacs: (node: OrgRoamNode) => void
   createNodeInEmacs: (node: OrgRoamNode) => void
+  getOrgText: any
 }
 
 export const ContextMenu = (props: ContextMenuProps) => {
@@ -69,6 +70,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     openNodeInEmacs,
     deleteNodeInEmacs,
     createNodeInEmacs,
+    getOrgText,
   } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
   const copyRef = useRef<any>()
@@ -157,6 +159,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 Permenantly delete note
               </MenuItem>
             )}
+            <MenuItem onClick={() => getOrgText(node)}>Preview</MenuItem>
           </MenuList>
         </Menu>
       </Box>

@@ -84,6 +84,11 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
+  const [orgText, setOrgText] = useState('')
+
+  useEffect(() => {
+    console.log(orgText)
+  }, [orgText])
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
@@ -358,6 +363,8 @@ export function GraphPage() {
       switch (message.type) {
         case 'graphdata':
           return updateGraphData(message.data)
+        case 'orgText':
+          return setOrgText(message.data)
         case 'theme':
           return setEmacsTheme(message.data)
         case 'command':
@@ -518,6 +525,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const sendMessageToEmacs = (command: string, data: {}) => {
     webSocket.send(JSON.stringify({ command: command, data: data }))
   }
+
+  const getOrgText = (node: OrgRoamNode) => {
+    sendMessageToEmacs('getText', { id: node.id })
+  }
+
   const openNodeInEmacs = (node: OrgRoamNode) => {
     sendMessageToEmacs('open', { id: node.id })
   }
@@ -947,6 +959,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     () => getThemeColor(visuals.labelTextColor),
     [visuals.labelTextColor, emacsTheme],
   )
+
   const labelBackgroundColor = useMemo(
     () => getThemeColor(visuals.labelBackgroundColor),
     [visuals.labelBackgroundColor, emacsTheme],
@@ -1182,6 +1195,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           openNodeInEmacs={openNodeInEmacs}
           deleteNodeInEmacs={deleteNodeInEmacs}
           createNodeInEmacs={createNodeInEmacs}
+          getOrgText={getOrgText}
         />
       )}
       {threeDim ? (
