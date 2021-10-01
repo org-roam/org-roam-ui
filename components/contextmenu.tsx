@@ -43,6 +43,7 @@ import {
 } from '@chakra-ui/icons'
 
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
+import { getOrgText, deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from "../util/webSocketFunctions"
 
 export default interface ContextMenuProps {
   background: Boolean
@@ -50,12 +51,10 @@ export default interface ContextMenuProps {
   nodeType?: string
   coordinates: number[]
   handleLocal: (node: OrgRoamNode, add: string) => void
-  openNodeInEmacs: (node: OrgRoamNode) => void
   menuClose: () => void
   scope: { nodeIds: string[] }
-  deleteNodeInEmacs: (node: OrgRoamNode) => void
-  createNodeInEmacs: (node: OrgRoamNode) => void
-  getOrgText: any
+  webSocket: any
+    setPreviewNode: any,
 }
 
 export const ContextMenu = (props: ContextMenuProps) => {
@@ -67,10 +66,8 @@ export const ContextMenu = (props: ContextMenuProps) => {
     handleLocal,
     menuClose,
     scope,
-    openNodeInEmacs,
-    deleteNodeInEmacs,
-    createNodeInEmacs,
-    getOrgText,
+    webSocket,
+      setPreviewNode,
   } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
   const copyRef = useRef<any>()
@@ -104,11 +101,11 @@ export const ContextMenu = (props: ContextMenuProps) => {
               </>
             )}
             {!node?.properties.FILELESS ? (
-              <MenuItem icon={<EditIcon />} onClick={() => openNodeInEmacs(node as OrgRoamNode)}>
+              <MenuItem icon={<EditIcon />} onClick={() => openNodeInEmacs(node as OrgRoamNode, webSocket)}>
                 Open in Emacs
               </MenuItem>
             ) : (
-              <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(node)}>
+              <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(node, webSocket)}>
                 Create node
               </MenuItem>
             )}
@@ -159,7 +156,8 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 Permenantly delete note
               </MenuItem>
             )}
-            <MenuItem onClick={() => getOrgText(node)}>Preview</MenuItem>
+            <MenuItem onClick={() => {getOrgText(node!, webSocket)
+                setPreviewNode(node)}}>Preview</MenuItem>
           </MenuList>
         </Menu>
       </Box>
@@ -198,7 +196,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
               ml={3}
               onClick={() => {
                 console.log('aaaaa')
-                deleteNodeInEmacs(node!)
+                deleteNodeInEmacs(node!, webSocket)
                 onClose()
                 menuClose()
               }}

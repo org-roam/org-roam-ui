@@ -11,7 +11,7 @@ export interface uniorgProps {
   orgText: string
 }
 
-const UniOrg = (props: uniorgProps) => {
+export const UniOrg = (props: uniorgProps) => {
   const { orgText } = props
   const processor = unified()
     .use(uniorgParse)
@@ -22,4 +22,3 @@ const UniOrg = (props: uniorgProps) => {
   return <div>processor.processSync(orgText)</div>
 }
 
-export default UniOrg

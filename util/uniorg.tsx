@@ -7,11 +7,11 @@ import katex from 'rehype-katex'
 import rehype2react from 'rehype-react'
 import React from 'react'
 
-export interface uniorgProps {
+export interface UniOrgProps {
   orgText: string
 }
 
-const uniorg = (props: uniorgProps) => {
+export const UniOrg = (props: UniOrgProps) => {
   const { orgText } = props
   const processor = unified()
     .use(uniorgParse)
@@ -19,7 +19,7 @@ const uniorg = (props: uniorgProps) => {
     .use(katex)
     .use(rehype2react, { createElement: React.createElement })
 
-  return processor.processSync(orgText)
+    console.log(processor.processSync(orgText))
+    return <div> {processor.processSync(orgText).result}</div>
 }
 
-export default uniorg
