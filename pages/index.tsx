@@ -42,12 +42,7 @@ import SpriteText from 'three-spritetext'
 import wrap from 'word-wrap'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-import {
-  getOrgText,
-  deleteNodeInEmacs,
-  openNodeInEmacs,
-  createNodeInEmacs,
-} from '../util/webSocketFunctions'
+import { deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from '../util/webSocketFunctions'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -92,7 +87,6 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
-  const [orgText, setOrgText] = useState('')
   const [previewNode, setPreviewNode] = useState<NodeObject>({})
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -369,8 +363,6 @@ export function GraphPage() {
       switch (message.type) {
         case 'graphdata':
           return updateGraphData(message.data)
-        case 'orgText':
-          return setOrgText(message.data)
         case 'theme':
           return setEmacsTheme(message.data)
         case 'command':
@@ -432,7 +424,6 @@ export function GraphPage() {
             isOpen,
             onClose,
             previewNode,
-            orgText,
           }}
         />
         <Tweaks
@@ -584,7 +575,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         openContextMenu(node, event)
       }
       case mouse.preview: {
-        getOrgText(node, webSocket)
         setPreviewNode(node)
       }
       default:

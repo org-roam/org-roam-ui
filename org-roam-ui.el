@@ -206,8 +206,8 @@ This serves the web-build and API over HTTP."
                         (org-roam-capture-
                          :node (org-roam-node-create :title (alist-get 'title data))
                          :props '(:finalize find-file))))
-                      ((string= command "getText")
-                       (org-roam-ui--send-text (alist-get 'id data) oru-ws))
+                      ;((string= command "getText")
+                      ; (org-roam-ui--send-text (alist-get 'id data) oru-ws))
                       (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
@@ -235,6 +235,14 @@ This serves the web-build and API over HTTP."
           text)
         (websocket-send-text ws
                              (json-encode `((type . "orgText") (data . ,text))))))
+
+(defservlet* note/:id text/plain ()
+  (let* ((node (org-roam-populate (org-roam-node-create :id id)))
+        (file (org-roam-node-file node)))
+ (insert-file-contents-literally file)
+(httpd-send-header t "text/html" 200
+                       :Access-Control-Allow-Origin "*")))
+
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer."

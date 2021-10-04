@@ -34,6 +34,26 @@ export const BehaviorPanel = (props: BehaviorPanelProps) => {
       color="gray.800"
     >
       <Flex alignItems="center" justifyContent="space-between">
+        <Text>Preview node</Text>
+        <Menu isLazy placement="right">
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="" color="black">
+            <Text>
+              {mouse.preview ? mouse.preview[0]!.toUpperCase() + mouse.preview!.slice(1) : 'Never'}
+            </Text>
+          </MenuButton>
+          <Portal>
+            {' '}
+            <MenuList bgColor="gray.200" zIndex="popover">
+              <MenuItem onClick={() => setMouse({ ...mouse, preview: '' })}>Never</MenuItem>
+              <MenuItem onClick={() => setMouse({ ...mouse, preview: 'click' })}>Click</MenuItem>
+              <MenuItem onClick={() => setMouse({ ...mouse, preview: 'double' })}>
+                Double Click
+              </MenuItem>
+            </MenuList>
+          </Portal>
+        </Menu>
+      </Flex>
+      <Flex alignItems="center" justifyContent="space-between">
         <Flex>
           <Text>Expand Node</Text>
           <InfoTooltip infoText="View only the node and its direct neighbors" />

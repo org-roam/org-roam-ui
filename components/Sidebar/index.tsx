@@ -33,14 +33,25 @@ export interface SidebarProps {
   onClose: any
   //nodeById: any
   previewNode: NodeObject
-  orgText: string
 }
 
 const Sidebar = (props: SidebarProps) => {
-  const { isOpen, onClose, previewNode, orgText } = props
+  const { isOpen, onClose, previewNode } = props
 
   const { highlightColor } = useContext(ThemeContext)
   const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode>()
+  const [previewText, setPreviewText] = useState('')
+
+  const getText = (id: string) => {
+    fetch(`http://localhost:35901/note/${id}`)
+      .then((res) => {
+        return res.text()
+      })
+      .then((res) => {
+        console.log(res)
+        setPreviewText(res)
+      })
+  }
 
   useEffect(() => {
     if (!previewNode) {
@@ -48,6 +59,7 @@ const Sidebar = (props: SidebarProps) => {
     }
 
     setPreviewRoamNode(previewNode as OrgRoamNode)
+    previewNode?.id && getText(previewNode?.id as string)
   }, [previewNode])
 
   //maybe want to close it when clicking outside, but not sure
@@ -246,7 +258,7 @@ const Sidebar = (props: SidebarProps) => {
                   '.figure p': { textAlign: 'center' },
                 }}
               >
-                <UniOrg orgText={orgText} />
+                <UniOrg orgText={previewText} />
               </Box>
             </VStack>
           </Scrollbars>

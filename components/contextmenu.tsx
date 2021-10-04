@@ -43,7 +43,7 @@ import {
 } from '@chakra-ui/icons'
 
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
-import { getOrgText, deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from "../util/webSocketFunctions"
+import { deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from '../util/webSocketFunctions'
 
 export default interface ContextMenuProps {
   background: Boolean
@@ -54,7 +54,7 @@ export default interface ContextMenuProps {
   menuClose: () => void
   scope: { nodeIds: string[] }
   webSocket: any
-    setPreviewNode: any,
+  setPreviewNode: any
 }
 
 export const ContextMenu = (props: ContextMenuProps) => {
@@ -67,7 +67,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     menuClose,
     scope,
     webSocket,
-      setPreviewNode,
+    setPreviewNode,
   } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
   const copyRef = useRef<any>()
@@ -101,7 +101,10 @@ export const ContextMenu = (props: ContextMenuProps) => {
               </>
             )}
             {!node?.properties.FILELESS ? (
-              <MenuItem icon={<EditIcon />} onClick={() => openNodeInEmacs(node as OrgRoamNode, webSocket)}>
+              <MenuItem
+                icon={<EditIcon />}
+                onClick={() => openNodeInEmacs(node as OrgRoamNode, webSocket)}
+              >
                 Open in Emacs
               </MenuItem>
             ) : (
@@ -156,8 +159,13 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 Permenantly delete note
               </MenuItem>
             )}
-            <MenuItem onClick={() => {getOrgText(node!, webSocket)
-                setPreviewNode(node)}}>Preview</MenuItem>
+            <MenuItem
+              onClick={() => {
+                setPreviewNode(node)
+              }}
+            >
+              Preview
+            </MenuItem>
           </MenuList>
         </Menu>
       </Box>

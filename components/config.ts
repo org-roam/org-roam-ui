@@ -122,6 +122,7 @@ export const initialMouse = {
   local: 'click',
   follow: 'double',
   context: 'right',
+  preview: 'click',
 }
 
 export const colorList = [
