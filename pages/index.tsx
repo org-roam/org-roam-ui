@@ -42,7 +42,12 @@ import SpriteText from 'three-spritetext'
 import wrap from 'word-wrap'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-import { getOrgText, deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from "../util/webSocketFunctions"
+import {
+  getOrgText,
+  deleteNodeInEmacs,
+  openNodeInEmacs,
+  createNodeInEmacs,
+} from '../util/webSocketFunctions'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -87,7 +92,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
-  const [orgText, setOrgText] = useState("")
+  const [orgText, setOrgText] = useState('')
   const [previewNode, setPreviewNode] = useState<NodeObject>({})
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -365,7 +370,7 @@ export function GraphPage() {
         case 'graphdata':
           return updateGraphData(message.data)
         case 'orgText':
-              return setOrgText(message.data)
+          return setOrgText(message.data)
         case 'theme':
           return setEmacsTheme(message.data)
         case 'command':
@@ -415,14 +420,20 @@ export function GraphPage() {
 
   return (
     <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%" overflow="hidden">
-      <Box display="flex" justifyContent="space-between" flexDirection="row" height="100%" width="100%">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flexDirection="row"
+        height="100%"
+        width="100%"
+      >
         <Sidebar
-            {...{
-          isOpen,
-          onClose,
-          previewNode,
-          orgText,
-        }}
+          {...{
+            isOpen,
+            onClose,
+            previewNode,
+            orgText,
+          }}
         />
         <Tweaks
           {...{
@@ -443,21 +454,21 @@ export function GraphPage() {
           }}
           tags={tagsRef.current}
         />
-      <Flex height="100%" flexDirection="column" marginLeft="auto">
-        {!isOpen && (
-          <IconButton
-            icon={<ChevronLeftIcon />}
-            height={100}
-            aria-label="Open org-viewer"
-            position="relative"
-            zIndex="overlay"
-            colorScheme="purple"
-            onClick={onOpen}
-            variant="ghost"
-            marginTop={10}
-          />
-        )}
-      </Flex>
+        <Flex height="100%" flexDirection="column" marginLeft="auto">
+          {!isOpen && (
+            <IconButton
+              icon={<ChevronLeftIcon />}
+              height={100}
+              aria-label="Open org-viewer"
+              position="relative"
+              zIndex="overlay"
+              colorScheme="purple"
+              onClick={onOpen}
+              variant="ghost"
+              marginTop={10}
+            />
+          )}
+        </Flex>
       </Box>
       <Box position="absolute" alignItems="top" overflow="hidden">
         <Graph
@@ -500,10 +511,10 @@ export interface GraphProps {
   setScope: any
   webSocket: any
   tagColors: { [tag: string]: string }
-    setPreviewNode: any
+  setPreviewNode: any
 }
 
-export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
+export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const {
     physics,
     graphData,
@@ -519,7 +530,7 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
     setScope,
     webSocket,
     tagColors,
-      setPreviewNode,
+    setPreviewNode,
   } = props
 
   // react-force-graph does not track window size
@@ -551,7 +562,6 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
     return
   }
 
-
   const contextMenu = useDisclosure()
 
   const openContextMenu = (node: OrgRoamNode, event: any) => {
@@ -572,6 +582,10 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
       }
       case mouse.context: {
         openContextMenu(node, event)
+      }
+      case mouse.preview: {
+        getOrgText(node, webSocket)
+        setPreviewNode(node)
       }
       default:
         break
@@ -779,7 +793,7 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
   ])
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       const fg = graphRef.current
       const d3 = await d3promise
       if (physics.gravityOn && !(scope.nodeIds.length && !physics.gravityLocal)) {
@@ -941,15 +955,15 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
       return needsHighlighting
         ? getThemeColor(visuals.citeNodeColor)
         : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
-          visuals.highlightFade * opacity,
-        )
+            visuals.highlightFade * opacity,
+          )
     }
     if (visuals.refNodeColor && node.properties.ROAM_REFS) {
       return needsHighlighting
         ? getThemeColor(visuals.refNodeColor)
         : highlightColors[visuals.refNodeColor][visuals.backgroundColor](
-          visuals.highlightFade * opacity,
-        )
+            visuals.highlightFade * opacity,
+          )
     }
     if (!needsHighlighting) {
       return highlightColors[getNodeColorById(node.id as string)][visuals.backgroundColor](
@@ -1097,20 +1111,20 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
       if (visuals.refLinkColor && roamLink.type === 'ref') {
         return needsHighlighting && (visuals.refLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.refLinkColor][
-            visuals.refLinkHighlightColor || visuals.linkHighlight
-          ](opacity)
+              visuals.refLinkHighlightColor || visuals.linkHighlight
+            ](opacity)
           : highlightColors[visuals.refLinkColor][visuals.backgroundColor](
-            visuals.highlightFade * opacity,
-          )
+              visuals.highlightFade * opacity,
+            )
       }
       if (visuals.citeLinkColor && roamLink.type?.includes('cite')) {
         return needsHighlighting && (visuals.citeLinkHighlightColor || visuals.linkHighlight)
           ? highlightColors[visuals.citeLinkColor][
-            visuals.citeLinkHighlightColor || visuals.linkHighlight
-          ](opacity)
+              visuals.citeLinkHighlightColor || visuals.linkHighlight
+            ](opacity)
           : highlightColors[visuals.citeLinkColor][visuals.backgroundColor](
-            visuals.highlightFade * opacity,
-          )
+              visuals.highlightFade * opacity,
+            )
       }
 
       return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
@@ -1200,7 +1214,7 @@ export const Graph = forwardRef(function(props: GraphProps, graphRef: any) {
           handleLocal={handleLocal}
           menuClose={contextMenu.onClose.bind(contextMenu)}
           webSocket={webSocket}
-        setPreviewNode={setPreviewNode}
+          setPreviewNode={setPreviewNode}
         />
       )}
       {threeDim ? (

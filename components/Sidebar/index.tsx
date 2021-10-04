@@ -88,7 +88,7 @@ const Sidebar = (props: SidebarProps) => {
             alignItems="center"
             color="black"
           >
-            <Heading size="md">{previewRoamNode}</Heading>
+            <Heading size="md">{previewRoamNode?.title}</Heading>
           </Flex>
           <Scrollbars
             //autoHeight
