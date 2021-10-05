@@ -51,6 +51,11 @@ const Sidebar = (props: SidebarProps) => {
         console.log(res)
         setPreviewText(res)
       })
+      .catch((e) => {
+        setPreviewText(
+          'Could not fetch the text for some reason, sorry!\n\n This can happen because you have an id with forward slashes (/) in it.',
+        )
+      })
   }
 
   useEffect(() => {
