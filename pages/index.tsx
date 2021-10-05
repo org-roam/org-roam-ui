@@ -698,7 +698,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           }
           const links = filteredLinksByNodeIdRef.current[node.id as string] ?? []
           return links.some((link) => {
-            return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
+            const [source, target] = normalizeLinkEnds(link)
+            return scope.nodeIds.includes(source) || scope.nodeIds.includes(target)
           })
         }
         return neighbs.includes(node.id as string)
@@ -736,7 +737,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const scopedLinks = [...oldScopedLinks, ...newScopedLinks]
 
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
-  }, [filter, scope, graphData])
+  }, [filter, scope, JSON.stringify(graphData), filteredGraphData.links, filteredGraphData.nodes])
 
   centralHighlightedNode.current = hoverNode
   const highlightedNodes = useMemo(() => {
