@@ -6,43 +6,21 @@ import * as d3int from 'd3-interpolate'
 
 import { ThemeContext } from '../util/themecontext'
 import { usePersistantState } from '../util/persistant-state'
+import { themes } from '../components/themes'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const initialTheme = {
-    base1: '#1c1f24',
-    base2: '#21272d',
-    base3: '#23272e',
-    base4: '#484854',
-    base5: '#62686E',
-    base6: '#757B80',
-    base7: '#9ca0a4',
-    base8: '#DFDFDF',
-    bg: '#242730',
-    'bg-alt': '#2a2e38',
-    blue: '#51afef',
-    cyan: '#5cEfFF',
-    'dark-blue': '#1f5582',
-    'dark-cyan': '#6A8FBF',
-    fg: '#bbc2cf',
-    'fg-alt': '#5D656B',
-    green: '#7bc275',
-    grey: '#484854',
-    magenta: '#C57BDB',
-    orange: '#e69055',
-    red: '#ff665c',
-    teal: '#4db5bd',
-    violet: '#a991f1',
-    yellow: '#FCCE7B',
-  }
+  type Theme = [string, { [color: string]: string }]
+  const initialTheme: Theme = ['one-vibrant', themes['one-vibrant']]
   const [isInitialized, setIsInitialized] = useState(false)
 
-  const [emacsTheme, setEmacsTheme] = useState(initialTheme)
+  const [emacsTheme, setEmacsTheme] = useState<Theme>(initialTheme)
   const [highlightColor, setHighlightColor] = useState('purple.500')
 
   useEffect(() => {
     if (isInitialized) {
-      localStorage.setItem('theme', JSON.stringify(emacsTheme))
+      localStorage.setItem('colorTheme', JSON.stringify(emacsTheme))
     }
+    console.log(emacsTheme)
   }, [emacsTheme])
 
   useEffect(() => {
@@ -53,7 +31,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setEmacsTheme(
-      JSON.parse(localStorage.getItem('theme') ?? JSON.stringify(initialTheme)) ?? initialTheme,
+      JSON.parse(localStorage.getItem('colorTheme') ?? JSON.stringify(initialTheme)) ??
+        initialTheme,
     )
     setHighlightColor(
       JSON.parse(localStorage.getItem('highlightColor') ?? JSON.stringify(highlightColor)) ??
@@ -80,81 +59,83 @@ function MyApp({ Component, pageProps }: AppProps) {
 function SubApp(props: any) {
   const { children } = props
   const { highlightColor, emacsTheme } = useContext(ThemeContext)
+  type Theme = { [color: string]: string }
+  const themeColors: Theme = emacsTheme[1] as Theme
   // yeah it's annoying, should put this someplace more sensible
   const getBorderColor = () => {
     if (highlightColor === 'purple.500') {
-      return emacsTheme.violet + 'aa'
+      return `${themeColors['violet']}aa`
     }
     if (highlightColor === 'pink.500') {
-      return emacsTheme.magenta + 'aa'
+      return `${themeColors['magenta']}aa`
     }
     if (highlightColor === 'blue.500') {
-      return emacsTheme.blue + 'aa'
+      return `${themeColors['blue']}aa`
     }
     if (highlightColor === 'cyan.500') {
-      return emacsTheme.cyan + 'aa'
+      return `${themeColors['cyan']}aa`
     }
     if (highlightColor === 'green.500') {
-      return emacsTheme.green + 'aa'
+      return `${themeColors['green']}aa`
     }
     if (highlightColor === 'yellow.500') {
-      return emacsTheme.yellow + 'aa'
+      return `${themeColors['yellow']}aa`
     }
     if (highlightColor === 'orange.500') {
-      return emacsTheme.orange + 'aa'
+      return `${themeColors['orange']}aa`
     }
     if (highlightColor === 'red.500') {
-      return emacsTheme.red + 'aa'
+      return `${themeColors['red']}aa`
     }
   }
-  const missingColor = d3int.interpolate(emacsTheme.base1, emacsTheme.base2)(0.2)
+  const missingColor = d3int.interpolate(themeColors['base1'], themeColors['base2'])(0.2)
   const borderColor = getBorderColor()
   const theme = useMemo(() => {
     return {
       colors: {
-        white: emacsTheme.bg,
-        black: emacsTheme.fg,
+        white: themeColors['bg'],
+        black: themeColors['fg'],
         gray: {
-          100: emacsTheme.base1,
+          100: themeColors['base1'],
           200: missingColor,
-          300: emacsTheme.base2,
-          400: emacsTheme.base3,
-          500: emacsTheme.base4,
-          600: emacsTheme.base5,
-          700: emacsTheme.base6,
-          800: emacsTheme.base7,
-          900: emacsTheme.base8,
+          300: themeColors['base2'],
+          400: themeColors['base3'],
+          500: themeColors['base4'],
+          600: themeColors['base5'],
+          700: themeColors['base6'],
+          800: themeColors['base7'],
+          900: themeColors['base8'],
         },
         blue: {
-          500: emacsTheme.blue,
+          500: themeColors['blue'],
         },
         teal: {
-          500: emacsTheme.blue,
+          500: themeColors['blue'],
         },
         yellow: {
-          500: emacsTheme.yellow,
+          500: themeColors['yellow'],
         },
         orange: {
-          500: emacsTheme.orange,
+          500: themeColors['orange'],
         },
         red: {
-          500: emacsTheme.red,
+          500: themeColors['red'],
         },
         green: {
-          500: emacsTheme.green,
+          500: themeColors['green'],
         },
         purple: {
-          500: emacsTheme.violet,
+          500: themeColors['violet'],
         },
         pink: {
-          500: emacsTheme.magenta,
+          500: themeColors['magenta'],
         },
         cyan: {
-          500: emacsTheme.cyan,
+          500: themeColors['cyan'],
         },
         alt: {
-          100: emacsTheme['bg-alt'],
-          900: emacsTheme['fg-alt'],
+          100: themeColors['bg-alt'],
+          900: themeColors['fg-alt'],
         },
       },
       shadows: {

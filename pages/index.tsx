@@ -359,7 +359,7 @@ export function GraphPage() {
         case 'graphdata':
           return updateGraphData(message.data)
         case 'theme':
-          return setEmacsTheme(message.data)
+          return setEmacsTheme(['custom', message.data])
         case 'command':
           switch (message.data.commandName) {
             case 'local':
