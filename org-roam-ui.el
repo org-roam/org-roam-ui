@@ -219,6 +219,7 @@ This serves the web-build and API over HTTP."
     (remove-hook 'after-save-hook #'org-roam-ui--on-save)
     (org-roam-ui-follow-mode -1)))))
 
+
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer."
   (when (org-roam-buffer-p)
@@ -378,6 +379,15 @@ unchanged."
      org-roam-ui-custom-theme))
   ui-theme))
 
+
+(defun org-roam-ui--send-variables (ws)
+  "Send org-roam variables through the websocket WS."
+  (when (boundp 'org-roam-dailies-directory)
+  (websocket-send-text ws (json-encode `((type . "variables")
+                                             (data .
+                                                   (("daily-directory" . ,(concat org-roam-directory org-roam-dailies-directory))
+                                                    ("org-roam-directory" . ,org-roam-directory))))))))
+
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
 ROWS is the sql result, while COLUMN-NAMES is the columns to use."
@@ -393,6 +403,8 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
                   res)
       (setq rows nil)))
     res))
+
+
 
 ;; (defservlet* id/:id text/html ()
 ;;   (let ((node (org-roam-populate (org-roam-node-create :id id)))

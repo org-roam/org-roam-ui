@@ -46,9 +46,15 @@ const FilterPanel = (props: FilterPanelProps) => {
         color="gray.800"
       >
         <Flex alignItems="center" justifyContent="space-between">
-          <Text>Link children to...</Text>
+          <Text>Link children to</Text>
           <Menu isLazy placement="right">
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="" color="black">
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              colorScheme=""
+              color="black"
+              size="sm"
+            >
               {(() => {
                 switch (filter.parent) {
                   case 'parent':
@@ -106,6 +112,17 @@ const FilterPanel = (props: FilterPanelProps) => {
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
+          <Text>Dailies</Text>
+          <Switch
+            onChange={() => {
+              setFilter((curr: typeof initialFilter) => {
+                return { ...curr, dailies: !curr.dailies }
+              })
+            }}
+            isChecked={filter.dailies}
+          ></Switch>
+        </Flex>
+        <Flex justifyContent="space-between">
           <Text>Citations without note files</Text>
           <Switch
             onChange={() => {
@@ -150,7 +167,7 @@ const FilterPanel = (props: FilterPanelProps) => {
         </AccordionItem>
         <AccordionItem>
           <AccordionButton>
-            Tag Colors
+            Tag colors
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pr={0} mr={0}>

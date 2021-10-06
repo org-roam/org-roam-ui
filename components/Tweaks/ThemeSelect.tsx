@@ -19,7 +19,7 @@ export const ThemeSelect = () => {
   type Theme = { [key: string]: string }
   const { emacsTheme, setEmacsTheme, highlightColor } = useContext(ThemeContext)
   return (
-    <Flex alignItems="center" justifyContent="space-between" pl={7}>
+    <Flex alignItems="center" justifyContent="space-between" pl={7} pr={2}>
       <Text>Theme</Text>
       <Menu isLazy placement="bottom" closeOnSelect={false}>
         <MenuButton as={Button} colorScheme="" color="black" rightIcon={<ChevronDownIcon />}>
