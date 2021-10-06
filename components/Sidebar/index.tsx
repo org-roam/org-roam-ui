@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 
 import { UniOrg } from '../../util/uniorg'
+import { Backlinks } from './Backlinks'
 import { getOrgText } from '../../util/webSocketFunctions'
 
 import {
@@ -22,90 +23,98 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { Scrollbars } from 'react-custom-scrollbars-2'
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { ChevronLeftIcon, ChevronRightIcon, HamburgerIcon } from '@chakra-ui/icons'
+import {
+  BiFont,
+  BiAlignJustify,
+  BiAlignLeft,
+  BiAlignMiddle,
+  BiAlignRight,
+  BiRightIndent,
+} from 'react-icons/bi'
 
 import { GraphData, NodeObject, LinkObject } from 'force-graph'
 import { OrgRoamNode } from '../../api'
 import { ThemeContext } from '../../util/themecontext'
+import { LinksByNodeId, NodeById } from '../../pages/index'
 
 export interface SidebarProps {
   isOpen: boolean
   onClose: any
-  //nodeById: any
+  onOpen: any
+  nodeById: NodeById
   previewNode: NodeObject
+  setPreviewNode: any
+  linksByNodeId: LinksByNodeId
 }
 
 const Sidebar = (props: SidebarProps) => {
-  const { isOpen, onClose, previewNode } = props
+  const { isOpen, onOpen, onClose, previewNode, setPreviewNode, nodeById, linksByNodeId } = props
 
   const { highlightColor } = useContext(ThemeContext)
   const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode>()
-  const [previewText, setPreviewText] = useState('')
 
-  const getText = (id: string) => {
+  const getText = (id: string, setText: any) => {
     fetch(`http://localhost:35901/note/${id}`)
       .then((res) => {
         return res.text()
       })
-      .then((res) => {
-        console.log(res)
-        setPreviewText(res)
-      })
+      .then((res) => setText(res))
       .catch((e) => {
-        setPreviewText(
+        return (
           'Could not fetch the text for some reason, sorry!\n\n This can happen because you have an id with forward slashes (/) in it.',
+          console.log(e)
         )
       })
   }
 
   useEffect(() => {
-    if (!previewNode) {
+    if (!previewNode.id) {
+      onClose()
       return
     }
-
+    onOpen()
     setPreviewRoamNode(previewNode as OrgRoamNode)
-    previewNode?.id && getText(previewNode?.id as string)
-  }, [previewNode])
+  }, [previewNode.id])
 
+  const [justification, setJustification] = useState(0)
+  const justificationList = ['justify', 'start', 'end', 'center']
+  const [font, setFont] = useState('sans serif')
+  const [indent, setIndent] = useState(0)
   //maybe want to close it when clicking outside, but not sure
   //const outsideClickRef = useRef();
   return (
-    <Slide direction="right" in={isOpen} style={{ zIndex: 200, width: 500 }} unmountOnExit>
+    <Slide direction="right" in={isOpen} style={{ maxWidth: '50%' }} unmountOnExit>
       <Flex flexDirection="row" height="100%">
-        <IconButton
-          icon={<ChevronRightIcon height={30} />}
-          colorScheme="white"
-          aria-label="Close file-viewer"
-          height={100}
-          variant="ghost"
-          marginRight={-2}
-          bg="alt.100"
-          onClick={onClose}
-          marginTop={20}
-        />
-        <Box
-          color="gray.800"
-          bg="alt.100"
-          boxShadow="xl"
-          w={500}
-          height="98%"
-          position="relative"
-          zIndex="overlay"
-          marginTop={10}
-          paddingBottom={15}
-          borderRadius="xl"
-          right={-2}
-        >
+        <Box pl={2} color="gray.800" bg="alt.100" w="100%" paddingBottom={15}>
           <Flex
             justifyContent="space-between"
-            padding={4}
-            paddingTop={10}
-            paddingLeft={10}
-            width="80%"
+            paddingTop={4}
+            pl={0}
+            pb={5}
+            pr={2}
             alignItems="center"
             color="black"
           >
-            <Heading size="md">{previewRoamNode?.title}</Heading>
+            <Flex>
+              <IconButton
+                variant="link"
+                size="md"
+                icon={<ChevronLeftIcon />}
+                aria-label="Previous node"
+              />
+              <Heading size="md" fontWeight={400}>
+                {previewRoamNode?.title}
+              </Heading>
+            </Flex>
+
+            <IconButton
+              // eslint-disable-next-line react/jsx-no-undef
+              icon={<HamburgerIcon />}
+              aria-label="Close file-viewer"
+              variant="link"
+              onClick={onClose}
+            />
           </Flex>
           <Scrollbars
             //autoHeight
@@ -113,40 +122,43 @@ const Sidebar = (props: SidebarProps) => {
             autoHide
             renderThumbVertical={({ style, ...props }) => (
               <Box
-                {...props}
                 style={{
                   ...style,
                   borderRadius: 10,
+                  backgroundColor: highlightColor,
                 }}
-                bg={highlightColor}
+                color="black"
+                {...props}
               />
             )}
           >
-            <VStack alignItems="left" bg="alt.100" paddingLeft={10} paddingRight={10}>
+            <VStack height="100%" alignItems="left" bg="alt.100" paddingLeft={10}>
               <Box
+                pr={8}
+                overflow="scroll"
+                height="85%"
                 className="org"
                 sx={{
-                  h1: { display: 'none' },
+                  '.katex': { overflowX: 'scroll' },
+                  h1: { fontSize: '20', fontWeight: 'bold', marginBottom: 3 },
                   h2: {
-                    fontSize: '20',
-                    fontWeight: 'bold !important',
-                    marginBottom: '1em',
+                    fontSize: '18',
+                    marginBottom: 2,
                     color: 'black',
                   },
                   h3: {
-                    fontSize: '18',
+                    fontSize: '16',
                     fontWeight: '600 !important',
                     marginBottom: '.5em',
                   },
                   h4: {
-                    fontSize: '16',
+                    fontSize: '14',
                     fontWeight: '500 !important',
                     marginBottom: '.25em',
                     fontStyle: 'italic',
                   },
                   a: {
                     color: highlightColor,
-                    pointerEvents: 'none',
                   },
                   ol: {
                     paddingLeft: '5',
@@ -157,8 +169,11 @@ const Sidebar = (props: SidebarProps) => {
                   p: {
                     paddingBottom: '.5em',
                   },
-                  '.katex-html': { visibility: 'hidden', width: '0px', position: 'absolute' },
-                  '#content': { textAlign: 'justify' },
+                  div: {
+                    fontSize: 'small',
+                    hyphens: 'auto !important',
+                    textAlign: justificationList[justification],
+                  },
                   '.title': {
                     textAlign: 'center',
                     marginBottom: '.2em',
@@ -261,9 +276,75 @@ const Sidebar = (props: SidebarProps) => {
                   '.footdef': { marginBottom: '1em' },
                   '.figure': { padding: '1em' },
                   '.figure p': { textAlign: 'center' },
+                  // org-like indents
+                  'h1, h1 ~ *,h2 ~ h1,h2 ~ h1 ~ *,h3 ~ h1,h3 ~ h1 ~ *': {
+                    marginLeft: 0 * indent,
+                  },
+                  'h2 ~ *, h1 ~ h2,h1 ~ h2 ~ *:not(h1):not(h3)': {
+                    marginLeft: 2 * indent,
+                  },
+                  'h3 ~ *,h1 ~ h3,h1 ~ h3 ~ *:not(h1):not(h2)': {
+                    marginLeft: 4 * indent,
+                  },
                 }}
               >
-                <UniOrg orgText={previewText} />
+                {previewNode?.id && (
+                  <Box>
+                    <Flex pt={1} alignItems="center" justifyContent="flex-end">
+                      <IconButton
+                        variant="ghost"
+                        aria-label="Justify content"
+                        icon={
+                          [
+                            <BiAlignJustify key="justify" />,
+                            <BiAlignLeft key="left" />,
+                            <BiAlignRight key="right" />,
+                            <BiAlignMiddle key="center" />,
+                          ][justification]
+                        }
+                        onClick={() => setJustification((curr) => (curr + 1) % 4)}
+                      />
+                      <IconButton
+                        variant="ghost"
+                        aria-label="Indent Text"
+                        icon={<BiRightIndent />}
+                        onClick={() => {
+                          console.log(indent)
+                          setIndent((curr: number) => (indent ? 0 : 1))
+                        }}
+                      />
+                      <IconButton
+                        variant="ghost"
+                        aria-label="Change font"
+                        icon={<BiFont />}
+                        onClick={() => {
+                          setFont((curr: string) =>
+                            curr === 'sans serif' ? 'serif' : 'sans serif',
+                          )
+                        }}
+                      />
+                    </Flex>
+                    <Flex height="100%" flexDirection="column" justifyContent="space-between">
+                      <UniOrg
+                        {...{
+                          getText,
+                          setPreviewNode,
+                          previewNode,
+                          nodeById,
+                        }}
+                      />
+                      <Backlinks
+                        {...{
+                          setPreviewNode,
+                          previewNode,
+                          nodeById,
+                          linksByNodeId,
+                          getText,
+                        }}
+                      />
+                    </Flex>
+                  </Box>
+                )}
               </Box>
             </VStack>
           </Scrollbars>

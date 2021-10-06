@@ -43,7 +43,7 @@ import wrap from 'word-wrap'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 import { deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from '../util/webSocketFunctions'
-import { ChevronLeftIcon } from '@chakra-ui/icons'
+import { ChevronLeftIcon, HamburgerIcon } from '@chakra-ui/icons'
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -419,13 +419,6 @@ export function GraphPage() {
         height="100%"
         width="100%"
       >
-        <Sidebar
-          {...{
-            isOpen,
-            onClose,
-            previewNode,
-          }}
-        />
         <Tweaks
           {...{
             physics,
@@ -448,20 +441,18 @@ export function GraphPage() {
         <Flex height="100%" flexDirection="column" marginLeft="auto">
           {!isOpen && (
             <IconButton
-              icon={<ChevronLeftIcon />}
-              height={100}
+              icon={<HamburgerIcon />}
               aria-label="Open org-viewer"
-              position="relative"
-              zIndex="overlay"
-              colorScheme="purple"
+              zIndex={2}
               onClick={onOpen}
               variant="ghost"
               marginTop={10}
+              mr={8}
             />
           )}
         </Flex>
       </Box>
-      <Box position="absolute" alignItems="top" overflow="hidden">
+      <Flex position="absolute" alignItems="top" overflow="hidden">
         <Graph
           ref={graphRef}
           nodeById={nodeByIdRef.current!}
@@ -482,7 +473,18 @@ export function GraphPage() {
             setPreviewNode,
           }}
         />
-      </Box>
+        <Sidebar
+          {...{
+            isOpen,
+            onOpen,
+            onClose,
+            previewNode,
+            setPreviewNode,
+          }}
+          nodeById={nodeByIdRef.current!}
+          linksByNodeId={linksByNodeIdRef.current!}
+        />
+      </Flex>
     </Box>
   )
 }
@@ -996,7 +998,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   const [zoom, setZoom] = useState(1)
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
-    width: windowWidth,
+    //width: windowWidth,
     height: windowHeight,
     backgroundColor: theme.colors.gray[visuals.backgroundColor],
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
@@ -1262,7 +1264,7 @@ function numberWithinRange(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
+export function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
   // we need to cover both because force-graph modifies the original data
   // but if we supply the original data on each render, the graph will re-render sporadically
   const sourceId =

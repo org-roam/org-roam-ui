@@ -1,24 +1,34 @@
-import unified from 'unified'
-//import createStream from 'unified-stream'
-import uniorgParse from 'uniorg-parse'
-import uniorg2rehype from 'uniorg-rehype'
-//import highlight from 'rehype-highlight'
-import katex from 'rehype-katex'
-import rehype2react from 'rehype-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { NodeById } from '../pages/index'
+import { ProcessedOrg } from './processOrg'
 
 export interface UniOrgProps {
-  orgText: string
+  nodeById: NodeById
+  previewNode: any
+  setPreviewNode: any
+  getText: any
 }
 
 export const UniOrg = (props: UniOrgProps) => {
-  const { orgText } = props
-  const processor = unified()
-    .use(uniorgParse)
-    .use(uniorg2rehype)
-    .use(katex)
-    .use(rehype2react, { createElement: React.createElement })
+  const { nodeById, previewNode, setPreviewNode, getText } = props
 
-  console.log(processor.processSync(orgText))
-  return <div> {processor.processSync(orgText).result}</div>
+  const [previewText, setPreviewText] = useState('')
+
+  useEffect(() => {
+    if (previewNode?.id) {
+      getText(previewNode?.id, setPreviewText)
+    }
+  }, [previewNode?.id])
+
+  return (
+    <ProcessedOrg
+      {...{
+        getText,
+        nodeById,
+        previewNode,
+        setPreviewNode,
+        previewText,
+      }}
+    />
+  )
 }

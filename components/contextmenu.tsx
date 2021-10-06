@@ -44,6 +44,7 @@ import {
 
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import { deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from '../util/webSocketFunctions'
+import { BiNetworkChart } from 'react-icons/bi'
 
 export default interface ContextMenuProps {
   background: Boolean
@@ -116,7 +117,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
               <MenuItem icon={<ExternalLinkIcon />}>Open in Zotero</MenuItem>
             )}
             {scope.nodeIds.length === 0 && (
-              <MenuItem icon={<ViewIcon />} onClick={() => handleLocal(node!, 'replace')}>
+              <MenuItem icon={<BiNetworkChart />} onClick={() => handleLocal(node!, 'replace')}>
                 Open local graph
               </MenuItem>
             )}
@@ -149,6 +150,15 @@ export const ContextMenu = (props: ContextMenuProps) => {
                                 </Popover>
                             </Box>
                         </MenuItem> */}
+
+            <MenuItem
+              icon={<ViewIcon />}
+              onClick={() => {
+                setPreviewNode(node)
+              }}
+            >
+              Preview
+            </MenuItem>
             {node?.level === 0 && (
               <MenuItem
                 closeOnSelect={false}
@@ -159,13 +169,6 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 Permenantly delete note
               </MenuItem>
             )}
-            <MenuItem
-              onClick={() => {
-                setPreviewNode(node)
-              }}
-            >
-              Preview
-            </MenuItem>
           </MenuList>
         </Menu>
       </Box>

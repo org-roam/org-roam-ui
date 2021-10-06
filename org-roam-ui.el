@@ -240,8 +240,7 @@ This serves the web-build and API over HTTP."
   (let* ((node (org-roam-populate (org-roam-node-create :id id)))
         (file (org-roam-node-file node)))
  (insert-file-contents-literally file)
-(httpd-send-header t "text/html" 200
-                       :Access-Control-Allow-Origin "*")))
+(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
 
 
 (defun org-roam-ui--on-save ()
