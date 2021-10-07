@@ -26,7 +26,7 @@ export const TagPanel = (props: TagPanelProps) => {
   return (
     <CUIAutoComplete
       items={tagArray}
-      label={'Add tag to ' + mode}
+      label={`Add tag to ${mode} (${selectedItems.length}/${tagArray.length})`}
       placeholder=" "
       onCreateItem={(item) => null}
       disableCreateItem={true}
