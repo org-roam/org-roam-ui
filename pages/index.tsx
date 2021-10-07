@@ -361,7 +361,6 @@ export function GraphPage() {
           return updateGraphData(message.data)
         case 'variables':
           variablesRef.current = message.data
-          console.log(message.data)
           return
         case 'theme':
           return setEmacsTheme(['custom', message.data])
@@ -626,7 +625,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
-        if (filter.filelessCites && node.properties.FILELESS) {
+        if (filter.filelessCites && node?.properties?.FILELESS) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -635,7 +634,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           return false
         }
 
-        if (filter.dailies && dailyDir?.length !== 0 && node.file.includes(dailyDir)) {
+        if (filter.dailies && dailyDir && node.file?.includes(dailyDir)) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }

@@ -36,6 +36,7 @@
 (require 'json)
 (require 'simple-httpd)
 (require 'org-roam)
+(require 'org-roam-dailies)
 (require 'websocket)
 
 (defgroup org-roam-ui nil
@@ -168,6 +169,7 @@ This serves the web-build and API over HTTP."
          :host 'local
          :on-open (lambda (ws) (progn
             (setq oru-ws ws)
+            (org-roam-ui--send-variables ws)
             (org-roam-ui--send-graphdata)
             (when org-roam-ui-update-on-save
             (add-hook 'after-save-hook #'org-roam-ui--on-save))
@@ -385,8 +387,8 @@ unchanged."
   (when (boundp 'org-roam-dailies-directory)
   (websocket-send-text ws (json-encode `((type . "variables")
                                              (data .
-                                                   (("daily-directory" . ,(concat org-roam-directory org-roam-dailies-directory))
-                                                    ("org-roam-directory" . ,org-roam-directory))))))))
+                                                   (("dailyDir" . ,(concat org-roam-directory org-roam-dailies-directory))
+                                                    ("roamDir" . ,org-roam-directory))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
