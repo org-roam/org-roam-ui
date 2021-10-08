@@ -2,45 +2,59 @@ import unified from 'unified'
 //import createStream from 'unified-stream'
 import uniorgParse from 'uniorg-parse'
 import uniorg2rehype from 'uniorg-rehype'
-//import highlight from 'rehype-highlight'
+import uniorgSlug from 'uniorg-slug'
+import extractKeywords from 'uniorg-extract-keywords'
+import attachments from 'uniorg-attach'
+// rehypeHighlight does not have any types
+// @ts-expect-error
+import highlight from 'rehype-highlight'
 import katex from 'rehype-katex'
 import 'katex/dist/katex.css'
 import rehype2react from 'rehype-react'
 
 import { PreviewLink } from '../components/Sidebar/Link'
-import { NodeById } from '../pages'
-import React from 'react'
+import { NodeByCite, NodeById } from '../pages'
+import React, { useMemo } from 'react'
 
 export interface ProcessedOrgProps {
   nodeById: NodeById
   previewNode: any
   setPreviewNode: any
-  getText: any
   previewText: any
+  nodeByCite: NodeByCite
+  setSidebarHighlightedNode: any
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
-  const { nodeById, previewNode, setPreviewNode, getText, previewText } = props
-  console.log(previewText)
+  const { nodeById, setSidebarHighlightedNode, setPreviewNode, previewText, nodeByCite } = props
+
   const processor = unified()
     .use(uniorgParse)
+    .use(extractKeywords)
+    .use(attachments)
+    .use(uniorgSlug)
     .use(uniorg2rehype)
     .use(katex)
     .use(rehype2react, {
       createElement: React.createElement,
       // eslint-disable-next-line react/display-name
       components: {
-        a: ({ props, children, href }) => (
-          <PreviewLink
-            getText={getText}
-            nodeById={nodeById}
-            previewNode={previewNode}
-            setPreviewNode={setPreviewNode}
-            {...{ children, href }}
-          />
-        ),
+        a: ({ children, href }) => {
+          return (
+            <PreviewLink
+              nodeByCite={nodeByCite}
+              setSidebarHighlightedNode={setSidebarHighlightedNode}
+              href={`${href as string}`}
+              nodeById={nodeById}
+              setPreviewNode={setPreviewNode}
+            >
+              {typeof children === 'string' ? children : null}
+            </PreviewLink>
+          )
+        },
       },
     })
 
-  return <div>{processor.processSync(previewText).result}</div>
+  const text = useMemo(() => processor.processSync(previewText).result, [previewText])
+  return <>{text}</>
 }

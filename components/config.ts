@@ -119,8 +119,8 @@ export const initialBehavior = {
 
 export const initialMouse = {
   highlight: 'hover',
-  local: 'click',
-  follow: 'double',
+  local: 'double',
+  follow: 'never',
   context: 'right',
   preview: 'click',
 }

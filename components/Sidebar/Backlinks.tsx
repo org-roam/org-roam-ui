@@ -1,4 +1,4 @@
-import { LinksByNodeId, NodeById } from '../../pages/index'
+import { LinksByNodeId, NodeByCite, NodeById } from '../../pages/index'
 
 import { GraphData, NodeObject, LinkObject } from 'force-graph'
 
@@ -12,17 +12,34 @@ export interface BacklinksProps {
   setPreviewNode: any
   nodeById: NodeById
   linksByNodeId: LinksByNodeId
-  getText: any
+  nodeByCite: NodeByCite
+  setSidebarHighlightedNode: OrgRoamNode
 }
 
 import { PreviewLink } from './Link'
+import { OrgRoamNode } from '../../api'
 
 export const Backlinks = (props: BacklinksProps) => {
-  const { previewNode, setPreviewNode, nodeById, linksByNodeId, getText } = props
+  const {
+    previewNode,
+    setPreviewNode,
+    setSidebarHighlightedNode,
+    nodeById,
+    linksByNodeId,
+    nodeByCite,
+  } = props
   const links = linksByNodeId[previewNode?.id] ?? []
+
+  const backLinks = links
+    .filter((link: LinkObject) => {
+      const [source, target] = normalizeLinkEnds(link)
+      return source !== previewNode?.id
+    })
+    .map((l) => l.source)
+
   return (
     <Box>
-      <Heading pt={4}>{'Backlinks (' + links.length + ')'}</Heading>
+      <Heading pt={4}>{`Backlinks (${backLinks.length})`}</Heading>
       <VStack
         pt={2}
         spacing={3}
@@ -32,20 +49,19 @@ export const Backlinks = (props: BacklinksProps) => {
         color="gray.800"
       >
         {previewNode?.id &&
-          links.map((link: LinkObject, i: number) => {
-            const [source, target] = normalizeLinkEnds(link)
-            if (source === previewNode?.id) {
-              return
-            }
+          backLinks.map((link) => {
+            const title = nodeById[link as string]?.title ?? ''
             return (
-              <Box overflow="hidden" p={3} bg="gray.300" width="100%" key={source}>
+              <Box overflow="hidden" p={3} bg="gray.300" width="100%" key={link}>
                 <PreviewLink
-                  href={'id:' + source}
-                  children={nodeById[source]?.title}
+                  nodeByCite={nodeByCite}
+                  setSidebarHighlightedNode={setSidebarHighlightedNode}
+                  href={`id:${link as string}`}
                   nodeById={nodeById}
                   setPreviewNode={setPreviewNode}
-                  getText={getText}
-                />
+                >
+                  {nodeById[link as string]?.title}
+                </PreviewLink>
               </Box>
             )
           })}

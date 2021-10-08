@@ -7,6 +7,8 @@ import React, {
   useContext,
   forwardRef,
 } from 'react'
+
+import Head from 'next/head'
 import { usePersistantState } from '../util/persistant-state'
 const d3promise = import('d3-force-3d')
 import * as d3int from 'd3-interpolate'
@@ -22,7 +24,7 @@ import Sidebar from '../components/Sidebar'
 import { useWindowSize } from '@react-hook/window-size'
 import { useAnimation } from '@lilib/hooks'
 
-import { Box, Flex, IconButton, useDisclosure, useTheme } from '@chakra-ui/react'
+import { Box, Flex, IconButton, useDisclosure, useTheme, WithCSSVar } from '@chakra-ui/react'
 
 import {
   initialPhysics,
@@ -57,6 +59,7 @@ const ForceGraph3D = (
 export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
 export type NodesByFile = { [file: string]: OrgRoamNode[] | undefined }
+export type NodeByCite = { [key: string]: OrgRoamNode | undefined }
 export type Tags = string[]
 export type Scope = {
   nodeIds: string[]
@@ -72,7 +75,14 @@ export default function Home() {
   if (!showPage) {
     return null
   }
-  return <GraphPage />
+  return (
+    <>
+      <Head>
+        <title>ORUI</title>
+      </Head>
+      <GraphPage />
+    </>
+  )
 }
 
 export function GraphPage() {
@@ -88,10 +98,12 @@ export function GraphPage() {
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
   const [previewNode, setPreviewNode] = useState<NodeObject>({})
+  const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
+  const nodeByCiteRef = useRef<NodeByCite>({})
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
 
@@ -217,6 +229,22 @@ export function GraphPage() {
     }, {})
 
     const nodes = [...importNodes, ...nonExistantNodes]
+
+    nodeByCiteRef.current = nodes.reduce<NodeByCite>((acc, node) => {
+      const ref = node.properties?.ROAM_REFS as string
+      if (!ref?.includes('cite')) {
+        return acc
+      }
+      const key = ref.replaceAll(/cite:(.*)/g, '$1')
+      if (!key) {
+        return acc
+      }
+      return {
+        ...acc,
+        [key]: node,
+      }
+    }, {})
+
     const orgRoamGraphDataProcessed = {
       nodes,
       links,
@@ -471,6 +499,7 @@ export function GraphPage() {
             setScope,
             tagColors,
             setPreviewNode,
+            sidebarHighlightedNode,
           }}
         />
         <Sidebar
@@ -480,9 +509,11 @@ export function GraphPage() {
             onClose,
             previewNode,
             setPreviewNode,
+            setSidebarHighlightedNode,
           }}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
+          nodeByCite={nodeByCiteRef.current!}
         />
       </Flex>
     </Box>
@@ -505,6 +536,7 @@ export interface GraphProps {
   webSocket: any
   tagColors: { [tag: string]: string }
   setPreviewNode: any
+  sidebarHighlightedNode: OrgRoamNode | null
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -524,6 +556,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     webSocket,
     tagColors,
     setPreviewNode,
+    sidebarHighlightedNode,
   } = props
 
   // react-force-graph does not track window size
@@ -763,27 +796,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
   }, [filter, scope, graphData])
 
-  centralHighlightedNode.current = hoverNode
-  const highlightedNodes = useMemo(() => {
-    if (!centralHighlightedNode.current) {
-      return {}
-    }
-
-    const links = filteredLinksByNodeIdRef.current[centralHighlightedNode.current.id!]
-    if (!links) {
-      return {}
-    }
-    return Object.fromEntries(
-      [
-        centralHighlightedNode.current.id! as string,
-        ...links.flatMap((link) => [link.source, link.target]),
-      ].map((nodeId) => [nodeId, {}]),
-    )
-  }, [
-    JSON.stringify(centralHighlightedNode.current),
-    JSON.stringify(filteredLinksByNodeIdRef.current),
-  ])
-
   useEffect(() => {
     ;(async () => {
       const fg = graphRef.current
@@ -831,9 +843,36 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       algorithm: algos[visuals.algorithmName],
     },
   )
+  useEffect(() => {
+    console.log('aaa')
+    if (sidebarHighlightedNode?.id) {
+      setHoverNode(sidebarHighlightedNode)
+    } else {
+      setHoverNode(null)
+    }
+  }, [sidebarHighlightedNode])
+  const highlightedNodes = useMemo(() => {
+    if (!centralHighlightedNode.current) {
+      return {}
+    }
 
+    const links = filteredLinksByNodeIdRef.current[centralHighlightedNode.current.id!]
+    if (!links) {
+      return {}
+    }
+    return Object.fromEntries(
+      [
+        centralHighlightedNode.current.id! as string,
+        ...links.flatMap((link) => [link.source, link.target]),
+      ].map((nodeId) => [nodeId, {}]),
+    )
+  }, [
+    JSON.stringify(centralHighlightedNode.current),
+    JSON.stringify(filteredLinksByNodeIdRef.current),
+  ])
   const lastHoverNode = useRef<OrgRoamNode | null>(null)
   useEffect(() => {
+    centralHighlightedNode.current = hoverNode
     if (hoverNode) {
       lastHoverNode.current = hoverNode as OrgRoamNode
     }
@@ -850,20 +889,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
   }, [hoverNode])
 
-  const getThemeColor = (name: string) => {
-    if (!theme) {
-      return
-    }
-    return name.split('.').reduce((o, i) => o[i], theme.colors)
-  }
-
   const highlightColors = useMemo(() => {
     return Object.fromEntries(
       colorList.map((color) => {
-        const color1 = getThemeColor(color)
+        const color1 = getThemeColor(color, theme)
         const crisscross = colorList.map((color2) => [
           color2,
-          d3int.interpolate(color1, getThemeColor(color2)),
+          d3int.interpolate(color1, getThemeColor(color2, theme)),
         ])
         return [color, Object.fromEntries(crisscross)]
       }),
@@ -899,10 +931,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       : getNodeColorById(targetId)
   }
 
-  const getLinkColor = (sourceId: string, targetId: string, needsHighlighting: boolean) => {
+  const getLinkColor = (
+    sourceId: string,
+    targetId: string,
+    needsHighlighting: boolean,
+    theme: any,
+  ) => {
     if (!visuals.linkHighlight && !visuals.linkColorScheme && !needsHighlighting) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor)
+      return getThemeColor(nodeColor, theme)
     }
 
     if (!needsHighlighting && !visuals.linkColorScheme) {
@@ -918,11 +955,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     if (!visuals.linkHighlight && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor)
+      return getThemeColor(nodeColor, theme)
     }
 
     if (!visuals.linkHighlight) {
-      return getThemeColor(visuals.linkColorScheme)
+      return getThemeColor(visuals.linkColorScheme, theme)
     }
 
     if (!visuals.linkColorScheme) {
@@ -932,12 +969,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
 
-  const getNodeColor = (node: OrgRoamNode) => {
+  const getNodeColor = (node: OrgRoamNode, theme: any) => {
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
-      return getThemeColor(visuals.emacsNodeColor)
+      return getThemeColor(visuals.emacsNodeColor, theme)
     }
     if (tagColors && node.tags.some((tag) => tagColors[tag])) {
       const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
@@ -945,14 +982,14 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
     if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
       return needsHighlighting
-        ? getThemeColor(visuals.citeNodeColor)
+        ? getThemeColor(visuals.citeNodeColor, theme)
         : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
             visuals.highlightFade * opacity,
           )
     }
     if (visuals.refNodeColor && node.properties.ROAM_REFS) {
       return needsHighlighting
-        ? getThemeColor(visuals.refNodeColor)
+        ? getThemeColor(visuals.refNodeColor, theme)
         : highlightColors[visuals.refNodeColor][visuals.backgroundColor](
             visuals.highlightFade * opacity,
           )
@@ -963,18 +1000,18 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       )
     }
     if (!visuals.nodeHighlight) {
-      return getThemeColor(getNodeColorById(node.id as string))
+      return getThemeColor(getNodeColorById(node.id as string), theme)
     }
     return highlightColors[getNodeColorById(node.id as string)][visuals.nodeHighlight](opacity)
   }
 
   const labelTextColor = useMemo(
-    () => getThemeColor(visuals.labelTextColor),
+    () => getThemeColor(visuals.labelTextColor, theme),
     [visuals.labelTextColor, emacsTheme],
   )
 
   const labelBackgroundColor = useMemo(
-    () => getThemeColor(visuals.labelBackgroundColor),
+    () => getThemeColor(visuals.labelBackgroundColor, theme),
     [visuals.labelBackgroundColor, emacsTheme],
   )
 
@@ -1005,7 +1042,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     onZoom: ({ k, x, y }) => setZoom(k),
     nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
-      return getNodeColor(node as OrgRoamNode)
+      return getNodeColor(node as OrgRoamNode, theme)
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
@@ -1090,7 +1127,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     linkDirectionalArrowLength: visuals.arrows ? visuals.arrowsLength : undefined,
     linkDirectionalArrowRelPos: visuals.arrowsPos,
     linkDirectionalArrowColor: visuals.arrowsColor
-      ? () => getThemeColor(visuals.arrowsColor)
+      ? () => getThemeColor(visuals.arrowsColor, theme)
       : undefined,
     linkColor: (link) => {
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
@@ -1119,7 +1156,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
             )
       }
 
-      return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
+      return getLinkColor(sourceId as string, targetId as string, needsHighlighting, theme)
     },
     linkWidth: (link) => {
       if (visuals.highlightLinkSize === 1) {
@@ -1226,8 +1263,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
               return
             }
             const sprite = new SpriteText(node.title.substring(0, 40))
-            sprite.color = getThemeColor(visuals.labelTextColor)
-            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor)
+            sprite.color = getThemeColor(visuals.labelTextColor, theme)
+            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor, theme)
             sprite.padding = 2
             sprite.textHeight = 8
 
@@ -1274,7 +1311,11 @@ export function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, stri
   return [sourceId, targetId]
 }
 
-function hexToRGBA(hex: string, opacity: number) {
+export function getThemeColor(name: string, theme: any) {
+  return name.split('.').reduce((o, i) => o[i], theme.colors)
+}
+
+export function hexToRGBA(hex: string, opacity: number) {
   return (
     'rgba(' +
     (hex = hex.replace('#', ''))

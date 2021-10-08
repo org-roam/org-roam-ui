@@ -17,8 +17,6 @@ import { initialBehavior, initialMouse } from '../config'
 import { InfoTooltip } from './InfoTooltip'
 import { SliderWithInfo } from './SliderWithInfo'
 
-import { checkFileSystemCompatibility } from '../../util/checkFileSystemCompatibility'
-
 export interface BehaviorPanelProps {
   behavior: typeof initialBehavior
   setBehavior: any
@@ -166,20 +164,6 @@ export const BehaviorPanel = (props: BehaviorPanelProps) => {
         onChange={(value) => setBehavior({ ...behavior, zoomPadding: value })}
         infoText="How much to zoom out to accomodate all nodes when changing the view."
       />
-
-      <Box>
-        <Button width="100%" isDisabled={!checkFileSystemCompatibility()}>
-          Grant Filesystem Access
-        </Button>
-        {!checkFileSystemCompatibility() && (
-          <Box bg="gray.600" width="100%" padding={5}>
-            <Text>
-              You are not using a browser compatible with the FileSystem Access API. Only Chromium
-              based browsers are currently supported.
-            </Text>
-          </Box>
-        )}
-      </Box>
     </VStack>
   )
 }
