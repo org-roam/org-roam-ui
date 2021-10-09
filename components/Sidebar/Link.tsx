@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import {
   Box,
   Button,
@@ -140,7 +141,7 @@ export const PreviewLink = (props: LinkProps) => {
 
   const getText = () => {
     console.log('gettin text')
-    fetch(`http://localhost:35901/file/${file}`)
+    fetch(`127.0.0.1:35901/file/${file}`)
       .then((res) => {
         return res.text()
       })
