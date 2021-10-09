@@ -16,9 +16,9 @@ export const UniOrg = (props: UniOrgProps) => {
 
   const [previewText, setPreviewText] = useState('')
 
-  const file = encodeURIComponent(previewNode.file)
+  const file = encodeURIComponent(encodeURIComponent(previewNode.file))
   useEffect(() => {
-    fetch(`api/notes/${file}`)
+    fetch(`http://localhost:35901/file/${file}`)
       .then((res) => {
         return res.text()
       })

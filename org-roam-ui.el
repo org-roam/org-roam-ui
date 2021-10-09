@@ -237,13 +237,9 @@ This serves the web-build and API over HTTP."
                              (json-encode `((type . "orgText") (data . ,text))))))
 
 (defservlet* note/:id text/plain ()
-  (if-let ((node (org-roam-populate (org-roam-node-create :id id)))
-        (file (org-roam-node-file node)))
       (progn
-        (insert-file-contents-literally file)
-        (message "we got one %s" file)
-        ))
-(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))
+        (insert-file-contents-literally (org-link-decode file))
+(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
         ;(insert "error")
         ;(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")
 

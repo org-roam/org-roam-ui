@@ -129,10 +129,9 @@ export const PreviewLink = (props: LinkProps) => {
       },
     })
 
-  const file = encodeURIComponent(nodeById[id]?.file as string)
+  const file = encodeURIComponent(encodeURIComponent(nodeById[id]?.file as string))
   const getText = () => {
-    console.log(nodeById[id]?.title)
-    fetch(`api/notes/${file}`)
+    fetch(`http://localhost:35901/file/${file}`)
       .then((res) => {
         return res.text()
       })
