@@ -134,14 +134,13 @@ export const PreviewLink = (props: LinkProps) => {
           </PreviewLink>
         ),
         img: ({ src }) => {
-          return <OrgImage src={src as string} file={file} />
+          return <OrgImage src={src as string} file={nodeById[id]?.file as string} />
         },
       },
     })
 
   const getText = () => {
-    console.log('gettin text')
-    fetch(`127.0.0.1:35901/file/${file}`)
+    fetch(`http://localhost:35901/file/${file}`)
       .then((res) => {
         return res.text()
       })

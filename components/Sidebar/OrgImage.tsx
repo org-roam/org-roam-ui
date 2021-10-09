@@ -22,12 +22,14 @@ export const OrgImage = (props: OrgImageProps) => {
 *   })
 }, [fullPath]) */
 
-  const dir = path.dirname(src)
+  const dir = path.dirname(file)
   const fullPath = encodeURIComponent(encodeURIComponent(path.join(dir, src)))
 
   const dumbLoader = ({ src, width, quality }: { [key: string]: string | number }) => {
     return `http://localhost:35901/img/${src}`
   }
 
-  return <Image unoptimized loader={dumbLoader} src={fullPath} alt="" width={100} height={100} />
+  return (
+    <Image layout="responsive" loader={dumbLoader} src={fullPath} alt="" width="70%" height="70%" />
+  )
 }

@@ -237,9 +237,8 @@ This serves the web-build and API over HTTP."
                              (json-encode `((type . "orgText") (data . ,text))))))
 
 (defservlet* file/:file text/plain ()
-      (progn
         (insert-file-contents-literally (org-link-decode file))
-(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))
 
 
 (defservlet* img/:file text/plain ()

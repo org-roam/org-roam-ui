@@ -33,11 +33,6 @@ export const UniOrg = (props: UniOrgProps) => {
       })
   }, [previewNode.id])
 
-  useEffect(() => {
-    console.log('mount')
-    return () => console.log('unmount')
-  }, [])
-
   return (
     <>
       {previewNode?.id && (
