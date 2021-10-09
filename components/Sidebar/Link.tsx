@@ -72,7 +72,7 @@ export const NormalLink = (props: NormalLinkProps) => {
       _hover={{ textDecoration: 'none', cursor: 'pointer', bgColor: coolHighlightColor + '22' }}
       _focus={{ outlineColor: highlightColor }}
     >
-      {children}
+      {nodeById[uri]?.title}
     </Text>
   )
 }
