@@ -9,5 +9,6 @@ module.exports = withPlugins([withTM], {
   distDir: 'build',
   images: {
     domains: ['localhost'],
+    loader: 'custom',
   },
 })
