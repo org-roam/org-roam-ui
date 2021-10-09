@@ -47,6 +47,7 @@ export interface NormalLinkProps {
 
 import { hexToRGBA, getThemeColor } from '../../pages/index'
 import noteStyle from './noteStyle'
+import { OrgImage } from './OrgImage'
 
 export const NormalLink = (props: NormalLinkProps) => {
   const { setSidebarHighlightedNode, setPreviewNode, nodeById, href, children } = props
@@ -66,6 +67,7 @@ export const NormalLink = (props: NormalLinkProps) => {
       color={highlightColor}
       textDecoration="underline"
       onClick={() => setPreviewNode(nodeById[uri])}
+      // TODO  don't hardcode the opacitycolor
       _hover={{ textDecoration: 'none', cursor: 'pointer', bgColor: coolHighlightColor + '22' }}
       _focus={{ outlineColor: highlightColor }}
     >
@@ -86,8 +88,9 @@ export const PreviewLink = (props: LinkProps) => {
   } = props
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
-  const [orgText, setOrgText] = useState<any>()
+  const [orgText, setOrgText] = useState<any>(null)
   const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
+  const [hover, setHover] = useState(false)
 
   const getId = (type: string, uri: string) => {
     if (type === 'id') {
@@ -108,6 +111,7 @@ export const PreviewLink = (props: LinkProps) => {
   }
 
   const id = getId(type, uri)
+  const file = encodeURIComponent(encodeURIComponent(nodeById[id]?.file as string))
 
   const processor = unified()
     .use(uniorgParse)
@@ -118,19 +122,24 @@ export const PreviewLink = (props: LinkProps) => {
       components: {
         // eslint-disable-next-line react/display-name
         a: ({ children, href }) => (
-          <NormalLink
-            setSidebarHighlightedNode={setSidebarHighlightedNode}
-            nodeById={nodeById}
+          <PreviewLink
             nodeByCite={nodeByCite}
+            setSidebarHighlightedNode={setSidebarHighlightedNode}
+            href={href}
+            nodeById={nodeById}
             setPreviewNode={setPreviewNode}
-            {...{ children, href }}
-          />
+          >
+            {nodeById[id as string]?.title}
+          </PreviewLink>
         ),
+        img: ({ src }) => {
+          return <OrgImage src={src as string} file={file} />
+        },
       },
     })
 
-  const file = encodeURIComponent(encodeURIComponent(nodeById[id]?.file as string))
   const getText = () => {
+    console.log('gettin text')
     fetch(`http://localhost:35901/file/${file}`)
       .then((res) => {
         return res.text()
@@ -148,15 +157,26 @@ export const PreviewLink = (props: LinkProps) => {
       })
   }
 
-  useMemo(() => {
+  useEffect(() => {
+    if (!!orgText) {
+      return
+    }
+    if (!hover) {
+      return
+    }
     getText()
-  }, [id])
+  }, [hover, orgText])
+
   if (id) {
     return (
       <>
         <Popover gutter={12} trigger="hover" placement="top-start">
           <PopoverTrigger>
-            <Box display="inline">
+            <Box
+              display="inline"
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+            >
               <NormalLink
                 key={nodeById[id]?.title ?? id}
                 {...{
@@ -176,8 +196,12 @@ export const PreviewLink = (props: LinkProps) => {
               boxShadow="xl"
               position="relative"
               zIndex="tooltip"
-              onMouseEnter={() => setSidebarHighlightedNode(nodeById[id] ?? {})}
-              onMouseLeave={() => setSidebarHighlightedNode({})}
+              onMouseEnter={() => {
+                setSidebarHighlightedNode(nodeById[id] ?? {})
+              }}
+              onMouseLeave={() => {
+                setSidebarHighlightedNode({})
+              }}
             >
               <PopoverArrow />
               <PopoverBody

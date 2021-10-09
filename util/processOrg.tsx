@@ -15,6 +15,7 @@ import rehype2react from 'rehype-react'
 import { PreviewLink } from '../components/Sidebar/Link'
 import { NodeByCite, NodeById } from '../pages'
 import React, { useMemo } from 'react'
+import { OrgImage } from '../components/Sidebar/OrgImage'
 
 export interface ProcessedOrgProps {
   nodeById: NodeById
@@ -26,7 +27,14 @@ export interface ProcessedOrgProps {
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
-  const { nodeById, setSidebarHighlightedNode, setPreviewNode, previewText, nodeByCite } = props
+  const {
+    nodeById,
+    setSidebarHighlightedNode,
+    setPreviewNode,
+    previewText,
+    nodeByCite,
+    previewNode,
+  } = props
 
   const processor = unified()
     .use(uniorgParse)
@@ -48,9 +56,12 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
               nodeById={nodeById}
               setPreviewNode={setPreviewNode}
             >
-              {typeof children === 'string' ? children : null}
+              {children}
             </PreviewLink>
           )
+        },
+        img: ({ src }) => {
+          return <OrgImage src={src as string} file={previewNode.file} />
         },
       },
     })

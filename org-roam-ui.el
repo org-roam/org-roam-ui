@@ -236,9 +236,15 @@ This serves the web-build and API over HTTP."
         (websocket-send-text ws
                              (json-encode `((type . "orgText") (data . ,text))))))
 
-(defservlet* note/:id text/plain ()
+(defservlet* file/:file text/plain ()
       (progn
         (insert-file-contents-literally (org-link-decode file))
+(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+
+
+(defservlet* img/:file text/plain ()
+      (progn
+        (httpd-send-file t (org-link-decode file))
 (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
         ;(insert "error")
         ;(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")
