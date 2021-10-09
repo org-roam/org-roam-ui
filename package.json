@@ -33,6 +33,7 @@
     "react-dom": "17.0.2",
     "react-force-graph": "^1.41.7",
     "react-icons": "^4.3.1",
+    "react-resizable": "^3.0.4",
     "react-spring": "^9.2.4",
     "reconnecting-websocket": "^4.4.0",
     "rehype": "^11.0.0",
@@ -50,6 +51,7 @@
     "uniorg-rehype": "^0.4.0",
     "uniorg-slug": "^0.4.0",
     "use-constant": "^1.1.0",
+    "use-undo": "^1.0.5",
     "vfile": "^4.2.1",
     "word-wrap": "^1.2.3"
   },

@@ -42,6 +42,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     .use(attachments)
     .use(uniorgSlug)
     .use(uniorg2rehype)
+    .use(highlight)
     .use(katex)
     .use(rehype2react, {
       createElement: React.createElement,

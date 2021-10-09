@@ -46,6 +46,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 import { deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from '../util/webSocketFunctions'
 import { ChevronLeftIcon, HamburgerIcon } from '@chakra-ui/icons'
+import useUndo from 'use-undo'
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -97,7 +98,22 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
-  const [previewNode, setPreviewNode] = useState<NodeObject>({})
+  const [
+    previewNodeState,
+    {
+      set: setPreviewNode,
+      reset: resetPreviewNode,
+      undo: previousPreviewNode,
+      redo: nextPreviewNode,
+      canUndo,
+      canRedo,
+    },
+  ] = useUndo<NodeObject>({})
+  const {
+    past: pastPreviewNodes,
+    present: previewNode,
+    future: futurePreviewNodes,
+  } = previewNodeState
   const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -509,6 +525,10 @@ export function GraphPage() {
             onClose,
             previewNode,
             setPreviewNode,
+            canUndo,
+            canRedo,
+            previousPreviewNode,
+            nextPreviewNode,
             setSidebarHighlightedNode,
           }}
           nodeById={nodeByIdRef.current!}
@@ -843,14 +863,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       algorithm: algos[visuals.algorithmName],
     },
   )
-  useEffect(() => {
-    console.log('aaa')
-    if (sidebarHighlightedNode?.id) {
-      setHoverNode(sidebarHighlightedNode)
-    } else {
-      setHoverNode(null)
-    }
-  }, [sidebarHighlightedNode])
+
   const highlightedNodes = useMemo(() => {
     if (!centralHighlightedNode.current) {
       return {}
@@ -862,7 +875,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
     return Object.fromEntries(
       [
-        centralHighlightedNode.current.id! as string,
+        centralHighlightedNode.current?.id! as string,
         ...links.flatMap((link) => [link.source, link.target]),
       ].map((nodeId) => [nodeId, {}]),
     )
@@ -870,6 +883,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     JSON.stringify(centralHighlightedNode.current),
     JSON.stringify(filteredLinksByNodeIdRef.current),
   ])
+
+  useEffect(() => {
+    if (sidebarHighlightedNode?.id) {
+      setHoverNode(sidebarHighlightedNode)
+    } else {
+      setHoverNode(null)
+    }
+  }, [sidebarHighlightedNode])
+
   const lastHoverNode = useRef<OrgRoamNode | null>(null)
   useEffect(() => {
     centralHighlightedNode.current = hoverNode

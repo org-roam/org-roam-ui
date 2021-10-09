@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import { Toolbar } from './Toolbar'
 import { Note } from './Note'
@@ -23,6 +23,11 @@ export interface SidebarProps {
   linksByNodeId: LinksByNodeId
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: any
+  canUndo: any
+  canRedo: any
+  resetPreviewNode: any
+  previousPreviewNode: any
+  nextPreviewNode: any
 }
 
 const Sidebar = (props: SidebarProps) => {
@@ -36,6 +41,11 @@ const Sidebar = (props: SidebarProps) => {
     linksByNodeId,
     nodeByCite,
     setSidebarHighlightedNode,
+    canUndo,
+    canRedo,
+    resetPreviewNode,
+    previousPreviewNode,
+    nextPreviewNode,
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
@@ -97,7 +107,20 @@ const Sidebar = (props: SidebarProps) => {
               onClick={onClose}
             />
           </Flex>
-          <Toolbar {...{ setJustification, setIndent, setFont, justification }} />
+          <Toolbar
+            {...{
+              setJustification,
+              setIndent,
+              setFont,
+              justification,
+              setPreviewNode,
+              canUndo,
+              canRedo,
+              resetPreviewNode,
+              previousPreviewNode,
+              nextPreviewNode,
+            }}
+          />
           <Scrollbars
             //autoHeight
             //autoHeightMax={600}

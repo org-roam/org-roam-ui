@@ -30,6 +30,13 @@ export const OrgImage = (props: OrgImageProps) => {
   }
 
   return (
-    <Image layout="responsive" loader={dumbLoader} src={fullPath} alt="" width="70%" height="70%" />
+    <Image
+      layout="responsive"
+      loader={dumbLoader}
+      src={fullPath}
+      alt=""
+      width="100%"
+      height="100%"
+    />
   )
 }
