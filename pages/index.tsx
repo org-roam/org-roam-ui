@@ -461,7 +461,13 @@ export function GraphPage() {
 
   const contextMenuRef = useRef<any>()
   const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | null>(null)
-  const [contextPos, setContextPos] = useState({
+  type ContextPos = {
+    left: number | undefined
+    right: number | undefined
+    top: number | undefined
+    bottom: number | undefined
+  }
+  const [contextPos, setContextPos] = useState<ContextPos>({
     left: 0,
     top: 0,
     right: undefined,
@@ -477,7 +483,7 @@ export function GraphPage() {
     },
   })
 
-  const openContextMenu = (node: OrgRoamNode, event: any, coords?: number[]) => {
+  const openContextMenu = (node: OrgRoamNode, event: any, coords?: ContextPos) => {
     coords
       ? setContextPos(coords)
       : setContextPos({ left: event.pageX, top: event.pageY, right: undefined, bottom: undefined })
@@ -568,6 +574,7 @@ export function GraphPage() {
             handleLocal,
             mainWindowWidth,
             setMainWindowWidth,
+            setContextMenuTarget,
           }}
         />
       </Box>

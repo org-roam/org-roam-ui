@@ -6,7 +6,7 @@ import uniorgSlug from 'uniorg-slug'
 import extractKeywords from 'uniorg-extract-keywords'
 import attachments from 'uniorg-attach'
 // rehypeHighlight does not have any types
-// @ts-expect-error
+// add error thing here
 // import highlight from 'rehype-highlight'
 import katex from 'rehype-katex'
 import 'katex/dist/katex.css'

@@ -50,13 +50,12 @@ export default interface ContextMenuProps {
   background: Boolean
   target: OrgRoamNode | null
   nodeType?: string
-  coordinates: { [direction: string]: number }
+  coordinates: { [direction: string]: number | undefined }
   handleLocal: (node: OrgRoamNode, add: string) => void
   menuClose: () => void
   scope: { nodeIds: string[] }
   webSocket: any
   setPreviewNode: any
-  contextMenuRef: any
 }
 
 export const ContextMenu = (props: ContextMenuProps) => {
@@ -70,7 +69,6 @@ export const ContextMenu = (props: ContextMenuProps) => {
     scope,
     webSocket,
     setPreviewNode,
-    contextMenuRef,
   } = props
   const { isOpen, onOpen, onClose } = useDisclosure()
   const copyRef = useRef<any>()
