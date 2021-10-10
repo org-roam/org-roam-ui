@@ -35,6 +35,7 @@ export interface LinkProps {
   setSidebarHighlightedNode: any
   nodeByCite: NodeByCite
   nodeById: NodeById
+  openContextMenu: any
 }
 
 export interface NormalLinkProps {
@@ -44,6 +45,7 @@ export interface NormalLinkProps {
   href: any
   children: any
   setSidebarHighlightedNode: any
+  openContextMenu: any
 }
 
 import { hexToRGBA, getThemeColor } from '../../pages/index'
@@ -51,7 +53,8 @@ import noteStyle from './noteStyle'
 import { OrgImage } from './OrgImage'
 
 export const NormalLink = (props: NormalLinkProps) => {
-  const { setSidebarHighlightedNode, setPreviewNode, nodeById, href, children } = props
+  const { setSidebarHighlightedNode, setPreviewNode, nodeById, openContextMenu, href, children } =
+    props
   const { highlightColor } = useContext(ThemeContext)
 
   const theme = useTheme()
@@ -67,12 +70,16 @@ export const NormalLink = (props: NormalLinkProps) => {
       fontWeight={500}
       color={highlightColor}
       textDecoration="underline"
+      onContextMenu={(e) => {
+        e.preventDefault()
+        openContextMenu(nodeById[uri], e)
+      }}
       onClick={() => setPreviewNode(nodeById[uri])}
       // TODO  don't hardcode the opacitycolor
       _hover={{ textDecoration: 'none', cursor: 'pointer', bgColor: coolHighlightColor + '22' }}
       _focus={{ outlineColor: highlightColor }}
     >
-      {nodeById[uri]?.title}
+      {children}
     </Text>
   )
 }
@@ -86,6 +93,7 @@ export const PreviewLink = (props: LinkProps) => {
     previewNode,
     setPreviewNode,
     nodeByCite,
+    openContextMenu,
   } = props
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
@@ -129,8 +137,9 @@ export const PreviewLink = (props: LinkProps) => {
             href={href}
             nodeById={nodeById}
             setPreviewNode={setPreviewNode}
+            openContextMenu={openContextMenu}
           >
-            {nodeById[id as string]?.title}
+            {children}
           </PreviewLink>
         ),
         img: ({ src }) => {
@@ -186,6 +195,7 @@ export const PreviewLink = (props: LinkProps) => {
                   href,
                   children,
                   nodeByCite,
+                  openContextMenu,
                 }}
               />
             </Box>
@@ -213,7 +223,9 @@ export const PreviewLink = (props: LinkProps) => {
                 maxHeight={300}
                 overflow="scroll"
               >
-                <Box sx={noteStyle}>{orgText}</Box>
+                <Box color="black" sx={noteStyle}>
+                  {orgText}
+                </Box>
               </PopoverBody>
             </PopoverContent>
           </Portal>

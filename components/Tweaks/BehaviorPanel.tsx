@@ -11,6 +11,7 @@ import {
   VStack,
   Text,
   Box,
+  Switch,
 } from '@chakra-ui/react'
 import React from 'react'
 import { initialBehavior, initialMouse } from '../config'

@@ -68,6 +68,7 @@ export const Tweaks = (props: TweakProps) => {
     tagColors,
     setTagColors,
   } = props
+
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
 
@@ -75,12 +76,12 @@ export const Tweaks = (props: TweakProps) => {
     <Box
       position="absolute"
       zIndex="overlay"
-      marginTop={10}
-      marginLeft={10}
+      marginTop={0}
+      marginLeft={0}
       display={showTweaks ? 'none' : 'block'}
     >
       <IconButton
-        variant="ghost"
+        variant="subtle"
         aria-label="Settings"
         icon={<SettingsIcon />}
         onClick={() => setShowTweaks(true)}
@@ -88,17 +89,17 @@ export const Tweaks = (props: TweakProps) => {
     </Box>
   ) : (
     <Box
+      position="absolute"
       bg="alt.100"
       w="xs"
-      marginTop={10}
-      marginLeft={10}
-      borderRadius="xl"
+      marginTop={2}
+      marginLeft={2}
+      borderRadius="lg"
       paddingBottom={5}
-      zIndex={300}
-      position="relative"
+      zIndex="overlay"
       boxShadow="xl"
-      maxH={0.92 * globalThis.innerHeight}
-      marginBottom={10}
+      maxH={'95vh'}
+      fontSize="sm"
     >
       <Box
         display="flex"
@@ -108,7 +109,7 @@ export const Tweaks = (props: TweakProps) => {
         paddingTop={1}
       >
         <Tooltip label={'Switch to ' + threeDim ? '2D' : '3D' + ' view'}>
-          <Button onClick={() => setThreeDim(!threeDim)} variant="ghost" zIndex="overlay">
+          <Button onClick={() => setThreeDim(!threeDim)} variant="subtle" zIndex="overlay">
             {threeDim ? '3D' : '2D'}
           </Button>
         </Tooltip>
@@ -124,7 +125,7 @@ export const Tweaks = (props: TweakProps) => {
                 setPhysics(initialPhysics)
                 setBehavior(initialBehavior)
               }}
-              variant="none"
+              variant="subtle"
               size="sm"
             />
           </Tooltip>
@@ -132,7 +133,7 @@ export const Tweaks = (props: TweakProps) => {
             size="sm"
             icon={<CloseIcon />}
             aria-label="Close Tweak Panel"
-            variant="ghost"
+            variant="subtle"
             onClick={() => setShowTweaks(false)}
           />
         </Box>

@@ -16,6 +16,7 @@ export interface NoteProps {
   justification: number
   justificationList: string[]
   linksByNodeId: LinksByNodeId
+  openContextMenu: any
 }
 
 export const Note = (props: NoteProps) => {
@@ -28,6 +29,7 @@ export const Note = (props: NoteProps) => {
     nodeByCite,
     setSidebarHighlightedNode,
     linksByNodeId,
+    openContextMenu,
   } = props
   return (
     <Box
@@ -50,6 +52,7 @@ export const Note = (props: NoteProps) => {
               nodeById,
               nodeByCite,
               setSidebarHighlightedNode,
+              openContextMenu,
             }}
           />
           <Backlinks
@@ -60,6 +63,7 @@ export const Note = (props: NoteProps) => {
               linksByNodeId,
               nodeByCite,
               setSidebarHighlightedNode,
+              openContextMenu,
             }}
           />
         </Flex>

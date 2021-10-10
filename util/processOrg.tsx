@@ -7,7 +7,7 @@ import extractKeywords from 'uniorg-extract-keywords'
 import attachments from 'uniorg-attach'
 // rehypeHighlight does not have any types
 // @ts-expect-error
-import highlight from 'rehype-highlight'
+// import highlight from 'rehype-highlight'
 import katex from 'rehype-katex'
 import 'katex/dist/katex.css'
 import rehype2react from 'rehype-react'
@@ -24,6 +24,7 @@ export interface ProcessedOrgProps {
   previewText: any
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: any
+  openContextMenu: any
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
@@ -34,6 +35,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     previewText,
     nodeByCite,
     previewNode,
+    openContextMenu,
   } = props
 
   const processor = unified()
@@ -42,7 +44,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     .use(attachments)
     .use(uniorgSlug)
     .use(uniorg2rehype)
-    .use(highlight)
+    // .use(highlight)
     .use(katex)
     .use(rehype2react, {
       createElement: React.createElement,
@@ -56,6 +58,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
               href={`${href as string}`}
               nodeById={nodeById}
               setPreviewNode={setPreviewNode}
+              openContextMenu={openContextMenu}
             >
               {children}
             </PreviewLink>

@@ -3,15 +3,19 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Toolbar } from './Toolbar'
 import { Note } from './Note'
 
-import { Button, Slide, VStack, Flex, Heading, Box, IconButton } from '@chakra-ui/react'
+import { Button, Slide, VStack, Flex, Heading, Box, IconButton, Tooltip } from '@chakra-ui/react'
+import { Collapse } from './Collapse'
 import { Scrollbars } from 'react-custom-scrollbars-2'
-import { ChevronLeftIcon, ChevronRightIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { BiFile } from 'react-icons/bi'
+import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { BiDotsVerticalRounded, BiFile, BiNetworkChart } from 'react-icons/bi'
+import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 
 import { GraphData, NodeObject, LinkObject } from 'force-graph'
 import { OrgRoamNode } from '../../api'
 import { ThemeContext } from '../../util/themecontext'
-import { LinksByNodeId, NodeByCite, NodeById } from '../../pages/index'
+import { LinksByNodeId, NodeByCite, NodeById, Scope } from '../../pages/index'
+import { Resizable } from 're-resizable'
+import { usePersistantState } from '../../util/persistant-state'
 
 export interface SidebarProps {
   isOpen: boolean
@@ -28,6 +32,10 @@ export interface SidebarProps {
   resetPreviewNode: any
   previousPreviewNode: any
   nextPreviewNode: any
+  openContextMenu: any
+  scope: Scope
+  setScope: any
+  windowWidth: number
 }
 
 const Sidebar = (props: SidebarProps) => {
@@ -46,10 +54,15 @@ const Sidebar = (props: SidebarProps) => {
     resetPreviewNode,
     previousPreviewNode,
     nextPreviewNode,
+    openContextMenu,
+    scope,
+    setScope,
+    windowWidth,
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
   const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode>()
+  const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
 
   useEffect(() => {
     if (!previewNode?.id) {
@@ -67,25 +80,58 @@ const Sidebar = (props: SidebarProps) => {
   //maybe want to close it when clicking outside, but not sure
   //const outsideClickRef = useRef();
   return (
-    <Slide
-      direction="right"
+    <Collapse
+      animateOpacity={false}
+      dimension="width"
       in={isOpen}
-      style={{ width: 'clamp(400px, 30%, 500px)' }}
+      //style={{ position: 'relative' }}
       unmountOnExit
+      startingSize={0}
+      style={{ height: '100vh' }}
     >
-      <Flex flexDirection="row" height="100%">
-        <Box pl={2} color="black" bg="alt.100" w="100%" paddingBottom={15}>
+      <Resizable
+        size={{ height: '100%', width: sidebarWidth }}
+        onResizeStop={(e, direction, ref, d) => {
+          setSidebarWidth((curr: number) => curr + d.width)
+        }}
+        enable={{
+          top: false,
+          right: false,
+          bottom: false,
+          left: true,
+          topRight: false,
+          bottomRight: false,
+          bottomLeft: false,
+          topLeft: false,
+        }}
+        minWidth="220px"
+        maxWidth={windowWidth - 200}
+      >
+        <Box pl={2} color="black" h="100%" bg="alt.100" width="100%">
           <Flex
-            justifyContent="space-between"
-            paddingTop={4}
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
             pl={4}
-            pb={5}
-            pr={3}
-            alignItems="top"
+            alignItems="center"
             color="black"
+            width="100%"
           >
-            <Flex alignItems="center" whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
-              <BiFile />
+            <BiFile
+              onContextMenu={(e) => {
+                e.preventDefault()
+                openContextMenu(previewNode, e)
+              }}
+            />
+            <Flex
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+              onContextMenu={(e) => {
+                e.preventDefault()
+                openContextMenu(previewNode, e)
+              }}
+            >
               <Heading
                 pl={2}
                 whiteSpace="nowrap"
@@ -99,13 +145,23 @@ const Sidebar = (props: SidebarProps) => {
                 {previewRoamNode?.title}
               </Heading>
             </Flex>
-            <IconButton
-              // eslint-disable-next-line react/jsx-no-undef
-              icon={<HamburgerIcon />}
-              aria-label="Close file-viewer"
-              variant="link"
-              onClick={onClose}
-            />
+            <Flex flexDir="row" ml="auto">
+              <IconButton
+                // eslint-disable-next-line react/jsx-no-undef
+                m={1}
+                icon={<BiDotsVerticalRounded />}
+                aria-label="Options"
+                variant="subtle"
+                onClick={(e) => {
+                  openContextMenu(previewNode, e, {
+                    left: undefined,
+                    top: 12,
+                    right: -windowWidth + 20,
+                    bottom: undefined,
+                  })
+                }}
+              />
+            </Flex>
           </Flex>
           <Toolbar
             {...{
@@ -132,7 +188,7 @@ const Sidebar = (props: SidebarProps) => {
                   borderRadius: 10,
                   backgroundColor: highlightColor,
                 }}
-                color="black"
+                color="alt.100"
                 {...props}
               />
             )}
@@ -148,13 +204,14 @@ const Sidebar = (props: SidebarProps) => {
                   justification,
                   justificationList,
                   linksByNodeId,
+                  openContextMenu,
                 }}
               />
             </VStack>
           </Scrollbars>
         </Box>
-      </Flex>
-    </Slide>
+      </Resizable>
+    </Collapse>
   )
 }
 

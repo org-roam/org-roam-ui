@@ -28,6 +28,7 @@
     "orgast-util-to-string": "^0.3.1",
     "orgast-util-visit-ids": "^0.3.1",
     "path": "^0.12.7",
+    "re-resizable": "^6.9.1",
     "react": "17.0.2",
     "react-custom-scrollbars-2": "^4.4.0",
     "react-dom": "17.0.2",

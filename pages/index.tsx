@@ -1,52 +1,59 @@
+import { HamburgerIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  Slide,
+  Tooltip,
+  useDisclosure,
+  useOutsideClick,
+  useTheme,
+} from '@chakra-ui/react'
+import { useAnimation } from '@lilib/hooks'
+import { useWindowSize, useWindowWidth } from '@react-hook/window-size'
+import * as d3int from 'd3-interpolate'
+import { GraphData, LinkObject, NodeObject } from 'force-graph'
+import Head from 'next/head'
 import React, {
   ComponentPropsWithoutRef,
+  forwardRef,
+  useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
-  useContext,
-  forwardRef,
 } from 'react'
-
-import Head from 'next/head'
-import { usePersistantState } from '../util/persistant-state'
-const d3promise = import('d3-force-3d')
-import * as d3int from 'd3-interpolate'
-
 import type {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
-import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
-import { GraphData, NodeObject, LinkObject } from 'force-graph'
-import Sidebar from '../components/Sidebar'
-
-import { useWindowSize } from '@react-hook/window-size'
-import { useAnimation } from '@lilib/hooks'
-
-import { Box, Flex, IconButton, useDisclosure, useTheme, WithCSSVar } from '@chakra-ui/react'
-
-import {
-  initialPhysics,
-  initialFilter,
-  initialVisuals,
-  initialBehavior,
-  initialMouse,
-  algos,
-  TagColors,
-  colorList,
-} from '../components/config'
-import { Tweaks } from '../components/Tweaks'
-import { ContextMenu } from '../components/contextmenu'
-
-import { ThemeContext, ThemeContextProps } from '../util/themecontext'
-import SpriteText from 'three-spritetext'
-import wrap from 'word-wrap'
+import { BiChart, BiNetworkChart } from 'react-icons/bi'
+import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-
-import { deleteNodeInEmacs, openNodeInEmacs, createNodeInEmacs } from '../util/webSocketFunctions'
-import { ChevronLeftIcon, HamburgerIcon } from '@chakra-ui/icons'
+import SpriteText from 'three-spritetext'
 import useUndo from 'use-undo'
+import wrap from 'word-wrap'
+import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
+import {
+  algos,
+  colorList,
+  initialBehavior,
+  initialFilter,
+  initialMouse,
+  initialPhysics,
+  initialVisuals,
+  TagColors,
+} from '../components/config'
+import { ContextMenu } from '../components/contextmenu'
+import Sidebar from '../components/Sidebar'
+import { Tweaks } from '../components/Tweaks'
+import { usePersistantState } from '../util/persistant-state'
+import { ThemeContext, ThemeContextProps } from '../util/themecontext'
+import { openNodeInEmacs } from '../util/webSocketFunctions'
+
+const d3promise = import('d3-force-3d')
+
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
 const ForceGraph2D = (
@@ -450,53 +457,91 @@ export function GraphPage() {
     }, 50)
   }, [scope.nodeIds])
 
+  const [windowWidth, windowHeight] = useWindowSize()
+
+  const contextMenuRef = useRef<any>()
+  const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | null>(null)
+  const [contextPos, setContextPos] = useState({
+    left: 0,
+    top: 0,
+    right: undefined,
+    bottom: undefined,
+  })
+
+  const contextMenu = useDisclosure()
+  useOutsideClick({
+    ref: contextMenuRef,
+    handler: () => {
+      console.log('click')
+      contextMenu.onClose()
+    },
+  })
+
+  const openContextMenu = (node: OrgRoamNode, event: any, coords?: number[]) => {
+    coords
+      ? setContextPos(coords)
+      : setContextPos({ left: event.pageX, top: event.pageY, right: undefined, bottom: undefined })
+    setContextMenuTarget(node)
+    contextMenu.onOpen()
+  }
+
+  const handleLocal = (node: OrgRoamNode, add: string) => {
+    if (add === 'replace') {
+      setScope({ nodeIds: [node.id] })
+      return
+    }
+    if (scope.nodeIds.includes(node.id as string)) {
+      return
+    }
+    setScope((currentScope: Scope) => ({
+      ...currentScope,
+      nodeIds: [...currentScope.nodeIds, node.id as string],
+    }))
+    return
+  }
+
+  const [mainItem, setMainItem] = useState({
+    type: 'Graph',
+    title: 'Graph',
+    icon: <BiNetworkChart />,
+  })
+
+  const [mainWindowWidth, setMainWindowWidth] = usePersistantState<number>(
+    'mainWindowWidth',
+    windowWidth,
+  )
   if (!graphData) {
     return null
   }
 
   return (
-    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%" overflow="hidden">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        flexDirection="row"
-        height="100%"
-        width="100%"
-      >
-        <Tweaks
-          {...{
-            physics,
-            setPhysics,
-            threeDim,
-            setThreeDim,
-            filter,
-            setFilter,
-            visuals,
-            setVisuals,
-            mouse,
-            setMouse,
-            behavior,
-            setBehavior,
-            tagColors,
-            setTagColors,
-          }}
-          tags={tagsRef.current}
-        />
-        <Flex height="100%" flexDirection="column" marginLeft="auto">
-          {!isOpen && (
-            <IconButton
-              icon={<HamburgerIcon />}
-              aria-label="Open org-viewer"
-              zIndex={2}
-              onClick={onOpen}
-              variant="ghost"
-              marginTop={10}
-              mr={8}
-            />
-          )}
-        </Flex>
-      </Box>
-      <Flex position="absolute" alignItems="top" overflow="hidden">
+    <Box
+      display="flex"
+      alignItems="flex-start"
+      flexDirection="row"
+      height="100vh"
+      overflow="hidden"
+    >
+      <Tweaks
+        {...{
+          physics,
+          setPhysics,
+          threeDim,
+          setThreeDim,
+          filter,
+          setFilter,
+          visuals,
+          setVisuals,
+          mouse,
+          setMouse,
+          behavior,
+          setBehavior,
+          tagColors,
+          setTagColors,
+        }}
+        tags={tagsRef.current}
+      />
+      <Box position="absolute">
         <Graph
           ref={graphRef}
           nodeById={nodeByIdRef.current!}
@@ -516,8 +561,58 @@ export function GraphPage() {
             tagColors,
             setPreviewNode,
             sidebarHighlightedNode,
+            windowWidth,
+            windowHeight,
+            openContextMenu,
+            contextMenu,
+            handleLocal,
+            mainWindowWidth,
+            setMainWindowWidth,
           }}
         />
+      </Box>
+      <Box position="relative" zIndex={4} width="100%">
+        <Flex className="headerBar" h={10} flexDir="column">
+          <Flex alignItems="center" h={10} justifyContent="flex-end">
+            {/* <Flex flexDir="row" alignItems="center">
+             *   <Box color="blue.500" bgColor="alt.100" h="100%" p={3} mr={4}>
+             *     {mainItem.icon}
+             *   </Box>
+             *   <Heading size="sm">{mainItem.title}</Heading>
+             * </Flex> */}
+            <Flex height="100%" flexDirection="row">
+              {scope.nodeIds.length > 0 && (
+                <Tooltip label="Return to main graph">
+                  <IconButton
+                    m={1}
+                    icon={<BiNetworkChart />}
+                    aria-label="Exit local mode"
+                    onClick={() =>
+                      setScope((currentScope: Scope) => ({
+                        ...currentScope,
+                        nodeIds: [],
+                      }))
+                    }
+                    variant="subtle"
+                  />
+                </Tooltip>
+              )}
+              <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
+                <IconButton
+                  m={1}
+                  // eslint-disable-next-line react/jsx-no-undef
+                  icon={<BsReverseLayoutSidebarInsetReverse />}
+                  aria-label="Close file-viewer"
+                  variant="subtle"
+                  onClick={isOpen ? onClose : onOpen}
+                />
+              </Tooltip>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Box>
+
+      <Box position="relative" zIndex={4}>
         <Sidebar
           {...{
             isOpen,
@@ -529,13 +624,33 @@ export function GraphPage() {
             canRedo,
             previousPreviewNode,
             nextPreviewNode,
+            resetPreviewNode,
             setSidebarHighlightedNode,
+            openContextMenu,
+            scope,
+            setScope,
+            windowWidth,
           }}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
           nodeByCite={nodeByCiteRef.current!}
         />
-      </Flex>
+      </Box>
+      {contextMenu.isOpen && (
+        <div ref={contextMenuRef}>
+          <ContextMenu
+            //contextMenuRef={contextMenuRef}
+            scope={scope}
+            target={contextMenuTarget}
+            background={false}
+            coordinates={contextPos}
+            handleLocal={handleLocal}
+            menuClose={contextMenu.onClose.bind(contextMenu)}
+            webSocket={WebSocketRef.current}
+            setPreviewNode={setPreviewNode}
+          />
+        </div>
+      )}
     </Box>
   )
 }
@@ -557,6 +672,14 @@ export interface GraphProps {
   tagColors: { [tag: string]: string }
   setPreviewNode: any
   sidebarHighlightedNode: OrgRoamNode | null
+  windowWidth: number
+  windowHeight: number
+  setContextMenuTarget: any
+  openContextMenu: any
+  contextMenu: any
+  handleLocal: any
+  mainWindowWidth: number
+  setMainWindowWidth: any
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -577,47 +700,25 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     tagColors,
     setPreviewNode,
     sidebarHighlightedNode,
+    windowWidth,
+    windowHeight,
+    setContextMenuTarget,
+    openContextMenu,
+    contextMenu,
+    handleLocal,
   } = props
 
-  // react-force-graph does not track window size
-  // https://github.com/vasturiano/react-force-graph/issues/233
-  // does not work below a certain width
-  const [windowWidth, windowHeight] = useWindowSize()
-
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
-
-  const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
-  const [contextPos, setContextPos] = useState([0, 0])
 
   const theme = useTheme()
 
   const { emacsTheme } = useContext<ThemeContextProps>(ThemeContext)
 
-  const handleLocal = (node: OrgRoamNode, add: string) => {
-    if (add === 'replace') {
-      setScope({ nodeIds: [node.id] })
-      return
-    }
-    if (scope.nodeIds.includes(node.id as string)) {
-      return
-    }
-    setScope((currentScope: Scope) => ({
-      ...currentScope,
-      nodeIds: [...currentScope.nodeIds, node.id as string],
-    }))
-    return
-  }
-
-  const contextMenu = useDisclosure()
-
-  const openContextMenu = (node: OrgRoamNode, event: any) => {
-    setContextPos([event.pageX, event.pageY])
-    setRightClickedNode(node)
-    contextMenu.onOpen()
-  }
-
   const handleClick = (click: string, node: OrgRoamNode, event: any) => {
     switch (click) {
+      case mouse.preview: {
+        setPreviewNode(node)
+      }
       case mouse.local: {
         handleLocal(node, behavior.localSame)
         break
@@ -628,9 +729,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       }
       case mouse.context: {
         openContextMenu(node, event)
-      }
-      case mouse.preview: {
-        setPreviewNode(node)
       }
       default:
         break
@@ -1062,7 +1160,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     backgroundColor: theme.colors.gray[visuals.backgroundColor],
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     onZoom: ({ k, x, y }) => setZoom(k),
-    nodeLabel: (node) => (node as OrgRoamNode).title,
+    //nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode, theme)
     },
@@ -1199,7 +1297,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     onNodeClick: (nodeArg: NodeObject, event: any) => {
       const node = nodeArg as OrgRoamNode
-      contextMenu.onClose()
+      //contextMenu.onClose()
       const doubleClickTimeBuffer = 200
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
       lastNodeClickRef.current = event.timeStamp
@@ -1215,17 +1313,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return handleClick('click', node, event)
       }, doubleClickTimeBuffer)
     },
-    onBackgroundClick: () => {
-      contextMenu.onClose()
-      setHoverNode(null)
-      if (scope.nodeIds.length === 0) {
-        return
-      }
-      setScope((currentScope: Scope) => ({
-        ...currentScope,
-        nodeIds: [],
-      }))
-    },
+    /* onBackgroundClick: () => {
+     *   contextMenu.onClose()
+     *   setHoverNode(null)
+     *   if (scope.nodeIds.length === 0) {
+     *     return
+     *   }
+     *   if (mouse.backgroundExitsLocal) {
+     *     setScope((currentScope: Scope) => ({
+     *       ...currentScope,
+     *       nodeIds: [],
+     *     }))
+     *   }
+     * }, */
     onNodeHover: (node) => {
       if (!visuals.highlight) {
         return
@@ -1243,7 +1343,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       handleClick('right', node, event)
     },
     onNodeDrag: (node) => {
-      contextMenu.onClose()
+      //contextMenu.onClose()
       setHoverNode(node)
       setDragging(true)
     },
@@ -1254,20 +1354,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   return (
-    <Box overflow="hidden">
-      {contextMenu.isOpen && (
-        <ContextMenu
-          scope={scope}
-          node={rightClickedNode!}
-          nodeType={rightClickedNode?.id}
-          background={false}
-          coordinates={contextPos}
-          handleLocal={handleLocal}
-          menuClose={contextMenu.onClose.bind(contextMenu)}
-          webSocket={webSocket}
-          setPreviewNode={setPreviewNode}
-        />
-      )}
+    <Box overflow="hidden" onClick={contextMenu.onClose}>
       {threeDim ? (
         <ForceGraph3D
           ref={graphRef}

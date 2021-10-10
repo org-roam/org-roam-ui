@@ -173,6 +173,11 @@ function SubApp(props: any) {
               _hover: { bg: `inherit`, border: '1px solid', borderColor: highlightColor },
               _active: { color: `inherit`, bg: highlightColor },
             },
+            subtle: {
+              color: 'gray.800',
+              _hover: { bg: `inherit`, color: highlightColor },
+              _active: { color: `inherit`, bg: borderColor },
+            },
           },
         },
         Accordion: {

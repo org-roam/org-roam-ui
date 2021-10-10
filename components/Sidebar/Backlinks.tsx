@@ -14,6 +14,7 @@ export interface BacklinksProps {
   linksByNodeId: LinksByNodeId
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: OrgRoamNode
+  openContextMenu: any
 }
 
 import { PreviewLink } from './Link'
@@ -27,6 +28,7 @@ export const Backlinks = (props: BacklinksProps) => {
     nodeById,
     linksByNodeId,
     nodeByCite,
+    openContextMenu,
   } = props
   const links = linksByNodeId[previewNode?.id] ?? []
 
@@ -59,6 +61,7 @@ export const Backlinks = (props: BacklinksProps) => {
                   href={`id:${link as string}`}
                   nodeById={nodeById}
                   setPreviewNode={setPreviewNode}
+                  openContextMenu={openContextMenu}
                 >
                   {nodeById[link as string]?.title}
                 </PreviewLink>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Flex, IconButton } from '@chakra-ui/react'
+import { Text, Flex, IconButton, ButtonGroup, Tooltip } from '@chakra-ui/react'
 import {
   BiAlignJustify,
   BiAlignLeft,
@@ -38,53 +38,65 @@ export const Toolbar = (props: ToolbarProps) => {
     nextPreviewNode,
   } = props
   return (
-    <Flex py={3} alignItems="center" justifyContent="space-between" pr={4}>
+    <Flex pb={3} alignItems="center" justifyContent="space-between" pl={1} pr={1}>
       <Flex>
-        <IconButton
-          variant="ghost"
-          icon={<ChevronLeftIcon />}
-          aria-label="Previous node"
-          disabled={!canUndo}
-          onClick={() => previousPreviewNode()}
-        />
-        <IconButton
-          variant="ghost"
-          icon={<ChevronRightIcon />}
-          aria-label="Next node"
-          disabled={!canRedo}
-          onClick={() => nextPreviewNode()}
-        />
+        <ButtonGroup isAttached>
+          <Tooltip label="Go backward">
+            <IconButton
+              variant="subtle"
+              icon={<ChevronLeftIcon />}
+              aria-label="Previous node"
+              disabled={!canUndo}
+              onClick={() => previousPreviewNode()}
+            />
+          </Tooltip>
+          <Tooltip label="Go forward">
+            <IconButton
+              variant="subtle"
+              icon={<ChevronRightIcon />}
+              aria-label="Next node"
+              disabled={!canRedo}
+              onClick={() => nextPreviewNode()}
+            />
+          </Tooltip>
+        </ButtonGroup>
       </Flex>
       <Flex>
-        <IconButton
-          variant="ghost"
-          aria-label="Justify content"
-          icon={
-            [
-              <BiAlignJustify key="justify" />,
-              <BiAlignLeft key="left" />,
-              <BiAlignRight key="right" />,
-              <BiAlignMiddle key="center" />,
-            ][justification]
-          }
-          onClick={() => setJustification((curr: number) => (curr + 1) % 4)}
-        />
-        <IconButton
-          variant="ghost"
-          aria-label="Indent Text"
-          icon={<BiRightIndent />}
-          onClick={() => {
-            setIndent((curr: number) => (curr ? 0 : 1))
-          }}
-        />
-        <IconButton
-          variant="ghost"
-          aria-label="Change font"
-          icon={<BiFont />}
-          onClick={() => {
-            setFont((curr: string) => (curr === 'sans serif' ? 'serif' : 'sans serif'))
-          }}
-        />
+        <Tooltip label="Justify content">
+          <IconButton
+            variant="subtle"
+            aria-label="Justify content"
+            icon={
+              [
+                <BiAlignJustify key="justify" />,
+                <BiAlignLeft key="left" />,
+                <BiAlignRight key="right" />,
+                <BiAlignMiddle key="center" />,
+              ][justification]
+            }
+            onClick={() => setJustification((curr: number) => (curr + 1) % 4)}
+          />
+        </Tooltip>
+        {/* <Tooltip label="Indent trees">
+          <IconButton
+            variant="subtle"
+            aria-label="Indent Text"
+            icon={<BiRightIndent />}
+            onClick={() => {
+              setIndent((curr: number) => (curr ? 0 : 1))
+            }}
+          />
+        </Tooltip>
+        <Tooltip label="Switch betwwen sans and serif">
+          <IconButton
+            variant="subtle"
+            aria-label="Change font"
+            icon={<BiFont />}
+            onClick={() => {
+              setFont((curr: string) => (curr === 'sans serif' ? 'serif' : 'sans serif'))
+            }}
+          />
+        </Tooltip> */}
       </Flex>
     </Flex>
   )

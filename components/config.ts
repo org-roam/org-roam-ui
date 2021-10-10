@@ -58,13 +58,13 @@ export const initialVisuals = {
   nodeOpacity: 1,
   nodeResolution: 12,
   labels: 2,
-  labelScale: 1.5,
+  labelScale: 1,
   labelFontSize: 13,
   labelLength: 40,
   labelWordWrap: 25,
   labelLineSpace: 1,
   highlight: true,
-  highlightNodeSize: 2,
+  highlightNodeSize: 1.2,
   highlightLinkSize: 2,
   highlightFade: 0.8,
   highlightAnim: true,
@@ -123,6 +123,7 @@ export const initialMouse = {
   follow: 'never',
   context: 'right',
   preview: 'click',
+  backgroundExitsLocal: false,
 }
 
 export const colorList = [
