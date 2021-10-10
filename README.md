@@ -334,9 +334,10 @@ In no particular order
 - Displaying notes Andy Matushak style
 - Discovery options, e.g. "show shortest path between X and Y"
 
-### Beyond
+# Feedback
 
-- Discuss the future of org-roam-ui with us [here!](https://github.com/org-roam/org-roam-ui/discussions/6)
+For feature suggestions, please make an issue or check out the discussions for [major](https://github.com/org-roam/org-roam-ui/discussions/66) and [minor features](https://github.com/org-roam/org-roam-ui/discussions/6).
+For other feedback, please go to the [feedback discussion](https://github.com/org-roam/org-roam-ui/discussions/99), or open up a new one!
 
 # Contribute 💪
 
