@@ -129,6 +129,7 @@ export function GraphPage() {
   const nodeByCiteRef = useRef<NodeByCite>({})
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
+  const variablesRef = useRef<{ [variable: string]: string }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
 
@@ -414,8 +415,11 @@ export function GraphPage() {
       switch (message.type) {
         case 'graphdata':
           return updateGraphData(message.data)
+        case 'variables':
+          variablesRef.current = message.data
+          return
         case 'theme':
-          return setEmacsTheme(message.data)
+          return setEmacsTheme(['custom', message.data])
         case 'command':
           switch (message.data.commandName) {
             case 'local':
@@ -553,6 +557,7 @@ export function GraphPage() {
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
           webSocket={WebSocketRef.current}
+          variables={variablesRef.current}
           {...{
             physics,
             graphData,
@@ -687,6 +692,7 @@ export interface GraphProps {
   handleLocal: any
   mainWindowWidth: number
   setMainWindowWidth: any
+  variables: { [variable: string]: string }
 }
 
 export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
@@ -713,7 +719,14 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     openContextMenu,
     contextMenu,
     handleLocal,
+    variables,
   } = props
+
+  const { dailyDir, roamDir } = variables
+  // react-force-graph does not track window size
+  // https://github.com/vasturiano/react-force-graph/issues/233
+  // does not work below a certain width
+  const [windowWidth, windowHeight] = useWindowSize()
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
 
@@ -788,23 +801,28 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         const node = nodeArg as OrgRoamNode
         if (
           filter.tagsBlacklist.length &&
-          filter.tagsBlacklist.some((tag) => node.tags.indexOf(tag) > -1)
+          filter.tagsBlacklist.some((tag) => node?.tags?.indexOf(tag) > -1)
         ) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
         if (
           filter.tagsWhitelist.length > 0 &&
-          !filter.tagsWhitelist.some((tag) => node.tags.indexOf(tag) > -1)
+          !filter.tagsWhitelist.some((tag) => node?.tags?.indexOf(tag) > -1)
         ) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
-        if (filter.filelessCites && node.properties.FILELESS) {
+        if (filter.filelessCites && node?.properties?.FILELESS) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
         if (filter.bad && node.properties.bad) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+
+        if (filter.dailies && dailyDir && node.file?.includes(dailyDir)) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -881,7 +899,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           }
           const links = filteredLinksByNodeIdRef.current[node.id as string] ?? []
           return links.some((link) => {
-            return scope.nodeIds.includes(link.source) || scope.nodeIds.includes(link.target)
+            const [source, target] = normalizeLinkEnds(link)
+            return scope.nodeIds.includes(source) || scope.nodeIds.includes(target)
           })
         }
         return neighbs.includes(node.id as string)
@@ -919,7 +938,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     const scopedLinks = [...oldScopedLinks, ...newScopedLinks]
 
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
-  }, [filter, scope, graphData])
+  }, [filter, scope, JSON.stringify(graphData), filteredGraphData.links, filteredGraphData.nodes])
 
   useEffect(() => {
     ;(async () => {

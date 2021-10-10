@@ -7,6 +7,13 @@ import {
   VStack,
   AccordionIcon,
   AccordionPanel,
+  MenuButton,
+  Menu,
+  Button,
+  Box,
+  Portal,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
 import { HighlightingPanel } from './HighlightingPanel'
@@ -15,6 +22,8 @@ import { initialVisuals } from '../config'
 import { NodesNLinksPanel } from './NodesNLinksPanel'
 import { LabelsPanel } from './LabelsPanel'
 import { CitationsPanel } from './CitationsPanel'
+import { ColorMenu } from './ColorMenu'
+import { ThemeSelect } from './ThemeSelect'
 
 export interface VisualsPanelProps {
   visuals: typeof initialVisuals
@@ -29,6 +38,7 @@ export const VisualsPanel = (props: VisualsPanelProps) => {
   const setVisualsCallback = useCallback((val) => setVisuals(val), [])
   return (
     <VStack justifyContent="flex-start" align="stretch">
+      <ThemeSelect />
       <Accordion allowToggle defaultIndex={[0]} paddingLeft={3}>
         <AccordionItem>
           <AccordionButton>
@@ -97,4 +107,7 @@ export const VisualsPanel = (props: VisualsPanelProps) => {
       </Accordion>
     </VStack>
   )
+}
+function clickCallback(color: string): void {
+  throw new Error('Function not implemented.')
 }
