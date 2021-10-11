@@ -96,7 +96,7 @@ export const Tweaks = (props: TweakProps) => {
       marginLeft={2}
       borderRadius="lg"
       paddingBottom={5}
-      zIndex="overlay"
+      zIndex={4}
       boxShadow="xl"
       maxH={'95vh'}
       fontSize="sm"

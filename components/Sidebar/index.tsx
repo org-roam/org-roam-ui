@@ -1,12 +1,33 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import { Toolbar } from './Toolbar'
+import { TagBar } from './TagBar'
 import { Note } from './Note'
 
-import { Button, Slide, VStack, Flex, Heading, Box, IconButton, Tooltip } from '@chakra-ui/react'
+import {
+  Button,
+  Slide,
+  VStack,
+  Flex,
+  Heading,
+  Box,
+  IconButton,
+  Tooltip,
+  HStack,
+  TagLabel,
+  Tag,
+  TagRightIcon,
+} from '@chakra-ui/react'
 import { Collapse } from './Collapse'
 import { Scrollbars } from 'react-custom-scrollbars-2'
-import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CloseIcon,
+  HamburgerIcon,
+  ViewIcon,
+  ViewOffIcon,
+} from '@chakra-ui/icons'
 import { BiDotsVerticalRounded, BiFile, BiNetworkChart } from 'react-icons/bi'
 import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 
@@ -16,6 +37,7 @@ import { ThemeContext } from '../../util/themecontext'
 import { LinksByNodeId, NodeByCite, NodeById, Scope } from '../../pages/index'
 import { Resizable } from 're-resizable'
 import { usePersistantState } from '../../util/persistant-state'
+import { initialFilter, TagColors } from '../config'
 
 export interface SidebarProps {
   isOpen: boolean
@@ -36,6 +58,10 @@ export interface SidebarProps {
   scope: Scope
   setScope: any
   windowWidth: number
+  filter: typeof initialFilter
+  setFilter: any
+  tagColors: TagColors
+  setTagColors: any
 }
 
 const Sidebar = (props: SidebarProps) => {
@@ -58,6 +84,10 @@ const Sidebar = (props: SidebarProps) => {
     scope,
     setScope,
     windowWidth,
+    filter,
+    setFilter,
+    tagColors,
+    setTagColors,
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
@@ -90,7 +120,7 @@ const Sidebar = (props: SidebarProps) => {
       style={{ height: '100vh' }}
     >
       <Resizable
-        size={{ height: '100%', width: sidebarWidth }}
+        size={{ height: '100vh', width: sidebarWidth }}
         onResizeStop={(e, direction, ref, d) => {
           setSidebarWidth((curr: number) => curr + d.width)
         }}
@@ -107,22 +137,24 @@ const Sidebar = (props: SidebarProps) => {
         minWidth="220px"
         maxWidth={windowWidth - 200}
       >
-        <Box pl={2} color="black" h="100%" bg="alt.100" width="100%">
+        <Flex flexDir="column" h="100vh" pl={2} color="black" bg="alt.100" width="100%">
           <Flex
-            whiteSpace="nowrap"
-            overflow="hidden"
-            textOverflow="ellipsis"
+            //whiteSpace="nowrap"
+            // overflow="hidden"
+            // textOverflow="ellipsis"
             pl={4}
             alignItems="center"
             color="black"
             width="100%"
           >
-            <BiFile
-              onContextMenu={(e) => {
-                e.preventDefault()
-                openContextMenu(previewNode, e)
-              }}
-            />
+            <Flex flexShrink={0}>
+              <BiFile
+                onContextMenu={(e) => {
+                  e.preventDefault()
+                  openContextMenu(previewNode, e)
+                }}
+              />
+            </Flex>
             <Flex
               whiteSpace="nowrap"
               textOverflow="ellipsis"
@@ -177,39 +209,42 @@ const Sidebar = (props: SidebarProps) => {
               nextPreviewNode,
             }}
           />
-          <Scrollbars
-            //autoHeight
-            //autoHeightMax={600}
-            autoHide
-            renderThumbVertical={({ style, ...props }) => (
-              <Box
-                style={{
-                  ...style,
-                  borderRadius: 10,
-                  backgroundColor: highlightColor,
-                }}
-                color="alt.100"
-                {...props}
-              />
-            )}
-          >
-            <VStack height="100%" alignItems="left" bg="alt.100" paddingLeft={4}>
-              <Note
-                {...{
-                  setPreviewNode,
-                  previewNode,
-                  nodeById,
-                  nodeByCite,
-                  setSidebarHighlightedNode,
-                  justification,
-                  justificationList,
-                  linksByNodeId,
-                  openContextMenu,
-                }}
-              />
-            </VStack>
-          </Scrollbars>
-        </Box>
+          {/* <Scrollbars
+           *   //autoHeight
+           *   autoHeightMax={600}
+           *   autoHide
+           *   renderThumbVertical={({ style, ...props }) => (
+           *     <Box
+           *       style={{
+           *         ...style,
+           *         borderRadius: 0,
+           *         // backgroundColor: highlightColor,
+           *       }}
+           *       //color="alt.100"
+           *       {...props}
+           *     />
+           *   )}
+           * > */}
+          <VStack flexGrow={1} overflow="scroll" alignItems="left" bg="alt.100" paddingLeft={4}>
+            <TagBar
+              {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
+            />
+            <Note
+              {...{
+                setPreviewNode,
+                previewNode,
+                nodeById,
+                nodeByCite,
+                setSidebarHighlightedNode,
+                justification,
+                justificationList,
+                linksByNodeId,
+                openContextMenu,
+              }}
+            />
+          </VStack>
+          {/*</Scrollbars>*/}
+        </Flex>
       </Resizable>
     </Collapse>
   )

@@ -43,7 +43,7 @@ export const Backlinks = (props: BacklinksProps) => {
     <Box>
       <Heading pt={4}>{`Backlinks (${backLinks.length})`}</Heading>
       <VStack
-        pt={2}
+        py={2}
         spacing={3}
         alignItems="start"
         divider={<StackDivider borderColor="gray.500" />}

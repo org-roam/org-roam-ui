@@ -38,7 +38,7 @@ export const Toolbar = (props: ToolbarProps) => {
     nextPreviewNode,
   } = props
   return (
-    <Flex pb={3} alignItems="center" justifyContent="space-between" pl={1} pr={1}>
+    <Flex flex="0 1 40px" pb={3} alignItems="center" justifyContent="space-between" pl={1} pr={1}>
       <Flex>
         <ButtonGroup isAttached>
           <Tooltip label="Go backward">

@@ -464,7 +464,7 @@ export function GraphPage() {
   const [windowWidth, windowHeight] = useWindowSize()
 
   const contextMenuRef = useRef<any>()
-  const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | null>(null)
+  const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | string | null>(null)
   type ContextPos = {
     left: number | undefined
     right: number | undefined
@@ -487,11 +487,11 @@ export function GraphPage() {
     },
   })
 
-  const openContextMenu = (node: OrgRoamNode, event: any, coords?: ContextPos) => {
+  const openContextMenu = (target: OrgRoamNode | string, event: any, coords?: ContextPos) => {
     coords
       ? setContextPos(coords)
       : setContextPos({ left: event.pageX, top: event.pageY, right: undefined, bottom: undefined })
-    setContextMenuTarget(node)
+    setContextMenuTarget(target)
     contextMenu.onOpen()
   }
 
@@ -525,13 +525,7 @@ export function GraphPage() {
   }
 
   return (
-    <Box
-      display="flex"
-      alignItems="flex-start"
-      flexDirection="row"
-      height="100vh"
-      overflow="hidden"
-    >
+    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100vh" overflow="clip">
       <Tweaks
         {...{
           physics,
@@ -553,7 +547,7 @@ export function GraphPage() {
       />
       <Box position="absolute">
         <Graph
-          ref={graphRef}
+          //ref={graphRef}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
           webSocket={WebSocketRef.current}
@@ -580,6 +574,7 @@ export function GraphPage() {
             mainWindowWidth,
             setMainWindowWidth,
             setContextMenuTarget,
+            graphRef,
           }}
         />
       </Box>
@@ -642,6 +637,10 @@ export function GraphPage() {
             scope,
             setScope,
             windowWidth,
+            tagColors,
+            setTagColors,
+            filter,
+            setFilter,
           }}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
@@ -660,6 +659,10 @@ export function GraphPage() {
             menuClose={contextMenu.onClose.bind(contextMenu)}
             webSocket={WebSocketRef.current}
             setPreviewNode={setPreviewNode}
+            setFilter={setFilter}
+            filter={filter}
+            setTagColors={setTagColors}
+            tagColors={tagColors}
           />
         </div>
       )}
@@ -693,10 +696,12 @@ export interface GraphProps {
   mainWindowWidth: number
   setMainWindowWidth: any
   variables: { [variable: string]: string }
+  graphRef: any
 }
 
-export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
+export const Graph = function (props: GraphProps) {
   const {
+    graphRef,
     physics,
     graphData,
     threeDim,
@@ -814,7 +819,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
-        if (filter.bad && node.properties.bad) {
+        if (filter?.bad && node?.properties?.bad) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -1119,11 +1124,13 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
       return getThemeColor(visuals.emacsNodeColor, theme)
     }
-    if (tagColors && node.tags.some((tag) => tagColors[tag])) {
-      const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
-      return highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
+    if (tagColors && node?.tags.some((tag) => tagColors[tag])) {
+      const tagColor = tagColors[node?.tags.filter((tag) => tagColors[tag])[0]]
+      return needsHighlighting
+        ? highlightColors[tagColor][tagColor](visuals.highlightFade * opacity)
+        : highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
     }
-    if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
+    if (visuals.citeNodeColor && node?.properties?.ROAM_REFS && node?.properties?.FILELESS) {
       return needsHighlighting
         ? getThemeColor(visuals.citeNodeColor, theme)
         : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
@@ -1175,21 +1182,22 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const [dragging, setDragging] = useState(false)
 
-  const [zoom, setZoom] = useState(1)
+  const scaleRef = useRef(1)
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
-    //width: windowWidth,
+    width: windowWidth,
     height: windowHeight,
-    backgroundColor: theme.colors.gray[visuals.backgroundColor],
+    backgroundColor: getThemeColor(visuals.backgroundColor, theme),
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
-    onZoom: ({ k, x, y }) => setZoom(k),
+    //onZoom: ({ k, x, y }) => setZoom(k),
+    onZoom: ({ k, x, y }) => (scaleRef.current = k),
     //nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode, theme)
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
-      return nodeSize(node) / Math.pow(zoom, visuals.nodeZoomSize)
+      return nodeSize(node) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!node) {
@@ -1376,6 +1384,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
   }
 
+  console.log('hey')
   return (
     <Box overflow="hidden" onClick={contextMenu.onClose}>
       {threeDim ? (
@@ -1383,7 +1392,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           ref={graphRef}
           {...graphCommonProps}
           nodeThreeObjectExtend={true}
-          backgroundColor={theme.colors.white}
           nodeOpacity={visuals.nodeOpacity}
           nodeResolution={visuals.nodeResolution}
           linkOpacity={visuals.linkOpacity}
@@ -1421,7 +1429,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       )}
     </Box>
   )
-})
+}
 
 function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   return (

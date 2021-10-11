@@ -35,7 +35,7 @@ export const Note = (props: NoteProps) => {
     <Box
       pr={8}
       overflow="scroll"
-      height="85%"
+      height="100%"
       className="org"
       sx={{
         ...noteStyle,
