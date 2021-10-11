@@ -20,7 +20,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (isInitialized) {
       localStorage.setItem('colorTheme', JSON.stringify(emacsTheme))
     }
-    console.log(emacsTheme)
   }, [emacsTheme])
 
   useEffect(() => {

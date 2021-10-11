@@ -76,7 +76,7 @@ export const Tweaks = (props: TweakProps) => {
     <Box
       position="absolute"
       zIndex="overlay"
-      marginTop={0}
+      marginTop={1}
       marginLeft={0}
       display={showTweaks ? 'none' : 'block'}
     >
@@ -96,7 +96,7 @@ export const Tweaks = (props: TweakProps) => {
       marginLeft={2}
       borderRadius="lg"
       paddingBottom={5}
-      zIndex={4}
+      zIndex={10}
       boxShadow="xl"
       maxH={'95vh'}
       fontSize="sm"

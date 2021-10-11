@@ -482,7 +482,6 @@ export function GraphPage() {
   useOutsideClick({
     ref: contextMenuRef,
     handler: () => {
-      console.log('click')
       contextMenu.onClose()
     },
   })
@@ -520,9 +519,6 @@ export function GraphPage() {
     'mainWindowWidth',
     windowWidth,
   )
-  if (!graphData) {
-    return null
-  }
 
   return (
     <Box display="flex" alignItems="flex-start" flexDirection="row" height="100vh" overflow="clip">
@@ -546,37 +542,39 @@ export function GraphPage() {
         tags={tagsRef.current}
       />
       <Box position="absolute">
-        <Graph
-          //ref={graphRef}
-          nodeById={nodeByIdRef.current!}
-          linksByNodeId={linksByNodeIdRef.current!}
-          webSocket={WebSocketRef.current}
-          variables={variablesRef.current}
-          {...{
-            physics,
-            graphData,
-            threeDim,
-            emacsNodeId,
-            filter,
-            visuals,
-            behavior,
-            mouse,
-            scope,
-            setScope,
-            tagColors,
-            setPreviewNode,
-            sidebarHighlightedNode,
-            windowWidth,
-            windowHeight,
-            openContextMenu,
-            contextMenu,
-            handleLocal,
-            mainWindowWidth,
-            setMainWindowWidth,
-            setContextMenuTarget,
-            graphRef,
-          }}
-        />
+        {graphData && (
+          <Graph
+            //ref={graphRef}
+            nodeById={nodeByIdRef.current!}
+            linksByNodeId={linksByNodeIdRef.current!}
+            webSocket={WebSocketRef.current}
+            variables={variablesRef.current}
+            {...{
+              physics,
+              graphData,
+              threeDim,
+              emacsNodeId,
+              filter,
+              visuals,
+              behavior,
+              mouse,
+              scope,
+              setScope,
+              tagColors,
+              setPreviewNode,
+              sidebarHighlightedNode,
+              windowWidth,
+              windowHeight,
+              openContextMenu,
+              contextMenu,
+              handleLocal,
+              mainWindowWidth,
+              setMainWindowWidth,
+              setContextMenuTarget,
+              graphRef,
+            }}
+          />
+        )}
       </Box>
       <Box position="relative" zIndex={4} width="100%">
         <Flex className="headerBar" h={10} flexDir="column">
@@ -1384,7 +1382,6 @@ export const Graph = function (props: GraphProps) {
     },
   }
 
-  console.log('hey')
   return (
     <Box overflow="hidden" onClick={contextMenu.onClose}>
       {threeDim ? (
