@@ -1,4 +1,4 @@
-# org-roam-ui: an org-roam frontend
+# org-roam-ui: a graphical frontend for your org-roam Zettelkasten
 
 [![ci](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml)
 
@@ -270,28 +270,19 @@ Org-Roam-UI's main feature is the ability to generate a graph visualization of y
 
 ![image](https://user-images.githubusercontent.com/21983833/127747037-aac46e8a-8617-4436-8887-ea1ad7a3141a.png)
 
-#### Sliders!
-
-Configure the graph just the way you like it.
-
-![image](https://user-images.githubusercontent.com/21983833/127746907-f6283400-c7b9-432f-bd85-e37b16a753e9.png)
-
-#### Colors
-
-A ton
-
-![image](https://user-images.githubusercontent.com/21983833/127747009-a4be5e47-1df6-4311-a747-71613168d028.png)
-
-or just a splash.
-
-![image](https://user-images.githubusercontent.com/21983833/127746962-97ed15d2-ffeb-4a3b-9743-ad77e7efce2e.png)
-
 #### Open notes in Emacs
 
 (Double) clicking a node will open the corresponding note in Emacs, very cool.
 You _don't_ need org-protocol for this, it works out of the box!
 
 https://user-images.githubusercontent.com/21983833/127747170-3b49fbde-7fc5-410f-bd26-4ffea8dae48c.mp4
+
+#### Note previewing
+
+For when you leave Emacs in a moment of weakness.
+
+https://user-images.githubusercontent.com/21983833/136845036-a6bd4b32-d78c-4bcf-aa8a-0e37c69cbbe8.mp4
+
 
 #### Follow your movement in Emacs!
 
@@ -301,7 +292,7 @@ https://user-images.githubusercontent.com/21983833/127747187-7823a825-a2f8-449c-
 
 #### Theme syncing
 
-Your gruvbox is only a `M-x orui-sync-theme` away.
+Your gruvbox is only a `M-x orui-sync-theme` away (or you can just select them in the settings).
 
 https://user-images.githubusercontent.com/21983833/127747203-a1aeca95-7def-4caf-b2cf-8a18fa1f2059.mp4
 
@@ -330,13 +321,14 @@ In no particular order
 
 ### UI in general
 
-- File viewing using AST parsing
+- ~~File viewing using AST parsing~~
 - Displaying notes Andy Matushak style
 - Discovery options, e.g. "show shortest path between X and Y"
 
-### Beyond
+# Feedback
 
-- Discuss the future of org-roam-ui with us [here!](https://github.com/org-roam/org-roam-ui/discussions/6)
+For feature suggestions, please make an issue or check out the discussions for [major](https://github.com/org-roam/org-roam-ui/discussions/66) and [minor features](https://github.com/org-roam/org-roam-ui/discussions/6).
+For other feedback, please go to the [feedback discussion](https://github.com/org-roam/org-roam-ui/discussions/99), or open up a new one!
 
 # Contribute 💪
 
