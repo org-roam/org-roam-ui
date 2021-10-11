@@ -208,6 +208,8 @@ This serves the web-build and API over HTTP."
                         (org-roam-capture-
                          :node (org-roam-node-create :title (alist-get 'title data))
                          :props '(:finalize find-file))))
+                      ;((string= command "getText")
+                      ; (org-roam-ui--send-text (alist-get 'id data) oru-ws))
                       (t (message "Something went wrong when receiving a message from Org-Roam-UI")))))
          :on-close (lambda (_websocket)
             (remove-hook 'after-save-hook #'org-roam-ui--on-save)
@@ -221,12 +223,38 @@ This serves the web-build and API over HTTP."
     (remove-hook 'after-save-hook #'org-roam-ui--on-save)
     (org-roam-ui-follow-mode -1)))))
 
+(defun org-roam-ui--send-text (id ws)
+  "Send the text from org-node ID through the websocket WS."
+  (let*
+((node (org-roam-populate (org-roam-node-create
+                                :id id)))
+                             (pos (org-roam-node-point node))
+                             (file (org-roam-node-file node))
+                             (text))
+        (org-roam-with-temp-buffer
+            file
+          (setq text (buffer-substring-no-properties (buffer-end -1) (buffer-end 1)))
+          text)
+        (websocket-send-text ws
+                             (json-encode `((type . "orgText") (data . ,text))))))
+
+(defservlet* file/:file text/plain ()
+        (insert-file-contents-literally (org-link-decode file))
+(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))
+
+
+(defservlet* img/:file text/plain ()
+      (progn
+        (httpd-send-file t (org-link-decode file))
+(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+        ;(insert "error")
+        ;(httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")
+
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer."
   (when (org-roam-buffer-p)
     (org-roam-ui--send-graphdata)))
-
 
 (defun org-roam-ui--check-orb-keywords ()
   "Check if the default keywords are in `orb-preformat-keywords', if not, add them."
@@ -405,34 +433,6 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
                   res)
       (setq rows nil)))
     res))
-
-
-
-;; (defservlet* id/:id text/html ()
-;;   (let ((node (org-roam-populate (org-roam-node-create :id id)))
-;;         html-string)
-;;     (org-roam-with-temp-buffer (org-roam-node-file node)
-;;       (progn
-;;       (setq-local org-export-with-toc nil)
-;;       (setq-local org-export-with-broken-links t)
-;;       (setq-local org-export-with-sub-superscripts nil)
-;;       (replace-string "[[id:" "[[./")
-;;              (let* ((file-string (buffer-string))
-;;                     (matches (s-match-strings-all "\\[\\[\\(file:\\|\\.\\/\\)\\(.*\\.\\(png\\|jpg\\|jpeg\\|gif\\|svg\\)\\)\\]\\(\\[.*\\]\\)?\\]" file-string)))
-;;                (dolist (match matches)
-;;                  (let ((path (elt match 2))
-;;                        (link (elt match 0)))
-;;                    (unless (file-name-absolute-p path)
-;;                      (setq path (concat (file-name-directory (org-roam-node-file-node)) path)))
-;;                    (setq path (f-full path))
-;;                    (if (file-exists-p path)
-;;                        (setq file-string
-;;                              (s-replace link (format "[[image:%s]]" path) file-string)))))
-;;                (erase-buffer)
-;;              (insert file-string))
-;;       (setq html-string (org-export-as 'html))))
-;;     (insert html-string)
-;;     (httpd-send-header t "text/html" 200 :Access-Control-Allow-Origin "*")))
 
 (defun org-roam-ui-get-theme ()
   "Attempt to bring the current theme into a standardized format."

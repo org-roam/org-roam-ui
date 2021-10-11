@@ -7,4 +7,8 @@ const withTM = require('next-transpile-modules')(d3packages)
 
 module.exports = withPlugins([withTM], {
   distDir: 'build',
+  images: {
+    domains: ['localhost'],
+    loader: 'custom',
+  },
 })

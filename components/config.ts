@@ -59,13 +59,13 @@ export const initialVisuals = {
   nodeOpacity: 1,
   nodeResolution: 12,
   labels: 2,
-  labelScale: 1.5,
-  labelFontSize: 13,
+  labelScale: 1,
+  labelFontSize: 10,
   labelLength: 40,
   labelWordWrap: 25,
   labelLineSpace: 1,
   highlight: true,
-  highlightNodeSize: 2,
+  highlightNodeSize: 1.2,
   highlightLinkSize: 2,
   highlightFade: 0.8,
   highlightAnim: true,
@@ -88,7 +88,7 @@ export const initialVisuals = {
   linkHighlight: 'purple.500',
   backgroundColor: 'white',
   emacsNodeColor: 'gray.800',
-  labelTextColor: 'gray.900',
+  labelTextColor: 'black',
   labelBackgroundColor: '',
   labelBackgroundOpacity: 0.7,
   citeDashes: true,
@@ -120,9 +120,11 @@ export const initialBehavior = {
 
 export const initialMouse = {
   highlight: 'hover',
-  local: 'click',
-  follow: 'double',
+  local: 'double',
+  follow: 'never',
   context: 'right',
+  preview: 'click',
+  backgroundExitsLocal: false,
 }
 
 export const colorList = [

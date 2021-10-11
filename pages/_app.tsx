@@ -20,7 +20,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (isInitialized) {
       localStorage.setItem('colorTheme', JSON.stringify(emacsTheme))
     }
-    console.log(emacsTheme)
   }, [emacsTheme])
 
   useEffect(() => {
@@ -153,6 +152,11 @@ function SubApp(props: any) {
               color: highlightColor,
               _hover: { bg: `inherit`, border: '1px solid', borderColor: highlightColor },
               _active: { color: `inherit`, bg: highlightColor },
+            },
+            subtle: {
+              color: 'gray.800',
+              _hover: { bg: `inherit`, color: highlightColor },
+              _active: { color: `inherit`, bg: borderColor },
             },
           },
         },

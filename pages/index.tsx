@@ -1,45 +1,58 @@
+import { HamburgerIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  Slide,
+  Tooltip,
+  useDisclosure,
+  useOutsideClick,
+  useTheme,
+} from '@chakra-ui/react'
+import { useAnimation } from '@lilib/hooks'
+import { useWindowSize, useWindowWidth } from '@react-hook/window-size'
+import * as d3int from 'd3-interpolate'
+import { GraphData, LinkObject, NodeObject } from 'force-graph'
+import Head from 'next/head'
 import React, {
   ComponentPropsWithoutRef,
+  forwardRef,
+  useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
-  useContext,
-  forwardRef,
 } from 'react'
-import { usePersistantState } from '../util/persistant-state'
-const d3promise = import('d3-force-3d')
-import * as d3int from 'd3-interpolate'
-
 import type {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
-import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
-import { GraphData, NodeObject, LinkObject } from 'force-graph'
-
-import { useWindowSize } from '@react-hook/window-size'
-import { useAnimation } from '@lilib/hooks'
-
-import { Box, useDisclosure, useTheme } from '@chakra-ui/react'
-
-import {
-  initialPhysics,
-  initialFilter,
-  initialVisuals,
-  initialBehavior,
-  initialMouse,
-  algos,
-  TagColors,
-  colorList,
-} from '../components/config'
-import { Tweaks } from '../components/Tweaks'
-import { ContextMenu } from '../components/contextmenu'
-
-import { ThemeContext, ThemeContextProps } from '../util/themecontext'
-import SpriteText from 'three-spritetext'
-import wrap from 'word-wrap'
+import { BiChart, BiNetworkChart } from 'react-icons/bi'
+import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import SpriteText from 'three-spritetext'
+import useUndo from 'use-undo'
+import wrap from 'word-wrap'
+import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
+import {
+  algos,
+  colorList,
+  initialBehavior,
+  initialFilter,
+  initialMouse,
+  initialPhysics,
+  initialVisuals,
+  TagColors,
+} from '../components/config'
+import { ContextMenu } from '../components/contextmenu'
+import Sidebar from '../components/Sidebar'
+import { Tweaks } from '../components/Tweaks'
+import { usePersistantState } from '../util/persistant-state'
+import { ThemeContext, ThemeContextProps } from '../util/themecontext'
+import { openNodeInEmacs } from '../util/webSocketFunctions'
+
+const d3promise = import('d3-force-3d')
 
 // react-force-graph fails on import when server-rendered
 // https://github.com/vasturiano/react-force-graph/issues/155
@@ -54,6 +67,7 @@ const ForceGraph3D = (
 export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
 export type NodesByFile = { [file: string]: OrgRoamNode[] | undefined }
+export type NodeByCite = { [key: string]: OrgRoamNode | undefined }
 export type Tags = string[]
 export type Scope = {
   nodeIds: string[]
@@ -69,7 +83,14 @@ export default function Home() {
   if (!showPage) {
     return null
   }
-  return <GraphPage />
+  return (
+    <>
+      <Head>
+        <title>ORUI</title>
+      </Head>
+      <GraphPage />
+    </>
+  )
 }
 
 export function GraphPage() {
@@ -84,9 +105,28 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
+  const [
+    previewNodeState,
+    {
+      set: setPreviewNode,
+      reset: resetPreviewNode,
+      undo: previousPreviewNode,
+      redo: nextPreviewNode,
+      canUndo,
+      canRedo,
+    },
+  ] = useUndo<NodeObject>({})
+  const {
+    past: pastPreviewNodes,
+    present: previewNode,
+    future: futurePreviewNodes,
+  } = previewNodeState
+  const [sidebarHighlightedNode, setSidebarHighlightedNode] = useState<OrgRoamNode | null>(null)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const nodeByIdRef = useRef<NodeById>({})
   const linksByNodeIdRef = useRef<LinksByNodeId>({})
+  const nodeByCiteRef = useRef<NodeByCite>({})
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
   const variablesRef = useRef<{ [variable: string]: string }>({})
@@ -213,6 +253,22 @@ export function GraphPage() {
     }, {})
 
     const nodes = [...importNodes, ...nonExistantNodes]
+
+    nodeByCiteRef.current = nodes.reduce<NodeByCite>((acc, node) => {
+      const ref = node.properties?.ROAM_REFS as string
+      if (!ref?.includes('cite')) {
+        return acc
+      }
+      const key = ref.replaceAll(/cite:(.*)/g, '$1')
+      if (!key) {
+        return acc
+      }
+      return {
+        ...acc,
+        [key]: node,
+      }
+    }, {})
+
     const orgRoamGraphDataProcessed = {
       nodes,
       links,
@@ -405,12 +461,67 @@ export function GraphPage() {
     }, 50)
   }, [scope.nodeIds])
 
-  if (!graphData) {
-    return null
+  const [windowWidth, windowHeight] = useWindowSize()
+
+  const contextMenuRef = useRef<any>()
+  const [contextMenuTarget, setContextMenuTarget] = useState<OrgRoamNode | string | null>(null)
+  type ContextPos = {
+    left: number | undefined
+    right: number | undefined
+    top: number | undefined
+    bottom: number | undefined
+  }
+  const [contextPos, setContextPos] = useState<ContextPos>({
+    left: 0,
+    top: 0,
+    right: undefined,
+    bottom: undefined,
+  })
+
+  const contextMenu = useDisclosure()
+  useOutsideClick({
+    ref: contextMenuRef,
+    handler: () => {
+      contextMenu.onClose()
+    },
+  })
+
+  const openContextMenu = (target: OrgRoamNode | string, event: any, coords?: ContextPos) => {
+    coords
+      ? setContextPos(coords)
+      : setContextPos({ left: event.pageX, top: event.pageY, right: undefined, bottom: undefined })
+    setContextMenuTarget(target)
+    contextMenu.onOpen()
   }
 
+  const handleLocal = (node: OrgRoamNode, add: string) => {
+    if (add === 'replace') {
+      setScope({ nodeIds: [node.id] })
+      return
+    }
+    if (scope.nodeIds.includes(node.id as string)) {
+      return
+    }
+    setScope((currentScope: Scope) => ({
+      ...currentScope,
+      nodeIds: [...currentScope.nodeIds, node.id as string],
+    }))
+    return
+  }
+
+  const [mainItem, setMainItem] = useState({
+    type: 'Graph',
+    title: 'Graph',
+    icon: <BiNetworkChart />,
+  })
+
+  const [mainWindowWidth, setMainWindowWidth] = usePersistantState<number>(
+    'mainWindowWidth',
+    windowWidth,
+  )
+
   return (
-    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100%" overflow="hidden">
+    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100vh" overflow="clip">
       <Tweaks
         {...{
           physics,
@@ -430,28 +541,129 @@ export function GraphPage() {
         }}
         tags={tagsRef.current}
       />
-      <Box position="absolute" alignItems="top" overflow="hidden">
-        <Graph
-          ref={graphRef}
-          nodeById={nodeByIdRef.current!}
-          linksByNodeId={linksByNodeIdRef.current!}
-          webSocket={WebSocketRef.current}
-          variables={variablesRef.current}
+      <Box position="absolute">
+        {graphData && (
+          <Graph
+            //ref={graphRef}
+            nodeById={nodeByIdRef.current!}
+            linksByNodeId={linksByNodeIdRef.current!}
+            webSocket={WebSocketRef.current}
+            variables={variablesRef.current}
+            {...{
+              physics,
+              graphData,
+              threeDim,
+              emacsNodeId,
+              filter,
+              visuals,
+              behavior,
+              mouse,
+              scope,
+              setScope,
+              tagColors,
+              setPreviewNode,
+              sidebarHighlightedNode,
+              windowWidth,
+              windowHeight,
+              openContextMenu,
+              contextMenu,
+              handleLocal,
+              mainWindowWidth,
+              setMainWindowWidth,
+              setContextMenuTarget,
+              graphRef,
+            }}
+          />
+        )}
+      </Box>
+      <Box position="relative" zIndex={4} width="100%">
+        <Flex className="headerBar" h={10} flexDir="column">
+          <Flex alignItems="center" h={10} justifyContent="flex-end">
+            {/* <Flex flexDir="row" alignItems="center">
+             *   <Box color="blue.500" bgColor="alt.100" h="100%" p={3} mr={4}>
+             *     {mainItem.icon}
+             *   </Box>
+             *   <Heading size="sm">{mainItem.title}</Heading>
+             * </Flex> */}
+            <Flex height="100%" flexDirection="row">
+              {scope.nodeIds.length > 0 && (
+                <Tooltip label="Return to main graph">
+                  <IconButton
+                    m={1}
+                    icon={<BiNetworkChart />}
+                    aria-label="Exit local mode"
+                    onClick={() =>
+                      setScope((currentScope: Scope) => ({
+                        ...currentScope,
+                        nodeIds: [],
+                      }))
+                    }
+                    variant="subtle"
+                  />
+                </Tooltip>
+              )}
+              <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
+                <IconButton
+                  m={1}
+                  // eslint-disable-next-line react/jsx-no-undef
+                  icon={<BsReverseLayoutSidebarInsetReverse />}
+                  aria-label="Close file-viewer"
+                  variant="subtle"
+                  onClick={isOpen ? onClose : onOpen}
+                />
+              </Tooltip>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Box>
+
+      <Box position="relative" zIndex={4}>
+        <Sidebar
           {...{
-            physics,
-            graphData,
-            threeDim,
-            emacsNodeId,
-            filter,
-            visuals,
-            behavior,
-            mouse,
+            isOpen,
+            onOpen,
+            onClose,
+            previewNode,
+            setPreviewNode,
+            canUndo,
+            canRedo,
+            previousPreviewNode,
+            nextPreviewNode,
+            resetPreviewNode,
+            setSidebarHighlightedNode,
+            openContextMenu,
             scope,
             setScope,
+            windowWidth,
             tagColors,
+            setTagColors,
+            filter,
+            setFilter,
           }}
+          nodeById={nodeByIdRef.current!}
+          linksByNodeId={linksByNodeIdRef.current!}
+          nodeByCite={nodeByCiteRef.current!}
         />
       </Box>
+      {contextMenu.isOpen && (
+        <div ref={contextMenuRef}>
+          <ContextMenu
+            //contextMenuRef={contextMenuRef}
+            scope={scope}
+            target={contextMenuTarget}
+            background={false}
+            coordinates={contextPos}
+            handleLocal={handleLocal}
+            menuClose={contextMenu.onClose.bind(contextMenu)}
+            webSocket={WebSocketRef.current}
+            setPreviewNode={setPreviewNode}
+            setFilter={setFilter}
+            filter={filter}
+            setTagColors={setTagColors}
+            tagColors={tagColors}
+          />
+        </div>
+      )}
     </Box>
   )
 }
@@ -471,11 +683,23 @@ export interface GraphProps {
   setScope: any
   webSocket: any
   tagColors: { [tag: string]: string }
+  setPreviewNode: any
+  sidebarHighlightedNode: OrgRoamNode | null
+  windowWidth: number
+  windowHeight: number
+  setContextMenuTarget: any
+  openContextMenu: any
+  contextMenu: any
+  handleLocal: any
+  mainWindowWidth: number
+  setMainWindowWidth: any
   variables: { [variable: string]: string }
+  graphRef: any
 }
 
-export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
+export const Graph = function (props: GraphProps) {
   const {
+    graphRef,
     physics,
     graphData,
     threeDim,
@@ -490,73 +714,37 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     setScope,
     webSocket,
     tagColors,
+    setPreviewNode,
+    sidebarHighlightedNode,
+    windowWidth,
+    windowHeight,
+    setContextMenuTarget,
+    openContextMenu,
+    contextMenu,
+    handleLocal,
     variables,
   } = props
 
   const { dailyDir, roamDir } = variables
-  // react-force-graph does not track window size
-  // https://github.com/vasturiano/react-force-graph/issues/233
-  // does not work below a certain width
-  const [windowWidth, windowHeight] = useWindowSize()
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
-
-  const [rightClickedNode, setRightClickedNode] = useState<OrgRoamNode | null>(null)
-  const [contextPos, setContextPos] = useState([0, 0])
 
   const theme = useTheme()
 
   const { emacsTheme } = useContext<ThemeContextProps>(ThemeContext)
 
-  const handleLocal = (node: OrgRoamNode, add: string) => {
-    if (add === 'replace') {
-      setScope({ nodeIds: [node.id] })
-      return
-    }
-    if (scope.nodeIds.includes(node.id as string)) {
-      return
-    }
-    setScope((currentScope: Scope) => ({
-      ...currentScope,
-      nodeIds: [...currentScope.nodeIds, node.id as string],
-    }))
-    return
-  }
-
-  const sendMessageToEmacs = (command: string, data: {}) => {
-    webSocket.send(JSON.stringify({ command: command, data: data }))
-  }
-  const openNodeInEmacs = (node: OrgRoamNode) => {
-    sendMessageToEmacs('open', { id: node.id })
-  }
-
-  const deleteNodeInEmacs = (node: OrgRoamNode) => {
-    if (node.level !== 0) {
-      return
-    }
-    sendMessageToEmacs('delete', { id: node.id, file: node.file })
-  }
-
-  const createNodeInEmacs = (node: OrgRoamNode) => {
-    sendMessageToEmacs('create', { id: node.id, title: node.title, ref: node.properties.ROAM_REFS })
-  }
-
-  const contextMenu = useDisclosure()
-
-  const openContextMenu = (node: OrgRoamNode, event: any) => {
-    setContextPos([event.pageX, event.pageY])
-    setRightClickedNode(node)
-    contextMenu.onOpen()
-  }
-
   const handleClick = (click: string, node: OrgRoamNode, event: any) => {
     switch (click) {
+      case mouse.preview: {
+        setPreviewNode(node)
+        break
+      }
       case mouse.local: {
         handleLocal(node, behavior.localSame)
         break
       }
       case mouse.follow: {
-        openNodeInEmacs(node)
+        openNodeInEmacs(node, webSocket)
         break
       }
       case mouse.context: {
@@ -629,7 +817,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
-        if (filter.bad && node.properties.bad) {
+        if (filter?.bad && node?.properties?.bad) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -752,24 +940,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
   }, [filter, scope, JSON.stringify(graphData), filteredGraphData.links, filteredGraphData.nodes])
 
-  centralHighlightedNode.current = hoverNode
-  const highlightedNodes = useMemo(() => {
-    if (!centralHighlightedNode.current) {
-      return {}
-    }
-
-    const links = filteredLinksByNodeIdRef.current[centralHighlightedNode.current.id!]
-    if (!links) {
-      return {}
-    }
-    return Object.fromEntries(
-      [
-        centralHighlightedNode.current.id! as string,
-        ...links.flatMap((link) => [link.source, link.target]),
-      ].map((nodeId) => [nodeId, {}]),
-    )
-  }, [centralHighlightedNode.current, filteredLinksByNodeIdRef.current])
-
   useEffect(() => {
     ;(async () => {
       const fg = graphRef.current
@@ -818,8 +988,37 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     },
   )
 
+  const highlightedNodes = useMemo(() => {
+    if (!centralHighlightedNode.current) {
+      return {}
+    }
+
+    const links = filteredLinksByNodeIdRef.current[centralHighlightedNode.current.id!]
+    if (!links) {
+      return {}
+    }
+    return Object.fromEntries(
+      [
+        centralHighlightedNode.current?.id! as string,
+        ...links.flatMap((link) => [link.source, link.target]),
+      ].map((nodeId) => [nodeId, {}]),
+    )
+  }, [
+    JSON.stringify(centralHighlightedNode.current),
+    JSON.stringify(filteredLinksByNodeIdRef.current),
+  ])
+
+  useEffect(() => {
+    if (sidebarHighlightedNode?.id) {
+      setHoverNode(sidebarHighlightedNode)
+    } else {
+      setHoverNode(null)
+    }
+  }, [sidebarHighlightedNode])
+
   const lastHoverNode = useRef<OrgRoamNode | null>(null)
   useEffect(() => {
+    centralHighlightedNode.current = hoverNode
     if (hoverNode) {
       lastHoverNode.current = hoverNode as OrgRoamNode
     }
@@ -836,29 +1035,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     }
   }, [hoverNode])
 
-  const getThemeColor = (name: string) => {
-    if (!theme) {
-      return
-    }
-    return name.split('.').reduce((o, i) => o[i], theme.colors)
-  }
-
   const highlightColors = useMemo(() => {
     return Object.fromEntries(
       colorList.map((color) => {
-        const color1 = getThemeColor(color)
+        const color1 = getThemeColor(color, theme)
         const crisscross = colorList.map((color2) => [
           color2,
-          d3int.interpolate(color1, getThemeColor(color2)),
+          d3int.interpolate(color1, getThemeColor(color2, theme)),
         ])
         return [color, Object.fromEntries(crisscross)]
       }),
     )
   }, [emacsTheme])
 
-  // FIXME: Somehow the "linksByNodeId" call causes parent nodes to be always highlighted
-  // Replacing this with "linksByNodeIdRef.current" should solve this, but instead leads to no
-  // highlighting whatsoever.
   const previouslyHighlightedNodes = useMemo(() => {
     const previouslyHighlightedLinks =
       filteredLinksByNodeIdRef.current[lastHoverNode.current?.id!] ?? []
@@ -888,10 +1077,15 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       : getNodeColorById(targetId)
   }
 
-  const getLinkColor = (sourceId: string, targetId: string, needsHighlighting: boolean) => {
+  const getLinkColor = (
+    sourceId: string,
+    targetId: string,
+    needsHighlighting: boolean,
+    theme: any,
+  ) => {
     if (!visuals.linkHighlight && !visuals.linkColorScheme && !needsHighlighting) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor)
+      return getThemeColor(nodeColor, theme)
     }
 
     if (!needsHighlighting && !visuals.linkColorScheme) {
@@ -907,11 +1101,11 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     if (!visuals.linkHighlight && !visuals.linkColorScheme) {
       const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor)
+      return getThemeColor(nodeColor, theme)
     }
 
     if (!visuals.linkHighlight) {
-      return getThemeColor(visuals.linkColorScheme)
+      return getThemeColor(visuals.linkColorScheme, theme)
     }
 
     if (!visuals.linkColorScheme) {
@@ -921,27 +1115,29 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
   }
 
-  const getNodeColor = (node: OrgRoamNode) => {
+  const getNodeColor = (node: OrgRoamNode, theme: any) => {
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
-      return getThemeColor(visuals.emacsNodeColor)
+      return getThemeColor(visuals.emacsNodeColor, theme)
     }
-    if (tagColors && node.tags.some((tag) => tagColors[tag])) {
-      const tagColor = tagColors[node.tags.filter((tag) => tagColors[tag])[0]]
-      return highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
-    }
-    if (visuals.citeNodeColor && node.properties.ROAM_REFS && node.properties.FILELESS) {
+    if (tagColors && node?.tags.some((tag) => tagColors[tag])) {
+      const tagColor = tagColors[node?.tags.filter((tag) => tagColors[tag])[0]]
       return needsHighlighting
-        ? getThemeColor(visuals.citeNodeColor)
+        ? highlightColors[tagColor][tagColor](visuals.highlightFade * opacity)
+        : highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
+    }
+    if (visuals.citeNodeColor && node?.properties?.ROAM_REFS && node?.properties?.FILELESS) {
+      return needsHighlighting
+        ? getThemeColor(visuals.citeNodeColor, theme)
         : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
             visuals.highlightFade * opacity,
           )
     }
     if (visuals.refNodeColor && node.properties.ROAM_REFS) {
       return needsHighlighting
-        ? getThemeColor(visuals.refNodeColor)
+        ? getThemeColor(visuals.refNodeColor, theme)
         : highlightColors[visuals.refNodeColor][visuals.backgroundColor](
             visuals.highlightFade * opacity,
           )
@@ -952,17 +1148,18 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       )
     }
     if (!visuals.nodeHighlight) {
-      return getThemeColor(getNodeColorById(node.id as string))
+      return getThemeColor(getNodeColorById(node.id as string), theme)
     }
     return highlightColors[getNodeColorById(node.id as string)][visuals.nodeHighlight](opacity)
   }
 
   const labelTextColor = useMemo(
-    () => getThemeColor(visuals.labelTextColor),
+    () => getThemeColor(visuals.labelTextColor, theme),
     [visuals.labelTextColor, emacsTheme],
   )
+
   const labelBackgroundColor = useMemo(
-    () => getThemeColor(visuals.labelBackgroundColor),
+    () => getThemeColor(visuals.labelBackgroundColor, theme),
     [visuals.labelBackgroundColor, emacsTheme],
   )
 
@@ -983,21 +1180,22 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
   const [dragging, setDragging] = useState(false)
 
-  const [zoom, setZoom] = useState(1)
+  const scaleRef = useRef(1)
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: theme.colors.gray[visuals.backgroundColor],
+    backgroundColor: getThemeColor(visuals.backgroundColor, theme),
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
-    onZoom: ({ k, x, y }) => setZoom(k),
-    nodeLabel: (node) => (node as OrgRoamNode).title,
+    //onZoom: ({ k, x, y }) => setZoom(k),
+    onZoom: ({ k, x, y }) => (scaleRef.current = k),
+    //nodeLabel: (node) => (node as OrgRoamNode).title,
     nodeColor: (node) => {
-      return getNodeColor(node as OrgRoamNode)
+      return getNodeColor(node as OrgRoamNode, theme)
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
-      return nodeSize(node) / Math.pow(zoom, visuals.nodeZoomSize)
+      return nodeSize(node) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       if (!node) {
@@ -1078,7 +1276,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     linkDirectionalArrowLength: visuals.arrows ? visuals.arrowsLength : undefined,
     linkDirectionalArrowRelPos: visuals.arrowsPos,
     linkDirectionalArrowColor: visuals.arrowsColor
-      ? () => getThemeColor(visuals.arrowsColor)
+      ? () => getThemeColor(visuals.arrowsColor, theme)
       : undefined,
     linkColor: (link) => {
       const sourceId = typeof link.source === 'object' ? link.source.id! : (link.source as string)
@@ -1107,7 +1305,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
             )
       }
 
-      return getLinkColor(sourceId as string, targetId as string, needsHighlighting)
+      return getLinkColor(sourceId as string, targetId as string, needsHighlighting, theme)
     },
     linkWidth: (link) => {
       if (visuals.highlightLinkSize === 1) {
@@ -1128,7 +1326,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
 
     onNodeClick: (nodeArg: NodeObject, event: any) => {
       const node = nodeArg as OrgRoamNode
-      contextMenu.onClose()
+      //contextMenu.onClose()
       const doubleClickTimeBuffer = 200
       const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
       lastNodeClickRef.current = event.timeStamp
@@ -1144,17 +1342,19 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
         return handleClick('click', node, event)
       }, doubleClickTimeBuffer)
     },
-    onBackgroundClick: () => {
-      contextMenu.onClose()
-      setHoverNode(null)
-      if (scope.nodeIds.length === 0) {
-        return
-      }
-      setScope((currentScope: Scope) => ({
-        ...currentScope,
-        nodeIds: [],
-      }))
-    },
+    /* onBackgroundClick: () => {
+     *   contextMenu.onClose()
+     *   setHoverNode(null)
+     *   if (scope.nodeIds.length === 0) {
+     *     return
+     *   }
+     *   if (mouse.backgroundExitsLocal) {
+     *     setScope((currentScope: Scope) => ({
+     *       ...currentScope,
+     *       nodeIds: [],
+     *     }))
+     *   }
+     * }, */
     onNodeHover: (node) => {
       if (!visuals.highlight) {
         return
@@ -1172,7 +1372,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       handleClick('right', node, event)
     },
     onNodeDrag: (node) => {
-      contextMenu.onClose()
+      //contextMenu.onClose()
       setHoverNode(node)
       setDragging(true)
     },
@@ -1183,27 +1383,12 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   }
 
   return (
-    <Box overflow="hidden">
-      {contextMenu.isOpen && (
-        <ContextMenu
-          scope={scope}
-          node={rightClickedNode!}
-          nodeType={rightClickedNode?.id}
-          background={false}
-          coordinates={contextPos}
-          handleLocal={handleLocal}
-          menuClose={contextMenu.onClose.bind(contextMenu)}
-          openNodeInEmacs={openNodeInEmacs}
-          deleteNodeInEmacs={deleteNodeInEmacs}
-          createNodeInEmacs={createNodeInEmacs}
-        />
-      )}
+    <Box overflow="hidden" onClick={contextMenu.onClose}>
       {threeDim ? (
         <ForceGraph3D
           ref={graphRef}
           {...graphCommonProps}
           nodeThreeObjectExtend={true}
-          backgroundColor={theme.colors.white}
           nodeOpacity={visuals.nodeOpacity}
           nodeResolution={visuals.nodeResolution}
           linkOpacity={visuals.linkOpacity}
@@ -1215,8 +1400,8 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
               return
             }
             const sprite = new SpriteText(node.title.substring(0, 40))
-            sprite.color = getThemeColor(visuals.labelTextColor)
-            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor)
+            sprite.color = getThemeColor(visuals.labelTextColor, theme)
+            sprite.backgroundColor = getThemeColor(visuals.labelBackgroundColor, theme)
             sprite.padding = 2
             sprite.textHeight = 8
 
@@ -1241,7 +1426,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
       )}
     </Box>
   )
-})
+}
 
 function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
   return (
@@ -1253,7 +1438,7 @@ function numberWithinRange(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
+export function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
   // we need to cover both because force-graph modifies the original data
   // but if we supply the original data on each render, the graph will re-render sporadically
   const sourceId =
@@ -1263,14 +1448,16 @@ function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
   return [sourceId, targetId]
 }
 
-function hexToRGBA(hex: string, opacity: number) {
+export function getThemeColor(name: string, theme: any) {
+  return name.split('.').reduce((o, i) => o[i], theme.colors)
+}
+
+export function hexToRGBA(hex: string, opacity: number) {
   return (
     'rgba(' +
     (hex = hex.replace('#', ''))
       .match(new RegExp('(.{' + hex.length / 3 + '})', 'g'))!
-      .map(function (l) {
-        return parseInt(hex.length % 2 ? l + l : l, 16)
-      })
+      .map((l) => parseInt(hex.length % 2 ? l + l : l, 16))
       .concat(isFinite(opacity) ? opacity : 1)
       .join(',') +
     ')'
