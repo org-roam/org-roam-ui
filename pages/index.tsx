@@ -723,10 +723,6 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
   } = props
 
   const { dailyDir, roamDir } = variables
-  // react-force-graph does not track window size
-  // https://github.com/vasturiano/react-force-graph/issues/233
-  // does not work below a certain width
-  const [windowWidth, windowHeight] = useWindowSize()
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
 
@@ -738,6 +734,7 @@ export const Graph = forwardRef(function (props: GraphProps, graphRef: any) {
     switch (click) {
       case mouse.preview: {
         setPreviewNode(node)
+        break
       }
       case mouse.local: {
         handleLocal(node, behavior.localSame)
