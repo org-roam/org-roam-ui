@@ -34,7 +34,6 @@ export const Note = (props: NoteProps) => {
   return (
     <Box
       pr={8}
-      overflow="scroll"
       height="100%"
       className="org"
       sx={{

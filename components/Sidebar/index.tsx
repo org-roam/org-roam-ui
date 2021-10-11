@@ -209,41 +209,41 @@ const Sidebar = (props: SidebarProps) => {
               nextPreviewNode,
             }}
           />
-          {/* <Scrollbars
-           *   //autoHeight
-           *   autoHeightMax={600}
-           *   autoHide
-           *   renderThumbVertical={({ style, ...props }) => (
-           *     <Box
-           *       style={{
-           *         ...style,
-           *         borderRadius: 0,
-           *         // backgroundColor: highlightColor,
-           *       }}
-           *       //color="alt.100"
-           *       {...props}
-           *     />
-           *   )}
-           * > */}
-          <VStack flexGrow={1} overflow="scroll" alignItems="left" bg="alt.100" paddingLeft={4}>
-            <TagBar
-              {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
-            />
-            <Note
-              {...{
-                setPreviewNode,
-                previewNode,
-                nodeById,
-                nodeByCite,
-                setSidebarHighlightedNode,
-                justification,
-                justificationList,
-                linksByNodeId,
-                openContextMenu,
-              }}
-            />
-          </VStack>
-          {/*</Scrollbars>*/}
+          <Scrollbars
+            //autoHeight
+            //autoHeightMax={600}
+            autoHide
+            renderThumbVertical={({ style, ...props }) => (
+              <Box
+                style={{
+                  ...style,
+                  borderRadius: 0,
+                  // backgroundColor: highlightColor,
+                }}
+                //color="alt.100"
+                {...props}
+              />
+            )}
+          >
+            <VStack flexGrow={1} overflowY="scroll" alignItems="left" bg="alt.100" paddingLeft={4}>
+              <TagBar
+                {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
+              />
+              <Note
+                {...{
+                  setPreviewNode,
+                  previewNode,
+                  nodeById,
+                  nodeByCite,
+                  setSidebarHighlightedNode,
+                  justification,
+                  justificationList,
+                  linksByNodeId,
+                  openContextMenu,
+                }}
+              />
+            </VStack>
+          </Scrollbars>
         </Flex>
       </Resizable>
     </Collapse>

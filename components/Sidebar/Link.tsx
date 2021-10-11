@@ -51,6 +51,7 @@ export interface NormalLinkProps {
 import { hexToRGBA, getThemeColor } from '../../pages/index'
 import noteStyle from './noteStyle'
 import { OrgImage } from './OrgImage'
+import { Scrollbars } from 'react-custom-scrollbars-2'
 
 export const NormalLink = (props: NormalLinkProps) => {
   const { setSidebarHighlightedNode, setPreviewNode, nodeById, openContextMenu, href, children } =
@@ -202,6 +203,7 @@ export const PreviewLink = (props: LinkProps) => {
           </PopoverTrigger>
           <Portal>
             <PopoverContent
+              transform="scale(1)"
               key={nodeById[id]?.title ?? id}
               boxShadow="xl"
               position="relative"
@@ -217,15 +219,31 @@ export const PreviewLink = (props: LinkProps) => {
               <PopoverBody
                 pb={5}
                 fontSize="xs"
-                px={5}
                 position="relative"
                 zIndex="tooltip"
-                maxHeight={300}
-                overflow="scroll"
+                transform="scale(1)"
+                width="100%"
               >
-                <Box color="black" sx={noteStyle}>
-                  {orgText}
-                </Box>
+                <Scrollbars
+                  autoHeight
+                  autoHeightMax={300}
+                  autoHide
+                  renderThumbVertical={({ style, ...props }) => (
+                    <Box
+                      style={{
+                        ...style,
+                        borderRadius: 0,
+                        // backgroundColor: highlightColor,
+                      }}
+                      //color="alt.100"
+                      {...props}
+                    />
+                  )}
+                >
+                  <Box w="100%" color="black" px={3} sx={noteStyle} overflowY="scroll">
+                    {orgText}
+                  </Box>
+                </Scrollbars>
               </PopoverBody>
             </PopoverContent>
           </Portal>
