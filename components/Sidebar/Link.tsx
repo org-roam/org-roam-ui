@@ -240,7 +240,13 @@ export const PreviewLink = (props: LinkProps) => {
                     />
                   )}
                 >
-                  <Box w="100%" color="black" px={3} sx={noteStyle} overflowY="scroll">
+                  <Box
+                    w="100%"
+                    color="black"
+                    px={3}
+                    sx={noteStyle}
+                    //overflowY="scroll"
+                  >
                     {orgText}
                   </Box>
                 </Scrollbars>

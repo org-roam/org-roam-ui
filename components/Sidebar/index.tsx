@@ -225,7 +225,13 @@ const Sidebar = (props: SidebarProps) => {
               />
             )}
           >
-            <VStack flexGrow={1} overflowY="scroll" alignItems="left" bg="alt.100" paddingLeft={4}>
+            <VStack
+              flexGrow={1}
+              // overflowY="scroll"
+              alignItems="left"
+              bg="alt.100"
+              paddingLeft={4}
+            >
               <TagBar
                 {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
               />
