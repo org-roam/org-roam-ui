@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml)
 
-![image](https://user-images.githubusercontent.com/21983833/127746882-4ba00691-3be4-49d6-8c8c-e139a14596c2.png)
+<img width="1440" alt="Screenshot 2021-10-12 at 12 51 39" src="https://user-images.githubusercontent.com/21983833/136942774-3f293f65-dbd4-4479-b530-1fde738c5289.png">
 
 Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](https://github.com/org-roam/org-roam) notes.
 
@@ -197,7 +197,7 @@ By default, org-roam-ui will try to open itself in your default browser. To disa
 
 ## FAQ 🗨
 
-## Q: Aaaaand it broke: what do?
+### Q: Aaaaand it broke: what do?
 
 Sorry! This is still alpha software, so expect it to break from time to time. Best thing you can try is to remove your settings by going to "Storage > Local Storage" on Firefox or "Application > Local Storage" on Chromium and deleting everything there.
 
@@ -209,7 +209,7 @@ If the issue still persists, please file a bug report with
 
 and we'll try to help you ASAP!
 
-## Q: Clicking 'Open in Emacs' gives an error around json-parse-string, how do I fix this?
+### Q: Clicking 'Open in Emacs' gives an error around json-parse-string, how do I fix this?
 
 If you receive an error, in emacs, stating `function definition is void json-parse-string`, then you must compile emacs with json support.  This is not automatically done on systems such as Gentoo.
 
@@ -260,11 +260,11 @@ If your feature is not already on the [project board](https://github.com/org-roa
 
 ### Q: This doesn't work with org-roam v1/org-brain/Zettledelft!
 
-Correct! We only support org-roam v2!
+Correct! We only support org-roam v2, although we might introduce a backend agnostic implementation later.
 
 ## Features ✨
 
-Org-Roam-UI's main feature is the ability to generate a graph visualization of your org-roam notes.
+Org-roam-ui's main feature is the ability to generate a graph visualization of your org-roam notes.
 
 ### Cool graph
 
@@ -298,7 +298,11 @@ https://user-images.githubusercontent.com/21983833/127747203-a1aeca95-7def-4caf-
 
 #### Filters
 
-https://user-images.githubusercontent.com/21983833/127747222-7c768e37-4948-4072-895b-a55ff7b5906a.mp4
+Filter out all those "temporary" notes you'll sift through someday.
+
+https://user-images.githubusercontent.com/21983833/136944460-76b92e7c-7cf5-40d0-89f4-bdabfa41fe01.mp4
+
+
 
 #### 3 D
 
@@ -315,7 +319,6 @@ In no particular order
 - ~~Citation links + customization~~
 - ~~Tag filtering/coloring~~
 - Local graph show Nth neighbor
-- More colors
 - Colorization options (by neighbors, centrality, etc)
 - Setting profiles
 
@@ -325,22 +328,37 @@ In no particular order
 - Displaying notes Andy Matushak style
 - Discovery options, e.g. "show shortest path between X and Y"
 
-# Feedback
+# Supporting org-roam-ui
+
+## Feedback
 
 For feature suggestions, please make an issue or check out the discussions for [major](https://github.com/org-roam/org-roam-ui/discussions/66) and [minor features](https://github.com/org-roam/org-roam-ui/discussions/6).
 For other feedback, please go to the [feedback discussion](https://github.com/org-roam/org-roam-ui/discussions/99), or open up a new one!
 
-# Contribute 💪
+## Contribute 💪
+
+The best way to support the continued development of org-roam-ui is to get involved yourself! 
+To get started, simply
 
 ```bash
 git clone https://github.com/org-roam/org-roam-ui
 yarn
 yarn dev
 ```
+and a development server will be lauched on `localhost:3000`.
 
 [GitHub Community Guidelines
 ](https://docs.github.com/en/github/site-policy/github-community-guidelines) apply.
 
-Go [here](https://github.com/org-roam/org-roam-ui/discussions/4) to have an onboarding call with a member of the core team.
+If you are interested in being more closely involved with the project, go [here](https://github.com/org-roam/org-roam-ui/discussions/4) to have an onboarding call with a member of the core team.
 
-We would ❤️ to have you on board.
+We would ❤️ to have you on board!
+
+### Hacktoberfest
+Org-roam-ui is also participating in Hacktoberfest 2021! [Enter Hacktoberfest](https://hacktoberfest.digitalocean.com/), check out the [issues labeled Hacktoberfest](https://github.com/org-roam/org-roam-ui/issues) and get a free (as in beer) t-shirt! (as well as the moral satisfaction of contributing to free software, but hey, t-shirt) 
+
+## Donate
+
+If you really really like org-roam-ui, you can make a [one-time donation or sponsor one of us monthly!](https://github.com/sponsors/ThomasFKJorna/)
+
+### Sponsors
