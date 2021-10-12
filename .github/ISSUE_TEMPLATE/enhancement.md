@@ -1,6 +1,6 @@
 ---
 name: Enhancement
-about: Suggest a small enhancement for org-roam-ui. This isn't so much new functionality as much as it is making current functionality a little bit better, such as descreasing the font size of some element, or trying to make a certain component more performant.
+about: Suggest a small enhancement for org-roam-ui. This isn't so much new functionality as much as it is making current functionality a little bit better.
 title: "[ENH]"
 labels: enhancement
 assignees: ''
