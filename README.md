@@ -1,8 +1,27 @@
-# org-roam-ui: a graphical frontend for your org-roam Zettelkasten
-
 [![ci](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml)
 
 <img width="1440" alt="Screenshot 2021-10-12 at 12 51 39" src="https://user-images.githubusercontent.com/21983833/136942774-3f293f65-dbd4-4479-b530-1fde738c5289.png">
+
+# org-roam-ui: a graphical frontend for your org-roam Zettelkasten
+
+**Table of Contents**
+
+- [Changelog](#changelog)
+- [Installation](#installation)
+- [Manually](#manually)
+- [Doom](#doom)
+- [straight/use-package](#straightuse-package)
+- [Usage](#usage)
+- [Disclaimers ‼](#disclaimers-)
+- [FAQ 🗨](#faq-🗨)
+- [Features ✨](#features-✨)
+- [Planned features](#planned-features)
+- [Supporting org-roam-ui](#supporting-org-roam-ui)
+- [Feedback](#feedback)
+- [Contribute 💪](#contribute-💪)
+- [Hacktoberfest](#hacktoberfest)
+- [Donate](#donate)
+- [Sponsors](#sponsors)
 
 Org-Roam-UI is a frontend for exploring and interacting with your [org-roam](https://github.com/org-roam/org-roam) notes.
 
@@ -48,6 +67,7 @@ Add the following to your `package.el`
 
 Org-roam-ui tries to keep up with the latest features of `org-roam`, which conflicts with Doom Emacs's desire for
 stability. To make sure nothing breaks, use the latest version of `org-roam` by unpinning it.
+
 ```emacs-lisp
 (unpin! org-roam)
 (package! websocket)
@@ -211,7 +231,7 @@ and we'll try to help you ASAP!
 
 ### Q: Clicking 'Open in Emacs' gives an error around json-parse-string, how do I fix this?
 
-If you receive an error, in emacs, stating `function definition is void json-parse-string`, then you must compile emacs with json support.  This is not automatically done on systems such as Gentoo.
+If you receive an error, in emacs, stating `function definition is void json-parse-string`, then you must compile emacs with json support. This is not automatically done on systems such as Gentoo.
 
 ### Q: Graph Slow! Faster?
 
@@ -255,8 +275,8 @@ In our experience, once the graph has actually settled and nothing needs to be r
 
 ### Q: Will you implement X?
 
-Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you! 
-If your feature is not already on the [project board](https://github.com/org-roam/org-roam-ui/projects/2), please post minor feature requests such as "I want to be able to color this specific node" in [the minor feature requests discussion](https://github.com/org-roam/org-roam-ui/discussions/6) and *major* feature requests (e.g. "I want to publish my graph) in [the major feature requests discussion](https://github.com/org-roam/org-roam-ui/discussions/66) or upvote those already posted, this way we can adjust our priorities somewhat!
+Hopefully, yeah! But time is limited, and so is the amount of features we can cram into this things before it implodes in itself, so we are adding things incrementally to make sure they work. That said, we'd love to hear from you!
+If your feature is not already on the [project board](https://github.com/org-roam/org-roam-ui/projects/2), please post minor feature requests such as "I want to be able to color this specific node" in [the minor feature requests discussion](https://github.com/org-roam/org-roam-ui/discussions/6) and _major_ feature requests (e.g. "I want to publish my graph) in [the major feature requests discussion](https://github.com/org-roam/org-roam-ui/discussions/66) or upvote those already posted, this way we can adjust our priorities somewhat!
 
 ### Q: This doesn't work with org-roam v1/org-brain/Zettledelft!
 
@@ -283,7 +303,6 @@ For when you leave Emacs in a moment of weakness.
 
 https://user-images.githubusercontent.com/21983833/136845036-a6bd4b32-d78c-4bcf-aa8a-0e37c69cbbe8.mp4
 
-
 #### Follow your movement in Emacs!
 
 When you open a note in Emacs, org-roam-ui will move to the corresponding node on the graph.
@@ -301,8 +320,6 @@ https://user-images.githubusercontent.com/21983833/127747203-a1aeca95-7def-4caf-
 Filter out all those "temporary" notes you'll sift through someday.
 
 https://user-images.githubusercontent.com/21983833/136944460-76b92e7c-7cf5-40d0-89f4-bdabfa41fe01.mp4
-
-
 
 #### 3 D
 
@@ -337,7 +354,7 @@ For other feedback, please go to the [feedback discussion](https://github.com/or
 
 ## Contribute 💪
 
-The best way to support the continued development of org-roam-ui is to get involved yourself! 
+The best way to support the continued development of org-roam-ui is to get involved yourself!
 To get started, simply
 
 ```bash
@@ -345,6 +362,7 @@ git clone https://github.com/org-roam/org-roam-ui
 yarn
 yarn dev
 ```
+
 and a development server will be lauched on `localhost:3000`.
 
 [GitHub Community Guidelines
@@ -355,7 +373,8 @@ If you are interested in being more closely involved with the project, go [here]
 We would ❤️ to have you on board!
 
 ### Hacktoberfest
-Org-roam-ui is also participating in Hacktoberfest 2021! [Enter Hacktoberfest](https://hacktoberfest.digitalocean.com/), check out the [issues labeled Hacktoberfest](https://github.com/org-roam/org-roam-ui/issues) and get a free (as in beer) t-shirt! (as well as the moral satisfaction of contributing to free software, but hey, t-shirt) 
+
+Org-roam-ui is also participating in Hacktoberfest 2021! [Enter Hacktoberfest](https://hacktoberfest.digitalocean.com/), check out the [issues labeled Hacktoberfest](https://github.com/org-roam/org-roam-ui/issues) and get a free (as in beer) t-shirt! (as well as the moral satisfaction of contributing to free software, but hey, t-shirt)
 
 ## Donate
 
