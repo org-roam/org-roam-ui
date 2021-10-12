@@ -8,7 +8,7 @@ assignees: ''
 
 ---
 
-** Have you checked whether this feature is not already on the [project board](https://github.com/org-roam/org-roam-ui/projects/2)?
+**Have you checked whether this feature is not already on the [project board](https://github.com/org-roam/org-roam-ui/projects/2)?**
 
 No
 
