@@ -416,6 +416,7 @@ export function GraphPage() {
         case 'graphdata':
           return updateGraphData(message.data)
         case 'variables':
+          console.log(message.data)
           variablesRef.current = message.data
           return
         case 'theme':

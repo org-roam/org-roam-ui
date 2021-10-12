@@ -169,7 +169,7 @@ This serves the web-build and API over HTTP."
          :host 'local
          :on-open (lambda (ws) (progn
             (setq oru-ws ws)
-            (org-roam-ui--send-variables ws)
+            (org-roam-ui--send-variables oru-ws)
             (org-roam-ui--send-graphdata)
             (when org-roam-ui-update-on-save
             (add-hook 'after-save-hook #'org-roam-ui--on-save))

@@ -11,6 +11,7 @@
     "lint": "tsc --noEmit && next lint && eslint \"./**/*.{ts,tsx,js}\" \"./**/.*.{ts,tsx,js}\" --fix"
   },
   "dependencies": {
+    "@agentofuser/rehype-section": "^1.0.5",
     "@chakra-ui/icons": "^1.0.14",
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11",
@@ -18,12 +19,15 @@
     "@lilib/hooks": "^0.1.1",
     "@react-hook/window-size": "^3.0.7",
     "@types/color": "^3.0.2",
+    "babel-plugin-syntax-jsx": "^6.18.0",
     "chakra-ui-autocomplete": "^1.4.2",
     "d3-force-3d": "^3.0.2",
     "d3-interpolate": "^3.0.1",
     "date-fns-tz": "^1.1.6",
     "es6-tween": "^5.5.11",
     "framer-motion": "^4",
+    "hast-to-hyperscript": "^9.0.1",
+    "hastscript": "^6.0.0",
     "next": "^11.1.0",
     "orgast-util-to-string": "^0.4.5",
     "orgast-util-visit-ids": "^0.4.5",
@@ -51,9 +55,11 @@
     "uniorg-parse": "^0.4.5",
     "uniorg-rehype": "^0.4.5",
     "uniorg-slug": "^0.4.5",
+    "unist-util-find-after": "^3.0.0",
     "use-constant": "^1.1.0",
     "use-undo": "^1.0.5",
     "vfile": "^4.2.1",
+    "web-namespaces": "^1.1.4",
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
