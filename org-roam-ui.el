@@ -415,7 +415,8 @@ unchanged."
   (when (boundp 'org-roam-dailies-directory)
   (websocket-send-text ws (json-encode `((type . "variables")
                                              (data .
-                                                   (("dailyDir" . ,(concat org-roam-directory org-roam-dailies-directory))
+                                                   (("dailyDir" . ,(if (f-absolute-p org-roam-dailies-directory) org-roam-dailies-directory
+                                                                     (concat org-roam-directory org-roam-dailies-directory)))
                                                     ("roamDir" . ,org-roam-directory))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
