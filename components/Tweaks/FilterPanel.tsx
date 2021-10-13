@@ -132,7 +132,7 @@ const FilterPanel = (props: FilterPanelProps) => {
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text>Non-existant nodes</Text>
+          <Text>Non-existent nodes</Text>
           <Switch
             onChange={() => {
               setTagColors({ ...tagColors, bad: 'white' })
