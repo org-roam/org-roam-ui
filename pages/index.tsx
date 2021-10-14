@@ -24,6 +24,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
+//@ts-expect-error
+import jLouvain from 'jlouvain.js'
 import type {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
@@ -130,6 +132,7 @@ export function GraphPage() {
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
   const variablesRef = useRef<{ [variable: string]: string }>({})
+  const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
 
@@ -573,6 +576,7 @@ export function GraphPage() {
               setMainWindowWidth,
               setContextMenuTarget,
               graphRef,
+              clusterRef,
             }}
           />
         )}
@@ -696,6 +700,7 @@ export interface GraphProps {
   setMainWindowWidth: any
   variables: { [variable: string]: string }
   graphRef: any
+  clusterRef: any
 }
 
 export const Graph = function (props: GraphProps) {
@@ -724,6 +729,7 @@ export const Graph = function (props: GraphProps) {
     contextMenu,
     handleLocal,
     variables,
+    clusterRef,
   } = props
 
   const { dailyDir, roamDir } = variables
@@ -884,6 +890,19 @@ export const Graph = function (props: GraphProps) {
       }
     }, {})
 
+    console.log(filteredLinks)
+    const weightedLinks = filteredLinks.map((l) => {
+      const [target, source] = normalizeLinkEnds(l)
+      const link = l as OrgRoamLink
+      return { target, source, weight: link.type === 'cite' ? 1 : 2 }
+    })
+    console.log(weightedLinks)
+    const community = jLouvain().nodes(filteredNodeIds).edges(weightedLinks)
+    clusterRef.current = community()
+    /* clusterRef.current = Object.fromEntries(
+     *   Object.entries(community()).sort(([, a], [, b]) => a - b),
+     * ) */
+    console.log(clusterRef.current)
     return { nodes: filteredNodes, links: filteredLinks }
   }, [filter, graphData])
 
@@ -1071,10 +1090,9 @@ export const Graph = function (props: GraphProps) {
      *   : 0
      * const neighbors = filter.parent ? linklen : linklen - parentCiteNeighbors! */
 
-    return visuals.nodeColorScheme[
-      numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
-    ]
+    return visuals.nodeColorScheme[clusterRef.current[id] % (visuals.nodeColorScheme.length - 1)]
   }
+
   const getLinkNodeColor = (sourceId: string, targetId: string) => {
     return filteredLinksByNodeIdRef.current[sourceId]!.length >
       filteredLinksByNodeIdRef.current[targetId]!.length
