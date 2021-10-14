@@ -827,6 +827,10 @@ export const Graph = function (props: GraphProps) {
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
+        if (filter.noter && node.properties?.NOTER_PAGE) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
         return true
       })
       .filter((node) => {

@@ -43,6 +43,7 @@ export const initialFilter = {
   nodes: [],
   links: [],
   date: [],
+  noter: true,
 }
 
 export const initialVisuals = {

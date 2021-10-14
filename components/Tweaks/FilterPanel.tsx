@@ -123,6 +123,17 @@ const FilterPanel = (props: FilterPanelProps) => {
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
+          <Text>Org-noter pages</Text>
+          <Switch
+            onChange={() => {
+              setFilter((curr: typeof initialFilter) => {
+                return { ...curr, noter: !curr.noter }
+              })
+            }}
+            isChecked={filter.noter}
+          ></Switch>
+        </Flex>
+        <Flex justifyContent="space-between">
           <Text>Citations without note files</Text>
           <Switch
             onChange={() => {
