@@ -8,7 +8,7 @@ import attachments from 'uniorg-attach'
 // rehypeHighlight does not have any types
 // add error thing here
 // import highlight from 'rehype-highlight'
-//import sectionParent from '@agentofuser/rehype-section'
+import sectionParent from '@agentofuser/rehype-section'
 import katex from 'rehype-katex'
 import 'katex/dist/katex.css'
 import rehype2react from 'rehype-react'
@@ -17,6 +17,7 @@ import { PreviewLink } from '../components/Sidebar/Link'
 import { NodeByCite, NodeById } from '../pages'
 import React, { useMemo } from 'react'
 import { OrgImage } from '../components/Sidebar/OrgImage'
+import { Section } from '../components/Sidebar/Section'
 
 export interface ProcessedOrgProps {
   nodeById: NodeById
@@ -39,7 +40,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     openContextMenu,
   } = props
 
-  //const section = sectionParent.default
+  const section = sectionParent.default
   const processor = unified()
     .use(uniorgParse)
     .use(extractKeywords)
@@ -47,7 +48,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     .use(uniorgSlug)
     .use(uniorg2rehype)
     //.data('settings', { fragment: true })
-    //.use(section)
+    .use(section)
     // .use(highlight)
     .use(katex)
     .use(rehype2react, {
@@ -70,6 +71,10 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
         },
         img: ({ src }) => {
           return <OrgImage src={src as string} file={previewNode.file} />
+        },
+        section: Section,
+        p: ({ children }) => {
+          return <p lang="en">{children}</p>
         },
       },
     })

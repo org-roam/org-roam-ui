@@ -1,22 +1,18 @@
 export const noteStyle = {
   '.katex': { overflowX: 'scroll' },
-  h1: { color: 'black', lineHeight: '1.2', fontSize: '20', fontWeight: 'bold', marginBottom: 3 },
+  h1: { color: 'black', lineHeight: '1.2', fontSize: '20', fontWeight: 'bold' },
   h2: {
     fontSize: '18',
-    marginBottom: 2,
     color: 'black',
   },
   h3: {
     fontSize: '16',
     fontWeight: '600 !important',
-    marginBottom: '.5em',
-
     color: 'black',
   },
   h4: {
     fontSize: '14',
     fontWeight: '500 !important',
-    marginBottom: '.25em',
     fontStyle: 'italic',
     color: 'black',
   },
