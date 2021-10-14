@@ -38,7 +38,7 @@ export interface LinkProps {
   openContextMenu: any
 }
 
-export interface NormalLinkProps {
+export interface NodeLinkProps {
   setPreviewNode: any
   nodeById: NodeById
   nodeByCite: NodeByCite
@@ -47,13 +47,18 @@ export interface NormalLinkProps {
   setSidebarHighlightedNode: any
   openContextMenu: any
 }
+export interface NormalLinkProps {
+  href: string
+  children: string
+}
 
 import { hexToRGBA, getThemeColor } from '../../pages/index'
 import noteStyle from './noteStyle'
 import { OrgImage } from './OrgImage'
 import { Scrollbars } from 'react-custom-scrollbars-2'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
-export const NormalLink = (props: NormalLinkProps) => {
+export const NodeLink = (props: NodeLinkProps) => {
   const { setSidebarHighlightedNode, setPreviewNode, nodeById, openContextMenu, href, children } =
     props
   const { highlightColor } = useContext(ThemeContext)
@@ -85,6 +90,17 @@ export const NormalLink = (props: NormalLinkProps) => {
   )
 }
 
+export const NormalLink = (props: NormalLinkProps) => {
+  const { href, children } = props
+  const { highlightColor } = useContext(ThemeContext)
+  return (
+    <Link color={highlightColor} isExternal href={href}>
+      {children}
+      <ExternalLinkIcon mx="1px" pb="2px" />
+    </Link>
+  )
+}
+
 export const PreviewLink = (props: LinkProps) => {
   const {
     href,
@@ -102,7 +118,39 @@ export const PreviewLink = (props: LinkProps) => {
   const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
   const [hover, setHover] = useState(false)
 
-  console.log(href)
+  const getText = () => {
+    fetch(`http://localhost:35901/file/${file}`)
+      .then((res) => {
+        return res.text()
+      })
+      .then((res) => {
+        if (res !== 'error') {
+          const text = processor.processSync(res).result
+          setOrgText(text)
+          return
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        return 'Could not fetch the text for some reason, sorry!\n\n This can happen because you have an id with forward slashes (/) in it.'
+      })
+  }
+  useEffect(() => {
+    if (type.replaceAll(/(http)?.*/g, '$1')) {
+      return
+    }
+    if (!!orgText) {
+      return
+    }
+    if (!hover) {
+      return
+    }
+    getText()
+  }, [hover, orgText])
+
+  if (type.replaceAll(/(http)?.*/g, '$1')) {
+    return <NormalLink href={href}>{children}</NormalLink>
+  }
   const getId = (type: string, uri: string) => {
     if (type === 'id') {
       return uri
@@ -150,34 +198,6 @@ export const PreviewLink = (props: LinkProps) => {
       },
     })
 
-  const getText = () => {
-    fetch(`http://localhost:35901/file/${file}`)
-      .then((res) => {
-        return res.text()
-      })
-      .then((res) => {
-        if (res !== 'error') {
-          const text = processor.processSync(res).result
-          setOrgText(text)
-          return
-        }
-      })
-      .catch((e) => {
-        console.log(e)
-        return 'Could not fetch the text for some reason, sorry!\n\n This can happen because you have an id with forward slashes (/) in it.'
-      })
-  }
-
-  useEffect(() => {
-    if (!!orgText) {
-      return
-    }
-    if (!hover) {
-      return
-    }
-    getText()
-  }, [hover, orgText])
-
   if (id) {
     return (
       <>
@@ -188,7 +208,7 @@ export const PreviewLink = (props: LinkProps) => {
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
             >
-              <NormalLink
+              <NodeLink
                 key={nodeById[id]?.title ?? id}
                 {...{
                   setSidebarHighlightedNode,
