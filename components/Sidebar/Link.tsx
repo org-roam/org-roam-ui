@@ -102,6 +102,7 @@ export const PreviewLink = (props: LinkProps) => {
   const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
   const [hover, setHover] = useState(false)
 
+  console.log(href)
   const getId = (type: string, uri: string) => {
     if (type === 'id') {
       return uri
