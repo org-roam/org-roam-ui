@@ -1,7 +1,7 @@
 import { OrgRoamNode } from '../../api'
 import { NodeObject } from 'force-graph'
 import { initialVisuals } from '../config'
-import { hexToRGBA } from '../../pages'
+import { hexToRGBA, LinksByNodeId } from '../../pages'
 import wrap from 'word-wrap'
 
 export interface drawLabelsProps {
@@ -15,7 +15,21 @@ export interface drawLabelsProps {
   visuals: typeof initialVisuals
   opacity: number
   nodeSize: (node: NodeObject) => number
+  filteredLinksByNodeId: LinksByNodeId
 }
+
+export const getLabelOpacity = (
+  fadeFactor: number,
+  visuals: typeof initialVisuals,
+  globalScale: number,
+  opacity: number,
+  isHighlighty: boolean,
+) => {
+  return isHighlighty
+    ? Math.max(fadeFactor, opacity)
+    : 1 * fadeFactor * (-1 * (visuals.highlightFade * opacity - 1))
+}
+
 export function drawLabels(props: drawLabelsProps) {
   const {
     labelBackgroundColor,
@@ -28,54 +42,41 @@ export function drawLabels(props: drawLabelsProps) {
     visuals,
     opacity,
     nodeSize,
+    filteredLinksByNodeId,
   } = props
 
   if (!node) {
     return
   }
-  //if (dragging) {
-  //   return
-  //}
 
   if (!visuals.labels) {
     return
   }
-  const wasHighlightedNode = previouslyHighlightedNodes[node.id!]
+  const links = filteredLinksByNodeId[(node as OrgRoamNode).id] ?? []
 
-  if (
-    (globalScale <= visuals.labelScale || visuals.labels === 1) &&
-    !highlightedNodes[node.id!] &&
-    !wasHighlightedNode
-  ) {
-    return
-  }
+  const isHighlighty = !!(highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!])
 
-  const nodeTitle = (node as OrgRoamNode).title!
+  const fadeFactor = Math.min(
+    3 * (globalScale - visuals.labelScale) + Math.pow(Math.min(links.length, 10), 1 / 2),
+    1,
+  )
+  const nodeTitle = (node as OrgRoamNode).title ?? ''
+
   const label = nodeTitle.substring(0, visuals.labelLength)
+
   const fontSize = visuals.labelFontSize / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
+
   const textWidth = ctx.measureText(label).width
   const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
     number,
     number,
   ] // some padding
 
-  const fadeFactor = Math.min((3 * (globalScale - visuals.labelScale)) / visuals.labelScale, 1)
-
   // draw label background
-  const getLabelOpacity = () => {
-    if (visuals.labels === 1) {
-      return opacity
-    }
-    if (globalScale <= visuals.labelScale) {
-      return opacity
-    }
-    return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-      ? Math.max(fadeFactor, opacity)
-      : 1 * fadeFactor * (-1 * (visuals.highlightFade * opacity - 1))
-  }
+  const textOpacity = getLabelOpacity(fadeFactor, visuals, globalScale, opacity, isHighlighty)
   const nodeS = 8 * Math.cbrt(nodeSize(node) * visuals.nodeRel)
   if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
-    const backgroundOpacity = getLabelOpacity() * visuals.labelBackgroundOpacity
+    const backgroundOpacity = textOpacity * visuals.labelBackgroundOpacity
     const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
     ctx.fillStyle = labelBackground
     ctx.fillRect(
@@ -86,7 +87,6 @@ export function drawLabels(props: drawLabelsProps) {
   }
 
   // draw label text
-  const textOpacity = getLabelOpacity()
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   const labelText = hexToRGBA(labelTextColor, textOpacity)

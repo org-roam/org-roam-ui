@@ -1219,6 +1219,7 @@ export const Graph = function (props: GraphProps) {
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       drawLabels({
+        filteredLinksByNodeId: filteredLinksByNodeIdRef.current,
         ...{
           node,
           ctx,
