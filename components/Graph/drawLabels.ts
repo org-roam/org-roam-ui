@@ -16,6 +16,9 @@ export interface drawLabelsProps {
   opacity: number
   nodeSize: (node: NodeObject) => number
   filteredLinksByNodeId: LinksByNodeId
+  nodeRel: number
+  hoverNode: NodeObject
+  lastHoverNode: OrgRoamNode
 }
 
 export const getLabelOpacity = (
@@ -43,6 +46,9 @@ export function drawLabels(props: drawLabelsProps) {
     opacity,
     nodeSize,
     filteredLinksByNodeId,
+    nodeRel,
+    hoverNode,
+    lastHoverNode,
   } = props
 
   if (!node) {
@@ -52,6 +58,8 @@ export function drawLabels(props: drawLabelsProps) {
   if (!visuals.labels) {
     return
   }
+  const hoverId = hoverNode?.id ?? ''
+  const lastHoverId = lastHoverNode?.id ?? ''
   const links = filteredLinksByNodeId[(node as OrgRoamNode).id] ?? []
 
   const isHighlighty = !!(highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!])
@@ -64,7 +72,13 @@ export function drawLabels(props: drawLabelsProps) {
 
   const label = nodeTitle.substring(0, visuals.labelLength)
 
-  const fontSize = visuals.labelFontSize / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
+  const nodeS = Math.cbrt(
+    (visuals.nodeRel * nodeSize(node)) / Math.pow(globalScale, visuals.nodeZoomSize),
+  )
+  const fontSize =
+    hoverId == (node as OrgRoamNode).id
+      ? Math.max((visuals.labelFontSize * nodeS) / 2, (visuals.labelFontSize * nodeS) / 3)
+      : (visuals.labelFontSize * nodeS) / 3
 
   const textWidth = ctx.measureText(label).width
   const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
@@ -74,7 +88,6 @@ export function drawLabels(props: drawLabelsProps) {
 
   // draw label background
   const textOpacity = getLabelOpacity(fadeFactor, visuals, globalScale, opacity, isHighlighty)
-  const nodeS = 8 * Math.cbrt(nodeSize(node) * visuals.nodeRel)
   if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
     const backgroundOpacity = textOpacity * visuals.labelBackgroundOpacity
     const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
@@ -98,7 +111,15 @@ export function drawLabels(props: drawLabelsProps) {
     nodeTitle.length > visuals.labelLength
       ? [...wordsArray.slice(0, -1), `${wordsArray.slice(-1)}...`]
       : wordsArray
+
+  const highlightedNodeOffset = [hoverId, lastHoverId].includes((node as OrgRoamNode).id)
+    ? 1 + 0.3 * opacity
+    : 1
   truncatedWords.forEach((word, index) => {
-    ctx.fillText(word, node.x!, node.y! + nodeS + visuals.labelLineSpace * fontSize * index)
+    ctx.fillText(
+      word,
+      node.x! - 2,
+      node.y! + highlightedNodeOffset * nodeS * 8 + visuals.labelLineSpace * fontSize * index,
+    )
   })
 }

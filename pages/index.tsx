@@ -1219,7 +1219,9 @@ export const Graph = function (props: GraphProps) {
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       drawLabels({
+        nodeRel: visuals.nodeRel,
         filteredLinksByNodeId: filteredLinksByNodeIdRef.current,
+        lastHoverNode: lastHoverNode.current,
         ...{
           node,
           ctx,
@@ -1231,6 +1233,7 @@ export const Graph = function (props: GraphProps) {
           nodeSize,
           labelTextColor,
           labelBackgroundColor,
+          hoverNode,
         },
       })
     },
