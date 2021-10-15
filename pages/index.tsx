@@ -1378,6 +1378,9 @@ export const Graph = function (props: GraphProps) {
       if (!visuals.highlight) {
         return
       }
+      if (dragging) {
+        return
+      }
 
       if (!hoverNode) {
         fadeOutCancel()
