@@ -128,6 +128,10 @@ export const initialMouse = {
   backgroundExitsLocal: false,
 }
 
+export const initialLocal = {
+  neighbors: 1,
+}
+
 export const colorList = [
   'red.500',
   'orange.500',

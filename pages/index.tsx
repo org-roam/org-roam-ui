@@ -40,6 +40,7 @@ import {
   colorList,
   initialBehavior,
   initialFilter,
+  initialLocal,
   initialMouse,
   initialPhysics,
   initialVisuals,
@@ -105,6 +106,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
+  const [local, setLocal] = usePersistantState('local', initialLocal)
   const [
     previewNodeState,
     {
@@ -539,6 +541,8 @@ export function GraphPage() {
           setBehavior,
           tagColors,
           setTagColors,
+          local,
+          setLocal,
         }}
         tags={tagsRef.current}
       />
@@ -573,6 +577,7 @@ export function GraphPage() {
               setMainWindowWidth,
               setContextMenuTarget,
               graphRef,
+              local,
             }}
           />
         )}
@@ -680,6 +685,7 @@ export interface GraphProps {
   visuals: typeof initialVisuals
   behavior: typeof initialBehavior
   mouse: typeof initialMouse
+  local: typeof initialLocal
   scope: Scope
   setScope: any
   webSocket: any
@@ -712,6 +718,7 @@ export const Graph = function (props: GraphProps) {
     behavior,
     mouse,
     scope,
+    local,
     setScope,
     webSocket,
     tagColors,
@@ -895,7 +902,7 @@ export const Graph = function (props: GraphProps) {
     }
     const oldScopedNodes = scope.nodeIds.length > 1 ? scopedGraphData.nodes : []
     const oldScopedNodeIds = oldScopedNodes.map((node) => node.id as string)
-    const neighbs = findNthNeighbors(scope.nodeIds, 1)
+    const neighbs = findNthNeighbors(scope.nodeIds, local.neighbors)
     const newScopedNodes = filteredGraphData.nodes
       .filter((node) => {
         if (oldScopedNodes.length) {
@@ -943,7 +950,14 @@ export const Graph = function (props: GraphProps) {
     const scopedLinks = [...oldScopedLinks, ...newScopedLinks]
 
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
-  }, [filter, scope, JSON.stringify(graphData), filteredGraphData.links, filteredGraphData.nodes])
+  }, [
+    local.neighbors,
+    filter,
+    scope,
+    JSON.stringify(graphData),
+    filteredGraphData.links,
+    filteredGraphData.nodes,
+  ])
 
   useEffect(() => {
     ;(async () => {

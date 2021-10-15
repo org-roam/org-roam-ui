@@ -20,6 +20,7 @@ import {
   initialVisuals,
   initialMouse,
   initialBehavior,
+  initialLocal,
   TagColors,
   colorList,
 } from '../config'
@@ -48,6 +49,8 @@ export interface TweakProps {
   tags: string[]
   tagColors: TagColors
   setTagColors: any
+  local: typeof initialLocal
+  setLocal: any
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -67,6 +70,8 @@ export const Tweaks = (props: TweakProps) => {
     tags,
     tagColors,
     setTagColors,
+    local,
+    setLocal,
   } = props
 
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
@@ -168,6 +173,7 @@ export const Tweaks = (props: TweakProps) => {
                 highlightColor={highlightColor}
                 colorList={colorList}
                 tags={tags}
+                {...{ local, setLocal }}
               />
             </AccordionPanel>
           </AccordionItem>
