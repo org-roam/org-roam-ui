@@ -184,6 +184,9 @@ function SubApp(props: any) {
             },
             track: {
               backgroundColor: 'gray.400',
+              borderColor: 'gray.400',
+              borderWidth: '5px',
+              borderRadius: 'lg',
             },
           }),
         },
