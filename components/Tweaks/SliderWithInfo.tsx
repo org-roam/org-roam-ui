@@ -31,7 +31,7 @@ export const SliderWithInfo = ({
   const { highlightColor } = useContext(ThemeContext)
   return (
     <Box key={label} pt={1} pb={2}>
-      <Box display="flex" alignItems="flex-end">
+      <Box display="flex" alignItems="flex-end" mb={2}>
         <Text>{label}</Text>
         {infoText && <InfoTooltip infoText={infoText} />}
       </Box>

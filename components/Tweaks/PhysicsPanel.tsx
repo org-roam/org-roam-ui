@@ -65,37 +65,15 @@ export const PhysicsPanel = (props: PhysicsPanelProps) => {
           onChange={(v) => setPhysicsCallback(v, 'charge', -1 / 100)}
           label="Repulsive Force"
         />
-        <EnableSection
-          label="Collision"
-          infoText="Perfomance sap, disable if slow"
-          value={physics.collision}
-          onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
-        >
-          <SliderWithInfo
-            value={physics.collisionStrength / 5}
-            onChange={(v) => setPhysicsCallback(v, 'collisionStrength', 1 / 5)}
-            label="Collision Radius"
-            infoText="Easy with this one, high values can lead to a real jiggly mess"
-          />
-        </EnableSection>
         <SliderWithInfo
           value={physics.linkStrength * 5}
           onChange={(v) => setPhysicsCallback(v, 'linkStrength', 5)}
           label="Link Force"
         />
         <SliderWithInfo
-          label="Link Iterations"
-          value={physics.linkIts}
-          onChange={(v) => setPhysicsCallback(v, 'linkIts', 1)}
-          min={0}
-          max={6}
-          step={1}
-          infoText="How many links down the line the physics of a single node affects (Slow)"
-        />
-        <SliderWithInfo
-          label="Viscosity"
-          value={physics.velocityDecay * 10}
-          onChange={(v) => setPhysicsCallback(v, 'velocityDecay', 10)}
+          label="Stabilization rate"
+          value={physics.alphaDecay * 50}
+          onChange={(v) => setPhysicsCallback(v, 'alphaDecay', 50)}
         />
       </VStack>
       <Box>
@@ -114,10 +92,32 @@ export const PhysicsPanel = (props: PhysicsPanelProps) => {
                 paddingLeft={3}
                 color="gray.800"
               >
+                <EnableSection
+                  label="Collision"
+                  infoText="Perfomance sap, disable if slow"
+                  value={physics.collision}
+                  onChange={() => setPhysics({ ...physics, collision: !physics.collision })}
+                >
+                  <SliderWithInfo
+                    value={physics.collisionStrength / 5}
+                    onChange={(v) => setPhysicsCallback(v, 'collisionStrength', 1 / 5)}
+                    label="Collision Radius"
+                    infoText="Easy with this one, high values can lead to a real jiggly mess"
+                  />
+                </EnableSection>
                 <SliderWithInfo
-                  label="Stabilization rate"
-                  value={physics.alphaDecay * 50}
-                  onChange={(v) => setPhysicsCallback(v, 'alphaDecay', 50)}
+                  label="Link iterations"
+                  value={physics.linkIts}
+                  onChange={(v) => setPhysicsCallback(v, 'linkIts', 1)}
+                  min={0}
+                  max={6}
+                  step={1}
+                  infoText="How many links down the line the physics of a single node affects (Slow)"
+                />
+                <SliderWithInfo
+                  label="Viscosity"
+                  value={physics.velocityDecay * 10}
+                  onChange={(v) => setPhysicsCallback(v, 'velocityDecay', 10)}
                 />
                 <EnableSection
                   label="Center nodes"

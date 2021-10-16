@@ -120,6 +120,3 @@ export const VisualsPanel = (props: VisualsPanelProps) => {
     </VStack>
   )
 }
-function clickCallback(color: string): void {
-  throw new Error('Function not implemented.')
-}

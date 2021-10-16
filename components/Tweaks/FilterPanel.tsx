@@ -20,8 +20,9 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { TagPanel } from './TagPanel'
-import { initialFilter, TagColors } from '../config'
+import { initialFilter, initialLocal, TagColors } from '../config'
 import { TagColorPanel } from './TagColorPanel'
+import { SliderWithInfo } from './SliderWithInfo'
 
 export interface FilterPanelProps {
   filter: typeof initialFilter
@@ -31,10 +32,22 @@ export interface FilterPanelProps {
   highlightColor: string
   colorList: string[]
   tags: string[]
+  local: typeof initialLocal
+  setLocal: any
 }
 
 const FilterPanel = (props: FilterPanelProps) => {
-  const { filter, setFilter, tagColors, setTagColors, highlightColor, colorList, tags } = props
+  const {
+    filter,
+    setFilter,
+    local,
+    setLocal,
+    tagColors,
+    setTagColors,
+    highlightColor,
+    colorList,
+    tags,
+  } = props
   return (
     <Box>
       <VStack
@@ -152,6 +165,14 @@ const FilterPanel = (props: FilterPanelProps) => {
             isChecked={filter.bad}
           ></Switch>
         </Flex>
+        <SliderWithInfo
+          label="Number of neighbors in local graph"
+          value={local.neighbors}
+          onChange={(v) => setLocal({ ...local, neighbors: v })}
+          min={1}
+          max={5}
+          step={1}
+        />
       </VStack>
       <Accordion padding={0} allowToggle allowMultiple paddingLeft={3}>
         <AccordionItem>
