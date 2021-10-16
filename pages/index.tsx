@@ -52,6 +52,7 @@ import { Tweaks } from '../components/Tweaks'
 import { usePersistantState } from '../util/persistant-state'
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import { openNodeInEmacs } from '../util/webSocketFunctions'
+import { drawLabels } from '../components/Graph/drawLabels'
 
 const d3promise = import('d3-force-3d')
 
@@ -1136,6 +1137,7 @@ export const Graph = function (props: GraphProps) {
 
   const getNodeColor = (node: OrgRoamNode, theme: any) => {
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+    //const needsHighlighting = hoverNode?.id === node.id! || lastHoverNode?.current?.id === node.id
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
@@ -1208,7 +1210,7 @@ export const Graph = function (props: GraphProps) {
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     //onZoom: ({ k, x, y }) => setZoom(k),
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
-    //nodeLabel: (node) => (node as OrgRoamNode).title,
+    //nodeLabel: (node) => ,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode, theme)
     },
@@ -1217,76 +1219,23 @@ export const Graph = function (props: GraphProps) {
       return nodeSize(node) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
-      if (!node) {
-        return
-      }
-      if (dragging) {
-        return
-      }
-
-      if (!visuals.labels) {
-        return
-      }
-      const wasHighlightedNode = previouslyHighlightedNodes[node.id!]
-
-      if (
-        (globalScale <= visuals.labelScale || visuals.labels === 1) &&
-        !highlightedNodes[node.id!] &&
-        !wasHighlightedNode
-      ) {
-        return
-      }
-
-      const nodeTitle = (node as OrgRoamNode).title!
-      const label = nodeTitle.substring(0, visuals.labelLength)
-      const fontSize = visuals.labelFontSize / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
-      const textWidth = ctx.measureText(label).width
-      const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
-        number,
-        number,
-      ] // some padding
-
-      const fadeFactor = Math.min((3 * (globalScale - visuals.labelScale)) / visuals.labelScale, 1)
-
-      // draw label background
-      const getLabelOpacity = () => {
-        if (visuals.labels === 1) {
-          return opacity
-        }
-        if (globalScale <= visuals.labelScale) {
-          return opacity
-        }
-        return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-          ? Math.max(fadeFactor, opacity)
-          : 1 * fadeFactor * (-1 * (visuals.highlightFade * opacity - 1))
-      }
-      const nodeS = 8 * Math.cbrt(nodeSize(node) * visuals.nodeRel)
-      if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
-        const backgroundOpacity = getLabelOpacity() * visuals.labelBackgroundOpacity
-        const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
-        ctx.fillStyle = labelBackground
-        ctx.fillRect(
-          node.x! - bckgDimensions[0] / 2,
-          node.y! - bckgDimensions[1] / 2 + nodeS,
-          ...bckgDimensions,
-        )
-      }
-
-      // draw label text
-      const textOpacity = getLabelOpacity()
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      const labelText = hexToRGBA(labelTextColor, textOpacity)
-      ctx.fillStyle = labelText
-      ctx.font = `${fontSize}px Sans-Serif`
-      const wordsArray = wrap(label, { width: visuals.labelWordWrap }).split('\n')
-
-      const truncatedWords =
-        nodeTitle.length > visuals.labelLength
-          ? [...wordsArray.slice(0, -1), `${wordsArray.slice(-1)}...`]
-          : wordsArray
-      truncatedWords.forEach((word, index) => {
-        ctx.fillText(word, node.x!, node.y! + nodeS + visuals.labelLineSpace * fontSize * index)
+      drawLabels({
+        nodeRel: visuals.nodeRel,
+        filteredLinksByNodeId: filteredLinksByNodeIdRef.current,
+        lastHoverNode: lastHoverNode.current,
+        ...{
+          node,
+          ctx,
+          globalScale,
+          highlightedNodes,
+          previouslyHighlightedNodes,
+          visuals,
+          opacity,
+          nodeSize,
+          labelTextColor,
+          labelBackgroundColor,
+          hoverNode,
+        },
       })
     },
     nodeCanvasObjectMode: () => 'after',
@@ -1376,6 +1325,9 @@ export const Graph = function (props: GraphProps) {
      * }, */
     onNodeHover: (node) => {
       if (!visuals.highlight) {
+        return
+      }
+      if (dragging) {
         return
       }
 
