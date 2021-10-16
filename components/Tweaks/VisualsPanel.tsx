@@ -24,6 +24,7 @@ import { LabelsPanel } from './LabelsPanel'
 import { CitationsPanel } from './CitationsPanel'
 import { ColorMenu } from './ColorMenu'
 import { ThemeSelect } from './ThemeSelect'
+import { GraphColorSelect } from './GraphColorSelect'
 
 export interface VisualsPanelProps {
   visuals: typeof initialVisuals
@@ -31,14 +32,25 @@ export interface VisualsPanelProps {
   highlightColor: string
   setHighlightColor: any
   threeDim: boolean
+  coloring: string
+  setColoring: any
 }
 
 export const VisualsPanel = (props: VisualsPanelProps) => {
-  const { visuals, setVisuals, highlightColor, setHighlightColor, threeDim } = props
+  const {
+    coloring,
+    setColoring,
+    visuals,
+    setVisuals,
+    highlightColor,
+    setHighlightColor,
+    threeDim,
+  } = props
   const setVisualsCallback = useCallback((val) => setVisuals(val), [])
   return (
     <VStack justifyContent="flex-start" align="stretch">
       <ThemeSelect />
+      <GraphColorSelect {...{ coloring, setColoring }} />
       <Accordion allowToggle defaultIndex={[0]} paddingLeft={3}>
         <AccordionItem>
           <AccordionButton>

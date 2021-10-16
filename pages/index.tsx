@@ -107,6 +107,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
+  const [coloring, setColoring] = usePersistantState('coloring', 'community')
   const [
     previewNodeState,
     {
@@ -542,6 +543,8 @@ export function GraphPage() {
           setBehavior,
           tagColors,
           setTagColors,
+          coloring,
+          setColoring,
         }}
         tags={tagsRef.current}
       />
@@ -577,6 +580,7 @@ export function GraphPage() {
               setContextMenuTarget,
               graphRef,
               clusterRef,
+              coloring,
             }}
           />
         )}
@@ -701,6 +705,7 @@ export interface GraphProps {
   variables: { [variable: string]: string }
   graphRef: any
   clusterRef: any
+  coloring: string
 }
 
 export const Graph = function (props: GraphProps) {
@@ -730,6 +735,7 @@ export const Graph = function (props: GraphProps) {
     handleLocal,
     variables,
     clusterRef,
+    coloring,
   } = props
 
   const { dailyDir, roamDir } = variables
@@ -890,19 +896,20 @@ export const Graph = function (props: GraphProps) {
       }
     }, {})
 
-    console.log(filteredLinks)
     const weightedLinks = filteredLinks.map((l) => {
       const [target, source] = normalizeLinkEnds(l)
       const link = l as OrgRoamLink
       return { target, source, weight: link.type === 'cite' ? 1 : 2 }
     })
-    console.log(weightedLinks)
-    const community = jLouvain().nodes(filteredNodeIds).edges(weightedLinks)
-    clusterRef.current = community()
+
+    if (coloring === 'community') {
+      const community = jLouvain().nodes(filteredNodeIds).edges(weightedLinks)
+      clusterRef.current = community()
+    }
     /* clusterRef.current = Object.fromEntries(
      *   Object.entries(community()).sort(([, a], [, b]) => a - b),
      * ) */
-    console.log(clusterRef.current)
+    //console.log(clusterRef.current)
     return { nodes: filteredNodes, links: filteredLinks }
   }, [filter, graphData])
 
@@ -1085,12 +1092,14 @@ export const Graph = function (props: GraphProps) {
 
   const getNodeColorById = (id: string) => {
     const linklen = filteredLinksByNodeIdRef.current[id!]?.length ?? 0
-    /* const parentCiteNeighbors = linklen
-     *   ? linksByNodeId[id!]?.filter((link) => ['parent', 'heading', 'cite', 'ref'].includes(link.type)).length
-     *   : 0
-     * const neighbors = filter.parent ? linklen : linklen - parentCiteNeighbors! */
-
-    return visuals.nodeColorScheme[clusterRef.current[id] % (visuals.nodeColorScheme.length - 1)]
+    if (coloring === 'degree') {
+      return visuals.nodeColorScheme[
+        numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
+      ]
+    }
+    return visuals.nodeColorScheme[
+      linklen && clusterRef.current[id] % (visuals.nodeColorScheme.length - 1)
+    ]
   }
 
   const getLinkNodeColor = (sourceId: string, targetId: string) => {

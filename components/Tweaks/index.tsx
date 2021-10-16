@@ -48,6 +48,8 @@ export interface TweakProps {
   tags: string[]
   tagColors: TagColors
   setTagColors: any
+  coloring: string
+  setColoring: any
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -67,6 +69,8 @@ export const Tweaks = (props: TweakProps) => {
     tags,
     tagColors,
     setTagColors,
+    coloring,
+    setColoring,
   } = props
 
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
@@ -194,6 +198,10 @@ export const Tweaks = (props: TweakProps) => {
                 highlightColor={highlightColor}
                 setHighlightColor={setHighlightColor}
                 threeDim={threeDim}
+                {...{
+                  coloring,
+                  setColoring,
+                }}
               />
             </AccordionPanel>
           </AccordionItem>
