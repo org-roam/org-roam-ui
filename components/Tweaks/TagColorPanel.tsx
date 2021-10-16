@@ -40,7 +40,8 @@ export const TagColorPanel = (props: TagColorPanelProps) => {
     <Box>
       <CUIAutoComplete
         items={tagArray}
-        label="Add tag to filter"
+        labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
+        label="Add tag to color"
         placeholder=" "
         disableCreateItem={true}
         selectedItems={selectedItems}
@@ -60,9 +61,10 @@ export const TagColorPanel = (props: TagColorPanelProps) => {
         highlightItemBg="gray.400"
         toggleButtonStyleProps={{ variant: 'outline' }}
         inputStyleProps={{
+          height: 8,
           focusBorderColor: highlightColor,
           color: 'gray.800',
-          borderColor: 'gray.600',
+          borderColor: 'gray.500',
         }}
         tagStyleProps={{
           display: 'none',
@@ -86,7 +88,7 @@ export const TagColorPanel = (props: TagColorPanelProps) => {
           return (
             <Flex key={tag} alignItems="center" justifyContent="space-between" width="100%" pl={2}>
               <Box width="100%">
-                <Text fontWeight="bold">{tag}</Text>
+                <Text>{tag}</Text>
               </Box>
               <Menu isLazy placement="right">
                 <MenuButton as={Button} colorScheme="" color="black">

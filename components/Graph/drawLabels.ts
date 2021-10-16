@@ -17,8 +17,8 @@ export interface drawLabelsProps {
   nodeSize: (node: NodeObject) => number
   filteredLinksByNodeId: LinksByNodeId
   nodeRel: number
-  hoverNode: NodeObject
-  lastHoverNode: OrgRoamNode
+  hoverNode: NodeObject | null
+  lastHoverNode: OrgRoamNode | null
 }
 
 export const getLabelOpacity = (
@@ -65,9 +65,14 @@ export function drawLabels(props: drawLabelsProps) {
   const isHighlighty = !!(highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!])
 
   const fadeFactor = Math.min(
-    3 * (globalScale - visuals.labelScale) + Math.pow(Math.min(links.length, 10), 1 / 2),
+    5 * (globalScale - visuals.labelScale) +
+      2 *
+        Math.pow(Math.min(links.length, visuals.labelDynamicDegree), visuals.labelDynamicStrength),
     1,
   )
+  if (fadeFactor < 0.01 && !isHighlighty) {
+    return
+  }
   const nodeTitle = (node as OrgRoamNode).title ?? ''
 
   const label = nodeTitle.substring(0, visuals.labelLength)
@@ -75,11 +80,11 @@ export function drawLabels(props: drawLabelsProps) {
   const nodeS = Math.cbrt(
     (visuals.nodeRel * nodeSize(node)) / Math.pow(globalScale, visuals.nodeZoomSize),
   )
-  const fontSize =
-    hoverId == (node as OrgRoamNode).id
-      ? Math.max((visuals.labelFontSize * nodeS) / 2, (visuals.labelFontSize * nodeS) / 3)
-      : (visuals.labelFontSize * nodeS) / 3
+  const fontSize = visuals.labelFontSize / Math.cbrt(Math.pow(globalScale, visuals.nodeZoomSize))
+  //   ? Math.max((visuals.labelFontSize * nodeS) / 2, (visuals.labelFontSize * nodeS) / 3)
+  //    : (visuals.labelFontSize * nodeS) / 3
 
+  //  * nodeS) / 3
   const textWidth = ctx.measureText(label).width
   const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
     number,
@@ -118,7 +123,7 @@ export function drawLabels(props: drawLabelsProps) {
   truncatedWords.forEach((word, index) => {
     ctx.fillText(
       word,
-      node.x! - 2,
+      node.x!,
       node.y! + highlightedNodeOffset * nodeS * 8 + visuals.labelLineSpace * fontSize * index,
     )
   })

@@ -180,7 +180,10 @@ function SubApp(props: any) {
               backgroundColor: highlightColor,
             },
             filledTrack: {
-              backgroundColor: 'gray.200',
+              backgroundColor: 'gray.400',
+            },
+            track: {
+              backgroundColor: 'gray.400',
             },
           }),
         },

@@ -65,12 +65,14 @@ export const initialVisuals = {
   labelLength: 40,
   labelWordWrap: 25,
   labelLineSpace: 1,
+  labelDynamicDegree: 8,
+  labelDynamicStrength: 0.5,
   highlight: true,
-  highlightNodeSize: 1.2,
-  highlightLinkSize: 2,
+  highlightNodeSize: 1.1,
+  highlightLinkSize: 1,
   highlightFade: 0.8,
   highlightAnim: true,
-  animationSpeed: 420,
+  animationSpeed: 360,
   algorithmOptions: options,
   algorithmName: 'SinusoidalOut',
   linkColorScheme: 'gray.500',
@@ -105,7 +107,7 @@ export const initialVisuals = {
   refLinkHighlightColor: '',
   refNodeColor: 'black',
   nodeSizeLinks: 0.5,
-  nodeZoomSize: 1.3,
+  nodeZoomSize: 1.2,
 }
 
 export interface TagColors {

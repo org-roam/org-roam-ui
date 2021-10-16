@@ -1137,6 +1137,7 @@ export const Graph = function (props: GraphProps) {
 
   const getNodeColor = (node: OrgRoamNode, theme: any) => {
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+    //const needsHighlighting = hoverNode?.id === node.id! || lastHoverNode?.current?.id === node.id
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
@@ -1209,7 +1210,7 @@ export const Graph = function (props: GraphProps) {
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     //onZoom: ({ k, x, y }) => setZoom(k),
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
-    //nodeLabel: (node) => (node as OrgRoamNode).title,
+    //nodeLabel: (node) => ,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode, theme)
     },
