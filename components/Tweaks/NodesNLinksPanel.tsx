@@ -28,7 +28,7 @@ export const NodesNLinksPanel = (props: NodesNLinksPanelProps) => {
           onChange={(value) => setVisuals({ ...visuals, nodeRel: value })}
         />
         <SliderWithInfo
-          label="Node connections size scale"
+          label="Node degree size multiplier"
           value={visuals.nodeSizeLinks}
           min={0}
           max={2}
