@@ -22,6 +22,7 @@ import {
   initialBehavior,
   TagColors,
   colorList,
+  initialColoring,
 } from '../config'
 
 import FilterPanel from './FilterPanel'
@@ -48,7 +49,7 @@ export interface TweakProps {
   tags: string[]
   tagColors: TagColors
   setTagColors: any
-  coloring: string
+  coloring: typeof initialColoring
   setColoring: any
 }
 

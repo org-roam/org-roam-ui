@@ -11,9 +11,10 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { initialColoring } from '../config'
 
 export interface GraphColorSelectProps {
-  coloring: string
+  coloring: typeof initialColoring
   setColoring: any
 }
 
@@ -31,12 +32,14 @@ export const GraphColorSelect = (props: GraphColorSelectProps) => {
           color="black"
           rightIcon={<ChevronDownIcon />}
         >
-          {coloring === 'degree' ? 'Links' : 'Communities'}
+          {coloring.method === 'degree' ? 'Links' : 'Communities'}
         </MenuButton>
         <Portal>
           <MenuList minW={10} zIndex="popover" bgColor="gray.200">
             <MenuItem
-              onClick={() => setColoring('degree')}
+              onClick={() =>
+                setColoring((curr: typeof initialColoring) => ({ ...curr, method: 'degree' }))
+              }
               justifyContent="space-between"
               alignItems="center"
               display="flex"
@@ -44,7 +47,9 @@ export const GraphColorSelect = (props: GraphColorSelectProps) => {
               Number of links
             </MenuItem>
             <MenuItem
-              onClick={() => setColoring('community')}
+              onClick={() =>
+                setColoring((curr: typeof initialColoring) => ({ ...curr, method: 'community' }))
+              }
               justifyContent="space-between"
               alignItems="center"
               display="flex"

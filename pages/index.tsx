@@ -41,6 +41,7 @@ import {
   algos,
   colorList,
   initialBehavior,
+  initialColoring,
   initialFilter,
   initialMouse,
   initialPhysics,
@@ -107,7 +108,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
-  const [coloring, setColoring] = usePersistantState('coloring', 'community')
+  const [coloring, setColoring] = usePersistantState('coloring', initialColoring)
   const [
     previewNodeState,
     {
@@ -705,7 +706,7 @@ export interface GraphProps {
   variables: { [variable: string]: string }
   graphRef: any
   clusterRef: any
-  coloring: string
+  coloring: typeof initialColoring
 }
 
 export const Graph = function (props: GraphProps) {
@@ -902,7 +903,7 @@ export const Graph = function (props: GraphProps) {
       return { target, source, weight: link.type === 'cite' ? 1 : 2 }
     })
 
-    if (coloring === 'community') {
+    if (coloring.method === 'community') {
       const community = jLouvain().nodes(filteredNodeIds).edges(weightedLinks)
       clusterRef.current = community()
     }
@@ -911,7 +912,7 @@ export const Graph = function (props: GraphProps) {
      * ) */
     //console.log(clusterRef.current)
     return { nodes: filteredNodes, links: filteredLinks }
-  }, [filter, graphData])
+  }, [filter, graphData, coloring.method])
 
   const [scopedGraphData, setScopedGraphData] = useState<GraphData>({ nodes: [], links: [] })
 
@@ -1092,13 +1093,13 @@ export const Graph = function (props: GraphProps) {
 
   const getNodeColorById = (id: string) => {
     const linklen = filteredLinksByNodeIdRef.current[id!]?.length ?? 0
-    if (coloring === 'degree') {
+    if (coloring.method === 'degree') {
       return visuals.nodeColorScheme[
         numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
       ]
     }
     return visuals.nodeColorScheme[
-      linklen && clusterRef.current[id] % (visuals.nodeColorScheme.length - 1)
+      linklen && clusterRef.current[id] % visuals.nodeColorScheme.length
     ]
   }
 

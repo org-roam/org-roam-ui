@@ -18,7 +18,7 @@ import {
 import React, { useCallback } from 'react'
 import { HighlightingPanel } from './HighlightingPanel'
 import { ColorsPanel } from './ColorsPanel'
-import { initialVisuals } from '../config'
+import { initialColoring, initialVisuals } from '../config'
 import { NodesNLinksPanel } from './NodesNLinksPanel'
 import { LabelsPanel } from './LabelsPanel'
 import { CitationsPanel } from './CitationsPanel'
@@ -32,7 +32,7 @@ export interface VisualsPanelProps {
   highlightColor: string
   setHighlightColor: any
   threeDim: boolean
-  coloring: string
+  coloring: typeof initialColoring
   setColoring: any
 }
 
