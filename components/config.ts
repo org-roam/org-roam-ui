@@ -45,6 +45,9 @@ export const initialFilter = {
   date: [],
   noter: true,
 }
+export const initialColoring = {
+  method: 'degree',
+}
 
 export const initialVisuals = {
   particles: false,

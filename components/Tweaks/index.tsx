@@ -23,6 +23,7 @@ import {
   initialLocal,
   TagColors,
   colorList,
+  initialColoring,
 } from '../config'
 
 import FilterPanel from './FilterPanel'
@@ -49,6 +50,8 @@ export interface TweakProps {
   tags: string[]
   tagColors: TagColors
   setTagColors: any
+  coloring: typeof initialColoring
+  setColoring: any
   local: typeof initialLocal
   setLocal: any
 }
@@ -70,6 +73,8 @@ export const Tweaks = (props: TweakProps) => {
     tags,
     tagColors,
     setTagColors,
+    coloring,
+    setColoring,
     local,
     setLocal,
   } = props
@@ -129,6 +134,9 @@ export const Tweaks = (props: TweakProps) => {
                 setMouse(initialMouse)
                 setPhysics(initialPhysics)
                 setBehavior(initialBehavior)
+                setColoring(initialColoring)
+                setHighlightColor('purple.500')
+                setLocal(initialLocal)
               }}
               variant="subtle"
               size="sm"
@@ -200,6 +208,10 @@ export const Tweaks = (props: TweakProps) => {
                 highlightColor={highlightColor}
                 setHighlightColor={setHighlightColor}
                 threeDim={threeDim}
+                {...{
+                  coloring,
+                  setColoring,
+                }}
               />
             </AccordionPanel>
           </AccordionItem>
