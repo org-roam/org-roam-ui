@@ -79,7 +79,7 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
           <Collapse in={visuals.labelDynamicStrength > 0}>
             <SliderWithInfo
               label="Dynamic zoom degree cap"
-              infoText="By default, labels of nodes with more links will appear earlier than those with fewer. This slider changes the strength of this effect, put it at zero to disable it."
+              infoText="The maximum number of links that is considered for the 'dynamic zoom effect'. Past this number all number of links are treated the same."
               value={visuals.labelDynamicDegree}
               min={1}
               max={15}
