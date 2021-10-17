@@ -27,6 +27,7 @@ export interface ProcessedOrgProps {
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: any
   openContextMenu: any
+  outline: boolean
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
@@ -38,6 +39,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     nodeByCite,
     previewNode,
     openContextMenu,
+    outline,
   } = props
 
   const section = sectionParent.default
@@ -72,7 +74,9 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
         img: ({ src }) => {
           return <OrgImage src={src as string} file={previewNode.file} />
         },
-        section: Section,
+        section: ({ children, className }) => (
+          <Section {...{ outline, className }}>{children}</Section>
+        ),
         p: ({ children }) => {
           return <p lang="en">{children}</p>
         },
