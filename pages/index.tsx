@@ -76,6 +76,7 @@ export type NodeByCite = { [key: string]: OrgRoamNode | undefined }
 export type Tags = string[]
 export type Scope = {
   nodeIds: string[]
+  excludedNodeIds: string[]
 }
 
 export default function Home() {
@@ -101,7 +102,7 @@ export default function Home() {
 export function GraphPage() {
   const [threeDim, setThreeDim] = usePersistantState('3d', false)
   const [tagColors, setTagColors] = usePersistantState<TagColors>('tagCols', {})
-  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
+  const [scope, setScope] = useState<Scope>({ nodeIds: [], excludedNodeIds: [] })
 
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
@@ -337,7 +338,7 @@ export function GraphPage() {
 
   const { setEmacsTheme } = useContext(ThemeContext)
 
-  const scopeRef = useRef<Scope>({ nodeIds: [] })
+  const scopeRef = useRef<Scope>({ nodeIds: [], excludedNodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
   const WebSocketRef = useRef<ReconnectingWebSocket | null>(null)
@@ -363,7 +364,7 @@ export function GraphPage() {
     )
     if (command === 'zoom') {
       if (sr.nodeIds.length) {
-        setScope({ nodeIds: [] })
+        setScope({ nodeIds: [], excludedNodeIds: [] })
       }
       setTimeout(
         () => fg.zoomToFit(speed, padding, (node: NodeObject) => nodes[node.id as string]),
@@ -372,7 +373,7 @@ export function GraphPage() {
       return
     }
     if (!sr.nodeIds.length) {
-      setScope({ nodeIds: [emacsNode] })
+      setScope((current: Scope) => ({ ...current, nodeIds: [emacsNode] }))
       setTimeout(() => {
         fg.centerAt(0, 0, 10)
         fg.zoomToFit(1, padding)
@@ -380,7 +381,7 @@ export function GraphPage() {
       return
     }
     if (bh.localSame !== 'add') {
-      setScope({ nodeIds: [emacsNode] })
+      setScope((current: Scope) => ({ ...current, nodeIds: [emacsNode] }))
       setTimeout(() => {
         fg.centerAt(0, 0, 10)
         fg.zoomToFit(1, padding)
@@ -395,7 +396,7 @@ export function GraphPage() {
         return nodes[scopeId]
       })
     ) {
-      setScope({ nodeIds: [emacsNode] })
+      setScope((current: Scope) => ({ ...current, nodeIds: [emacsNode] }))
       setTimeout(() => {
         fg.centerAt(0, 0, 10)
         fg.zoomToFit(1, padding)
@@ -504,9 +505,16 @@ export function GraphPage() {
     contextMenu.onOpen()
   }
 
-  const handleLocal = (node: OrgRoamNode, add: string) => {
-    if (add === 'replace') {
-      setScope({ nodeIds: [node.id] })
+  const handleLocal = (node: OrgRoamNode, command: string) => {
+    if (command === 'remove') {
+      setScope((currentScope: Scope) => ({
+        ...currentScope,
+        excludedNodeIds: [...currentScope.excludedNodeIds, node.id as string],
+      }))
+      return
+    }
+    if (command === 'replace') {
+      setScope({ nodeIds: [node.id], excludedNodeIds: [] })
       return
     }
     if (scope.nodeIds.includes(node.id as string)) {
@@ -778,7 +786,7 @@ export const Graph = function (props: GraphProps) {
     }
   }
 
-  const findNthNeighbors = (ids: string[], n: number) => {
+  const findNthNeighbors = (ids: string[], excludedIds: string[], n: number) => {
     let queue = [ids[0]]
     let todo: string[] = []
     const completed = [ids[0]]
@@ -787,6 +795,9 @@ export const Graph = function (props: GraphProps) {
         const links = filteredLinksByNodeIdRef.current[node as string] ?? []
         links.forEach((link) => {
           const [sourceId, targetId] = normalizeLinkEnds(link)
+          if (excludedIds.some((id) => [sourceId, targetId].includes(id))) {
+            return
+          }
           if (!completed.includes(sourceId)) {
             todo.push(sourceId)
             return
@@ -929,9 +940,12 @@ export const Graph = function (props: GraphProps) {
     if (!scope.nodeIds.length) {
       return
     }
-    const oldScopedNodes = scope.nodeIds.length > 1 ? scopedGraphData.nodes : []
+    const oldScopedNodes =
+      scope.nodeIds.length > 1
+        ? scopedGraphData.nodes.filter((n) => !scope.excludedNodeIds.includes(n.id as string))
+        : []
     const oldScopedNodeIds = oldScopedNodes.map((node) => node.id as string)
-    const neighbs = findNthNeighbors(scope.nodeIds, local.neighbors)
+    const neighbs = findNthNeighbors(scope.nodeIds, scope.excludedNodeIds, local.neighbors)
     const newScopedNodes = filteredGraphData.nodes
       .filter((node) => {
         if (oldScopedNodes.length) {
@@ -954,7 +968,10 @@ export const Graph = function (props: GraphProps) {
     const scopedNodes = [...oldScopedNodes, ...newScopedNodes]
     const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-    const oldScopedLinks = scope.nodeIds.length > 1 ? scopedGraphData.links : []
+    const oldRawScopedLinks = scope.nodeIds.length > 1 ? scopedGraphData.links : []
+    const oldScopedLinks = oldRawScopedLinks.filter((l) => {
+      !scope.excludedNodeIds.some((e) => normalizeLinkEnds(l).includes(e))
+    })
     const newScopedLinks = filteredGraphData.links
       .filter((link) => {
         // we need to cover both because force-graph modifies the original data
@@ -982,7 +999,7 @@ export const Graph = function (props: GraphProps) {
   }, [
     local.neighbors,
     filter,
-    scope,
+    JSON.stringify(scope),
     JSON.stringify(graphData),
     filteredGraphData.links,
     filteredGraphData.nodes,
