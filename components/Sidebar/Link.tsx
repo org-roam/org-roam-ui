@@ -46,6 +46,7 @@ export interface NodeLinkProps {
   children: any
   setSidebarHighlightedNode: any
   openContextMenu: any
+  id?: string
 }
 export interface NormalLinkProps {
   href: string
@@ -59,16 +60,25 @@ import { Scrollbars } from 'react-custom-scrollbars-2'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 export const NodeLink = (props: NodeLinkProps) => {
-  const { setSidebarHighlightedNode, setPreviewNode, nodeById, openContextMenu, href, children } =
-    props
+  const {
+    id,
+    setSidebarHighlightedNode,
+    setPreviewNode,
+    nodeById,
+    openContextMenu,
+    href,
+    children,
+  } = props
   const { highlightColor } = useContext(ThemeContext)
 
   const theme = useTheme()
   const coolHighlightColor = getThemeColor(highlightColor, theme)
-  const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
+  const type = href.replaceAll(/(.*?)\:?.*/g, '$1')
+  const uri = href.replaceAll(/.*?\:(.*)/g, '$1')
+  const ID = id ?? uri
   return (
     <Text
-      onMouseEnter={() => setSidebarHighlightedNode(nodeById[uri])}
+      onMouseEnter={() => setSidebarHighlightedNode(nodeById[ID])}
       onMouseLeave={() => setSidebarHighlightedNode({})}
       tabIndex={0}
       display="inline"
@@ -115,8 +125,8 @@ export const PreviewLink = (props: LinkProps) => {
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
   const [orgText, setOrgText] = useState<any>(null)
-  const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
   const [hover, setHover] = useState(false)
+  const type = href.replaceAll(/(.*?)\:.*/g, '$1')
 
   const getText = () => {
     fetch(`http://localhost:35901/file/${file}`)
@@ -147,10 +157,15 @@ export const PreviewLink = (props: LinkProps) => {
     }
     getText()
   }, [hover, orgText])
+  if (!type) {
+    return <Text color="gray.700">{children}</Text>
+  }
 
   if (type.replaceAll(/(http)?.*/g, '$1')) {
     return <NormalLink href={href}>{children}</NormalLink>
   }
+
+  const uri = href.replaceAll(/.*?\:(.*)/g, '$1')
   const getId = (type: string, uri: string) => {
     if (type === 'id') {
       return uri
@@ -211,6 +226,7 @@ export const PreviewLink = (props: LinkProps) => {
               <NodeLink
                 key={nodeById[id]?.title ?? id}
                 {...{
+                  id,
                   setSidebarHighlightedNode,
                   setPreviewNode,
                   nodeById,

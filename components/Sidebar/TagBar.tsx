@@ -18,12 +18,12 @@ export const TagBar = (props: TagBarProps) => {
   const { filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode } = props
 
   const node = previewNode as OrgRoamNode
-  if (!node.tags || node?.tags[0] === null) {
+  if (!node?.tags || node?.tags?.[0] === null) {
     return null
   }
   return (
     <Flex mb={2} flexWrap="wrap">
-      {node?.tags?.map((tag: string) => {
+      {node?.tags?.map?.((tag: string) => {
         const bl: string[] = filter.tagsBlacklist ?? []
         const wl: string[] = filter.tagsWhitelist ?? []
         const blackList: boolean = bl.includes(tag)
