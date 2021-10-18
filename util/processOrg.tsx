@@ -66,13 +66,14 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
               nodeById={nodeById}
               setPreviewNode={setPreviewNode}
               openContextMenu={openContextMenu}
+              outline={outline}
             >
               {children}
             </PreviewLink>
           )
         },
         img: ({ src }) => {
-          return <OrgImage src={src as string} file={previewNode.file} />
+          return <OrgImage src={src as string} file={previewNode?.file} />
         },
         section: ({ children, className }) => (
           <Section {...{ outline, className }}>{children}</Section>

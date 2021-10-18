@@ -3,65 +3,92 @@ import React, { JSXElementConstructor, ReactChild, ReactElement, ReactNode, useS
 import { BiCaretDownCircle, BiChevronDownCircle, BiCircle } from 'react-icons/bi'
 import { ComponentLike, ComponentPropsWithoutNode } from 'rehype-react'
 import { VscCircleFilled, VscCircleOutline } from 'react-icons/vsc'
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
 export interface SectionProps {
   children: any
   className: string
-  //outline: boolean
+  outline: boolean
 }
 
 export const Section = (props: SectionProps) => {
   const {
     children,
     className, // outline
+    outline,
   } = props
-  const outline = true
   const [open, setOpen] = useState(true)
   if (className === 'h0Wrapper headingWrapper') {
-    return <Box> {children}</Box>
+    return <Box className="preHeadingContent"> {children}</Box>
   }
   const kids = children as ReactChild[]
   return (
     <Box className={'sec'}>
-      <Box display="block" pt={2}>
-        <Flex alignItems="center">
-          {open ? (
-            <IconButton
-              // ml={-7}
-              _focus={{}}
-              aria-label="Expand heading"
-              mr={1}
-              size="xs"
-              variant="subtle"
-              icon={<VscCircleOutline />}
-              onClick={() => setOpen(!open)}
-            />
+      <Box display="block">
+        <Flex className="headingFlex" alignItems="baseline">
+          {open && kids.length > 0 ? (
+            <>
+              <IconButton
+                className="viewerHeadingButton"
+                _focus={{}}
+                _active={{}}
+                aria-label="Expand heading"
+                //mr={1}
+                size="xs"
+                variant="subtle"
+                icon={<ChevronDownIcon />}
+                onClick={() => setOpen(!open)}
+                height={2}
+                width={2}
+              />
+              <IconButton
+                className="outlineHeadingButton"
+                _focus={{}}
+                _active={{}}
+                aria-label="Expand heading"
+                //mr={1}
+                size="xs"
+                variant="subtle"
+                icon={<VscCircleOutline />}
+                onClick={() => setOpen(!open)}
+                height={2}
+                width={2}
+              />
+            </>
           ) : (
-            <IconButton
-              // ml={-7}
-              _focus={{}}
-              aria-label="Collapse heading"
-              mr={1}
-              size="xs"
-              variant="subtle"
-              icon={<VscCircleFilled />}
-              onClick={() => setOpen(!open)}
-            />
+            <>
+              <IconButton
+                className="viewerHeadingButton"
+                _active={{}}
+                _focus={{}}
+                aria-label="Collapse heading"
+                //mr={1}
+                height={2}
+                width={2}
+                size="xs"
+                variant="subtle"
+                icon={<ChevronUpIcon />}
+                onClick={() => setOpen(!open)}
+              />
+              <IconButton
+                className="outlineHeadingButton"
+                _active={{}}
+                _focus={{}}
+                aria-label="Collapse heading"
+                //mr={1}
+                height={2}
+                width={2}
+                size="xs"
+                variant="subtle"
+                icon={<VscCircleFilled />}
+                onClick={() => setOpen(!open)}
+              />
+            </>
           )}
           {kids[0]}
         </Flex>
       </Box>
-      {open && (
-        <>
-          {outline ? (
-            <Box pt={2} pl={4} ml={3} borderLeftWidth="1px" borderLeftColor="purple.500">
-              {kids.slice(1)}
-            </Box>
-          ) : (
-            kids.slice(1)
-          )}
-        </>
-      )}
+      {open && <Box className="sectionContent">{kids.slice(1)}</Box>}
     </Box>
   )
 }

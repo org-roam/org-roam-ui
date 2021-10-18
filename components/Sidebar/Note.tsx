@@ -5,7 +5,7 @@ import { NodeById, NodeByCite, LinksByNodeId } from '../../pages'
 import { Box, Flex } from '@chakra-ui/react'
 import { UniOrg } from '../../util/uniorg'
 import { Backlinks } from '../../components/Sidebar/Backlinks'
-import { noteStyle } from './noteStyle'
+import { defaultNoteStyle, viewerNoteStyle, outlineNoteStyle } from './noteStyle'
 
 export interface NoteProps {
   setPreviewNode: any
@@ -17,6 +17,7 @@ export interface NoteProps {
   justificationList: string[]
   linksByNodeId: LinksByNodeId
   openContextMenu: any
+  outline: boolean
 }
 
 export const Note = (props: NoteProps) => {
@@ -30,15 +31,17 @@ export const Note = (props: NoteProps) => {
     setSidebarHighlightedNode,
     linksByNodeId,
     openContextMenu,
+    outline,
   } = props
+  const extraStyle = outline ? outlineNoteStyle : viewerNoteStyle
   return (
     <Box
       pr={8}
       height="100%"
       className="org"
       sx={{
-        ...noteStyle,
-
+        ...defaultNoteStyle,
+        ...extraStyle,
         textAlign: justificationList[justification],
       }}
     >
@@ -52,6 +55,7 @@ export const Note = (props: NoteProps) => {
               nodeByCite,
               setSidebarHighlightedNode,
               openContextMenu,
+              outline,
             }}
           />
           <Backlinks
@@ -63,6 +67,7 @@ export const Note = (props: NoteProps) => {
               nodeByCite,
               setSidebarHighlightedNode,
               openContextMenu,
+              outline,
             }}
           />
         </Flex>

@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import React, { ReactElement, useContext, useEffect, useMemo, useState } from 'react'
 
+import { ProcessedOrg } from '../../util/processOrg'
 import unified from 'unified'
 //import createStream from 'unified-stream'
 import uniorgParse from 'uniorg-parse'
@@ -36,6 +37,8 @@ export interface LinkProps {
   nodeByCite: NodeByCite
   nodeById: NodeById
   openContextMenu: any
+  outline: boolean
+  noUnderline: boolean
 }
 
 export interface NodeLinkProps {
@@ -46,6 +49,7 @@ export interface NodeLinkProps {
   children: any
   setSidebarHighlightedNode: any
   openContextMenu: any
+  noUnderline: boolean
 }
 export interface NormalLinkProps {
   href: string
@@ -53,14 +57,22 @@ export interface NormalLinkProps {
 }
 
 import { hexToRGBA, getThemeColor } from '../../pages/index'
-import noteStyle from './noteStyle'
+import { defaultNoteStyle, viewerNoteStyle, outlineNoteStyle } from './noteStyle'
 import { OrgImage } from './OrgImage'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { Section } from './Section'
 
 export const NodeLink = (props: NodeLinkProps) => {
-  const { setSidebarHighlightedNode, setPreviewNode, nodeById, openContextMenu, href, children } =
-    props
+  const {
+    noUnderline,
+    setSidebarHighlightedNode,
+    setPreviewNode,
+    nodeById,
+    openContextMenu,
+    href,
+    children,
+  } = props
   const { highlightColor } = useContext(ThemeContext)
 
   const theme = useTheme()
@@ -75,7 +87,7 @@ export const NodeLink = (props: NodeLinkProps) => {
       overflow="hidden"
       fontWeight={500}
       color={highlightColor}
-      textDecoration="underline"
+      textDecoration={noUnderline ? undefined : 'underline'}
       onContextMenu={(e) => {
         e.preventDefault()
         openContextMenu(nodeById[uri], e)
@@ -111,6 +123,8 @@ export const PreviewLink = (props: LinkProps) => {
     setPreviewNode,
     nodeByCite,
     openContextMenu,
+    outline,
+    noUnderline,
   } = props
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
@@ -118,6 +132,7 @@ export const PreviewLink = (props: LinkProps) => {
   const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
   const [hover, setHover] = useState(false)
 
+  const extraNoteStyle = outline ? outlineNoteStyle : viewerNoteStyle
   const getText = () => {
     fetch(`http://localhost:35901/file/${file}`)
       .then((res) => {
@@ -125,8 +140,7 @@ export const PreviewLink = (props: LinkProps) => {
       })
       .then((res) => {
         if (res !== 'error') {
-          const text = processor.processSync(res).result
-          setOrgText(text)
+          setOrgText(res)
           return
         }
       })
@@ -172,32 +186,39 @@ export const PreviewLink = (props: LinkProps) => {
   const id = getId(type, uri)
   const file = encodeURIComponent(encodeURIComponent(nodeById[id]?.file as string))
 
-  const processor = unified()
-    .use(uniorgParse)
-    .use(uniorg2rehype)
-    .use(katex)
-    .use(rehype2react, {
-      createElement: React.createElement,
-      components: {
-        // eslint-disable-next-line react/display-name
-        a: ({ children, href }) => (
-          <PreviewLink
-            nodeByCite={nodeByCite}
-            setSidebarHighlightedNode={setSidebarHighlightedNode}
-            href={href}
-            nodeById={nodeById}
-            setPreviewNode={setPreviewNode}
-            openContextMenu={openContextMenu}
-          >
-            {children}
-          </PreviewLink>
-        ),
-        img: ({ src }) => {
-          return <OrgImage src={src as string} file={nodeById[id]?.file as string} />
-        },
-      },
-    })
-
+  /* const processor = unified()
+   *   .use(uniorgParse)
+   *   .use(uniorg2rehype)
+   *   .use(katex)
+   *   .use(rehype2react, {
+   *     createElement: React.createElement,
+   *     components: {
+   *       // eslint-disable-next-line react/display-name
+   *       a: ({ children, href }) => (
+   *         <PreviewLink
+   *           outline={outline}
+   *           nodeByCite={nodeByCite}
+   *           setSidebarHighlightedNode={setSidebarHighlightedNode}
+   *           href={href}
+   *           nodeById={nodeById}
+   *           setPreviewNode={setPreviewNode}
+   *           openContextMenu={openContextMenu}
+   *         >
+   *           {children}
+   *         </PreviewLink>
+   *       ),
+   *       img: ({ src }) => {
+   *         return <OrgImage src={src as string} file={nodeById[id]?.file as string} />
+   *       },
+   *       section: ({ children, className }) => (
+   *         <Section {...{ outline, className }}>{children}</Section>
+   *       ),
+   *       p: ({ children }) => {
+   *         return <p lang="en">{children}</p>
+   *       },
+   *     },
+   *   })
+   */
   if (id) {
     return (
       <>
@@ -218,6 +239,7 @@ export const PreviewLink = (props: LinkProps) => {
                   children,
                   nodeByCite,
                   openContextMenu,
+                  noUnderline,
                 }}
               />
             </Box>
@@ -265,10 +287,21 @@ export const PreviewLink = (props: LinkProps) => {
                     w="100%"
                     color="black"
                     px={3}
-                    sx={noteStyle}
+                    sx={{ ...defaultNoteStyle, extraNoteStyle }}
                     //overflowY="scroll"
                   >
-                    {orgText}
+                    <ProcessedOrg
+                      previewText={orgText}
+                      {...{
+                        nodeById,
+                        setSidebarHighlightedNode,
+                        setPreviewNode,
+                        nodeByCite,
+                        previewNode,
+                        openContextMenu,
+                        outline,
+                      }}
+                    />
                   </Box>
                 </Scrollbars>
               </PopoverBody>

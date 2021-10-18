@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Toolbar } from './Toolbar'
 import { TagBar } from './TagBar'
 import { Note } from './Note'
+import { Title } from './Title'
 
 import {
   Button,
@@ -91,7 +92,7 @@ const Sidebar = (props: SidebarProps) => {
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
-  const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode>()
+  const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode>(null)
   const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
 
   useEffect(() => {
@@ -103,7 +104,8 @@ const Sidebar = (props: SidebarProps) => {
     setPreviewRoamNode(previewNode as OrgRoamNode)
   }, [previewNode?.id])
 
-  const [justification, setJustification] = useState(1)
+  const [justification, setJustification] = usePersistantState('justification', 1)
+  const [outline, setOutline] = usePersistantState('outline', false)
   const justificationList = ['justify', 'start', 'end', 'center']
   const [font, setFont] = useState('sans serif')
   const [indent, setIndent] = useState(0)
@@ -147,11 +149,21 @@ const Sidebar = (props: SidebarProps) => {
             color="black"
             width="100%"
           >
-            <Flex flexShrink={0}>
-              <BiFile
-                onContextMenu={(e) => {
-                  e.preventDefault()
-                  openContextMenu(previewNode, e)
+            <Flex pt={1} flexShrink={0}>
+              <Toolbar
+                {...{
+                  setJustification,
+                  setIndent,
+                  setFont,
+                  justification,
+                  setPreviewNode,
+                  canUndo,
+                  canRedo,
+                  resetPreviewNode,
+                  previousPreviewNode,
+                  nextPreviewNode,
+                  outline,
+                  setOutline,
                 }}
               />
             </Flex>
@@ -163,20 +175,7 @@ const Sidebar = (props: SidebarProps) => {
                 e.preventDefault()
                 openContextMenu(previewNode, e)
               }}
-            >
-              <Heading
-                pl={2}
-                whiteSpace="nowrap"
-                textOverflow="ellipsis"
-                overflow="hidden"
-                lineHeight={1}
-                size="sm"
-                fontWeight={600}
-                color={'gray.800'}
-              >
-                {previewRoamNode?.title}
-              </Heading>
-            </Flex>
+            ></Flex>
             <Flex flexDir="row" ml="auto">
               <IconButton
                 // eslint-disable-next-line react/jsx-no-undef
@@ -195,20 +194,6 @@ const Sidebar = (props: SidebarProps) => {
               />
             </Flex>
           </Flex>
-          <Toolbar
-            {...{
-              setJustification,
-              setIndent,
-              setFont,
-              justification,
-              setPreviewNode,
-              canUndo,
-              canRedo,
-              resetPreviewNode,
-              previousPreviewNode,
-              nextPreviewNode,
-            }}
-          />
           <Scrollbars
             //autoHeight
             //autoHeightMax={600}
@@ -230,8 +215,9 @@ const Sidebar = (props: SidebarProps) => {
               // overflowY="scroll"
               alignItems="left"
               bg="alt.100"
-              paddingLeft={4}
+              paddingLeft={10}
             >
+              <Title previewNode={previewRoamNode} />
               <TagBar
                 {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
               />
@@ -246,6 +232,8 @@ const Sidebar = (props: SidebarProps) => {
                   justificationList,
                   linksByNodeId,
                   openContextMenu,
+                  outline,
+                  setOutline,
                 }}
               />
             </VStack>

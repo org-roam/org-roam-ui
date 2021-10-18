@@ -1,21 +1,63 @@
-export const noteStyle = {
-  '.katex': { overflowX: 'scroll' },
-  h1: { color: 'black', lineHeight: '1.2', fontSize: '20', fontWeight: 'bold' },
+export const viewerNoteStyle = {
+  '.headingFlex': {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+  },
+  '.outlineHeadingButton': {
+    display: 'none',
+  },
+  h1: { color: 'black', lineHeight: '1.2', fontSize: '16', fontWeight: 'bold', paddingTop: 2 },
   h2: {
-    fontSize: '18',
+    fontSize: '14',
     color: 'black',
+    fontWeight: 'bold',
+    paddingTop: 2,
   },
   h3: {
-    fontSize: '16',
-    fontWeight: '600 !important',
+    fontSize: '13',
+    fontWeight: 'bold',
     color: 'black',
+    paddingTop: 2,
   },
   h4: {
-    fontSize: '14',
-    fontWeight: '500 !important',
+    fontSize: '12',
+    fontWeight: 'bold',
     fontStyle: 'italic',
     color: 'black',
+    paddingTop: 2,
   },
+
+  '.sectionContent': {
+    paddingTop: 2,
+  },
+}
+
+export const outlineNoteStyle = {
+  '.headingFlex': {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  '.viewerHeadingButton': {
+    display: 'none',
+  },
+  '.sectionContent': {
+    paddingTop: 2,
+    paddingLeft: 4,
+    ml: '11px',
+    borderLeftWidth: '1px',
+    borderLeftColor: 'gray.300',
+  },
+  '.preHeadingContent': {
+    //paddingTop: 2,
+    //paddingLeft: 4,
+    // ml: 3,
+    //borderLeftWidth: '1px',
+    //borderLeftColor: 'gray.600',
+  },
+}
+
+export const defaultNoteStyle = {
+  '.katex': { overflowX: 'scroll' },
   ol: {
     paddingLeft: '5',
   },
@@ -132,4 +174,3 @@ export const noteStyle = {
   '.figure': { padding: '1em' },
   '.figure p': { textAlign: 'center' },
 }
-export default noteStyle

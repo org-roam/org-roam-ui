@@ -15,10 +15,12 @@ export interface BacklinksProps {
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: OrgRoamNode
   openContextMenu: any
+  outline: boolean
 }
 
 import { PreviewLink } from './Link'
 import { OrgRoamNode } from '../../api'
+import { Section } from './Section'
 
 export const Backlinks = (props: BacklinksProps) => {
   const {
@@ -29,6 +31,7 @@ export const Backlinks = (props: BacklinksProps) => {
     linksByNodeId,
     nodeByCite,
     openContextMenu,
+    outline,
   } = props
   const links = linksByNodeId[previewNode?.id] ?? []
 
@@ -40,8 +43,8 @@ export const Backlinks = (props: BacklinksProps) => {
     .map((l) => l.source)
 
   return (
-    <Box>
-      <Heading pt={4}>{`Backlinks (${backLinks.length})`}</Heading>
+    <Box className="backlinks" borderRadius="sm" mt={6} p={4} bg="white" mb={10}>
+      <p style={{ fontSize: 16, fontWeight: 600 }}>{`Linked references (${backLinks.length})`}</p>
       <VStack
         py={2}
         spacing={3}
@@ -54,14 +57,17 @@ export const Backlinks = (props: BacklinksProps) => {
           backLinks.map((link) => {
             const title = nodeById[link as string]?.title ?? ''
             return (
-              <Box overflow="hidden" p={3} bg="gray.300" width="100%" key={link}>
+              <Box overflow="hidden" py={2} borderRadius="sm" width="100%" key={link}>
                 <PreviewLink
                   nodeByCite={nodeByCite}
                   setSidebarHighlightedNode={setSidebarHighlightedNode}
                   href={`id:${link as string}`}
                   nodeById={nodeById}
+                  previewNode={previewNode}
                   setPreviewNode={setPreviewNode}
                   openContextMenu={openContextMenu}
+                  outline={outline}
+                  noUnderline
                 >
                   {nodeById[link as string]?.title}
                 </PreviewLink>
