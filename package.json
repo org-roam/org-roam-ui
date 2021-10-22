@@ -21,6 +21,7 @@
     "@lilib/hooks": "^0.1.1",
     "@react-hook/window-size": "^3.0.7",
     "@types/color": "^3.0.2",
+    "@types/jest": "^27.0.2",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "chakra-ui-autocomplete": "^1.4.2",
     "d3-force-3d": "^3.0.2",
@@ -29,6 +30,7 @@
     "es6-tween": "^5.5.11",
     "framer-motion": "^4",
     "hastscript": "^6.0.0",
+    "jest": "^27.3.1",
     "next": "^11.1.0",
     "orgast-util-to-string": "^0.3.1",
     "orgast-util-visit-ids": "^0.3.1",
@@ -50,6 +52,7 @@
     "three-spritetext": "^1.6.2",
     "through": "^2.3.8",
     "to-vfile": "^6.1.0",
+    "ts-jest": "^27.0.7",
     "unified": "^9.2.2",
     "uniorg": "^0.4.0",
     "uniorg-attach": "^0.4.2",
@@ -57,8 +60,8 @@
     "uniorg-parse": "^0.4.0",
     "uniorg-rehype": "^0.4.0",
     "uniorg-slug": "^0.4.0",
-    "unist-util-is": "^4.0.0",
     "unist-util-find-after": "^3.0.0",
+    "unist-util-is": "^4.0.0",
     "use-constant": "^1.1.0",
     "use-undo": "^1.0.5",
     "vfile": "^4.2.1",
@@ -67,38 +70,12 @@
   },
   "devDependencies": {
     "@types/d3-interpolate": "^3.0.1",
-    "@types/jest": "^27.0.2",
     "@types/react": "17.0.14",
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1",
-    "jest": "^27.3.1",
     "next-compose-plugins": "^2.2.1",
     "next-transpile-modules": "^8.0.0",
     "prettier": "^2.3.2",
-    "ts-jest": "^27.0.7",
     "typescript": "4.3.5"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
-    },
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "testMatch": [
-      "**/*.test.(ts|tsx)"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.ts"
-    ],
-    "testPathIgnorePatterns": [
-      "./.next/",
-      "./node_modules/"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.jest.json"
-      }
-    }
   }
 }

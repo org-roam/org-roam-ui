@@ -3,56 +3,97 @@ import { OrgRoamNode } from '../api'
 import { NodeObject } from 'force-graph'
 
 export type Props = { [prop: string]: string }
-export interface Query {
+export type Queries = { [query: string]: Query }
+export type Query = {
   list: string
   tags: string[]
   titles: string[]
   files: string[]
   dirs: string[]
-  props: Props
+  props: { [prop: string]: string }
   mtimes: string[]
   ctimes: string[]
   todos: string[]
-  queries: Query[]
+  queries: { [query: string]: Query }
 }
 
 const keywordList = ['title', 'tag', 'file', 'dir', 'prop', 'mtime', 'ctime', 'todo', 'query']
 
 const getKeyWords = (query: string, keyword: string) => {
   const its = query.matchAll(new RegExp(`${keyword}:\\(([^\)]*?)\\)`, 'g'))
-  const spread = [...its]
+  const spread = Array.from(its)
   return spread.length ? spread.map((key) => key[1]) : []
 }
 
-export function parseQuery(query: string, queries: Query[]): Query {
-  return keywordList.reduce<Query>((acc, key) => {
-    if (key === 'query') {
-      acc['queries'] = getKeyWords(query, 'query').map((q) => queries[q])
-      return
-    }
-    acc[`${key}s`] = getKeyWords(query, key)
-    return
-  })
+export const emptyQuery: Query = {
+  list: 'color',
+  titles: [],
+  files: [],
+  tags: [],
+  dirs: [],
+  queries: {},
+  ctimes: [],
+  mtimes: [],
+  props: {},
+  todos: [],
 }
 
-export function filterNodeByQuery(node: OrgRoamNode, query: Query) {
-  return keywordList.some((keyword) => {
+// export function parseProps(queryString: string) {
+//   return {
+//     props: Object.fromEntries(
+//       getKeyWords(queryString, 'prop').map((p) => {
+//         const match = p.matchAll(/([^:]*?:(.*?)/g)
+//         const arr = Array.from(match)
+//         if (!arr?.length) return
+
+//         if (!(arr[0].length > 2)) return
+//         const [string, key, val] = arr[0]
+//         return [key, val]
+//       }),
+//     ),
+//   }
+// }
+export function parseQuery(queryString: string, queries: Queries) {
+  return Object.keys(emptyQuery).reduce<Query>((acc, key) => {
+    switch (key) {
+      case 'queries':
+        acc[key] = Object.fromEntries(getKeyWords(queryString, 'query').map((q) => [q, queries[q]]))
+        return acc
+      case 'list':
+        return { ...acc, list: 'color' }
+      case 'props':
+        return { ...acc, props: {} }
+      default:
+        return { ...acc, [key]: getKeyWords(queryString, key.slice(0, -1)) }
+    }
+  }, emptyQuery)
+}
+
+export function filterNodeByQuery(node: OrgRoamNode, query: Query): boolean {
+  const list = query.list
+  return Object.entries(query).some((entry) => {
+    const [keyword, value] = entry
     switch (keyword) {
-      case 'query':
-        return query.queries?.some((q) => filterNodeByQuery(node, q))
-      case 'dir':
+      case 'titles':
+        return node.title === value
+      case 'files':
+        return node.file === value
+      case 'queries':
+        return Object.values(query.queries)?.some((q: Query) => filterNodeByQuery(node, q))
+      case 'dirs':
         return query.dirs?.some((dir) => path.dirname(node.file)?.includes(dir))
-      case 'tag':
+      case 'tags':
         return node.tags?.some((tag) => query?.tags?.includes(tag))
       case 'props':
         return Object.keys(query.props)?.some(
           (prop) => node.properties?.[prop] === query.props?.[prop],
         )
-      case 'mtime':
-      case 'ctime':
-        return node.properties?.[keyword] === query[keyword]
+      case 'mtimes':
+        return node.properties?.mtime === value
+      case 'ctimes':
+        return node.properties?.[keyword] === value
       default:
-        return node[keyword] === query[keyword]
+        return !list
     }
   })
 }
