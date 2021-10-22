@@ -3,9 +3,8 @@ import { OrgRoamNode } from '../api'
 import { NodeObject } from 'force-graph'
 
 export type Props = { [prop: string]: string[] }
-export type Queries = { [query: string]: Query }
+export type Queries = { [name: string]: { mode: string; query: Query } }
 export interface Query {
-  list?: string
   tags: string[]
   titles: string[]
   files: string[]
@@ -27,7 +26,6 @@ const getKeyWords = (query: string, keyword: string) => {
 }
 
 export const emptyQuery: Query = {
-  list: 'color',
   titles: [],
   files: [],
   tags: [],
@@ -83,7 +81,7 @@ export function parseSubQuery(queryString: string, acc: Query, queries: Queries)
   const subQueryKeywords = getKeyWords(queryString, 'query')
   if (subQueryKeywords.length === 0) return
   const queryObj = subQueryKeywords.reduce<Query>((reduce, queryName: string) => {
-    return mergeQueries(reduce, queries[queryName])
+    return mergeQueries(reduce, queries[queryName]?.query)
   }, acc)
   return queryObj
 }
@@ -92,8 +90,6 @@ export function parseQuery(queryString: string, queries: Queries) {
     switch (key) {
       case 'queries':
         return parseSubQuery(queryString, acc, queries) ?? acc
-      case 'list':
-        return { ...acc, list: 'color' }
       case 'props':
         return { ...acc, props: {} }
       default:
@@ -101,45 +97,65 @@ export function parseQuery(queryString: string, queries: Queries) {
     }
   }, emptyQuery)
 }
-
-export function filterNodeByQuery(node: OrgRoamNode, query: Query): boolean {
-  const list = query.list
-  return Object.entries(query).some((entry) => {
-    const [keyword, value] = entry
-    switch (keyword) {
-      case 'titles':
-        return node.title === value
-      case 'files':
-        return node.file === value
-      case 'dirs':
-        return query.dirs?.some((dir) => path.dirname(node.file)?.includes(dir))
-      case 'tags':
-        return node.tags?.some((tag) => query?.tags?.includes(tag))
-      case 'props':
-        return (
-          Object.entries(query?.['props']!)?.some((prop) => {
-            const [key, val] = prop
-            return val.some((v) => node.properties?.[key] === v)
-          }) ?? !list
-        )
-      case 'mtimes':
-        return node.properties?.mtime === value
-      case 'ctimes':
-        return node.properties?.ctime === value
-      default:
-        return !list
-    }
-  })
+export function filterPropIncludes(nodeProp: string[], queryProp: string[]) {
+  return queryProp.some((p: string) => nodeProp.some((pr) => pr.includes(p)))
 }
 
-export function filterNodesByQuery(nodes: NodeObject[], query: Query) {
-  if (query.list === 'color') {
+export function filterPropEqualsOne(nodeProp: string[], queryProp: string[]) {
+  return queryProp.some((p: string) => nodeProp.includes(p))
+}
+
+export function filterNodeByQuery(node: OrgRoamNode, query: Query, list: boolean): boolean {
+  return (
+    !list ===
+    Object.entries(query).some((entry) => {
+      const [keyword, value] = entry
+      if (keyword !== 'props' && value.length === 0) {
+        return false
+      }
+      switch (keyword) {
+        case 'titles':
+          return filterPropIncludes([node.title], value)
+        case 'files':
+          return filterPropIncludes([node.file], value)
+        case 'dirs':
+          return value.some((dir: string) => path.dirname(node.file)?.includes(dir))
+        case 'tags':
+          return filterPropEqualsOne(node.tags, value)
+          return node.tags?.some((tag) => query?.tags?.includes(tag))
+        case 'props':
+          return (
+            Object.entries(query?.['props']!)?.some((prop) => {
+              const [key, val] = prop
+              return val.some((v) => node.properties?.[key] === v)
+            }) ?? false
+          )
+        case 'mtimes':
+          return node.properties?.mtime === value
+        case 'ctimes':
+          return node.properties?.ctime === value
+        default:
+          return false
+      }
+    })
+  )
+}
+
+export function filterNodesByQuery(nodes: NodeObject[], query: Query, mode: string) {
+  if (mode === 'color') {
     return nodes
   }
-  const list = query.list === 'white' ? true : false
+  const list = mode === 'white' ? true : false
 
   return nodes.filter((nodeArg) => {
     const node = nodeArg as OrgRoamNode
-    return filterNodeByQuery(node, query) === list
+    return filterNodeByQuery(node, query, list) === list
   })
+}
+
+export function filterNodes(nodes: NodeObject[], queries: Queries): NodeObject[] {
+  return Object.entries(queries).reduce<NodeObject[]>((acc, entry) => {
+    const [name, { query, mode }] = entry
+    return filterNodesByQuery(acc, query, mode)
+  }, nodes)
 }
