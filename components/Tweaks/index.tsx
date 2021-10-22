@@ -10,9 +10,10 @@ import {
   IconButton,
   Tooltip,
   Heading,
+  Input,
 } from '@chakra-ui/react'
 
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 import {
   initialPhysics,
@@ -31,6 +32,7 @@ import { usePersistantState } from '../../util/persistant-state'
 import { PhysicsPanel } from './PhysicsPanel'
 import { VisualsPanel } from './VisualsPanel'
 import { BehaviorPanel } from './BehaviorPanel'
+import { parseQuery, Queries } from '../../util/parseQuery'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -48,6 +50,8 @@ export interface TweakProps {
   tags: string[]
   tagColors: TagColors
   setTagColors: any
+  queries: Queries
+  setQueries: any
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -67,9 +71,12 @@ export const Tweaks = (props: TweakProps) => {
     tags,
     tagColors,
     setTagColors,
+    queries,
+    setQueries,
   } = props
 
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
+  const [q, setQ] = useState('')
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
 
   return !showTweaks ? (
@@ -208,6 +215,24 @@ export const Tweaks = (props: TweakProps) => {
                 setBehavior={setBehavior}
                 mouse={mouse}
                 setMouse={setMouse}
+              />
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <AccordionIcon marginRight={2} />
+              <Heading size="sm">Queries</Heading>
+            </AccordionButton>
+            <AccordionPanel>
+              <Input
+                value={q}
+                onChange={(event) => {
+                  const text = event.target.value
+                  setQ(text)
+                  console.log(parseQuery(text, {}))
+                  console.log(queries)
+                  setQueries({ first: { query: parseQuery(text, {}), mode: 'black' } })
+                }}
               />
             </AccordionPanel>
           </AccordionItem>

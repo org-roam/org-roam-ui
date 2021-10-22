@@ -48,6 +48,7 @@ import {
 import { ContextMenu } from '../components/contextmenu'
 import Sidebar from '../components/Sidebar'
 import { Tweaks } from '../components/Tweaks'
+import { filterNodes, Queries } from '../util/parseQuery'
 import { usePersistantState } from '../util/persistant-state'
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import { openNodeInEmacs } from '../util/webSocketFunctions'
@@ -105,6 +106,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
+  const [queries, setQueries] = usePersistantState<Queries>('queries', {})
   const [
     previewNodeState,
     {
@@ -542,6 +544,8 @@ export function GraphPage() {
           setBehavior,
           tagColors,
           setTagColors,
+          queries,
+          setQueries,
         }}
         tags={tagsRef.current}
       />
@@ -575,6 +579,7 @@ export function GraphPage() {
             setMainWindowWidth,
             setContextMenuTarget,
             graphRef,
+            queries,
           }}
         />
       </Box>
@@ -697,6 +702,7 @@ export interface GraphProps {
   setMainWindowWidth: any
   variables: { [variable: string]: string }
   graphRef: any
+  queries: Queries
 }
 
 export const Graph = function (props: GraphProps) {
@@ -725,6 +731,7 @@ export const Graph = function (props: GraphProps) {
     contextMenu,
     handleLocal,
     variables,
+    queries,
   } = props
 
   const { dailyDir, roamDir } = variables
@@ -798,7 +805,8 @@ export const Graph = function (props: GraphProps) {
   const hiddenNodeIdsRef = useRef<NodeById>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
-    const filteredNodes = graphData?.nodes
+    const queriesNodes = filterNodes(graphData?.nodes, queries)
+    const filteredNodes = queriesNodes
       ?.filter((nodeArg) => {
         const node = nodeArg as OrgRoamNode
         if (
@@ -882,7 +890,7 @@ export const Graph = function (props: GraphProps) {
     }, {})
 
     return { nodes: filteredNodes, links: filteredLinks }
-  }, [filter, graphData])
+  }, [filter, graphData, queries])
 
   const [scopedGraphData, setScopedGraphData] = useState<GraphData>({ nodes: [], links: [] })
 
