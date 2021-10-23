@@ -3,7 +3,6 @@ import {
   parseQuery,
   Query,
   emptyQuery,
-  mergeQueries,
   filterNodesByQuery,
   filterNodes,
   filterNodeByQuery,
@@ -14,99 +13,108 @@ import {
 import { createTestNode, testNode } from './queryTestData'
 
 describe('query parsing', () => {
+  it('parses linearly', () => {
+    expect(parseQuery('title:(tag taggy) tags', {})).toEqual([
+      { keyword: 'title', value: ['tag taggy'] },
+      { keyword: 'title', value: ['tags'] },
+    ])
+  })
   describe('parsing function', () => {
     it('parses empty', () => {
-      expect(parseQuery('', {})).toEqual(emptyQuery)
+      expect(parseQuery('', {})).toEqual([])
     })
-    it('parses titles', () => {
-      expect(parseQuery('title:(title) title:(nother title)', {})).toEqual({
-        ...emptyQuery,
-        titles: ['title', 'nother title'],
-      })
+    it('parses title', () => {
+      expect(parseQuery('title:(title) title:(nother title)', {})).toEqual([
+        { keyword: 'title', value: ['title'] },
+        { keyword: 'title', value: ['nother title'] },
+      ])
     })
-    it('parses no syntax as titles', () => {
-      expect(parseQuery('title', {})).toEqual({
-        ...emptyQuery,
-        titles: ['title'],
-      })
+    it('parses no syntax as title', () => {
+      expect(parseQuery('title', {})).toEqual([{ keyword: 'title', value: ['title'] }])
     })
     it('parses tags', () => {
-      expect(parseQuery('tag:(tag) tag:(nother tag)', {})).toEqual({
-        ...emptyQuery,
-        tags: ['tag', 'nother tag'],
-      })
+      expect(parseQuery('tag:(tag) tag:(nother tag)', {})).toEqual([
+        { keyword: 'tag', value: ['tag'] },
+        { keyword: 'tag', value: ['nother tag'] },
+      ])
     })
     it('parses filenames', () => {
-      expect(parseQuery('file:(file) file:(nother file)', {})).toEqual({
-        ...emptyQuery,
-        files: ['file', 'nother file'],
-      })
+      expect(parseQuery('file:(file) file:(nother file)', {})).toEqual([
+        { keyword: 'file', value: ['file'] },
+        { keyword: 'file', value: ['nother file'] },
+      ])
     })
     it('parses times', () => {
-      expect(parseQuery('mtime:(2222) ctime:(43525)', {})).toEqual({
-        ...emptyQuery,
-        mtimes: ['2222'],
-        ctimes: ['43525'],
-      })
+      expect(parseQuery('mtime:(2222) ctime:(43525)', {})).toEqual([
+        { keyword: 'mtime', value: ['2222'] },
+        { keyword: 'ctime', value: ['43525'] },
+      ])
     })
     it('parses dir', () => {
-      expect(parseQuery('dir:(dailies) dir:(journal)', {})).toEqual({
-        ...emptyQuery,
-        dirs: ['dailies', 'journal'],
-      })
+      expect(parseQuery('dir:(dailies) dir:(journal)', {})).toEqual([
+        { keyword: 'dir', value: ['dailies'] },
+        { keyword: 'dir', value: ['journal'] },
+      ])
     })
     it('parses queries', () => {
       expect(
         parseQuery('query:(test)', {
-          test: { mode: 'white', query: { ...emptyQuery, titles: ['testtitle'] } },
+          test: { mode: 'black', query: [{ keyword: 'title', value: ['testtitle'] }] },
         }),
-      ).toEqual({
-        ...emptyQuery,
-        titles: ['testtitle'],
-      })
+      ).toEqual([{ keyword: 'title', value: ['testtitle'] }])
     })
-  })
-
-  describe('query merger', () => {
-    it('merges empty queries', () =>
-      expect(mergeQueries(emptyQuery, emptyQuery)).toEqual(emptyQuery))
-    it('concats arrays', () => {
+    it('parses everything', () => {
       expect(
-        mergeQueries({ ...emptyQuery, titles: ['jam'] }, { ...emptyQuery, titles: ['jelly'] }),
-      ).toEqual({ ...emptyQuery, titles: ['jam', 'jelly'] })
-    })
-    it('creates unique keys', () => {
-      expect(
-        mergeQueries(
-          { ...emptyQuery, ctimes: ['000', '111'] },
-          { ...emptyQuery, ctimes: ['000', '111'] },
-        ),
-      ).toEqual({ ...emptyQuery, ctimes: ['000', '111'] })
-    })
-    it('merges properties', () => {
-      expect(
-        mergeQueries(
+        parseQuery(
+          'empty title:(title) title:(nother title) tag:(tag) tag:(nother tag) file:(file) file:(nother file) query:(test) mtime:(2222) ctime:(43525) dir:(dailies) dir:(journal)',
           {
-            ...emptyQuery,
-            props: { fileless: ['true'], address: ['Geert van der Zwaagweg 33'] },
-          },
-          {
-            ...emptyQuery,
-            props: {
-              fileless: ['false'],
-              address: ['Parkweg 143b'],
+            test: {
+              mode: 'white',
+              query: [
+                { keyword: 'title', value: ['testtitle'] },
+                { keyword: 'ctime', value: ['33'] },
+              ],
             },
           },
         ),
-      ).toEqual({
-        ...emptyQuery,
-        props: {
-          fileless: ['true', 'false'],
-          address: ['Geert van der Zwaagweg 33', 'Parkweg 143b'],
-        },
-      })
+      ).toEqual([
+        { keyword: 'title', value: ['empty'] },
+        { keyword: 'title', value: ['title'] },
+        { keyword: 'title', value: ['nother title'] },
+        { keyword: 'tag', value: ['tag'] },
+        { keyword: 'tag', value: ['nother tag'] },
+        { keyword: 'file', value: ['file'] },
+        { keyword: 'file', value: ['nother file'] },
+        { keyword: 'title', value: ['testtitle'] },
+        { keyword: 'ctime', value: ['33'] },
+        { keyword: 'mtime', value: ['2222'] },
+        { keyword: 'ctime', value: ['43525'] },
+        { keyword: 'dir', value: ['dailies'] },
+        { keyword: 'dir', value: ['journal'] },
+      ])
     })
   })
+
+  // describe('query merger', () => {
+  //   it('merges empty queries', () =>
+  //     expect(mergeQueries(emptyQuery, emptyQuery)).toEqual(emptyQuery))
+  //   it('concats arrays', () => {
+  //     expect(
+  //       mergeQueries(['props', { fileless: ['true']] address: ['Geert van der Zwaagweg 33'] },
+  //         },
+  //         ['props', {
+  //             fileless: ['false']]
+  //             address: ['Parkweg 143b'],
+  //           },
+  //         },
+  //       ),
+  //     ).toEqual(['props', {
+  //         fileless: ['true', 'false']]
+  //         address: ['Geert van der Zwaagweg 33', 'Parkweg 143b'],
+  //       },
+  //     })
+  //   })
+  // })
 
   describe('filtering function', () => {
     describe('big filter', () => {
@@ -115,7 +123,7 @@ describe('query parsing', () => {
         const query = parseQuery('', {})
         expect(filterNodesByQuery([], query, mode)).toEqual([])
       })
-      it('filters titles', () => {
+      it('filters title', () => {
         const testnodes = [
           createTestNode({ title: 'Ik ben gerard' }),
           createTestNode({ title: 'Ik heet gerard' }),
@@ -130,7 +138,7 @@ describe('query parsing', () => {
           createTestNode({ title: 'Ik ben erard' }),
         ]
         const query = parseQuery('title:(G)', {})
-        expect(filterNodesByQuery([titlenode], query, mode)).toEqual([titlenode[2]])
+        expect(filterNodesByQuery(titlenode, query, mode)).toEqual([titlenode[2]])
       })
       it('can do regex', () => {
         const testnodes = [
@@ -138,24 +146,22 @@ describe('query parsing', () => {
           createTestNode({ title: 'Ik ben gerard 300' }),
           createTestNode({ title: 'Ik ben gerard vierhonderd' }),
         ]
-        const query = parseQuery('title:(/d/)', {})
+        const query = parseQuery('title:(/\\d/)', {})
         expect(filterNodesByQuery(testnodes, query, mode)).toEqual([testnodes[2]])
       })
     })
     describe('individual filters', () => {
       const list = false
-      describe('titles', () => {
-        it('filters titles', () => {
+      describe('title', () => {
+        it('filters title', () => {
           expect(filterPropIncludes(['Ik ben gerard'], ['ben'])).toBe(true)
           expect(filterPropIncludes(['Ik heet gerard'], ['ben'])).toBe(false)
         })
         it('filters nodes with title', () => {
           const test = createTestNode({ title: 'Ik ben gerard' })
           const query = parseQuery('title:(gerard)', {})
-          expect(query).toEqual({ ...emptyQuery, titles: ['gerard'] })
-          expect(filterNodeByQuery(test, query, list)).toEqual(!list)
-          const q = parseQuery('title:(pieter)', {})
-          expect(filterNodeByQuery(test, q, list)).toEqual(list)
+          expect(query).toEqual([{ keyword: 'title', value: ['gerard'] }])
+          expect(filterNodeByQuery(test, query, list)).toEqual(list)
         })
       })
       describe('tags', () => {
@@ -169,7 +175,7 @@ describe('query parsing', () => {
             createTestNode({ tags: ['tag10', 'tag9'] }),
           ]
           const query = parseQuery('tag:(tag1)', {})
-          expect(query).toEqual({ ...emptyQuery, tags: ['tag1'] })
+          expect(query).toEqual([{ keyword: 'tag', value: ['tag1'] }])
           expect(filterNodesByQuery(testnodes, query, 'black')).toEqual([testnodes[1]])
           const q = parseQuery('tag:(tag3) tag:(tag5)', {})
           expect(filterNodesByQuery(testnodes, q, 'black')).toEqual(testnodes)

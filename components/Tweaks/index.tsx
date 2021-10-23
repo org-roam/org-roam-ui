@@ -32,7 +32,9 @@ import { usePersistantState } from '../../util/persistant-state'
 import { PhysicsPanel } from './PhysicsPanel'
 import { VisualsPanel } from './VisualsPanel'
 import { BehaviorPanel } from './BehaviorPanel'
-import { parseQuery, Queries } from '../../util/parseQuery'
+import { LinQuery, parseQuery, Queries, Query } from '../../util/parseQuery'
+import { useRef } from 'react'
+import { QueriesPanel } from './QueriesPanel'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -76,7 +78,6 @@ export const Tweaks = (props: TweakProps) => {
   } = props
 
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
-  const [q, setQ] = useState('')
   const { highlightColor, setHighlightColor } = useContext(ThemeContext)
 
   return !showTweaks ? (
@@ -224,16 +225,7 @@ export const Tweaks = (props: TweakProps) => {
               <Heading size="sm">Queries</Heading>
             </AccordionButton>
             <AccordionPanel>
-              <Input
-                value={q}
-                onChange={(event) => {
-                  const text = event.target.value
-                  setQ(text)
-                  console.log(parseQuery(text, {}))
-                  console.log(queries)
-                  setQueries({ first: { query: parseQuery(text, {}), mode: 'black' } })
-                }}
-              />
+              <QueriesPanel {...{ queries, setQueries }} />
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
