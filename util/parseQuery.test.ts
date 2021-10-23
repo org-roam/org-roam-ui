@@ -24,6 +24,12 @@ describe('query parsing', () => {
         titles: ['title', 'nother title'],
       })
     })
+    it('parses no syntax as titles', () => {
+      expect(parseQuery('title', {})).toEqual({
+        ...emptyQuery,
+        titles: ['title'],
+      })
+    })
     it('parses tags', () => {
       expect(parseQuery('tag:(tag) tag:(nother tag)', {})).toEqual({
         ...emptyQuery,
