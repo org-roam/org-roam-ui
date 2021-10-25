@@ -3,7 +3,7 @@ import { OrgRoamNode } from '../api'
 import { NodeObject } from 'force-graph'
 
 export type Props = { [prop: string]: string[] }
-export type Queries = { [name: string]: { mode: string; query: Query } }
+export type Queries = { [name: string]: { mode: string; query: Query; color: string } }
 export interface Query {
   tags: string[]
   titles: string[]
@@ -116,13 +116,16 @@ export function parseQuery(queryString: string, queries: LinQueries) {
   )
   const linq = matches.reduce<LinQuery>((acc, q) => {
     if (!q[2]) {
-      return [...acc, { keyword: 'title', value: q[1].split(',') }]
+      return [...acc, { keyword: 'title', value: q[1].split(',').map((s) => s.trim()) }]
     }
     if (q[2] === 'query') {
-      console.log(queries[q[3]])
-      return [...acc, ...queries[q[3]].query]
+      if (queries[q[3]]) {
+        console.log(q[3])
+        return [...acc, ...queries[q[3]].query]
+      }
+      return acc
     }
-    return [...acc, { keyword: q[2], value: q[3].split(',') }]
+    return [...acc, { keyword: q[2], value: q[3].split(',').map((s) => s.trim()) }]
   }, [])
 
   return linq
@@ -157,42 +160,39 @@ export function filterPropEqualsOne(nodeProp: string[], queryProp: string[]) {
   return queryProp.some((p) => nodeProp.includes(p))
 }
 
-export function filterNodeByQuery(node: OrgRoamNode, query: LinQuery, list: boolean): boolean {
-  return (
-    !list ===
-    query?.some?.((entry) => {
-      const { keyword, value } = entry
-      if (keyword !== 'prop' && value?.length === 0) {
+export function filterNodeByQuery(node: OrgRoamNode, query: LinQuery): boolean {
+  return query?.some?.((entry) => {
+    const { keyword, value } = entry
+    if (keyword !== 'prop' && value?.length === 0) {
+      return false
+    }
+    if (typeof value === 'string') return false
+    switch (keyword) {
+      case 'title':
+        return filterPropIncludes([node.title], value)
+      case 'file':
+        return filterPropIncludes([node.file], value)
+      case 'dir':
+        return value.some((v) => path.dirname(node.file)?.match(v)?.length)
+      case 'tag':
+        return filterPropEqualsOne(node.tags, value)
+      //return node.tags?.some((tag) => query?.tags?.includes(tag))
+      case 'prop':
         return false
-      }
-      if (typeof value === 'string') return false
-      switch (keyword) {
-        case 'title':
-          return filterPropIncludes([node.title], value)
-        case 'file':
-          return filterPropIncludes([node.file], value)
-        case 'dir':
-          return value.some((v) => path.dirname(node.file)?.match(v)?.length)
-        case 'tag':
-          return filterPropEqualsOne(node.tags, value)
-        //return node.tags?.some((tag) => query?.tags?.includes(tag))
-        case 'prop':
-          return false
-        // (
-        //   value.some((prop) => {
-        //     const [key, val] = prop
-        //     return val.some((v) => node.properties?.[key] === v)
-        //   }) ?? false
-        // )
-        case 'mtime':
-          return filterPropEqualsOne((node.properties?.mtime as string).split(' '), value)
-        case 'ctime':
-          return filterPropEqualsOne((node.properties?.ctime as string).split(' '), value)
-        default:
-          return false
-      }
-    })
-  )
+      // (
+      //   value.some((prop) => {
+      //     const [key, val] = prop
+      //     return val.some((v) => node.properties?.[key] === v)
+      //   }) ?? false
+      // )
+      case 'mtime':
+        return filterPropEqualsOne((node.properties?.mtime as string).split(' '), value)
+      case 'ctime':
+        return filterPropEqualsOne((node.properties?.ctime as string).split(' '), value)
+      default:
+        return false
+    }
+  })
 }
 
 export function filterNodesByQuery(nodes: NodeObject[], query: LinQuery, mode: string) {
@@ -203,13 +203,27 @@ export function filterNodesByQuery(nodes: NodeObject[], query: LinQuery, mode: s
 
   return nodes.filter((nodeArg) => {
     const node = nodeArg as OrgRoamNode
-    return filterNodeByQuery(node, query, list) === list
+    return filterNodeByQuery(node, query) === list
   })
 }
 
 export function filterNodes(nodes: NodeObject[], queries: LinQueries): NodeObject[] {
-  return Object.entries(queries).reduce<NodeObject[]>((acc, entry) => {
-    const [name, { query, mode }] = entry
-    return filterNodesByQuery(acc, query, mode)
-  }, nodes)
+  return nodes.filter((nodeArg) => {
+    const node = nodeArg as OrgRoamNode
+    return !Object.entries(queries).some((entry) => {
+      const [name, { query, mode }] = entry
+      if (mode === 'color') {
+        return false
+      }
+      const list = mode === 'white' ? true : false
+      return filterNodeByQuery(node, query) !== list
+    })
+  }, [])
 }
+
+// export function filterNodes(nodes: NodeObject[], queries: LinQueries): NodeObject[] {
+//   return Object.entries(queries).reduce<NodeObject[]>((acc, entry) => {
+//     const [name, { query, mode }] = entry
+//     return filterNodesByQuery(acc, query, mode)
+//   }, nodes)
+// }

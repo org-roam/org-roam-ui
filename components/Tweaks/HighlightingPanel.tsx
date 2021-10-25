@@ -101,7 +101,7 @@ export const HighlightingPanel = (props: HighlightingPanelProps) => {
                   }))
                 }}
               >
-                {visuals.algorithmOptions.map((opt: string) => (
+                {visuals.algorithmOptions?.map((opt: string) => (
                   <option key={opt} value={opt}>
                     {opt}
                   </option>

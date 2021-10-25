@@ -48,7 +48,7 @@ import {
 import { ContextMenu } from '../components/contextmenu'
 import Sidebar from '../components/Sidebar'
 import { Tweaks } from '../components/Tweaks'
-import { filterNodes, Queries } from '../util/parseQuery'
+import { filterNodes, LinQueries } from '../util/parseQuery'
 import { usePersistantState } from '../util/persistant-state'
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import { openNodeInEmacs } from '../util/webSocketFunctions'
@@ -106,7 +106,7 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
-  const [queries, setQueries] = usePersistantState<Queries>('queries', {})
+  const [queries, setQueries] = usePersistantState<LinQueries>('queries', {})
   const [
     previewNodeState,
     {
@@ -803,93 +803,97 @@ export const Graph = function (props: GraphProps) {
   const filteredLinksByNodeIdRef = useRef<LinksByNodeId>({})
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
-  const filteredGraphData = useMemo(() => {
-    hiddenNodeIdsRef.current = {}
-    const queriesNodes = filterNodes(graphData?.nodes, queries)
-    const filteredNodes = queriesNodes
-      ?.filter((nodeArg) => {
-        const node = nodeArg as OrgRoamNode
-        if (
-          filter.tagsBlacklist.length &&
-          filter.tagsBlacklist.some((tag) => node?.tags?.indexOf(tag) > -1)
-        ) {
-          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
-          return false
-        }
-        if (
-          filter.tagsWhitelist.length > 0 &&
-          !filter.tagsWhitelist.some((tag) => node?.tags?.indexOf(tag) > -1)
-        ) {
-          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
-          return false
-        }
-        if (filter.filelessCites && node?.properties?.FILELESS) {
-          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
-          return false
-        }
-        if (filter?.bad && node?.properties?.bad) {
-          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
-          return false
-        }
+  const [filteredGraphData, setFilteredGraphData] = useState<GraphData>({ nodes: [], links: [] })
+  //const filteredGraphData = useMemo(() => {
+  useEffect(() => {
+    ;(async () => {
+      hiddenNodeIdsRef.current = {}
+      const queriesNodes = filterNodes(graphData?.nodes, queries)
+      const filteredNodes = queriesNodes
+        ?.filter((nodeArg) => {
+          const node = nodeArg as OrgRoamNode
+          if (
+            filter.tagsBlacklist.length &&
+            filter.tagsBlacklist.some((tag) => node?.tags?.indexOf(tag) > -1)
+          ) {
+            hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+            return false
+          }
+          if (
+            filter.tagsWhitelist.length > 0 &&
+            !filter.tagsWhitelist.some((tag) => node?.tags?.indexOf(tag) > -1)
+          ) {
+            hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+            return false
+          }
+          if (filter.filelessCites && node?.properties?.FILELESS) {
+            hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+            return false
+          }
+          if (filter?.bad && node?.properties?.bad) {
+            hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+            return false
+          }
 
-        if (filter.dailies && dailyDir && node.file?.includes(dailyDir)) {
-          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
-          return false
-        }
-        return true
-      })
-      .filter((node) => {
-        const links = linksByNodeId[node?.id as string] ?? []
-        const unhiddenLinks = links.filter(
-          (link) =>
-            !hiddenNodeIdsRef.current[link.source] && !hiddenNodeIdsRef.current[link.target],
-        )
-
-        if (!filter.orphans) {
+          if (filter.dailies && dailyDir && node.file?.includes(dailyDir)) {
+            hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+            return false
+          }
           return true
-        }
+        })
+        .filter((node) => {
+          const links = linksByNodeId[node?.id as string] ?? []
+          const unhiddenLinks = links.filter(
+            (link) =>
+              !hiddenNodeIdsRef.current[link.source] && !hiddenNodeIdsRef.current[link.target],
+          )
 
-        if (filter.parent) {
-          return unhiddenLinks.length !== 0
-        }
+          if (!filter.orphans) {
+            return true
+          }
 
-        if (unhiddenLinks.length === 0) {
+          if (filter.parent) {
+            return unhiddenLinks.length !== 0
+          }
+
+          if (unhiddenLinks.length === 0) {
+            return false
+          }
+
+          return unhiddenLinks.some((link) => !['parent', 'heading'].includes(link.type))
+        })
+
+      const filteredNodeIds = filteredNodes.map((node) => node.id as string)
+      const filteredLinks = graphData.links.filter((link) => {
+        const [sourceId, targetId] = normalizeLinkEnds(link)
+        if (
+          !filteredNodeIds.includes(sourceId as string) ||
+          !filteredNodeIds.includes(targetId as string)
+        ) {
           return false
         }
-
-        return unhiddenLinks.some((link) => !['parent', 'heading'].includes(link.type))
+        const linkRoam = link as OrgRoamLink
+        if (!filter.parent) {
+          return !['parent', 'heading'].includes(linkRoam.type)
+        }
+        if (filter.parent === 'heading') {
+          return linkRoam.type !== 'parent'
+        }
+        return linkRoam.type !== 'heading'
       })
 
-    const filteredNodeIds = filteredNodes.map((node) => node.id as string)
-    const filteredLinks = graphData.links.filter((link) => {
-      const [sourceId, targetId] = normalizeLinkEnds(link)
-      if (
-        !filteredNodeIds.includes(sourceId as string) ||
-        !filteredNodeIds.includes(targetId as string)
-      ) {
-        return false
-      }
-      const linkRoam = link as OrgRoamLink
-      if (!filter.parent) {
-        return !['parent', 'heading'].includes(linkRoam.type)
-      }
-      if (filter.parent === 'heading') {
-        return linkRoam.type !== 'parent'
-      }
-      return linkRoam.type !== 'heading'
-    })
+      filteredLinksByNodeIdRef.current = filteredLinks.reduce<LinksByNodeId>((acc, linkArg) => {
+        const link = linkArg as OrgRoamLink
+        const [sourceId, targetId] = normalizeLinkEnds(link)
+        return {
+          ...acc,
+          [sourceId]: [...(acc[sourceId] ?? []), link],
+          [targetId]: [...(acc[targetId] ?? []), link],
+        }
+      }, {})
 
-    filteredLinksByNodeIdRef.current = filteredLinks.reduce<LinksByNodeId>((acc, linkArg) => {
-      const link = linkArg as OrgRoamLink
-      const [sourceId, targetId] = normalizeLinkEnds(link)
-      return {
-        ...acc,
-        [sourceId]: [...(acc[sourceId] ?? []), link],
-        [targetId]: [...(acc[targetId] ?? []), link],
-      }
-    }, {})
-
-    return { nodes: filteredNodes, links: filteredLinks }
+      setFilteredGraphData({ nodes: filteredNodes, links: filteredLinks })
+    })()
   }, [filter, graphData, queries])
 
   const [scopedGraphData, setScopedGraphData] = useState<GraphData>({ nodes: [], links: [] })
@@ -1076,7 +1080,7 @@ export const Graph = function (props: GraphProps) {
      *   : 0
      * const neighbors = filter.parent ? linklen : linklen - parentCiteNeighbors! */
 
-    return visuals.nodeColorScheme[
+    return visuals.nodeColorScheme?.[
       numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
     ]
   }
@@ -1460,7 +1464,7 @@ export function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, stri
 }
 
 export function getThemeColor(name: string, theme: any) {
-  return name.split('.').reduce((o, i) => o[i], theme.colors)
+  return name?.split('.').reduce((o, i) => o[i], theme.colors)
 }
 
 export function hexToRGBA(hex: string, opacity: number) {

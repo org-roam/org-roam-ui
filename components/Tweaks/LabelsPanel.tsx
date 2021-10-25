@@ -68,7 +68,9 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
             min={5}
             max={20}
             step={0.5}
-            onChange={(value) => setVisuals({ ...visuals, labelFontSize: value })}
+            onChange={(value) =>
+              setVisuals((curr: typeof initialVisuals) => ({ ...curr, labelFontSize: value }))
+            }
           />
           <SliderWithInfo
             label="Max. label characters"
@@ -76,7 +78,9 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
             min={10}
             max={100}
             step={1}
-            onChange={(value) => setVisuals({ ...visuals, labelLength: value })}
+            onChange={(value) =>
+              setVisuals((curr: typeof initialVisuals) => ({ ...curr, labelLength: value }))
+            }
           />
           <SliderWithInfo
             label="Max. label line length"
@@ -84,7 +88,9 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
             min={10}
             max={100}
             step={1}
-            onChange={(value) => setVisuals({ ...visuals, labelWordWrap: value })}
+            onChange={(value) =>
+              setVisuals((curr: typeof initialVisuals) => ({ ...curr, labelWordWrap: value }))
+            }
           />
           <SliderWithInfo
             label="Space between label lines"
@@ -92,21 +98,31 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
             min={0.2}
             max={3}
             step={0.1}
-            onChange={(value) => setVisuals({ ...visuals, labelLineSpace: value })}
+            onChange={(value) =>
+              setVisuals((curr: typeof initialVisuals) => ({ ...curr, labelLineSpace: value }))
+            }
           />
           <ColorMenu
             colorList={colorList}
             label="Text"
-            setVisuals={setVisuals}
-            value="labelTextColor"
-            visValue={visuals.labelTextColor}
+            onClick={(color: string) =>
+              setVisuals((curr: typeof initialVisuals) => ({
+                ...curr,
+                labelTextColor: color,
+              }))
+            }
+            stateVal={visuals.labelTextColor}
           />
           <ColorMenu
             colorList={colorList}
             label="Background"
-            setVisuals={setVisuals}
-            value="labelBackgroundColor"
-            visValue={visuals.labelBackgroundColor}
+            onClick={(color: string) =>
+              setVisuals((curr: typeof initialVisuals) => ({
+                ...curr,
+                labelBackgroundColor: color,
+              }))
+            }
+            stateVal={visuals.labelBackgroundColor}
           />
           <Collapse in={!!visuals.labelBackgroundColor} animateOpacity>
             <Box paddingTop={2}>
@@ -115,7 +131,10 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
                 value={visuals.labelBackgroundOpacity}
                 onChange={(value) => {
                   console.log(visuals.labelBackgroundOpacity)
-                  setVisuals({ ...visuals, labelBackgroundOpacity: value })
+                  setVisuals((curr: typeof initialVisuals) => ({
+                    ...curr,
+                    labelBackgroundOpacity: value,
+                  }))
                 }}
                 min={0}
                 max={1}
@@ -128,7 +147,9 @@ export const LabelsPanel = (props: LabelsPanelProps) => {
               <SliderWithInfo
                 label="Label Appearance Scale"
                 value={visuals.labelScale * 5}
-                onChange={(value) => setVisuals({ ...visuals, labelScale: value / 5 })}
+                onChange={(value) =>
+                  setVisuals((curr: typeof initialVisuals) => ({ ...curr, labelScale: value / 5 }))
+                }
               />
             </Box>
           </Collapse>

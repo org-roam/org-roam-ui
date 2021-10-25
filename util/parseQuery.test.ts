@@ -32,6 +32,9 @@ describe('query parsing', () => {
     it('parses no syntax as title', () => {
       expect(parseQuery('title', {})).toEqual([{ keyword: 'title', value: ['title'] }])
     })
+    it('separates commas', () => {
+      expect(parseQuery('title:(t1, t2)', {})).toEqual([{ keyword: 'title', value: ['t1', 't2'] }])
+    })
     it('parses tags', () => {
       expect(parseQuery('tag:(tag) tag:(nother tag)', {})).toEqual([
         { keyword: 'tag', value: ['tag'] },

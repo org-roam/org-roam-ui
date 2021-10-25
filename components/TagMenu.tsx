@@ -14,7 +14,6 @@ import {
 import React from 'react'
 import { colorList, initialFilter, TagColors } from './config'
 import { Collapse } from './Sidebar/Collapse'
-import { ColorMenu } from './Tweaks/ColorMenu'
 
 export interface TagMenuProps {
   setTagColors: any

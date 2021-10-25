@@ -17,34 +17,25 @@ import React, { useCallback } from 'react'
 import { initialVisuals } from '../config'
 
 export interface ColorMenuProps {
-  label: string
+  label?: string
   colorList: string[]
-  value: string
-  visValue: string
-  setVisuals?: any
+  stateVal: string
+  onClick: any
   noEmpty?: boolean
 }
 
 export const ColorMenu = (props: ColorMenuProps) => {
-  const { label, colorList, value, visValue, setVisuals, noEmpty } = props
+  const { label, colorList, stateVal, onClick, noEmpty } = props
 
-  const clickCallback = useCallback(
-    (color) =>
-      setVisuals((curr: typeof initialVisuals) => {
-        return {
-          ...curr,
-          [value]: color,
-        }
-      }),
-    [],
-  )
+  const clickCallback = useCallback((color: string) => onClick(color), [])
+
   return (
     <Flex alignItems="center" justifyContent="space-between">
-      <Text>{label}</Text>
+      {label && <Text>{label}</Text>}
       <Popover isLazy placement="right">
         <PopoverTrigger>
           <Button colorScheme="" color="black" rightIcon={<ChevronDownIcon />}>
-            {<Box bgColor={visValue} borderRadius="sm" height={6} width={6}></Box>}
+            {<Box bgColor={stateVal} borderRadius="sm" height={6} width={6}></Box>}
           </Button>
         </PopoverTrigger>
         <Portal>
