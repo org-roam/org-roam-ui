@@ -118,13 +118,13 @@ export function parseQuery(queryString: string, queries: LinQueries) {
     if (!q[2]) {
       return [...acc, { keyword: 'title', value: q[1].split(',').map((s) => s.trim()) }]
     }
-    if (q[2] === 'query') {
-      if (queries[q[3]]) {
-        console.log(q[3])
-        return [...acc, ...queries[q[3]].query]
-      }
-      return acc
-    }
+    // if (q[2] === 'query') {
+    //   if (queries[q[3]]) {
+    //     console.log(q[3])
+    //     return [...acc, ...queries[q[3]].query]
+    //   }
+    //   return acc
+    // }
     return [...acc, { keyword: q[2], value: q[3].split(',').map((s) => s.trim()) }]
   }, [])
 
@@ -160,7 +160,15 @@ export function filterPropEqualsOne(nodeProp: string[], queryProp: string[]) {
   return queryProp.some((p) => nodeProp.includes(p))
 }
 
-export function filterNodeByQuery(node: OrgRoamNode, query: LinQuery): boolean {
+export function filterNodeByQuery(
+  node: OrgRoamNode,
+  query: LinQuery,
+  name: string,
+  queries: LinQueries,
+  pastQueries: string[] = [],
+): boolean {
+  if (pastQueries.includes(name)) return false
+  const processedQueries = [...pastQueries, name]
   return query?.some?.((entry) => {
     const { keyword, value } = entry
     if (keyword !== 'prop' && value?.length === 0) {
@@ -189,6 +197,10 @@ export function filterNodeByQuery(node: OrgRoamNode, query: LinQuery): boolean {
         return filterPropEqualsOne((node.properties?.mtime as string).split(' '), value)
       case 'ctime':
         return filterPropEqualsOne((node.properties?.ctime as string).split(' '), value)
+      case 'query':
+        return value.some((v) =>
+          filterNodeByQuery(node, queries?.[v as string]?.query, v, queries, processedQueries),
+        )
       default:
         return false
     }
@@ -203,7 +215,7 @@ export function filterNodesByQuery(nodes: NodeObject[], query: LinQuery, mode: s
 
   return nodes.filter((nodeArg) => {
     const node = nodeArg as OrgRoamNode
-    return filterNodeByQuery(node, query) === list
+    return filterNodeByQuery(node, query, queries) === list
   })
 }
 
@@ -216,7 +228,7 @@ export function filterNodes(nodes: NodeObject[], queries: LinQueries): NodeObjec
         return false
       }
       const list = mode === 'white' ? true : false
-      return filterNodeByQuery(node, query) !== list
+      return filterNodeByQuery(node, query, name, queries) !== list
     })
   }, [])
 }
