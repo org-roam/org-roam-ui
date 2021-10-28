@@ -438,7 +438,7 @@ TODO: Split this up."
   (when (boundp 'org-roam-dailies-directory)
     (let ((daily-dir (if (file-name-absolute-p org-roam-dailies-directory)
                          (expand-file-name org-roam-dailies-directory)
-                       (file-name-concat org-roam-directory org-roam-dailies-directory))))
+                       (expand-file-name (file-name-concat org-roam-directory org-roam-dailies-directory)))))
       (websocket-send-text ws (json-encode `((type . "variables")
                                              (data .
                                                    (("dailyDir" .
