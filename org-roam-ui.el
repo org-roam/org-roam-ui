@@ -497,8 +497,8 @@ The PADDING around the nodes in the viewport."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
       (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "command") (data .
-                                                                                         ((commandName . "zoom") (id . ,node) (speed . ,speed) (padding . ,padding)))))))
-  (message "No node found."))
+                                                                                         ((commandName . "zoom") (id . ,node) (speed . ,speed) (padding . ,padding))))))
+  (message "No node found.")))
 
 
 ;;;###autoload
@@ -508,8 +508,8 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
       (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "command") (data .
-                                                                                         ((commandName . "local") (id . ,node) (speed . ,speed) (padding . ,padding)))))))
-  (message "No node found."))
+                                                                                         ((commandName . "local") (id . ,node) (speed . ,speed) (padding . ,padding))))))
+  (message "No node found.")))
 
 ;;;###autoload
 (defun org-roam-ui-sync-theme ()
