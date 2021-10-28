@@ -52,7 +52,8 @@
           ".")
   "Root directory of the org-roam-ui project.")
 
-(defvar org-roam-ui-app-build-dir (expand-file-name "./out/" org-roam-ui-root-dir)
+(defvar org-roam-ui-app-build-dir
+  (expand-file-name "./out/" org-roam-ui-root-dir)
   "Directory containing org-roam-ui's web build.")
 
 ;; TODO: make into defcustom
@@ -114,7 +115,8 @@ This can lead to some jank."
   :group 'org-roam-ui
   :type 'boolean)
 
-(defcustom org-roam-ui-ref-title-template "%^{author-abbrev} (%^{year}) %^{title}"
+(defcustom org-roam-ui-ref-title-template
+  "%^{author-abbrev} (%^{year}) %^{title}"
   "A template for title creation, used for references without associated nodes.
 
 This uses `orb--pre-expand-template' under the hood and therefore only org-style
@@ -188,7 +190,8 @@ This serves the web-build and API over HTTP."
 (defun org-roam-ui--ws-on-message (_ws frame)
   "Functions to run when the org-roam-ui server receives a message.
 Takes _WS and FRAME as arguments."
-  (let* ((msg (json-parse-string (websocket-frame-text frame) :object-type 'alist))
+  (let* ((msg (json-parse-string
+               (websocket-frame-text frame) :object-type 'alist))
          (command (alist-get 'command msg))
          (data (alist-get 'data msg)))
     (cond ((string= command "open")
@@ -197,7 +200,9 @@ Takes _WS and FRAME as arguments."
            (org-roam-ui--on-msg-delete-node data))
           ((string= command "create")
            (org-roam-ui--on-msg-create-node data))
-          (t (message "Something went wrong when receiving a message from org-roam-ui")))))
+          (t
+           (message
+            "Something went wrong when receiving a message from org-roam-ui")))))
 
 (defun org-roam-ui--on-msg-open-node (data)
   "Open a node when receiving DATA from the websocket."
@@ -206,8 +211,13 @@ Takes _WS and FRAME as arguments."
          (buf (org-roam-node-find-noselect node)))
     (unless (window-live-p org-roam-ui--window)
       (if-let ((windows (window-list))
-               (or-windows (seq-filter (lambda (window) (org-roam-buffer-p (window-buffer window))) windows))
-               (newest-window (car (seq-sort-by #'window-use-time #'> or-windows))))
+               (or-windows (seq-filter
+                            (lambda (window)
+                              (org-roam-buffer-p
+                               (window-buffer window))) windows))
+               (newest-window (car
+                               (seq-sort-by
+                                #'window-use-time #'> or-windows))))
           (setq org-roam-ui--window newest-window)
         (split-window-horizontally)
         (setq org-roam-ui--window (frame-selected-window))))
@@ -249,10 +259,13 @@ TODO: Be able to delete individual nodes."
        (text))
     (org-roam-with-temp-buffer
         file
-      (setq text (buffer-substring-no-properties (buffer-end -1) (buffer-end 1)))
+      (setq text
+            (buffer-substring-no-properties (buffer-end -1) (buffer-end 1)))
       text)
     (websocket-send-text ws
-                         (json-encode `((type . "orgText") (data . ,text))))))
+                         (json-encode
+                          `((type . "orgText")
+                            (data . ,text))))))
 
 (defservlet* file/:file text/plain ()
   "Servlet for accessing file contents of org-roam files.
@@ -281,7 +294,8 @@ TODO: Make this only send the changes to the graph data, not the complete graph.
   (when (and org-roam-ui-retitle-ref-nodes (boundp 'orb-preformat-keywords))
     (dolist (keyword '("author-abbrev" "year" "title"))
       (unless (seq-contains-p orb-preformat-keywords keyword)
-        (setq orb-preformat-keywords (append orb-preformat-keywords (list keyword)))))))
+        (setq orb-preformat-keywords
+              (append orb-preformat-keywords (list keyword)))))))
 
 (defun org-roam-ui--find-ref-title (ref)
   "Find the title of the bibtex entry keyed by `REF'.
@@ -293,11 +307,14 @@ loaded. Returns `ref' if an entry could not be found."
            (fboundp 'orb--pre-expand-template)
            (boundp 'orb-preformat-keywords))
       (if-let ((entry (bibtex-completion-get-entry ref))
-               (orb-preformat-keywords (append orb-preformat-keywords '("author-abbrev" "year" "title"))))
+               (orb-preformat-keywords
+                (append orb-preformat-keywords
+                        '("author-abbrev" "year" "title"))))
           ;; Create a fake capture template list, only the actual capture at 3
           ;; matters. Interpolate the bibtex entries, and extract the filled
           ;; template from the return value.
-          (nth 3 (orb--pre-expand-template `("" "" plain ,org-roam-ui-ref-title-template) entry))
+          (nth 3 (orb--pre-expand-template
+                  `("" "" plain ,org-roam-ui-ref-title-template) entry))
         ref)
     ref))
 
@@ -344,14 +361,39 @@ unchanged."
 
 (defun org-roam-ui--create-fake-node (ref)
   "Create a fake node for REF without a source note."
-  (list ref ref (org-roam-ui--find-ref-title ref) 0 0 'nil `(("ROAM_REFS" . ,(format "cite:%s" ref)) ("FILELESS" . t)) 'nil))
+  (list
+   ref
+   ref
+   (org-roam-ui--find-ref-title ref)
+   0
+   0
+   'nil
+   `(("ROAM_REFS" . ,(format "cite:%s" ref))
+     ("FILELESS" . t))
+   'nil))
 
 (defun org-roam-ui--send-graphdata ()
   "Get roam data, make JSON, send through websocket to org-roam-ui.
 
 TODO: Split this up."
-  (let* ((nodes-columns [id file title level pos olp properties ,(funcall group-concat tag (emacsql-escape-raw \, ))])
-         (nodes-names [id file title level pos olp properties tags])
+  (let* ((nodes-columns
+          [id
+           file
+           title
+           level
+           pos
+           olp
+           properties
+           ,(funcall group-concat tag (emacsql-escape-raw \, ))])
+         (nodes-names
+          [id
+           file
+           title
+           level
+           pos
+           olp
+           properties
+           tags])
          (links-columns [links:source links:dest links:type])
          (cites-columns [citations:node-id citations:cite-key refs:node-id])
          (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :as tags
@@ -364,56 +406,99 @@ TODO: Split this up."
          links-with-empty-refs)
     ;; Put this check in until Doom upgrades to the latest org-roam
     (if (fboundp 'org-roam-db-map-citations)
-        (setq links-db-rows (org-roam-db-query `[:select ,links-columns
-                                                 :from links
-                                                 :where (= links:type "id")])
+        (setq links-db-rows (org-roam-db-query
+               `[:select ,links-columns
+                 :from links
+                 :where (= links:type "id")])
               ;; Left outer join on refs means any id link (or cite link without a
               ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
               ;; cite link where a node has that `:ROAM_REFS:' will have a value.
-              cites-db-rows (org-roam-db-query `[:select ,cites-columns
-                                                 :from citations
-                                                 :left :outer :join refs :on (= citations:cite-key refs:ref)])
+              cites-db-rows (org-roam-db-query
+               `[:select ,cites-columns
+                 :from citations
+                 :left :outer :join refs :on (= citations:cite-key refs:ref)])
               ;; Convert any cite links that have nodes with associated refs to an
               ;; id based link of type `ref' while removing the 'nil `refs:node-id'
               ;; from all other links
-              cites-db-rows (seq-map (lambda (l)
-                                       (pcase-let ((`(,source ,dest ,node-id) l))
-                                         (if node-id
-                                             (list source node-id "ref")
-                                           (list source dest "cite")))) cites-db-rows)
+              cites-db-rows (seq-map
+                             (lambda (link)
+                               (pcase-let ((`(,source ,dest ,node-id) link))
+                                 (if node-id
+                                     (list source node-id "ref")
+                                   (list source dest "cite"))))
+                             cites-db-rows)
               links-db-rows (append links-db-rows cites-db-rows)
-              links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) cites-db-rows))
-      (setq links-db-rows (org-roam-db-query `[:select [links:source links:dest links:type refs:node-id]
-                                               :from links
-                                               :left :outer :join refs :on (= links:dest refs:ref)
-                                               :where (or (= links:type "id") (like links:type "%cite%"))])
-            links-db-rows (seq-map (lambda (l)
-                                     (pcase-let ((`(,source ,dest ,type ,node-id) l))
-                                       (if node-id
-                                           (list source node-id "ref")
-                                         (list source dest type)))) links-db-rows)
-            links-with-empty-refs (seq-filter (lambda (link) (string-match-p "cite" (nth 2 link))) links-db-rows)))
-    (let* ((empty-refs (delete-dups (seq-map (lambda (link) (nth 1 link)) links-with-empty-refs)))
+              links-with-empty-refs (seq-filter
+                                     (lambda (link)
+                                       (string-match-p "cite" (nth 2 link)))
+                                     cites-db-rows))
+      (setq links-db-rows (org-roam-db-query
+                           `[:select [links:source
+                                      links:dest
+                                      links:type
+                                      refs:node-id]
+                             :from links
+                             :left :outer :join refs :on (= links:dest refs:ref)
+                             :where (or
+                                     (= links:type "id")
+                                     (like links:type "%cite%"))])
+            links-db-rows (seq-map
+                           (lambda (l)
+                             (pcase-let ((`(,source ,dest ,type ,node-id) l))
+                               (if node-id
+                                   (list source node-id "ref")
+                                 (list source dest type))))
+                           links-db-rows)
+            links-with-empty-refs (seq-filter
+                                   (lambda (link)
+                                     (string-match-p "cite" (nth 2 link)))
+                                   links-db-rows)))
+    (let* ((empty-refs (delete-dups (seq-map
+                                     (lambda (link)
+                                       (nth 1 link))
+                                     links-with-empty-refs)))
            (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
            ;; Try to update real nodes that are reference with a title build from
            ;; their bibliography entry. Check configuration here for avoid unneeded
            ;; iteration though nodes.
-           (nodes-db-rows (if org-roam-ui-retitle-ref-nodes (seq-map 'org-roam-ui--retitle-node nodes-db-rows) nodes-db-rows))
+           (nodes-db-rows (if org-roam-ui-retitle-ref-nodes
+                              (seq-map 'org-roam-ui--retitle-node nodes-db-rows)
+                            nodes-db-rows))
            (nodes-db-rows (append nodes-db-rows fake-nodes))
-           (response `((nodes . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist (append nodes-names nil)) nodes-db-rows))
-                       (links . ,(mapcar (apply-partially #'org-roam-ui-sql-to-alist '(source target type)) links-db-rows))
-                       (tags . ,(seq-mapcat #'seq-reverse (org-roam-db-query [:select :distinct tag :from tags]))))))
-      (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "graphdata") (data . ,response)))))))
+           (response `((nodes . ,(mapcar
+                                  (apply-partially
+                                   #'org-roam-ui-sql-to-alist
+                                   (append nodes-names nil))
+                                  nodes-db-rows))
+                       (links . ,(mapcar
+                                  (apply-partially
+                                   #'org-roam-ui-sql-to-alist
+                                   '(source target type))
+                                  links-db-rows))
+                       (tags . ,(seq-mapcat
+                                 #'seq-reverse
+                                 (org-roam-db-query
+                                  [:select :distinct tag :from tags]))))))
+      (websocket-send-text
+       org-roam-ui-ws-socket
+       (json-encode
+        `((type . "graphdata")
+          (data . ,response)))))))
 
 
 
 (defun org-roam-ui--update-current-node ()
   "Send the current node data to the web-socket."
-  (when (and (websocket-openp org-roam-ui-ws-socket) (org-roam-buffer-p) (buffer-file-name (buffer-base-buffer)))
+  (when (and (websocket-openp org-roam-ui-ws-socket)
+             (org-roam-buffer-p)
+             (buffer-file-name (buffer-base-buffer)))
     (let* ((node (org-roam-id-at-point)))
       (unless (string= org-roam-ui--ws-current-node node)
         (setq org-roam-ui--ws-current-node node)
-        (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "command") (data . ((commandName . "follow") (id . ,node))))))))))
+        (websocket-send-text org-roam-ui-ws-socket
+                             (json-encode `((type . "command")
+                                            (data . ((commandName . "follow")
+                                                     (id . ,node))))))))))
 
 
 (defun org-roam-ui--update-theme ()
@@ -422,10 +507,14 @@ TODO: Split this up."
     (if org-roam-ui-sync-theme
         (if (boundp 'doom-themes--colors)
             (let*
-                ((colors (butlast doom-themes--colors (- (length doom-themes--colors) 25)))
+                ((colors (butlast doom-themes--colors
+                                  (- (length doom-themes--colors) 25)))
                  doom-theme)
               (progn
-                (dolist (color colors) (push (cons (car color) (car (cdr color))) doom-theme)))
+                (dolist (color colors)
+                  (push
+                   (cons (car color) (car (cdr color)))
+                   doom-theme)))
               (setq ui-theme doom-theme))
           (setq ui-theme (org-roam-ui-get-theme)))
       (when org-roam-ui-custom-theme
@@ -438,19 +527,23 @@ TODO: Split this up."
   (when (boundp 'org-roam-dailies-directory)
     (let ((daily-dir (if (file-name-absolute-p org-roam-dailies-directory)
                          (expand-file-name org-roam-dailies-directory)
-                       (expand-file-name (file-name-concat org-roam-directory org-roam-dailies-directory)))))
-      (websocket-send-text ws (json-encode `((type . "variables")
-                                             (data .
-                                                   (("dailyDir" .
-                                                     ,daily-dir)
-                                                    ("roamDir" . ,org-roam-directory)))))))))
+                       (expand-file-name
+                        (file-name-concat org-roam-directory
+                                          org-roam-dailies-directory)))))
+      (websocket-send-text ws
+                           (json-encode
+                            `((type . "variables")
+                              (data .
+                                    (("dailyDir" .
+                                      ,daily-dir)
+                                     ("roamDir" . ,org-roam-directory)))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
 ROWS is the sql result, while COLUMN-NAMES is the columns to use."
   (let (res)
     (while rows
-      ;; I don't know how to obtain the tags as a simple list, so we post process it
+      ;; I don't know how to get the tags as a simple list, so we post process it
       (if (not (string= (car column-names) "tags"))
           (push (cons (pop column-names) (pop rows)) res)
         (push (cons (pop column-names)
@@ -483,8 +576,9 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 (defun org-roam-ui-open ()
   "Ensure `org-roam-ui' is running, then open the `org-roam-ui' webpage."
   (interactive)
-  (or org-roam-ui-mode (org-roam-ui-mode))
-  (funcall org-roam-ui-browser-function (format "http://localhost:%d" org-roam-ui-port)))
+  (unless org-roam-ui-mode (org-roam-ui-mode))
+  (funcall org-roam-ui-browser-function
+           (format "http://localhost:%d" org-roam-ui-port)))
 
 ;;;###autoload
 (defun org-roam-ui-node-zoom (&optional id speed padding)
@@ -496,9 +590,13 @@ The SPEED in ms it takes to make the transition.
 The PADDING around the nodes in the viewport."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
-      (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "command") (data .
-                                                                                         ((commandName . "zoom") (id . ,node) (speed . ,speed) (padding . ,padding))))))
-  (message "No node found.")))
+      (websocket-send-text org-roam-ui-ws-socket
+                           (json-encode `((type . "command")
+                                          (data . ((commandName . "zoom")
+                                                   (id . ,node)
+                                                   (speed . ,speed)
+                                                   (padding . ,padding))))))
+    (message "No node found.")))
 
 
 ;;;###autoload
@@ -507,15 +605,21 @@ The PADDING around the nodes in the viewport."
 Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
-      (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "command") (data .
-                                                                                         ((commandName . "local") (id . ,node) (speed . ,speed) (padding . ,padding))))))
-  (message "No node found.")))
+      (websocket-send-text org-roam-ui-ws-socket
+                           (json-encode `((type . "command")
+                                          (data . ((commandName . "local")
+                                                   (id . ,node)
+                                                   (speed . ,speed)
+                                                   (padding . ,padding))))))
+    (message "No node found.")))
 
 ;;;###autoload
 (defun org-roam-ui-sync-theme ()
   "Sync your current Emacs theme with org-roam-ui."
   (interactive)
-  (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
+  (websocket-send-text org-roam-ui-ws-socket
+                       (json-encode `((type . "theme")
+                                      (data . ,(org-roam-ui--update-theme))))))
 
 (define-obsolete-function-alias 'orui-open 'org-roam-ui-open "0.1")
 (define-obsolete-function-alias 'orui-node-local 'org-roam-ui-node-local "0.1")
