@@ -532,9 +532,9 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (if org-roam-ui-follow-mode
       (progn
         (add-hook 'post-command-hook #'org-roam-ui--update-current-node)
-        (message "Org-Roam-UI will now follow you around."))
+        (message "org-roam-ui will now follow you around."))
     (remove-hook 'post-command-hook #'org-roam-ui--update-current-node)
-    (message "Org-Roam-UI will now leave you alone.")))
+    (message "org-roam-ui will now leave you alone.")))
 
 (provide 'org-roam-ui)
 ;;; org-roam-ui.el ends here
