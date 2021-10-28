@@ -450,7 +450,7 @@ TODO: Split this up."
 ROWS is the sql result, while COLUMN-NAMES is the columns to use."
   (let (res)
     (while rows
-      ;; emacsql does not want to give us the tags as a list, so we post process it
+      ;; I don't know how to obtain the tags as a simple list, so we post process it
       (if (not (string= (car column-names) "tags"))
           (push (cons (pop column-names) (pop rows)) res)
         (push (cons (pop column-names)
