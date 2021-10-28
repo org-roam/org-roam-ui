@@ -5,7 +5,7 @@
 ;; author: Kirill Rogovoy, Thomas Jorna
 ;; URL: https://github.com/org-roam/org-roam-ui
 ;; Keywords: files outlines
-;; Version: 0
+;; Version: 0.1
 ;; Package-Requires: ((emacs "27.1") (org-roam "2.0.0") (simple-httpd "20191103.1446") (websocket "20210110.17") (json "1.2"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -480,14 +480,14 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
 ;;;; interactive commands
 
 ;;;###autoload
-(defun orui-open ()
+(defun org-roam-ui-open ()
   "Ensure `org-roam-ui' is running, then open the `org-roam-ui' webpage."
   (interactive)
   (or org-roam-ui-mode (org-roam-ui-mode))
   (funcall org-roam-ui-browser-function (format "http://localhost:%d" org-roam-ui-port)))
 
 ;;;###autoload
-(defun orui-node-zoom (&optional id speed padding)
+(defun org-roam-ui-node-zoom (&optional id speed padding)
   "Move the view of the graph to current node.
 or optionally a node of your choosing.
 Optionally takes three arguments:
@@ -502,7 +502,7 @@ The PADDING around the nodes in the viewport."
 
 
 ;;;###autoload
-(defun orui-node-local (&optional id speed padding)
+(defun org-roam-ui-node-local (&optional id speed padding)
   "Open the local graph view of the current node.
 Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (interactive)
@@ -512,10 +512,15 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   (message "No node found."))
 
 ;;;###autoload
-(defun orui-sync-theme ()
+(defun org-roam-ui-sync-theme ()
   "Sync your current Emacs theme with org-roam-ui."
   (interactive)
   (websocket-send-text org-roam-ui-ws-socket (json-encode `((type . "theme") (data . ,(org-roam-ui--update-theme))))))
+
+(define-obsolete-function-alias 'orui-open 'org-roam-ui-open "0.1")
+(define-obsolete-function-alias 'orui-node-local 'org-roam-ui-node-local "0.1")
+(define-obsolete-function-alias 'orui-node-zoom 'org-roam-ui-node-zoom "0.1")
+(define-obsolete-function-alias 'orui-sync-theme 'org-roam-ui-sync-theme "0.1")
 
 ;;;###autoload
 (define-minor-mode org-roam-ui-follow-mode
