@@ -24,8 +24,8 @@ export const Section = (props: SectionProps) => {
     children,
     className, // outline
   } = props
-  const { collapse } = useContext(NoteContext)
   const [open, setOpen] = useState(true)
+  const { collapse } = useContext(NoteContext)
   useEffect(() => {
     setOpen(!collapse)
   }, [collapse])

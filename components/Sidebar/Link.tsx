@@ -311,6 +311,7 @@ export const PreviewLink = (props: LinkProps) => {
                         openContextMenu,
                         outline,
                       }}
+                      collapse={false}
                     />
                   </Box>
                 </Scrollbars>

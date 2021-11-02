@@ -87,5 +87,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     })
 
   const text = useMemo(() => processor.processSync(previewText).result, [previewText])
-  return <NoteContext.Provider value={{ collapse, outline }}>{text}</NoteContext.Provider>
+  return (
+    <NoteContext.Provider value={{ collapse, outline }}>{text as ReactNode}</NoteContext.Provider>
+  )
 }
