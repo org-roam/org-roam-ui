@@ -11,7 +11,7 @@ defaults:
     shell: 'bash'
 jobs:
   changes:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-18.04'
     outputs:
       ts: ${{ steps.filter.outputs.ts }}
     steps:
