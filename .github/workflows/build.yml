@@ -14,7 +14,7 @@ jobs:
               with:
                 node-version: 16.x
             - name: Build and push
-              uses: alexthemaster/action-build-typescript@v. # check the releases tab on the right for versions (looks like this: v1.0.0)
+              uses: alexthemaster/action-build-typescript@v.1.2.1 # check the releases tab on the right for versions (looks like this: v1.0.0)
               # use this if you want the sharpest of cutting edges (can and probably WILL break from time to time)
               # uses: alexthemaster/action-build-typescript@master
               with:
