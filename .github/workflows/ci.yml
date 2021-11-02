@@ -4,6 +4,8 @@
 name: 'ci'
 on:
   push:
+    branches-ignore:
+      -[main]
 defaults:
   run:
     shell: 'bash'
