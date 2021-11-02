@@ -49,6 +49,7 @@
     "rehype-react": "^6.2.1",
     "slate": "^0.66.5",
     "slate-react": "^0.66.7",
+    "styled-jsx": "^4.0.1",
     "three-spritetext": "^1.6.2",
     "through": "^2.3.8",
     "to-vfile": "^6.1.0",
