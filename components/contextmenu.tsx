@@ -190,7 +190,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                   color="red.500"
                   onClick={onOpen}
                 >
-                  Permenantly delete note
+                  Permanently delete note
                 </MenuItem>
               )}
             </>
