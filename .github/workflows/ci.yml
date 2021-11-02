@@ -5,7 +5,7 @@ name: 'ci'
 on:
   push:
     branches-ignore:
-      -[main]
+      - main
 defaults:
   run:
     shell: 'bash'
