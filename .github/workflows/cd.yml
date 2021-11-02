@@ -1,18 +1,17 @@
 ---
-# File : ci.yml
+# File : cd.yml
 
-name: 'ci'
+name: 'cd'
 on:
   push:
-    branches-ignore:
-      -[main]
+    branches: [main] 
 defaults:
   run:
     shell: 'bash'
 jobs:
   lint-test-build:
-    name: '[ci|lint-test-build]'
-    runs-on: 'ubuntu-18.04'
+    name: '[build]'
+    runs-on: 'ubuntu-latest'
     steps:
       - name: '[checkout] ${{ github.repository }} project'
         uses: 'actions/checkout@v2'
@@ -31,5 +30,16 @@ jobs:
           git config --global url."https://".insteadOf ssh://
           yarn
           yarn build
+      - name: '[commit changes]'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "chore: build" -a
+      - name: '[push changes]'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 ...
 # End of ci.yml
