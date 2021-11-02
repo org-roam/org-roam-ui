@@ -18,7 +18,7 @@ export const TagBar = (props: TagBarProps) => {
   const { filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode } = props
 
   const node = previewNode as OrgRoamNode
-  if (!node.tags || node?.tags[0] === null) {
+  if (!node?.tags || node?.tags[0] === null) {
     return null
   }
   return (

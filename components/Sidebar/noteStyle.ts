@@ -45,7 +45,7 @@ export const outlineNoteStyle = {
     paddingLeft: 4,
     ml: '11px',
     borderLeftWidth: '1px',
-    borderLeftColor: 'gray.300',
+    borderLeftColor: 'gray.700',
   },
   '.preHeadingContent': {
     //paddingTop: 2,
@@ -53,6 +53,9 @@ export const outlineNoteStyle = {
     // ml: 3,
     //borderLeftWidth: '1px',
     //borderLeftColor: 'gray.600',
+  },
+  'h1,h2,h3,h4,h5,h6,h7,h8': {
+    pl: 1,
   },
 }
 

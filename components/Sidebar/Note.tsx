@@ -37,6 +37,7 @@ export const Note = (props: NoteProps) => {
   return (
     <Box
       pr={8}
+      pt={2}
       height="100%"
       className="org"
       sx={{

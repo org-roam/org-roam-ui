@@ -8,7 +8,6 @@ import attachments from 'uniorg-attach'
 // rehypeHighlight does not have any types
 // add error thing here
 // import highlight from 'rehype-highlight'
-import sectionParent from '@agentofuser/rehype-section'
 import katex from 'rehype-katex'
 import 'katex/dist/katex.css'
 import rehype2react from 'rehype-react'
@@ -42,15 +41,13 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     outline,
   } = props
 
-  const section = sectionParent.default
   const processor = unified()
     .use(uniorgParse)
     .use(extractKeywords)
     .use(attachments)
     .use(uniorgSlug)
-    .use(uniorg2rehype)
+    .use(uniorg2rehype, { useSections: true })
     //.data('settings', { fragment: true })
-    .use(section)
     // .use(highlight)
     .use(katex)
     .use(rehype2react, {

@@ -5,20 +5,7 @@ import { TagBar } from './TagBar'
 import { Note } from './Note'
 import { Title } from './Title'
 
-import {
-  Button,
-  Slide,
-  VStack,
-  Flex,
-  Heading,
-  Box,
-  IconButton,
-  Tooltip,
-  HStack,
-  TagLabel,
-  Tag,
-  TagRightIcon,
-} from '@chakra-ui/react'
+import { VStack, Flex, Box, IconButton } from '@chakra-ui/react'
 import { Collapse } from './Collapse'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import {
@@ -30,7 +17,6 @@ import {
   ViewOffIcon,
 } from '@chakra-ui/icons'
 import { BiDotsVerticalRounded, BiFile, BiNetworkChart } from 'react-icons/bi'
-import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 
 import { GraphData, NodeObject, LinkObject } from 'force-graph'
 import { OrgRoamNode } from '../../api'
@@ -144,7 +130,7 @@ const Sidebar = (props: SidebarProps) => {
             //whiteSpace="nowrap"
             // overflow="hidden"
             // textOverflow="ellipsis"
-            pl={4}
+            pl={2}
             alignItems="center"
             color="black"
             width="100%"
@@ -215,7 +201,7 @@ const Sidebar = (props: SidebarProps) => {
               // overflowY="scroll"
               alignItems="left"
               bg="alt.100"
-              paddingLeft={10}
+              paddingLeft={4}
             >
               <Title previewNode={previewRoamNode} />
               <TagBar

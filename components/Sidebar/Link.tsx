@@ -287,7 +287,7 @@ export const PreviewLink = (props: LinkProps) => {
                     w="100%"
                     color="black"
                     px={3}
-                    sx={{ ...defaultNoteStyle, extraNoteStyle }}
+                    sx={{ ...defaultNoteStyle, ...extraNoteStyle }}
                     //overflowY="scroll"
                   >
                     <ProcessedOrg

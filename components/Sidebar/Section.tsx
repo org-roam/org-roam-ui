@@ -36,7 +36,7 @@ export const Section = (props: SectionProps) => {
                 //mr={1}
                 size="xs"
                 variant="subtle"
-                icon={<ChevronDownIcon />}
+                icon={<ChevronUpIcon />}
                 onClick={() => setOpen(!open)}
                 height={2}
                 width={2}
@@ -67,7 +67,7 @@ export const Section = (props: SectionProps) => {
                 width={2}
                 size="xs"
                 variant="subtle"
-                icon={<ChevronUpIcon />}
+                icon={<ChevronDownIcon />}
                 onClick={() => setOpen(!open)}
               />
               <IconButton
