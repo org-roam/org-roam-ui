@@ -42,4 +42,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
 ...
-# End of ci.yml
+# End of cd.yml
