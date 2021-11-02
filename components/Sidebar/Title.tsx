@@ -4,7 +4,7 @@ import { BiFile } from 'react-icons/bi'
 
 import { OrgRoamNode } from '../../api'
 export interface TitleProps {
-  previewNode: OrgRoamNode
+  previewNode: OrgRoamNode | undefined
 }
 
 export const Title = (props: TitleProps) => {

@@ -57,7 +57,7 @@ export const Backlinks = (props: BacklinksProps) => {
           backLinks.map((link) => {
             const title = nodeById[link as string]?.title ?? ''
             return (
-              <Box overflow="hidden" py={2} borderRadius="sm" width="100%" key={link}>
+              <Box overflow="hidden" py={1} borderRadius="sm" width="100%" key={link}>
                 <PreviewLink
                   nodeByCite={nodeByCite}
                   setSidebarHighlightedNode={setSidebarHighlightedNode}

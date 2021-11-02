@@ -14,7 +14,7 @@ import rehype2react from 'rehype-react'
 
 import { PreviewLink } from '../components/Sidebar/Link'
 import { NodeByCite, NodeById } from '../pages'
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { OrgImage } from '../components/Sidebar/OrgImage'
 import { Section } from '../components/Sidebar/Section'
 
@@ -73,10 +73,12 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
           return <OrgImage src={src as string} file={previewNode?.file} />
         },
         section: ({ children, className }) => (
-          <Section {...{ outline, className }}>{children}</Section>
+          <Section {...{ outline }} className={className as string}>
+            {children}
+          </Section>
         ),
         p: ({ children }) => {
-          return <p lang="en">{children}</p>
+          return <p lang="en">{children as ReactNode}</p>
         },
       },
     })

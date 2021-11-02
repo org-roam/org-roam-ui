@@ -78,7 +78,7 @@ const Sidebar = (props: SidebarProps) => {
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
-  const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode>(null)
+  const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode | undefined>()
   const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
 
   useEffect(() => {

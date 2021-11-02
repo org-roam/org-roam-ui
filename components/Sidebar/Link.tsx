@@ -38,7 +38,7 @@ export interface LinkProps {
   nodeById: NodeById
   openContextMenu: any
   outline: boolean
-  noUnderline: boolean
+  noUnderline?: boolean
 }
 
 export interface NodeLinkProps {
@@ -49,7 +49,7 @@ export interface NodeLinkProps {
   children: any
   setSidebarHighlightedNode: any
   openContextMenu: any
-  noUnderline: boolean
+  noUnderline?: boolean
 }
 export interface NormalLinkProps {
   href: string
