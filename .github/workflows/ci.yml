@@ -4,14 +4,14 @@
 name: 'ci'
 on:
   push:
-    branches-ignore:
-      - main
+    branches:
+      - '!main'
 defaults:
   run:
     shell: 'bash'
 jobs:
   changes:
-    runs-on: 'ubuntu-18.04'
+    runs-on: 'ubuntu-latest'
     outputs:
       ts: ${{ steps.filter.outputs.ts }}
     steps:
@@ -27,7 +27,7 @@ jobs:
             - '*.json'
   lint-test-build:
     name: '[ci|lint-test-build]'
-    runs-on: 'ubuntu-18.04'
+    runs-on: 'ubuntu-latest'
     needs: changes
     if: ${{ needs.changes.outputs.ts == 'true' }}
     steps:
