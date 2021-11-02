@@ -47,7 +47,12 @@ export const Note = (props: NoteProps) => {
       }}
     >
       {previewNode?.id && (
-        <Flex height="100%" flexDirection="column" justifyContent="space-between">
+        <Flex
+          className="wrapClass"
+          height="100%"
+          flexDirection="column"
+          justifyContent="space-between"
+        >
           <UniOrg
             {...{
               setPreviewNode,

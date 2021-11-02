@@ -11,17 +11,16 @@ export const viewerNoteStyle = {
     fontSize: '14',
     color: 'black',
     fontWeight: 'bold',
+    fontStyle: 'bold italic',
     paddingTop: 2,
   },
   h3: {
     fontSize: '13',
-    fontWeight: 'bold',
     color: 'black',
     paddingTop: 2,
   },
   h4: {
     fontSize: '12',
-    fontWeight: 'bold',
     fontStyle: 'italic',
     color: 'black',
     paddingTop: 2,
@@ -41,11 +40,12 @@ export const outlineNoteStyle = {
     display: 'none',
   },
   '.sectionContent': {
-    paddingTop: 2,
+    pt: 2,
+    mt: 1,
     paddingLeft: 4,
     ml: '11px',
     borderLeftWidth: '1px',
-    borderLeftColor: 'gray.700',
+    borderLeftColor: 'gray.500',
   },
   '.preHeadingContent': {
     //paddingTop: 2,
@@ -56,13 +56,34 @@ export const outlineNoteStyle = {
   },
   'h1,h2,h3,h4,h5,h6,h7,h8': {
     pl: 1,
+    lineHeight: '1.25',
+    color: 'black',
+    fontSize: 14,
+  },
+  '.sec': {
+    pt: 1,
+  },
+  '.wrapClass > div > p': {
+    mb: 2,
+  },
+  p: {
+    fontSize: 12,
+    pb: 2,
   },
 }
 
 export const defaultNoteStyle = {
   '.katex': { overflowX: 'scroll' },
   ol: {
-    paddingLeft: '5',
+    paddingLeft: 4,
+    py: 1,
+  },
+  'li::marker': {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  li: {
+    pt: 1,
   },
   ul: {
     paddingLeft: '5',
@@ -70,7 +91,7 @@ export const defaultNoteStyle = {
   p: {
     fontSize: '14',
     fontWeight: '500 !important',
-    paddingBottom: '.5em',
+    pb: 2,
   },
   div: {
     hyphens: 'auto !important',
