@@ -95,6 +95,7 @@ const Sidebar = (props: SidebarProps) => {
   const justificationList = ['justify', 'start', 'end', 'center']
   const [font, setFont] = useState('sans serif')
   const [indent, setIndent] = useState(0)
+  const [collapse, setCollapse] = useState(false)
   //maybe want to close it when clicking outside, but not sure
   //const outsideClickRef = useRef();
   return (
@@ -150,6 +151,8 @@ const Sidebar = (props: SidebarProps) => {
                   nextPreviewNode,
                   outline,
                   setOutline,
+                  collapse,
+                  setCollapse,
                 }}
               />
             </Flex>
@@ -220,6 +223,7 @@ const Sidebar = (props: SidebarProps) => {
                   openContextMenu,
                   outline,
                   setOutline,
+                  collapse,
                 }}
               />
             </VStack>

@@ -40,8 +40,8 @@ export const outlineNoteStyle = {
     display: 'none',
   },
   '.sectionContent': {
-    pt: 2,
-    mt: 1,
+    //pt: 2,
+    mt: 3,
     paddingLeft: 4,
     ml: '11px',
     borderLeftWidth: '1px',
@@ -58,7 +58,8 @@ export const outlineNoteStyle = {
     pl: 1,
     lineHeight: '1.25',
     color: 'black',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: 700,
   },
   '.sec': {
     pt: 1,
@@ -67,7 +68,8 @@ export const outlineNoteStyle = {
     mb: 2,
   },
   p: {
-    fontSize: 12,
+    fontWeight: 500,
+    fontSize: 14,
     pb: 2,
   },
 }

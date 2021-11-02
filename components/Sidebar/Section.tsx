@@ -1,23 +1,35 @@
 import { Box, Collapse, Flex, IconButton } from '@chakra-ui/react'
-import React, { JSXElementConstructor, ReactChild, ReactElement, ReactNode, useState } from 'react'
+import React, {
+  JSXElementConstructor,
+  ReactChild,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { BiCaretDownCircle, BiChevronDownCircle, BiCircle } from 'react-icons/bi'
 import { ComponentLike, ComponentPropsWithoutNode } from 'rehype-react'
 import { VscCircleFilled, VscCircleOutline } from 'react-icons/vsc'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { NoteContext } from '../../util/NoteContext'
 
 export interface SectionProps {
   children: any
   className: string
-  outline: boolean
 }
 
 export const Section = (props: SectionProps) => {
   const {
     children,
     className, // outline
-    outline,
   } = props
+  const { collapse } = useContext(NoteContext)
   const [open, setOpen] = useState(true)
+  useEffect(() => {
+    setOpen(!collapse)
+  }, [collapse])
+
   if (className === 'h0Wrapper headingWrapper') {
     return <Box className="preHeadingContent"> {children}</Box>
   }

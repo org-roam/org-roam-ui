@@ -14,9 +14,10 @@ import rehype2react from 'rehype-react'
 
 import { PreviewLink } from '../components/Sidebar/Link'
 import { NodeByCite, NodeById } from '../pages'
-import React, { ReactNode, useMemo } from 'react'
+import React, { createContext, ReactNode, useMemo } from 'react'
 import { OrgImage } from '../components/Sidebar/OrgImage'
 import { Section } from '../components/Sidebar/Section'
+import { NoteContext } from './NoteContext'
 
 export interface ProcessedOrgProps {
   nodeById: NodeById
@@ -27,6 +28,7 @@ export interface ProcessedOrgProps {
   setSidebarHighlightedNode: any
   openContextMenu: any
   outline: boolean
+  collapse: boolean
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
@@ -39,6 +41,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     previewNode,
     openContextMenu,
     outline,
+    collapse,
   } = props
 
   const processor = unified()
@@ -73,7 +76,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
           return <OrgImage src={src as string} file={previewNode?.file} />
         },
         section: ({ children, className }) => (
-          <Section {...{ outline }} className={className as string}>
+          <Section {...{ outline, collapse }} className={className as string}>
             {children}
           </Section>
         ),
@@ -84,5 +87,5 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     })
 
   const text = useMemo(() => processor.processSync(previewText).result, [previewText])
-  return <>{text}</>
+  return <NoteContext.Provider value={{ collapse, outline }}>{text}</NoteContext.Provider>
 }

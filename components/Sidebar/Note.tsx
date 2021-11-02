@@ -18,6 +18,7 @@ export interface NoteProps {
   linksByNodeId: LinksByNodeId
   openContextMenu: any
   outline: boolean
+  collapse: boolean
 }
 
 export const Note = (props: NoteProps) => {
@@ -32,6 +33,7 @@ export const Note = (props: NoteProps) => {
     linksByNodeId,
     openContextMenu,
     outline,
+    collapse,
   } = props
   const extraStyle = outline ? outlineNoteStyle : viewerNoteStyle
   return (
@@ -62,6 +64,7 @@ export const Note = (props: NoteProps) => {
               setSidebarHighlightedNode,
               openContextMenu,
               outline,
+              collapse,
             }}
           />
           <Backlinks
