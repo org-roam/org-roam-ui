@@ -16,16 +16,16 @@ jobs:
     outputs:
       ts: ${{ steps.filter.outputs.ts }}
     steps:
-    - uses: actions/checkout@v2
-    - name: '[check if build necessary]' 
-      uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          ts:
-            - '**.ts'
-            - '**.tsx'
-            - '**.json'
+      - uses: actions/checkout@v2
+      - name: '[check if build necessary]'
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            ts:
+              - '**.ts'
+              - '**.tsx'
+              - '**.json'
   lint-test-build:
     name: '[ci|lint-test-build]'
     runs-on: 'ubuntu-latest'
@@ -47,7 +47,8 @@ jobs:
           git config --global url."https://github.com/".insteadOf ssh://git@github.com/
           git config --global url."https://".insteadOf git://
           git config --global url."https://".insteadOf ssh://
-          yarn
-          yarn build
-...
+          npm install
+          npm run build
+          npm run export
+---
 # End of ci.yml
