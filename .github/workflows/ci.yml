@@ -10,9 +10,25 @@ defaults:
   run:
     shell: 'bash'
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ts: ${{ steps.filter.outputs.ts }}
+    steps:
+    - name: '[check if build necessary]' 
+      uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          ts:
+            - '*.ts'
+            - '*.tsx'
+            - '*.json'
   lint-test-build:
     name: '[ci|lint-test-build]'
     runs-on: 'ubuntu-18.04'
+    needs: changes
+    if: ${{ needs.changes.outputs.ts == 'true' }}
     steps:
       - name: '[checkout] ${{ github.repository }} project'
         uses: 'actions/checkout@v2'
