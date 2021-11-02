@@ -9,9 +9,26 @@ defaults:
   run:
     shell: 'bash'
 jobs:
-  lint-test-build:
-    name: '[build]'
+  changes:
     runs-on: 'ubuntu-latest'
+    outputs:
+      ts: ${{ steps.filter.outputs.ts }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: '[check if build necessary]' 
+      uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          ts:
+            - '*.ts'
+            - '*.tsx'
+            - '*.json'
+  build-deploy:
+    name: '[cd|build-deploy]'
+    runs-on: 'ubuntu-latest'
+    needs: changes
+    if: ${{ needs.changes.outputs.ts == 'true' }}
     steps:
       - name: '[checkout] ${{ github.repository }} project'
         uses: 'actions/checkout@v2'
@@ -42,4 +59,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
 ...
-# End of ci.yml
+# End of cd.yml
