@@ -25,6 +25,7 @@ export const TagPanel = (props: TagPanelProps) => {
 
   return (
     <CUIAutoComplete
+      labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
       items={tagArray}
       label={'Add tag to ' + mode}
       placeholder=" "
@@ -41,16 +42,25 @@ export const TagPanel = (props: TagPanelProps) => {
       highlightItemBg="gray.400"
       toggleButtonStyleProps={{ variant: 'outline' }}
       inputStyleProps={{
+        mt: 2,
+        height: 8,
         focusBorderColor: highlightColor,
         color: 'gray.800',
-        borderColor: 'gray.600',
+        borderColor: 'gray.500',
       }}
       tagStyleProps={{
-        rounded: 'full',
-        bg: highlightColor,
-        height: 8,
-        paddingLeft: 4,
-        fontWeight: 'bold',
+        justifyContent: 'flex-start',
+        //variant: 'subtle',
+        fontSize: 10,
+        borderColor: highlightColor,
+        borderWidth: 1,
+        borderRadius: 'md',
+        color: highlightColor,
+        bg: '',
+        height: 4,
+        mb: 2,
+        //paddingLeft: 4,
+        //fontWeight: 'bold',
       }}
       hideToggleButton
       itemRenderer={(selected) => selected.label}

@@ -51,6 +51,28 @@ export const TagMenu = (props: TagMenuProps) => {
       </MenuItem>
       <Collapse in={colors.isOpen}>
         <Flex ml={2} mt={2} flexWrap="wrap">
+          <Box key="empty">
+            <Box
+              tabIndex={0}
+              cursor="pointer"
+              onClick={() =>
+                setTagColors((curr: { [tag: string]: string }) =>
+                  Object.fromEntries(
+                    Object.keys(curr)
+                      .filter((t) => t !== target)
+                      .map((t) => [t, curr[t]]),
+                  ),
+                )
+              }
+              bgColor={''}
+              m={1}
+              borderRadius="sm"
+              borderColor="gray.600"
+              borderWidth={1}
+              height={3}
+              width={3}
+            ></Box>
+          </Box>
           {colorList.map((color: string) => (
             <Box key={color}>
               <Box

@@ -40,6 +40,7 @@ import {
   ExternalLinkIcon,
   ChevronRightIcon,
   PlusSquareIcon,
+  MinusIcon,
 } from '@chakra-ui/icons'
 
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
@@ -119,6 +120,9 @@ export const ContextMenu = (props: ContextMenuProps) => {
                   >
                     Open local graph for this node
                   </MenuItem>
+                  <MenuItem onClick={() => handleLocal(target!, 'remove')} icon={<MinusIcon />}>
+                    Exclude node from local graph
+                  </MenuItem>
                 </>
               )}
               {!target?.properties?.FILELESS ? (
@@ -186,7 +190,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                   color="red.500"
                   onClick={onOpen}
                 >
-                  Permenantly delete note
+                  Permanently delete note
                 </MenuItem>
               )}
             </>

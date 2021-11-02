@@ -45,6 +45,9 @@ export const initialFilter = {
   date: [],
   noter: true,
 }
+export const initialColoring = {
+  method: 'degree',
+}
 
 export const initialVisuals = {
   particles: false,
@@ -56,23 +59,25 @@ export const initialVisuals = {
   arrowsColor: '',
   linkOpacity: 0.8,
   linkWidth: 1,
-  nodeRel: 4,
+  nodeRel: 3,
   nodeOpacity: 1,
   nodeResolution: 12,
   labels: 2,
-  labelScale: 1,
+  labelScale: 1.5,
   labelFontSize: 10,
   labelLength: 40,
   labelWordWrap: 25,
   labelLineSpace: 1,
+  labelDynamicDegree: 8,
+  labelDynamicStrength: 0.5,
   highlight: true,
-  highlightNodeSize: 1.2,
-  highlightLinkSize: 2,
+  highlightNodeSize: 1.1,
+  highlightLinkSize: 0.7,
   highlightFade: 0.8,
   highlightAnim: true,
-  animationSpeed: 420,
+  animationSpeed: 360,
   algorithmOptions: options,
-  algorithmName: 'SinusoidalOut',
+  algorithmName: 'CircularOut',
   linkColorScheme: 'gray.500',
   nodeColorScheme: [
     'red.500',
@@ -105,7 +110,7 @@ export const initialVisuals = {
   refLinkHighlightColor: '',
   refNodeColor: 'black',
   nodeSizeLinks: 0.5,
-  nodeZoomSize: 1.3,
+  nodeZoomSize: 1.2,
 }
 
 export interface TagColors {
@@ -126,6 +131,10 @@ export const initialMouse = {
   context: 'right',
   preview: 'click',
   backgroundExitsLocal: false,
+}
+
+export const initialLocal = {
+  neighbors: 1,
 }
 
 export const colorList = [

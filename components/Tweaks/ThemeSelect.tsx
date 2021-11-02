@@ -22,7 +22,13 @@ export const ThemeSelect = () => {
     <Flex alignItems="center" justifyContent="space-between" pl={7} pr={2}>
       <Text>Theme</Text>
       <Menu isLazy placement="bottom" closeOnSelect={false}>
-        <MenuButton as={Button} colorScheme="" color="black" rightIcon={<ChevronDownIcon />}>
+        <MenuButton
+          as={Button}
+          size="sm"
+          colorScheme=""
+          color="black"
+          rightIcon={<ChevronDownIcon />}
+        >
           {emacsTheme[0]}
         </MenuButton>
         <MenuList minW={10} zIndex="popover" bgColor="gray.200">

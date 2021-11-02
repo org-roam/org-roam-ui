@@ -24,6 +24,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
+//@ts-expect-error
+import jLouvain from 'jlouvain.js'
 import type {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
@@ -39,7 +41,9 @@ import {
   algos,
   colorList,
   initialBehavior,
+  initialColoring,
   initialFilter,
+  initialLocal,
   initialMouse,
   initialPhysics,
   initialVisuals,
@@ -51,6 +55,7 @@ import { Tweaks } from '../components/Tweaks'
 import { usePersistantState } from '../util/persistant-state'
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import { openNodeInEmacs } from '../util/webSocketFunctions'
+import { drawLabels } from '../components/Graph/drawLabels'
 
 const d3promise = import('d3-force-3d')
 
@@ -71,6 +76,7 @@ export type NodeByCite = { [key: string]: OrgRoamNode | undefined }
 export type Tags = string[]
 export type Scope = {
   nodeIds: string[]
+  excludedNodeIds: string[]
 }
 
 export default function Home() {
@@ -96,7 +102,7 @@ export default function Home() {
 export function GraphPage() {
   const [threeDim, setThreeDim] = usePersistantState('3d', false)
   const [tagColors, setTagColors] = usePersistantState<TagColors>('tagCols', {})
-  const [scope, setScope] = useState<Scope>({ nodeIds: [] })
+  const [scope, setScope] = useState<Scope>({ nodeIds: [], excludedNodeIds: [] })
 
   const [physics, setPhysics] = usePersistantState('physics', initialPhysics)
   const [filter, setFilter] = usePersistantState('filter', initialFilter)
@@ -105,6 +111,9 @@ export function GraphPage() {
   const [emacsNodeId, setEmacsNodeId] = useState<string | null>(null)
   const [behavior, setBehavior] = usePersistantState('behavior', initialBehavior)
   const [mouse, setMouse] = usePersistantState('mouse', initialMouse)
+  const [coloring, setColoring] = usePersistantState('coloring', initialColoring)
+  const [local, setLocal] = usePersistantState('local', initialLocal)
+
   const [
     previewNodeState,
     {
@@ -130,6 +139,7 @@ export function GraphPage() {
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
   const variablesRef = useRef<{ [variable: string]: string }>({})
+  const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
 
@@ -328,7 +338,7 @@ export function GraphPage() {
 
   const { setEmacsTheme } = useContext(ThemeContext)
 
-  const scopeRef = useRef<Scope>({ nodeIds: [] })
+  const scopeRef = useRef<Scope>({ nodeIds: [], excludedNodeIds: [] })
   const behaviorRef = useRef(initialBehavior)
   behaviorRef.current = behavior
   const WebSocketRef = useRef<ReconnectingWebSocket | null>(null)
@@ -354,7 +364,7 @@ export function GraphPage() {
     )
     if (command === 'zoom') {
       if (sr.nodeIds.length) {
-        setScope({ nodeIds: [] })
+        setScope({ nodeIds: [], excludedNodeIds: [] })
       }
       setTimeout(
         () => fg.zoomToFit(speed, padding, (node: NodeObject) => nodes[node.id as string]),
@@ -363,7 +373,7 @@ export function GraphPage() {
       return
     }
     if (!sr.nodeIds.length) {
-      setScope({ nodeIds: [emacsNode] })
+      setScope((current: Scope) => ({ ...current, nodeIds: [emacsNode] }))
       setTimeout(() => {
         fg.centerAt(0, 0, 10)
         fg.zoomToFit(1, padding)
@@ -371,7 +381,7 @@ export function GraphPage() {
       return
     }
     if (bh.localSame !== 'add') {
-      setScope({ nodeIds: [emacsNode] })
+      setScope((current: Scope) => ({ ...current, nodeIds: [emacsNode] }))
       setTimeout(() => {
         fg.centerAt(0, 0, 10)
         fg.zoomToFit(1, padding)
@@ -386,7 +396,7 @@ export function GraphPage() {
         return nodes[scopeId]
       })
     ) {
-      setScope({ nodeIds: [emacsNode] })
+      setScope((current: Scope) => ({ ...current, nodeIds: [emacsNode] }))
       setTimeout(() => {
         fg.centerAt(0, 0, 10)
         fg.zoomToFit(1, padding)
@@ -495,9 +505,16 @@ export function GraphPage() {
     contextMenu.onOpen()
   }
 
-  const handleLocal = (node: OrgRoamNode, add: string) => {
-    if (add === 'replace') {
-      setScope({ nodeIds: [node.id] })
+  const handleLocal = (node: OrgRoamNode, command: string) => {
+    if (command === 'remove') {
+      setScope((currentScope: Scope) => ({
+        ...currentScope,
+        excludedNodeIds: [...currentScope.excludedNodeIds, node.id as string],
+      }))
+      return
+    }
+    if (command === 'replace') {
+      setScope({ nodeIds: [node.id], excludedNodeIds: [] })
       return
     }
     if (scope.nodeIds.includes(node.id as string)) {
@@ -539,6 +556,10 @@ export function GraphPage() {
           setBehavior,
           tagColors,
           setTagColors,
+          coloring,
+          setColoring,
+          local,
+          setLocal,
         }}
         tags={tagsRef.current}
       />
@@ -573,6 +594,9 @@ export function GraphPage() {
               setMainWindowWidth,
               setContextMenuTarget,
               graphRef,
+              clusterRef,
+              coloring,
+              local,
             }}
           />
         )}
@@ -680,6 +704,7 @@ export interface GraphProps {
   visuals: typeof initialVisuals
   behavior: typeof initialBehavior
   mouse: typeof initialMouse
+  local: typeof initialLocal
   scope: Scope
   setScope: any
   webSocket: any
@@ -696,6 +721,8 @@ export interface GraphProps {
   setMainWindowWidth: any
   variables: { [variable: string]: string }
   graphRef: any
+  clusterRef: any
+  coloring: typeof initialColoring
 }
 
 export const Graph = function (props: GraphProps) {
@@ -712,6 +739,7 @@ export const Graph = function (props: GraphProps) {
     behavior,
     mouse,
     scope,
+    local,
     setScope,
     webSocket,
     tagColors,
@@ -724,6 +752,8 @@ export const Graph = function (props: GraphProps) {
     contextMenu,
     handleLocal,
     variables,
+    clusterRef,
+    coloring,
   } = props
 
   const { dailyDir, roamDir } = variables
@@ -756,7 +786,7 @@ export const Graph = function (props: GraphProps) {
     }
   }
 
-  const findNthNeighbors = (ids: string[], n: number) => {
+  const findNthNeighbors = (ids: string[], excludedIds: string[], n: number) => {
     let queue = [ids[0]]
     let todo: string[] = []
     const completed = [ids[0]]
@@ -765,6 +795,9 @@ export const Graph = function (props: GraphProps) {
         const links = filteredLinksByNodeIdRef.current[node as string] ?? []
         links.forEach((link) => {
           const [sourceId, targetId] = normalizeLinkEnds(link)
+          if (excludedIds.some((id) => [sourceId, targetId].includes(id))) {
+            return
+          }
           if (!completed.includes(sourceId)) {
             todo.push(sourceId)
             return
@@ -884,8 +917,22 @@ export const Graph = function (props: GraphProps) {
       }
     }, {})
 
+    const weightedLinks = filteredLinks.map((l) => {
+      const [target, source] = normalizeLinkEnds(l)
+      const link = l as OrgRoamLink
+      return { target, source, weight: link.type === 'cite' ? 1 : 2 }
+    })
+
+    if (coloring.method === 'community') {
+      const community = jLouvain().nodes(filteredNodeIds).edges(weightedLinks)
+      clusterRef.current = community()
+    }
+    /* clusterRef.current = Object.fromEntries(
+     *   Object.entries(community()).sort(([, a], [, b]) => a - b),
+     * ) */
+    //console.log(clusterRef.current)
     return { nodes: filteredNodes, links: filteredLinks }
-  }, [filter, graphData])
+  }, [filter, graphData, coloring.method])
 
   const [scopedGraphData, setScopedGraphData] = useState<GraphData>({ nodes: [], links: [] })
 
@@ -893,9 +940,12 @@ export const Graph = function (props: GraphProps) {
     if (!scope.nodeIds.length) {
       return
     }
-    const oldScopedNodes = scope.nodeIds.length > 1 ? scopedGraphData.nodes : []
+    const oldScopedNodes =
+      scope.nodeIds.length > 1
+        ? scopedGraphData.nodes.filter((n) => !scope.excludedNodeIds.includes(n.id as string))
+        : []
     const oldScopedNodeIds = oldScopedNodes.map((node) => node.id as string)
-    const neighbs = findNthNeighbors(scope.nodeIds, 1)
+    const neighbs = findNthNeighbors(scope.nodeIds, scope.excludedNodeIds, local.neighbors)
     const newScopedNodes = filteredGraphData.nodes
       .filter((node) => {
         if (oldScopedNodes.length) {
@@ -918,7 +968,10 @@ export const Graph = function (props: GraphProps) {
     const scopedNodes = [...oldScopedNodes, ...newScopedNodes]
     const scopedNodeIds = scopedNodes.map((node) => node.id as string)
 
-    const oldScopedLinks = scope.nodeIds.length > 1 ? scopedGraphData.links : []
+    const oldRawScopedLinks = scope.nodeIds.length > 1 ? scopedGraphData.links : []
+    const oldScopedLinks = oldRawScopedLinks.filter((l) => {
+      !scope.excludedNodeIds.some((e) => normalizeLinkEnds(l).includes(e))
+    })
     const newScopedLinks = filteredGraphData.links
       .filter((link) => {
         // we need to cover both because force-graph modifies the original data
@@ -943,7 +996,14 @@ export const Graph = function (props: GraphProps) {
     const scopedLinks = [...oldScopedLinks, ...newScopedLinks]
 
     setScopedGraphData({ nodes: scopedNodes, links: scopedLinks })
-  }, [filter, scope, JSON.stringify(graphData), filteredGraphData.links, filteredGraphData.nodes])
+  }, [
+    local.neighbors,
+    filter,
+    JSON.stringify(scope),
+    JSON.stringify(graphData),
+    filteredGraphData.links,
+    filteredGraphData.nodes,
+  ])
 
   useEffect(() => {
     ;(async () => {
@@ -1066,15 +1126,16 @@ export const Graph = function (props: GraphProps) {
 
   const getNodeColorById = (id: string) => {
     const linklen = filteredLinksByNodeIdRef.current[id!]?.length ?? 0
-    /* const parentCiteNeighbors = linklen
-     *   ? linksByNodeId[id!]?.filter((link) => ['parent', 'heading', 'cite', 'ref'].includes(link.type)).length
-     *   : 0
-     * const neighbors = filter.parent ? linklen : linklen - parentCiteNeighbors! */
-
+    if (coloring.method === 'degree') {
+      return visuals.nodeColorScheme[
+        numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
+      ]
+    }
     return visuals.nodeColorScheme[
-      numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
+      linklen && clusterRef.current[id] % visuals.nodeColorScheme.length
     ]
   }
+
   const getLinkNodeColor = (sourceId: string, targetId: string) => {
     return filteredLinksByNodeIdRef.current[sourceId]!.length >
       filteredLinksByNodeIdRef.current[targetId]!.length
@@ -1122,6 +1183,7 @@ export const Graph = function (props: GraphProps) {
 
   const getNodeColor = (node: OrgRoamNode, theme: any) => {
     const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
+    //const needsHighlighting = hoverNode?.id === node.id! || lastHoverNode?.current?.id === node.id
     // if we are matching the node color and don't have a highlight color
     // or we don't have our own scheme and we're not being highlighted
     if (visuals.emacsNodeColor && node.id === emacsNodeId) {
@@ -1194,7 +1256,7 @@ export const Graph = function (props: GraphProps) {
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     //onZoom: ({ k, x, y }) => setZoom(k),
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
-    //nodeLabel: (node) => (node as OrgRoamNode).title,
+    //nodeLabel: (node) => ,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode, theme)
     },
@@ -1203,76 +1265,23 @@ export const Graph = function (props: GraphProps) {
       return nodeSize(node) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
-      if (!node) {
-        return
-      }
-      if (dragging) {
-        return
-      }
-
-      if (!visuals.labels) {
-        return
-      }
-      const wasHighlightedNode = previouslyHighlightedNodes[node.id!]
-
-      if (
-        (globalScale <= visuals.labelScale || visuals.labels === 1) &&
-        !highlightedNodes[node.id!] &&
-        !wasHighlightedNode
-      ) {
-        return
-      }
-
-      const nodeTitle = (node as OrgRoamNode).title!
-      const label = nodeTitle.substring(0, visuals.labelLength)
-      const fontSize = visuals.labelFontSize / (0.75 * Math.min(Math.max(0.5, globalScale), 3))
-      const textWidth = ctx.measureText(label).width
-      const bckgDimensions = [textWidth * 1.1, fontSize].map((n) => n + fontSize * 0.5) as [
-        number,
-        number,
-      ] // some padding
-
-      const fadeFactor = Math.min((3 * (globalScale - visuals.labelScale)) / visuals.labelScale, 1)
-
-      // draw label background
-      const getLabelOpacity = () => {
-        if (visuals.labels === 1) {
-          return opacity
-        }
-        if (globalScale <= visuals.labelScale) {
-          return opacity
-        }
-        return highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-          ? Math.max(fadeFactor, opacity)
-          : 1 * fadeFactor * (-1 * (visuals.highlightFade * opacity - 1))
-      }
-      const nodeS = 8 * Math.cbrt(nodeSize(node) * visuals.nodeRel)
-      if (visuals.labelBackgroundColor && visuals.labelBackgroundOpacity) {
-        const backgroundOpacity = getLabelOpacity() * visuals.labelBackgroundOpacity
-        const labelBackground = hexToRGBA(labelBackgroundColor, backgroundOpacity)
-        ctx.fillStyle = labelBackground
-        ctx.fillRect(
-          node.x! - bckgDimensions[0] / 2,
-          node.y! - bckgDimensions[1] / 2 + nodeS,
-          ...bckgDimensions,
-        )
-      }
-
-      // draw label text
-      const textOpacity = getLabelOpacity()
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      const labelText = hexToRGBA(labelTextColor, textOpacity)
-      ctx.fillStyle = labelText
-      ctx.font = `${fontSize}px Sans-Serif`
-      const wordsArray = wrap(label, { width: visuals.labelWordWrap }).split('\n')
-
-      const truncatedWords =
-        nodeTitle.length > visuals.labelLength
-          ? [...wordsArray.slice(0, -1), `${wordsArray.slice(-1)}...`]
-          : wordsArray
-      truncatedWords.forEach((word, index) => {
-        ctx.fillText(word, node.x!, node.y! + nodeS + visuals.labelLineSpace * fontSize * index)
+      drawLabels({
+        nodeRel: visuals.nodeRel,
+        filteredLinksByNodeId: filteredLinksByNodeIdRef.current,
+        lastHoverNode: lastHoverNode.current,
+        ...{
+          node,
+          ctx,
+          globalScale,
+          highlightedNodes,
+          previouslyHighlightedNodes,
+          visuals,
+          opacity,
+          nodeSize,
+          labelTextColor,
+          labelBackgroundColor,
+          hoverNode,
+        },
       })
     },
     nodeCanvasObjectMode: () => 'after',
@@ -1362,6 +1371,9 @@ export const Graph = function (props: GraphProps) {
      * }, */
     onNodeHover: (node) => {
       if (!visuals.highlight) {
+        return
+      }
+      if (dragging) {
         return
       }
 

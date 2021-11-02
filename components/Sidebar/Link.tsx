@@ -50,6 +50,7 @@ export interface NodeLinkProps {
   setSidebarHighlightedNode: any
   openContextMenu: any
   noUnderline?: boolean
+  id?: string
 }
 export interface NormalLinkProps {
   href: string
@@ -66,6 +67,7 @@ import { Section } from './Section'
 export const NodeLink = (props: NodeLinkProps) => {
   const {
     noUnderline,
+    id,
     setSidebarHighlightedNode,
     setPreviewNode,
     nodeById,
@@ -77,10 +79,12 @@ export const NodeLink = (props: NodeLinkProps) => {
 
   const theme = useTheme()
   const coolHighlightColor = getThemeColor(highlightColor, theme)
-  const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
+  const type = href.replaceAll(/(.*?)\:?.*/g, '$1')
+  const uri = href.replaceAll(/.*?\:(.*)/g, '$1')
+  const ID = id ?? uri
   return (
     <Text
-      onMouseEnter={() => setSidebarHighlightedNode(nodeById[uri])}
+      onMouseEnter={() => setSidebarHighlightedNode(nodeById[ID])}
       onMouseLeave={() => setSidebarHighlightedNode({})}
       tabIndex={0}
       display="inline"
@@ -129,8 +133,8 @@ export const PreviewLink = (props: LinkProps) => {
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
   const [orgText, setOrgText] = useState<any>(null)
-  const [whatever, type, uri] = [...href.matchAll(/(.*?)\:(.*)/g)][0]
   const [hover, setHover] = useState(false)
+  const type = href.replaceAll(/(.*?)\:.*/g, '$1')
 
   const extraNoteStyle = outline ? outlineNoteStyle : viewerNoteStyle
   const getText = () => {
@@ -161,10 +165,15 @@ export const PreviewLink = (props: LinkProps) => {
     }
     getText()
   }, [hover, orgText])
+  if (!type) {
+    return <Text color="gray.700">{children}</Text>
+  }
 
   if (type.replaceAll(/(http)?.*/g, '$1')) {
     return <NormalLink href={href}>{children}</NormalLink>
   }
+
+  const uri = href.replaceAll(/.*?\:(.*)/g, '$1')
   const getId = (type: string, uri: string) => {
     if (type === 'id') {
       return uri
@@ -232,6 +241,7 @@ export const PreviewLink = (props: LinkProps) => {
               <NodeLink
                 key={nodeById[id]?.title ?? id}
                 {...{
+                  id,
                   setSidebarHighlightedNode,
                   setPreviewNode,
                   nodeById,
