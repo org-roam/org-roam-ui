@@ -10,6 +10,8 @@ export interface UniOrgProps {
   nodeByCite: NodeByCite
   setSidebarHighlightedNode: any
   openContextMenu: any
+  outline: boolean
+  collapse: boolean
 }
 
 export const UniOrg = (props: UniOrgProps) => {
@@ -20,6 +22,8 @@ export const UniOrg = (props: UniOrgProps) => {
     nodeByCite,
     previewNode,
     setPreviewNode,
+    outline,
+    collapse,
   } = props
 
   const [previewText, setPreviewText] = useState('')
@@ -58,6 +62,8 @@ export const UniOrg = (props: UniOrgProps) => {
             nodeByCite,
             setSidebarHighlightedNode,
             openContextMenu,
+            outline,
+            collapse,
           }}
         />
       )}

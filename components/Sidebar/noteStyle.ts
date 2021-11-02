@@ -1,27 +1,91 @@
-export const noteStyle = {
-  '.katex': { overflowX: 'scroll' },
-  h1: { color: 'black', lineHeight: '1.2', fontSize: '20', fontWeight: 'bold', marginBottom: 3 },
+export const viewerNoteStyle = {
+  '.headingFlex': {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+  },
+  '.outlineHeadingButton': {
+    display: 'none',
+  },
+  h1: { color: 'black', lineHeight: '1.2', fontSize: '16', fontWeight: 'bold', paddingTop: 2 },
   h2: {
-    fontSize: '18',
-    marginBottom: 2,
+    fontSize: '14',
     color: 'black',
+    fontWeight: 'bold',
+    fontStyle: 'bold italic',
+    paddingTop: 2,
   },
   h3: {
-    fontSize: '16',
-    fontWeight: '600 !important',
-    marginBottom: '.5em',
-
+    fontSize: '13',
     color: 'black',
+    paddingTop: 2,
   },
   h4: {
-    fontSize: '14',
-    fontWeight: '500 !important',
-    marginBottom: '.25em',
+    fontSize: '12',
     fontStyle: 'italic',
     color: 'black',
+    paddingTop: 2,
   },
+
+  '.sectionContent': {
+    paddingTop: 2,
+  },
+}
+
+export const outlineNoteStyle = {
+  '.headingFlex': {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  '.viewerHeadingButton': {
+    display: 'none',
+  },
+  '.sectionContent': {
+    //pt: 2,
+    mt: 3,
+    paddingLeft: 4,
+    ml: '11px',
+    borderLeftWidth: '1px',
+    borderLeftColor: 'gray.500',
+  },
+  '.preHeadingContent': {
+    //paddingTop: 2,
+    //paddingLeft: 4,
+    // ml: 3,
+    //borderLeftWidth: '1px',
+    //borderLeftColor: 'gray.600',
+  },
+  'h1,h2,h3,h4,h5,h6,h7,h8': {
+    pl: 1,
+    lineHeight: '1.25',
+    color: 'black',
+    fontSize: 15,
+    fontWeight: 700,
+  },
+  '.sec': {
+    pt: 1,
+  },
+  '.wrapClass > div > p': {
+    mb: 2,
+  },
+  p: {
+    fontWeight: 500,
+    fontSize: 14,
+    pb: 2,
+  },
+}
+
+export const defaultNoteStyle = {
+  '.katex': { overflowX: 'scroll' },
   ol: {
-    paddingLeft: '5',
+    paddingLeft: 4,
+    py: 1,
+  },
+  'li::marker': {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  li: {
+    pt: 1,
   },
   ul: {
     paddingLeft: '5',
@@ -29,7 +93,7 @@ export const noteStyle = {
   p: {
     fontSize: '14',
     fontWeight: '500 !important',
-    paddingBottom: '.5em',
+    pb: 2,
   },
   div: {
     hyphens: 'auto !important',
@@ -136,4 +200,3 @@ export const noteStyle = {
   '.figure': { padding: '1em' },
   '.figure p': { textAlign: 'center' },
 }
-export default noteStyle

@@ -5,7 +5,7 @@ import { NodeById, NodeByCite, LinksByNodeId } from '../../pages'
 import { Box, Flex } from '@chakra-ui/react'
 import { UniOrg } from '../../util/uniorg'
 import { Backlinks } from '../../components/Sidebar/Backlinks'
-import { noteStyle } from './noteStyle'
+import { defaultNoteStyle, viewerNoteStyle, outlineNoteStyle } from './noteStyle'
 
 export interface NoteProps {
   setPreviewNode: any
@@ -17,6 +17,8 @@ export interface NoteProps {
   justificationList: string[]
   linksByNodeId: LinksByNodeId
   openContextMenu: any
+  outline: boolean
+  collapse: boolean
 }
 
 export const Note = (props: NoteProps) => {
@@ -30,20 +32,29 @@ export const Note = (props: NoteProps) => {
     setSidebarHighlightedNode,
     linksByNodeId,
     openContextMenu,
+    outline,
+    collapse,
   } = props
+  const extraStyle = outline ? outlineNoteStyle : viewerNoteStyle
   return (
     <Box
       pr={8}
+      pt={2}
       height="100%"
       className="org"
       sx={{
-        ...noteStyle,
-
+        ...defaultNoteStyle,
+        ...extraStyle,
         textAlign: justificationList[justification],
       }}
     >
       {previewNode?.id && (
-        <Flex height="100%" flexDirection="column" justifyContent="space-between">
+        <Flex
+          className="wrapClass"
+          height="100%"
+          flexDirection="column"
+          justifyContent="space-between"
+        >
           <UniOrg
             {...{
               setPreviewNode,
@@ -52,6 +63,8 @@ export const Note = (props: NoteProps) => {
               nodeByCite,
               setSidebarHighlightedNode,
               openContextMenu,
+              outline,
+              collapse,
             }}
           />
           <Backlinks
@@ -63,6 +76,7 @@ export const Note = (props: NoteProps) => {
               nodeByCite,
               setSidebarHighlightedNode,
               openContextMenu,
+              outline,
             }}
           />
         </Flex>
