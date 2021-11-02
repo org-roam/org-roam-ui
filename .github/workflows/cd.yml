@@ -21,9 +21,9 @@ jobs:
       with:
         filters: |
           ts:
-            - '*.ts'
-            - '*.tsx'
-            - '*.json'
+            - '**.ts'
+            - '**.tsx'
+            - '**.json'
   build-deploy:
     name: '[cd|build-deploy]'
     runs-on: 'ubuntu-latest'
