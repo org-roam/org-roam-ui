@@ -551,7 +551,7 @@ from all other links."
                          (expand-file-name org-roam-dailies-directory)
                        (expand-file-name
                           org-roam-dailies-directory
-                          org-roam-directory)))))
+                          org-roam-directory))))
       (websocket-send-text ws
                            (json-encode
                             `((type . "variables")
