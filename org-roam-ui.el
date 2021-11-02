@@ -454,7 +454,7 @@ This database model won't be supported in the future, please consider upgrading.
                        :group :by id]))
 
 (defun org-roam-ui--get-links (&optional old)
-  "Get the cites and links tables as rows from the org-roam-db.
+  "Get the cites and links tables as rows from the org-roam db.
 Optionally set OLD to t to use the old db model (where the cites
 were in the same table as the links)."
 (if (not old)
