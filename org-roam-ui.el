@@ -373,19 +373,8 @@ unchanged."
    'nil))
 
 (defun org-roam-ui--send-graphdata ()
-  "Get roam data, make JSON, send through websocket to org-roam-ui.
-
-TODO: Split this up."
-  (let* ((nodes-columns
-          [id
-           file
-           title
-           level
-           pos
-           olp
-           properties
-           ,(funcall group-concat tag (emacsql-escape-raw \, ))])
-         (nodes-names
+  "Get roam data, make JSON, send through websocket to org-roam-ui."
+  (let* ((nodes-names
           [id
            file
            title
@@ -394,98 +383,131 @@ TODO: Split this up."
            olp
            properties
            tags])
-         (links-columns [links:source links:dest links:type])
-         (cites-columns [citations:node-id citations:cite-key refs:node-id])
-         (nodes-db-rows (org-roam-db-query `[:select ,nodes-columns :as tags
-                                             :from nodes
-                                             :left-join tags
-                                             :on (= id node_id)
-                                             :group :by id]))
-         links-db-rows
-         cites-db-rows
-         links-with-empty-refs)
-    ;; Put this check in until Doom upgrades to the latest org-roam
-    (if (fboundp 'org-roam-db-map-citations)
-        (setq links-db-rows (org-roam-db-query
-               `[:select ,links-columns
-                 :from links
-                 :where (= links:type "id")])
-              ;; Left outer join on refs means any id link (or cite link without a
-              ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
-              ;; cite link where a node has that `:ROAM_REFS:' will have a value.
-              cites-db-rows (org-roam-db-query
-               `[:select ,cites-columns
-                 :from citations
-                 :left :outer :join refs :on (= citations:cite-key refs:ref)])
-              ;; Convert any cite links that have nodes with associated refs to an
-              ;; id based link of type `ref' while removing the 'nil `refs:node-id'
-              ;; from all other links
-              cites-db-rows (seq-map
-                             (lambda (link)
-                               (pcase-let ((`(,source ,dest ,node-id) link))
-                                 (if node-id
-                                     (list source node-id "ref")
-                                   (list source dest "cite"))))
-                             cites-db-rows)
-              links-db-rows (append links-db-rows cites-db-rows)
-              links-with-empty-refs (seq-filter
-                                     (lambda (link)
-                                       (string-match-p "cite" (nth 2 link)))
-                                     cites-db-rows))
-      (setq links-db-rows (org-roam-db-query
-                           `[:select [links:source
-                                      links:dest
-                                      links:type
-                                      refs:node-id]
-                             :from links
-                             :left :outer :join refs :on (= links:dest refs:ref)
-                             :where (or
-                                     (= links:type "id")
-                                     (like links:type "%cite%"))])
-            links-db-rows (seq-map
-                           (lambda (l)
-                             (pcase-let ((`(,source ,dest ,type ,node-id) l))
-                               (if node-id
-                                   (list source node-id "ref")
-                                 (list source dest type))))
-                           links-db-rows)
-            links-with-empty-refs (seq-filter
+         (old (not (fboundp 'org-roam-db-map-citations)))
+         (links-db-rows (if old
+                            (org-roam-ui--separate-ref-links
+                             (org-roam-ui--get-links old))
+                          (seq-concatenate
+                           'list
+                           (org-roam-ui--separate-ref-links
+                            (org-roam-ui--get-cites))
+                           (org-roam-ui--get-links))))
+         (links-with-empty-refs (org-roam-ui--filter-citations links-db-rows))
+         (empty-refs (delete-dups (seq-map
                                    (lambda (link)
-                                     (string-match-p "cite" (nth 2 link)))
-                                   links-db-rows)))
-    (let* ((empty-refs (delete-dups (seq-map
-                                     (lambda (link)
-                                       (nth 1 link))
-                                     links-with-empty-refs)))
-           (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
-           ;; Try to update real nodes that are reference with a title build from
-           ;; their bibliography entry. Check configuration here for avoid unneeded
-           ;; iteration though nodes.
-           (nodes-db-rows (if org-roam-ui-retitle-ref-nodes
-                              (seq-map 'org-roam-ui--retitle-node nodes-db-rows)
-                            nodes-db-rows))
-           (nodes-db-rows (append nodes-db-rows fake-nodes))
-           (response `((nodes . ,(mapcar
-                                  (apply-partially
-                                   #'org-roam-ui-sql-to-alist
-                                   (append nodes-names nil))
+                                     (nth 1 link))
+                                   links-with-empty-refs)))
+         (nodes-db-rows (org-roam-ui--get-nodes))
+         (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
+           ;; Try to update real nodes that are reference with a title build
+           ;; from their bibliography entry. Check configuration here for avoid
+           ;; unneeded iteration though nodes.
+         (retitled-nodes-db-rows (if org-roam-ui-retitle-ref-nodes
+                                    (seq-map 'org-roam-ui--retitle-node
+                                             nodes-db-rows)
                                   nodes-db-rows))
-                       (links . ,(mapcar
-                                  (apply-partially
-                                   #'org-roam-ui-sql-to-alist
-                                   '(source target type))
-                                  links-db-rows))
-                       (tags . ,(seq-mapcat
-                                 #'seq-reverse
-                                 (org-roam-db-query
-                                  [:select :distinct tag :from tags]))))))
-      (websocket-send-text
-       org-roam-ui-ws-socket
-       (json-encode
-        `((type . "graphdata")
-          (data . ,response)))))))
+         (complete-nodes-db-rows (append retitled-nodes-db-rows fake-nodes))
+         (response `((nodes . ,(mapcar
+                                (apply-partially
+                                 #'org-roam-ui-sql-to-alist
+                                 (append nodes-names nil))
+                                complete-nodes-db-rows))
+                     (links . ,(mapcar
+                                (apply-partially
+                                 #'org-roam-ui-sql-to-alist
+                                 '(source target type))
+                                links-db-rows))
+                     (tags . ,(seq-mapcat
+                               #'seq-reverse
+                               (org-roam-db-query
+                                [:select :distinct tag :from tags]))))))
+    (when old
+      (message "[org-roam-ui] You are not using the latest version of org-roam.
+This database model won't be supported in the future, please consider upgrading."))
+    (websocket-send-text org-roam-ui-ws-socket (json-encode
+                                                `((type . "graphdata")
+                                                  (data . ,response))))))
 
 
+(defun org-roam-ui--filter-citations (links)
+  "Filter out the citations from LINKS."
+  (seq-filter
+   (lambda (link)
+     (string-match-p "cite" (nth 2 link)))
+   links))
+
+(defun org-roam-ui--get-nodes ()
+  "."
+  (org-roam-db-query [:select [id
+                                file
+                                title
+                                level
+                                pos
+                                olp
+                                properties
+                                (funcall group-concat tag
+                                         (emacsql-escape-raw \, ))]
+                       :as tags
+                       :from nodes
+                       :left-join tags
+                       :on (= id node_id)
+                       :group :by id]))
+
+(defun org-roam-ui--get-links (&optional old)
+  "Get the cites and links tables as rows from the org-roam-db.
+Optionally set OLD to t to use the old db model (where the cites
+were in the same table as the links)."
+(if (not old)
+    (org-roam-db-query
+     `[:select  [links:source
+                 links:dest
+                 links:type]
+       :from links
+       :where (= links:type "id")])
+  ;; Left outer join on refs means any id link (or cite link without a
+  ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
+  ;; cite link where a node has that `:ROAM_REFS:' will have a value.
+  (org-roam-db-query
+   `[:select [links:source
+              links:dest
+              links:type
+              refs:node-id]
+     :from links
+     :left :outer :join refs :on (= links:dest refs:ref)
+     :where (or
+             (= links:type "id")
+             (like links:type "%cite%"))])))
+
+(defun org-roam-ui--get-cites ()
+  "Get the citations when using the new db-model."
+  (org-roam-db-query
+   `[:select [citations:node-id citations:cite-key refs:node-id]
+     :from citations
+     :left :outer :join refs :on (= citations:cite-key refs:ref)]))
+
+(defun org-roam-ui--separate-ref-links (links &optional old)
+  "Create separate entries for LINKS with existing reference nodes.
+Optionally set OLD to t to support old citations db-model.
+
+Convert any cite links that have nodes with associated refs to an
+id based link of type `ref' while removing the 'nil `refs:node-id'
+from all other links."
+
+ (if (not old)
+    (seq-map
+     (lambda (link)
+       (pcase-let ((`(,source ,dest ,node-id) link))
+         (if node-id
+             (list source node-id "ref")
+           (list source dest "cite"))))
+     links)
+   (seq-map
+    (lambda (link)
+      (pcase-let ((`(,source ,dest ,type ,node-id) link))
+        (if node-id
+            (list source node-id "ref")
+          (list source dest type))))
+    links)))
 
 (defun org-roam-ui--update-current-node ()
   "Send the current node data to the web-socket."
@@ -621,6 +643,7 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
                        (json-encode `((type . "theme")
                                       (data . ,(org-roam-ui--update-theme))))))
 
+;;; Obsolete commands
 (define-obsolete-function-alias 'orui-open 'org-roam-ui-open "0.1")
 (define-obsolete-function-alias 'orui-node-local 'org-roam-ui-node-local "0.1")
 (define-obsolete-function-alias 'orui-node-zoom 'org-roam-ui-node-zoom "0.1")
