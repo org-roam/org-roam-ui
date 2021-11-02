@@ -15,6 +15,7 @@ jobs:
     outputs:
       ts: ${{ steps.filter.outputs.ts }}
     steps:
+    - uses: actions/checkout@v2
     - name: '[check if build necessary]' 
       uses: dorny/paths-filter@v2
       id: filter
