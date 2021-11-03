@@ -70,7 +70,7 @@ Ignored if a custom theme is provied for variable 'org-roam-ui-custom-theme'."
 
 (defcustom org-roam-ui-custom-theme nil
   "Custom theme for `org-roam-ui'.
-Blocks 'orui-sync-theme from syncing your current theme,
+Blocks 'org-roam-ui-sync-theme from syncing your current theme,
 instead sync this theme.
 Provide a list of cons with the following values:
 bg, bg-alt, fg, fg-alt, red, orange, yellow, green, cyan, blue, violet, magenta.
@@ -167,7 +167,7 @@ This serves the web-build and API over HTTP."
            :on-open #'org-roam-ui--ws-on-open
            :on-message #'org-roam-ui--ws-on-message
            :on-close #'org-roam-ui--ws-on-close))
-    (when org-roam-ui-open-on-start (orui-open)))
+    (when org-roam-ui-open-on-start (org-roam-ui-open)))
    (t
     (progn
       (websocket-server-close org-roam-ui-ws-server)
