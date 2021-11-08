@@ -6,7 +6,7 @@
 ;; URL: https://github.com/org-roam/org-roam-ui
 ;; Keywords: files outlines
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (org-roam "2.0.0") (simple-httpd "20191103.1446") (websocket "20210110.17") (json "1.2"))
+;; Package-Requires: ((emacs "27.1") (org-roam "2.0.0") (simple-httpd "20191103.1446") (websocket "1.13"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -398,12 +398,12 @@ unchanged."
                                      (nth 1 link))
                                    links-with-empty-refs)))
          (nodes-db-rows (org-roam-ui--get-nodes))
-         (fake-nodes (seq-map 'org-roam-ui--create-fake-node empty-refs))
+         (fake-nodes (seq-map #'org-roam-ui--create-fake-node empty-refs))
            ;; Try to update real nodes that are reference with a title build
            ;; from their bibliography entry. Check configuration here for avoid
            ;; unneeded iteration though nodes.
          (retitled-nodes-db-rows (if org-roam-ui-retitle-ref-nodes
-                                    (seq-map 'org-roam-ui--retitle-node
+                                    (seq-map #'org-roam-ui--retitle-node
                                              nodes-db-rows)
                                   nodes-db-rows))
          (complete-nodes-db-rows (append retitled-nodes-db-rows fake-nodes))
@@ -644,10 +644,10 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
                                       (data . ,(org-roam-ui--update-theme))))))
 
 ;;; Obsolete commands
-(define-obsolete-function-alias 'orui-open 'org-roam-ui-open "0.1")
-(define-obsolete-function-alias 'orui-node-local 'org-roam-ui-node-local "0.1")
-(define-obsolete-function-alias 'orui-node-zoom 'org-roam-ui-node-zoom "0.1")
-(define-obsolete-function-alias 'orui-sync-theme 'org-roam-ui-sync-theme "0.1")
+(define-obsolete-function-alias #'orui-open #'org-roam-ui-open "0.1")
+(define-obsolete-function-alias #'orui-node-local #'org-roam-ui-node-local "0.1")
+(define-obsolete-function-alias #'orui-node-zoom #'org-roam-ui-node-zoom "0.1")
+(define-obsolete-function-alias #'orui-sync-theme #'org-roam-ui-sync-theme "0.1")
 
 ;;;###autoload
 (define-minor-mode org-roam-ui-follow-mode
