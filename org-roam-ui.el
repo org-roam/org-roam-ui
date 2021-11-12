@@ -131,6 +131,22 @@ Defaults to #'browse-url."
   :group 'org-roam-ui
   :type 'function)
 
+;;Hooks
+
+(defcustom org-roam-ui-before-open-node-functions nil
+  "Functions to run before a node is opened through org-roam-ui.
+Take ID as string as sole argument."
+  :group 'org-roam-ui
+  :type 'hook)
+
+(defcustom org-roam-ui-after-open-node-functions nil
+  "Functions to run after a node is opened through org-roam-ui.
+Take ID as string as sole argument."
+  :group 'org-roam-ui
+  :type 'hook)
+
+;; Internal vars
+
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
 
@@ -208,7 +224,9 @@ Takes _WS and FRAME as arguments."
   "Open a node when receiving DATA from the websocket."
   (let* ((node (org-roam-node-from-id (alist-get'id data)))
          (pos (org-roam-node-point node))
-         (buf (org-roam-node-find-noselect node)))
+         (buf (org-roam-node-find-noselect node))
+         (id (alist-get 'id data)))
+    (run-hook-with-args 'org-roam-ui-before-open-node-functions id)
     (unless (window-live-p org-roam-ui--window)
       (if-let ((windows (window-list))
                (or-windows (seq-filter
@@ -223,7 +241,8 @@ Takes _WS and FRAME as arguments."
         (setq org-roam-ui--window (frame-selected-window))))
     (set-window-buffer org-roam-ui--window buf)
     (select-window org-roam-ui--window)
-    (goto-char pos)))
+    (goto-char pos)
+    (run-hook-with-args 'org-roam-ui-after-open-node-functions id)))
 
 (defun org-roam-ui--on-msg-delete-node (data)
   "Delete a node when receiving DATA from the websocket.
