@@ -26,7 +26,7 @@ import katex from 'rehype-katex'
 import 'katex/dist/katex.css'
 import rehype2react from 'rehype-react'
 import { ThemeContext } from '../../util/themecontext'
-import { NodeByCite, NodeById } from '../../pages'
+import { LinksByNodeId, NodeByCite, NodeById } from '../../pages'
 
 export interface LinkProps {
   href: any
@@ -38,6 +38,8 @@ export interface LinkProps {
   nodeById: NodeById
   openContextMenu: any
   outline: boolean
+  linksByNodeId: LinksByNodeId
+  isWiki?: boolean
   noUnderline?: boolean
 }
 
@@ -49,6 +51,7 @@ export interface NodeLinkProps {
   children: any
   setSidebarHighlightedNode: any
   openContextMenu: any
+  isWiki?: boolean
   noUnderline?: boolean
   id?: string
 }
@@ -63,6 +66,7 @@ import { OrgImage } from './OrgImage'
 import { Scrollbars } from 'react-custom-scrollbars-2'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Section } from './Section'
+import { OrgRoamLink } from '../../api'
 
 export const NodeLink = (props: NodeLinkProps) => {
   const {
@@ -74,6 +78,7 @@ export const NodeLink = (props: NodeLinkProps) => {
     openContextMenu,
     href,
     children,
+    isWiki,
   } = props
   const { highlightColor } = useContext(ThemeContext)
 
@@ -82,8 +87,10 @@ export const NodeLink = (props: NodeLinkProps) => {
   const type = href.replaceAll(/(.*?)\:?.*/g, '$1')
   const uri = href.replaceAll(/.*?\:(.*)/g, '$1')
   const ID = id ?? uri
+  const linkText = isWiki ? `[[${children}]]` : children
   return (
     <Text
+      as="a"
       onMouseEnter={() => setSidebarHighlightedNode(nodeById[ID])}
       onMouseLeave={() => setSidebarHighlightedNode({})}
       tabIndex={0}
@@ -101,7 +108,7 @@ export const NodeLink = (props: NodeLinkProps) => {
       _hover={{ textDecoration: 'none', cursor: 'pointer', bgColor: coolHighlightColor + '22' }}
       _focus={{ outlineColor: highlightColor }}
     >
-      {children}
+      {linkText}
     </Text>
   )
 }
@@ -129,6 +136,8 @@ export const PreviewLink = (props: LinkProps) => {
     openContextMenu,
     outline,
     noUnderline,
+    linksByNodeId,
+    isWiki,
   } = props
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
@@ -137,6 +146,7 @@ export const PreviewLink = (props: LinkProps) => {
   const type = href.replaceAll(/(.*?)\:.*/g, '$1')
 
   const extraNoteStyle = outline ? outlineNoteStyle : viewerNoteStyle
+  console.log(previewNode)
   const getText = () => {
     fetch(`http://localhost:35901/file/${file}`)
       .then((res) => {
@@ -153,6 +163,7 @@ export const PreviewLink = (props: LinkProps) => {
         return 'Could not fetch the text for some reason, sorry!\n\n This can happen because you have an id with forward slashes (/) in it.'
       })
   }
+
   useEffect(() => {
     if (type.replaceAll(/(http)?.*/g, '$1')) {
       return
@@ -165,6 +176,7 @@ export const PreviewLink = (props: LinkProps) => {
     }
     getText()
   }, [hover, orgText])
+
   if (!type) {
     return <Text color="gray.700">{children}</Text>
   }
@@ -195,39 +207,6 @@ export const PreviewLink = (props: LinkProps) => {
   const id = getId(type, uri)
   const file = encodeURIComponent(encodeURIComponent(nodeById[id]?.file as string))
 
-  /* const processor = unified()
-   *   .use(uniorgParse)
-   *   .use(uniorg2rehype)
-   *   .use(katex)
-   *   .use(rehype2react, {
-   *     createElement: React.createElement,
-   *     components: {
-   *       // eslint-disable-next-line react/display-name
-   *       a: ({ children, href }) => (
-   *         <PreviewLink
-   *           outline={outline}
-   *           nodeByCite={nodeByCite}
-   *           setSidebarHighlightedNode={setSidebarHighlightedNode}
-   *           href={href}
-   *           nodeById={nodeById}
-   *           setPreviewNode={setPreviewNode}
-   *           openContextMenu={openContextMenu}
-   *         >
-   *           {children}
-   *         </PreviewLink>
-   *       ),
-   *       img: ({ src }) => {
-   *         return <OrgImage src={src as string} file={nodeById[id]?.file as string} />
-   *       },
-   *       section: ({ children, className }) => (
-   *         <Section {...{ outline, className }}>{children}</Section>
-   *       ),
-   *       p: ({ children }) => {
-   *         return <p lang="en">{children}</p>
-   *       },
-   *     },
-   *   })
-   */
   if (id) {
     return (
       <>
@@ -250,6 +229,7 @@ export const PreviewLink = (props: LinkProps) => {
                   nodeByCite,
                   openContextMenu,
                   noUnderline,
+                  isWiki,
                 }}
               />
             </Box>
@@ -307,10 +287,11 @@ export const PreviewLink = (props: LinkProps) => {
                         setSidebarHighlightedNode,
                         setPreviewNode,
                         nodeByCite,
-                        previewNode,
                         openContextMenu,
                         outline,
+                        linksByNodeId,
                       }}
+                      previewNode={nodeById[id]!}
                       collapse={false}
                     />
                   </Box>
@@ -323,7 +304,7 @@ export const PreviewLink = (props: LinkProps) => {
     )
   }
   return (
-    <Text display="inline" color="base.700" cursor="not-allowed">
+    <Text as="span" display="inline" className={href} color="base.700" cursor="not-allowed">
       {children}
     </Text>
   )

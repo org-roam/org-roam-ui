@@ -59,6 +59,7 @@ export const Backlinks = (props: BacklinksProps) => {
             return (
               <Box overflow="hidden" py={1} borderRadius="sm" width="100%" key={link}>
                 <PreviewLink
+                  linksByNodeId={linksByNodeId}
                   nodeByCite={nodeByCite}
                   setSidebarHighlightedNode={setSidebarHighlightedNode}
                   href={`id:${link as string}`}

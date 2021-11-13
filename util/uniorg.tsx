@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { OrgRoamNode } from '../api'
-import { NodeByCite, NodeById } from '../pages/index'
+import { OrgRoamLink, OrgRoamNode } from '../api'
+import { LinksByNodeId, NodeByCite, NodeById } from '../pages/index'
 import { ProcessedOrg } from './processOrg'
 
 export interface UniOrgProps {
@@ -12,6 +12,7 @@ export interface UniOrgProps {
   openContextMenu: any
   outline: boolean
   collapse: boolean
+  linksByNodeId: LinksByNodeId
 }
 
 export const UniOrg = (props: UniOrgProps) => {
@@ -24,6 +25,7 @@ export const UniOrg = (props: UniOrgProps) => {
     setPreviewNode,
     outline,
     collapse,
+    linksByNodeId,
   } = props
 
   const [previewText, setPreviewText] = useState('')
@@ -52,7 +54,7 @@ export const UniOrg = (props: UniOrgProps) => {
 
   return (
     <>
-      {previewNode?.id && (
+      {previewText && previewNode && (
         <ProcessedOrg
           {...{
             nodeById,
@@ -64,6 +66,7 @@ export const UniOrg = (props: UniOrgProps) => {
             openContextMenu,
             outline,
             collapse,
+            linksByNodeId,
           }}
         />
       )}

@@ -199,34 +199,36 @@ const Sidebar = (props: SidebarProps) => {
               />
             )}
           >
-            <VStack
-              flexGrow={1}
-              // overflowY="scroll"
-              alignItems="left"
-              bg="alt.100"
-              paddingLeft={4}
-            >
-              <Title previewNode={previewRoamNode} />
-              <TagBar
-                {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
-              />
-              <Note
-                {...{
-                  setPreviewNode,
-                  previewNode,
-                  nodeById,
-                  nodeByCite,
-                  setSidebarHighlightedNode,
-                  justification,
-                  justificationList,
-                  linksByNodeId,
-                  openContextMenu,
-                  outline,
-                  setOutline,
-                  collapse,
-                }}
-              />
-            </VStack>
+            {previewRoamNode && (
+              <VStack
+                flexGrow={1}
+                // overflowY="scroll"
+                alignItems="left"
+                bg="alt.100"
+                paddingLeft={4}
+              >
+                <Title previewNode={previewRoamNode} />
+                <TagBar
+                  {...{ filter, setFilter, tagColors, setTagColors, openContextMenu, previewNode }}
+                />
+                <Note
+                  {...{
+                    setPreviewNode,
+                    previewNode,
+                    nodeById,
+                    nodeByCite,
+                    setSidebarHighlightedNode,
+                    justification,
+                    justificationList,
+                    linksByNodeId,
+                    openContextMenu,
+                    outline,
+                    setOutline,
+                    collapse,
+                  }}
+                />
+              </VStack>
+            )}
           </Scrollbars>
         </Flex>
       </Resizable>
