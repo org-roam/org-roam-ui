@@ -1,11 +1,12 @@
 import React from 'react'
 import { NodeObject } from 'force-graph'
 
-import { NodeById, NodeByCite, LinksByNodeId } from '../../pages'
+import { NodeById, NodeByCite, LinksByNodeId, normalizeLinkEnds } from '../../pages'
 import { Box, Flex } from '@chakra-ui/react'
 import { UniOrg } from '../../util/uniorg'
 import { Backlinks } from '../../components/Sidebar/Backlinks'
 import { defaultNoteStyle, viewerNoteStyle, outlineNoteStyle } from './noteStyle'
+import { OrgRoamLink } from '../../api'
 
 export interface NoteProps {
   setPreviewNode: any
@@ -35,6 +36,7 @@ export const Note = (props: NoteProps) => {
     outline,
     collapse,
   } = props
+
   const extraStyle = outline ? outlineNoteStyle : viewerNoteStyle
   return (
     <Box
@@ -59,12 +61,13 @@ export const Note = (props: NoteProps) => {
             {...{
               setPreviewNode,
               previewNode,
-              nodeById,
               nodeByCite,
               setSidebarHighlightedNode,
               openContextMenu,
               outline,
               collapse,
+              nodeById,
+              linksByNodeId,
             }}
           />
           <Backlinks
