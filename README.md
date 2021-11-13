@@ -1,5 +1,4 @@
-[![ci](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml)
-
+[![ci](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/org-roam/org-roam-ui/actions/workflows/ci.yml) [![MELPA](https://melpa.org/packages/org-roam-ui-badge.svg)](https://melpa.org/#/org-roam-ui)
 <img width="1440" alt="Screenshot 2021-10-12 at 12 51 39" src="https://user-images.githubusercontent.com/21983833/136942774-3f293f65-dbd4-4479-b530-1fde738c5289.png">
 
 # org-roam-ui: a graphical frontend for your org-roam Zettelkasten
@@ -33,25 +32,14 @@ For major new features/bugfixes we will update [changelog](https://github.com/or
 
 ## Installation
 
-`org-roam-ui` is not (yet!) on MELPA.
+`org-roam-ui` is on MELPA!
 
-Should your Emacs miss any of the dependencies, please install them manually!
 org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >= 27 for fast JSON parsing.
 
-### Manually
+### Using package.el
 
-Install `websocket.el` and `simple-httpd`
-
-```emacs-lisp
-M-x package-install websocket
-M-x package-install simple-httpd
 ```
-
-Clone the repo:
-
-```bash
-cd ~/.emacs.d/private
-git clone git@github.com:org-roam/org-roam-ui.git
+M-x package-install org-roam-ui
 ```
 
 Load in Emacs (add to config):
@@ -70,8 +58,7 @@ stability. To make sure nothing breaks, use the latest version of `org-roam` by 
 
 ```emacs-lisp
 (unpin! org-roam)
-(package! websocket)
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+(package! org-roam-ui)
 ```
 
 Then something along the following to your `config.el`
@@ -335,8 +322,8 @@ In no particular order
 
 - ~~Citation links + customization~~
 - ~~Tag filtering/coloring~~
-- Local graph show Nth neighbor
-- Colorization options (by neighbors, centrality, etc)
+- ~Local graph show Nth neighbor~
+- ~Colorization options (by neighbors, centrality, etc)~
 - Setting profiles
 
 ### UI in general
@@ -344,6 +331,16 @@ In no particular order
 - ~~File viewing using AST parsing~~
 - Displaying notes Andy Matushak style
 - Discovery options, e.g. "show shortest path between X and Y"
+
+# Integrations with other Org-mode packages
+
+## [md-roam](https://github.com/nobiot/md-roam)
+
+Use markdown notes interchangeably with Org-mode notes!
+
+## Delve
+
+tbd
 
 # Supporting org-roam-ui
 
