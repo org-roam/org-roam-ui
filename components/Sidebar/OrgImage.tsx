@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import path from 'path'
+import { Container } from '@chakra-ui/react'
 //import '../../../public/placeholder.png'
 
 export interface OrgImageProps {
@@ -32,7 +33,7 @@ export const OrgImage = (props: OrgImageProps) => {
   if (src.replaceAll(/(http)?.*/g, '$1')) {
     console.log(src.replaceAll(/(http)?.*/g, '$1'))
     return (
-      <Image layout="responsive" loader={dumbLoader} src={src} alt="" width="100%" height="100%" />
+      <Image layout="responsive" loader={dumbLoader} src={src} alt="" width="auto" height="auto" />
     )
   }
 
@@ -44,13 +45,15 @@ export const OrgImage = (props: OrgImageProps) => {
   const encodedPath = encodeURIComponent(encodeURIComponent(fullPath))
 
   return (
-    <Image
-      layout="responsive"
-      loader={homeLoader}
-      src={encodedPath}
-      alt=""
-      width="100%"
-      height="100%"
-    />
+    <Container>
+      <Image
+        layout="responsive"
+        loader={homeLoader}
+        src={encodedPath}
+        alt=""
+        width="100%"
+        height="100%"
+      />
+    </Container>
   )
 }
