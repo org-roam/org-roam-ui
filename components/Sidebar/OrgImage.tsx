@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import path from 'path'
@@ -45,15 +46,8 @@ export const OrgImage = (props: OrgImageProps) => {
   const encodedPath = encodeURIComponent(encodeURIComponent(fullPath))
 
   return (
-    <Container>
-      <Image
-        layout="responsive"
-        loader={homeLoader}
-        src={encodedPath}
-        alt=""
-        width="100%"
-        height="100%"
-      />
+    <Container my={4} position="relative">
+      <img alt="Wow, an image." src={`http://localhost:35901/img/${encodedPath}`} />
     </Container>
   )
 }
