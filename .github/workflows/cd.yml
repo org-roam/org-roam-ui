@@ -50,6 +50,10 @@ jobs:
           npm run export
       - name: '[Add GitHub Sponsors to Readme]'
         uses: JamesIves/github-sponsors-readme-action@1.0.5
+        with:
+          token: ${{secrets.PAT}}
+          file: 'README.md'
+          
       - name: '[commit changes]'
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
