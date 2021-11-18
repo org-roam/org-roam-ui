@@ -378,3 +378,5 @@ Org-roam-ui is also participating in Hacktoberfest 2021! [Enter Hacktoberfest](h
 If you really really like org-roam-ui, you can make a [one-time donation or sponsor one of us monthly!](https://github.com/sponsors/ThomasFKJorna/)
 
 ### Sponsors
+
+<!-- sponsors --><!-- sponsors -->
