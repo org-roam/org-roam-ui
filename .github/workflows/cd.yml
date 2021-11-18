@@ -48,6 +48,8 @@ jobs:
           npm install
           npm run build
           npm run export
+      - name: '[Add GitHub Sponsors to Readme]'
+        uses: JamesIves/github-sponsors-readme-action@1.0.5
       - name: '[commit changes]'
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
