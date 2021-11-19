@@ -42,7 +42,7 @@ org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >= 2
 M-x package-install org-roam-ui
 ```
 
-There is further configuration is necessary when you use `packge.el` to install ORUI.
+No configuration is necessary when you use `packge.el` to install ORUI.
 
 ### Doom
 
