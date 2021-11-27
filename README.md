@@ -379,4 +379,4 @@ If you really really like org-roam-ui, you can make a [one-time donation or spon
 
 ### Sponsors
 
-<!-- sponsors --><!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/linwaytin"><img src="https://github.com/linwaytin.png" width="60px" alt="" /></a><!-- sponsors -->
