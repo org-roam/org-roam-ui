@@ -111,7 +111,7 @@ export const TagMenu = (props: TagMenuProps) => {
           }}
           icon={blacklist ? <MinusIcon /> : <ViewOffIcon />}
         >
-          {blacklist ? 'Remove from blacklist' : 'Add to blacklist'}
+          {blacklist ? 'Remove from blocklist' : 'Add to blocklist'}
         </MenuItem>
       )}
       {!blacklist && (
@@ -131,7 +131,7 @@ export const TagMenu = (props: TagMenuProps) => {
           }}
           icon={whitelist ? <MinusIcon /> : <ViewIcon />}
         >
-          {whitelist ? 'Remove from whitelist' : 'Add to whitelist'}
+          {whitelist ? 'Remove from allowlist' : 'Add to allowlist'}
         </MenuItem>
       )}
     </>

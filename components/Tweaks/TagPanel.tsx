@@ -17,6 +17,7 @@ export const TagPanel = (props: TagPanelProps) => {
   })
 
   const currentTags = mode === 'blacklist' ? 'tagsBlacklist' : 'tagsWhitelist'
+  const name = mode === 'blacklist' ? 'blocklist' : 'allowlist'
   const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
     filter[currentTags].map((tag) => {
       return { value: tag, label: tag }
@@ -27,7 +28,7 @@ export const TagPanel = (props: TagPanelProps) => {
     <CUIAutoComplete
       labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
       items={tagArray}
-      label={'Add tag to ' + mode}
+      label={`Add tag to ${name}`}
       placeholder=" "
       onCreateItem={(item) => null}
       disableCreateItem={true}
