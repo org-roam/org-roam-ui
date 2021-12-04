@@ -44,6 +44,7 @@ export interface ProcessedOrgProps {
   outline: boolean
   collapse: boolean
   linksByNodeId: LinksByNodeId
+  macros?: { [key: string]: string }
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
@@ -58,9 +59,8 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     outline,
     collapse,
     linksByNodeId,
+    macros,
   } = props
-  console.log(linksByNodeId)
-  console.log(previewNode)
   if (!previewNode || !linksByNodeId) {
     return null
   }
@@ -85,8 +85,6 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
   const linkEntries = Object.entries(nodesInNote)
   const wikiLinkResolver = (wikiLink: string): string[] => {
     const entry = linkEntries.find((idNodeArray) => {
-      console.log(idNodeArray)
-      console.log(wikiLink)
       return idNodeArray?.[1]?.title === wikiLink
     })
     const id = entry?.[0] ?? ''
@@ -117,43 +115,55 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
   const isMarkdown = previewNode?.file?.slice(-3) === '.md'
   const baseProcessor = isMarkdown ? mdProcessor : orgProcessor
 
+  console.log(macros)
   const processor = useMemo(
     () =>
-      baseProcessor.use(katex).use(rehype2react, {
-        createElement: React.createElement,
-        // eslint-disable-next-line react/display-name
-        components: {
-          a: ({ children, href }) => {
-            return (
-              <PreviewLink
-                nodeByCite={nodeByCite}
-                setSidebarHighlightedNode={setSidebarHighlightedNode}
-                href={`${href as string}`}
-                nodeById={nodeById}
-                linksByNodeId={linksByNodeId}
-                setPreviewNode={setPreviewNode}
-                openContextMenu={openContextMenu}
-                outline={outline}
-                previewNode={previewNode}
-                isWiki={isMarkdown}
-              >
+      baseProcessor
+        .use(katex, {
+          trust: (context) => ['\\htmlId', '\\href'].includes(context.command),
+          macros: {
+            '\\eqref': '\\href{###1}{(\\text{#1})}',
+            '\\ref': '\\href{###1}{\\text{#1}}',
+            '\\label': '\\htmlId{#1}{}',
+            // '\\weird': '\\textbf{#1}',
+            ...macros,
+          },
+        })
+        .use(rehype2react, {
+          createElement: React.createElement,
+          // eslint-disable-next-line react/display-name
+          components: {
+            a: ({ children, href }) => {
+              return (
+                <PreviewLink
+                  nodeByCite={nodeByCite}
+                  setSidebarHighlightedNode={setSidebarHighlightedNode}
+                  href={`${href as string}`}
+                  nodeById={nodeById}
+                  linksByNodeId={linksByNodeId}
+                  setPreviewNode={setPreviewNode}
+                  openContextMenu={openContextMenu}
+                  outline={outline}
+                  previewNode={previewNode}
+                  isWiki={isMarkdown}
+                >
+                  {children}
+                </PreviewLink>
+              )
+            },
+            img: ({ src }) => {
+              return <OrgImage src={src as string} file={previewNode?.file} />
+            },
+            section: ({ children, className }) => (
+              <Section {...{ outline, collapse }} className={className as string}>
                 {children}
-              </PreviewLink>
-            )
+              </Section>
+            ),
+            p: ({ children }) => {
+              return <p lang="en">{children as ReactNode}</p>
+            },
           },
-          img: ({ src }) => {
-            return <OrgImage src={src as string} file={previewNode?.file} />
-          },
-          section: ({ children, className }) => (
-            <Section {...{ outline, collapse }} className={className as string}>
-              {children}
-            </Section>
-          ),
-          p: ({ children }) => {
-            return <p lang="en">{children as ReactNode}</p>
-          },
-        },
-      }),
+        }),
     [previewNode?.id],
   )
 

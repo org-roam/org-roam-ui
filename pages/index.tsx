@@ -73,6 +73,11 @@ export type NodeById = { [nodeId: string]: OrgRoamNode | undefined }
 export type LinksByNodeId = { [nodeId: string]: OrgRoamLink[] | undefined }
 export type NodesByFile = { [file: string]: OrgRoamNode[] | undefined }
 export type NodeByCite = { [key: string]: OrgRoamNode | undefined }
+export interface EmacsVariables {
+  roamDir?: string
+  dailyDir?: string
+  katexMacros?: { [key: string]: string }
+}
 export type Tags = string[]
 export type Scope = {
   nodeIds: string[]
@@ -138,7 +143,7 @@ export function GraphPage() {
   const nodeByCiteRef = useRef<NodeByCite>({})
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
-  const variablesRef = useRef<{ [variable: string]: string }>({})
+  const variablesRef = useRef<EmacsVariables>({})
   const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
@@ -426,8 +431,8 @@ export function GraphPage() {
         case 'graphdata':
           return updateGraphData(message.data)
         case 'variables':
-          console.log(message.data)
           variablesRef.current = message.data
+          console.log(message.data)
           return
         case 'theme':
           return setEmacsTheme(['custom', message.data])
@@ -665,6 +670,7 @@ export function GraphPage() {
             filter,
             setFilter,
           }}
+          macros={variablesRef.current.katexMacros}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
           nodeByCite={nodeByCiteRef.current!}
@@ -719,7 +725,7 @@ export interface GraphProps {
   handleLocal: any
   mainWindowWidth: number
   setMainWindowWidth: any
-  variables: { [variable: string]: string }
+  variables: EmacsVariables
   graphRef: any
   clusterRef: any
   coloring: typeof initialColoring
@@ -1254,9 +1260,7 @@ export const Graph = function (props: GraphProps) {
     height: windowHeight,
     backgroundColor: getThemeColor(visuals.backgroundColor, theme),
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
-    //onZoom: ({ k, x, y }) => setZoom(k),
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
-    //nodeLabel: (node) => ,
     nodeColor: (node) => {
       return getNodeColor(node as OrgRoamNode, theme)
     },

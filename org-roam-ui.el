@@ -145,6 +145,13 @@ Take ID as string as sole argument."
   :group 'org-roam-ui
   :type 'hook)
 
+(defcustom org-roam-ui-latex-macros nil
+  "Alist of LaTeX macros to be passed to org-roam-ui.
+Format as, i.e. with double backslashes for a single backslash:
+'((\"\\macro\".\"\\something{#1}\"))"
+  :group 'org-roam-ui
+  :type 'alist)
+
 ;; Internal vars
 
 (defvar org-roam-ui--ws-current-node nil
@@ -577,7 +584,8 @@ from all other links."
                               (data .
                                     (("dailyDir" .
                                       ,daily-dir)
-                                     ("roamDir" . ,org-roam-directory)))))))))
+                                     ("roamDir" . ,org-roam-directory)
+                                     ("katexMacros" . ,org-roam-ui-latex-macros)))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
