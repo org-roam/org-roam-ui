@@ -1,0 +1,50 @@
+---
+# File : cd.yml
+
+name: 'cd'
+on:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: 'bash'
+jobs:
+  build-deploy:
+    name: '[cd|build-deploy]'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: '[checkout] ${{ github.repository }} project'
+        uses: 'actions/checkout@v2'
+        with:
+          repository: '${{ github.repository }}'
+      - name: '[setup node]'  
+        uses: 'actions/setup-node@v2'
+        with:
+          node-version: '16'
+      - name: '[build]'
+        run: |
+          git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+          git config --global url."https://".insteadOf git://
+          git config --global url."https://".insteadOf ssh://
+          npm install
+          npm run build
+          npm run export
+      - name: '[Add GitHub Sponsors to Readme]'
+        uses: JamesIves/github-sponsors-readme-action@1.0.5
+        with:
+          token: ${{secrets.PAT}}
+          file: 'README.md'
+          minimum: 500
+          
+      - name: '[commit changes]'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "chore: build" -a
+      - name: '[push changes]'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+...
+# End of cd.yml
