@@ -7,7 +7,7 @@
 
 - [Changelog](#changelog)
 - [Installation](#installation)
-  - [Manually](#manually)
+  - [Using package.el](#package.el)
   - [Doom](#doom)
   - [straight/use-package](#straightuse-package)
 - [Usage](#usage)
@@ -36,7 +36,7 @@ For major new features/bugfixes we will update [changelog](https://github.com/or
 
 org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >= 27 for fast JSON parsing.
 
-### Using package.el
+### package.el
 
 ```
 M-x package-install org-roam-ui
@@ -369,9 +369,6 @@ If you are interested in being more closely involved with the project, go [here]
 
 We would ❤️ to have you on board!
 
-### Hacktoberfest
-
-Org-roam-ui is also participating in Hacktoberfest 2021! [Enter Hacktoberfest](https://hacktoberfest.digitalocean.com/), check out the [issues labeled Hacktoberfest](https://github.com/org-roam/org-roam-ui/issues) and get a free (as in beer) t-shirt! (as well as the moral satisfaction of contributing to free software, but hey, t-shirt)
 
 ## Donate
 
