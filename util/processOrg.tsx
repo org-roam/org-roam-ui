@@ -119,41 +119,50 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
 
   const processor = useMemo(
     () =>
-      baseProcessor.use(katex).use(rehype2react, {
-        createElement: React.createElement,
-        // eslint-disable-next-line react/display-name
-        components: {
-          a: ({ children, href }) => {
-            return (
-              <PreviewLink
-                nodeByCite={nodeByCite}
-                setSidebarHighlightedNode={setSidebarHighlightedNode}
-                href={`${href as string}`}
-                nodeById={nodeById}
-                linksByNodeId={linksByNodeId}
-                setPreviewNode={setPreviewNode}
-                openContextMenu={openContextMenu}
-                outline={outline}
-                previewNode={previewNode}
-                isWiki={isMarkdown}
-              >
+      baseProcessor
+        .use(katex, {
+          trust: (context) => ['\\htmlId', '\\href'].includes(context.command),
+          macros: {
+            '\\eqref': '\\href{###1}{(\\text{#1})}',
+            '\\ref': '\\href{###1}{\\text{#1}}',
+            '\\label': '\\htmlId{#1}{}',
+          },
+        })
+        .use(rehype2react, {
+          createElement: React.createElement,
+          // eslint-disable-next-line react/display-name
+          components: {
+            a: ({ children, href }) => {
+              return (
+                <PreviewLink
+                  nodeByCite={nodeByCite}
+                  setSidebarHighlightedNode={setSidebarHighlightedNode}
+                  href={`${href as string}`}
+                  nodeById={nodeById}
+                  linksByNodeId={linksByNodeId}
+                  setPreviewNode={setPreviewNode}
+                  openContextMenu={openContextMenu}
+                  outline={outline}
+                  previewNode={previewNode}
+                  isWiki={isMarkdown}
+                >
+                  {children}
+                </PreviewLink>
+              )
+            },
+            img: ({ src }) => {
+              return <OrgImage src={src as string} file={previewNode?.file} />
+            },
+            section: ({ children, className }) => (
+              <Section {...{ outline, collapse }} className={className as string}>
                 {children}
-              </PreviewLink>
-            )
+              </Section>
+            ),
+            p: ({ children }) => {
+              return <p lang="en">{children as ReactNode}</p>
+            },
           },
-          img: ({ src }) => {
-            return <OrgImage src={src as string} file={previewNode?.file} />
-          },
-          section: ({ children, className }) => (
-            <Section {...{ outline, collapse }} className={className as string}>
-              {children}
-            </Section>
-          ),
-          p: ({ children }) => {
-            return <p lang="en">{children as ReactNode}</p>
-          },
-        },
-      }),
+        }),
     [previewNode?.id],
   )
 
