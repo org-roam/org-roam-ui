@@ -3,8 +3,7 @@
 
 name: 'cd'
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 defaults:
   run:
     shell: 'bash'
