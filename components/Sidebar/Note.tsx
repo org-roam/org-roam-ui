@@ -20,6 +20,7 @@ export interface NoteProps {
   openContextMenu: any
   outline: boolean
   collapse: boolean
+  macros?: { [key: string]: string }
 }
 
 export const Note = (props: NoteProps) => {
@@ -35,6 +36,7 @@ export const Note = (props: NoteProps) => {
     openContextMenu,
     outline,
     collapse,
+    macros,
   } = props
 
   const extraStyle = outline ? outlineNoteStyle : viewerNoteStyle
@@ -68,6 +70,7 @@ export const Note = (props: NoteProps) => {
               collapse,
               nodeById,
               linksByNodeId,
+              macros,
             }}
           />
           <Backlinks

@@ -49,6 +49,7 @@ export interface SidebarProps {
   setFilter: any
   tagColors: TagColors
   setTagColors: any
+  macros?: { [key: string]: string }
 }
 
 const Sidebar = (props: SidebarProps) => {
@@ -75,6 +76,7 @@ const Sidebar = (props: SidebarProps) => {
     setFilter,
     tagColors,
     setTagColors,
+    macros,
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
@@ -225,6 +227,7 @@ const Sidebar = (props: SidebarProps) => {
                     outline,
                     setOutline,
                     collapse,
+                    macros,
                   }}
                 />
               </VStack>
