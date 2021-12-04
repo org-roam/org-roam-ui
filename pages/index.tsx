@@ -160,6 +160,8 @@ export function GraphPage() {
       }
     }, {})
 
+    // generate links between level 2 nodes and the level 1 node above it
+    // org-roam does not generate such links, so we have to put them in ourselves
     const headingLinks: OrgRoamLink[] = Object.keys(nodesByFile).flatMap((file) => {
       const nodesInFile = nodesByFile[file] ?? []
       // "file node" as opposed to "heading node"
@@ -174,8 +176,7 @@ export function GraphPage() {
           if (
             node.level >= headingNode.level ||
             node.pos >= headingNode.pos ||
-            !headingNode.olp?.includes(node.title) //||
-            //  node.level >= headingNode.level - headingNode.olp.reverse().indexOf(node.title)
+            !headingNode.olp?.includes((node.title as string)?.replace(/ *\[\d*\/\d*\] */g, ''))
           ) {
             return false
           }
