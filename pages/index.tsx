@@ -432,7 +432,6 @@ export function GraphPage() {
           return updateGraphData(message.data)
         case 'variables':
           variablesRef.current = message.data
-          console.log(message.data)
           return
         case 'theme':
           return setEmacsTheme(['custom', message.data])
