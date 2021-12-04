@@ -577,13 +577,16 @@ from all other links."
                          (expand-file-name org-roam-dailies-directory)
                        (expand-file-name
                           org-roam-dailies-directory
-                          org-roam-directory))))
+                          org-roam-directory)))
+          (attach-dir (if (boundp 'org-attach-id-dir) org-attach-id-dir (expand-file-name ".attach/" org-directory))))
       (websocket-send-text ws
                            (json-encode
                             `((type . "variables")
                               (data .
                                     (("dailyDir" .
                                       ,daily-dir)
+                                     ("attachDir" .
+                                      ,attach-dir)
                                      ("roamDir" . ,org-roam-directory)
                                      ("katexMacros" . ,org-roam-ui-latex-macros)))))))))
 

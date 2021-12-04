@@ -16,6 +16,8 @@ export interface BacklinksProps {
   setSidebarHighlightedNode: OrgRoamNode
   openContextMenu: any
   outline: boolean
+  attachDir: string
+  macros: { [key: string]: string }
 }
 
 import { PreviewLink } from './Link'
@@ -32,6 +34,8 @@ export const Backlinks = (props: BacklinksProps) => {
     nodeByCite,
     openContextMenu,
     outline,
+    macros,
+    attachDir,
   } = props
   const links = linksByNodeId[previewNode?.id] ?? []
 
@@ -69,6 +73,7 @@ export const Backlinks = (props: BacklinksProps) => {
                   openContextMenu={openContextMenu}
                   outline={outline}
                   noUnderline
+                  {...{ attachDir, macros }}
                 >
                   {nodeById[link as string]?.title}
                 </PreviewLink>
