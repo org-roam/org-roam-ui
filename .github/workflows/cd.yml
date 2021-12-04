@@ -57,6 +57,7 @@ jobs:
         with:
           token: ${{secrets.PAT}}
           file: 'README.md'
+          minimum: 500
           
       - name: '[commit changes]'
         run: |
