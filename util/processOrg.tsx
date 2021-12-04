@@ -44,7 +44,8 @@ export interface ProcessedOrgProps {
   outline: boolean
   collapse: boolean
   linksByNodeId: LinksByNodeId
-  macros?: { [key: string]: string }
+  macros: { [key: string]: string } | {}
+  attachDir: string
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
@@ -60,6 +61,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     collapse,
     linksByNodeId,
     macros,
+    attachDir,
   } = props
   if (!previewNode || !linksByNodeId) {
     return null
@@ -68,7 +70,9 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
   const orgProcessor = unified()
     .use(uniorgParse)
     .use(extractKeywords)
-    .use(attachments)
+    .use(attachments, {
+      idDir: attachDir || undefined,
+    })
     .use(uniorgSlug)
     .use(uniorg2rehype, { useSections: true })
 
@@ -146,6 +150,8 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
                   outline={outline}
                   previewNode={previewNode}
                   isWiki={isMarkdown}
+                  macros={macros}
+                  attachDir={attachDir}
                 >
                   {children}
                 </PreviewLink>

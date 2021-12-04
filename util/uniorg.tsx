@@ -14,6 +14,7 @@ export interface UniOrgProps {
   collapse: boolean
   linksByNodeId: LinksByNodeId
   macros?: { [key: string]: string }
+  attachDir: string
 }
 
 export const UniOrg = (props: UniOrgProps) => {
@@ -28,6 +29,7 @@ export const UniOrg = (props: UniOrgProps) => {
     collapse,
     linksByNodeId,
     macros,
+    attachDir,
   } = props
 
   const [previewText, setPreviewText] = useState('')
@@ -69,8 +71,9 @@ export const UniOrg = (props: UniOrgProps) => {
             outline,
             collapse,
             linksByNodeId,
-            macros,
+            attachDir,
           }}
+          macros={macros || {}}
         />
       )}
     </>

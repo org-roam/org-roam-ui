@@ -77,6 +77,7 @@ export interface EmacsVariables {
   roamDir?: string
   dailyDir?: string
   katexMacros?: { [key: string]: string }
+  attachDir?: string
 }
 export type Tags = string[]
 export type Scope = {
@@ -672,6 +673,7 @@ export function GraphPage() {
             setFilter,
           }}
           macros={variablesRef.current.katexMacros}
+          attachDir={variablesRef.current.attachDir || ''}
           nodeById={nodeByIdRef.current!}
           linksByNodeId={linksByNodeIdRef.current!}
           nodeByCite={nodeByCiteRef.current!}
