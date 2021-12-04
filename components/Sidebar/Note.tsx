@@ -86,7 +86,9 @@ export const Note = (props: NoteProps) => {
               setSidebarHighlightedNode,
               openContextMenu,
               outline,
+              attachDir,
             }}
+            macros={macros || {}}
           />
         </Flex>
       )}
