@@ -35,7 +35,6 @@
 (require 'json)
 (require 'simple-httpd)
 (require 'org-roam)
-(require 'org-roam-dailies)
 (require 'websocket)
 
 (defgroup org-roam-ui nil
