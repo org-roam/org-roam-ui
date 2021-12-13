@@ -36,6 +36,7 @@
 (require 'simple-httpd)
 (require 'org-roam)
 (require 'websocket)
+(require 'cl-lib) ;; for implicit cl-block around dolist
 
 (defgroup org-roam-ui nil
   "UI in Org-roam."
@@ -130,6 +131,15 @@ Defaults to #'browse-url."
   :group 'org-roam-ui
   :type 'function)
 
+(defcustom org-roam-ui-collect-function '((delve . delve-insert-nodes-by-id))
+  "Alist defining functions which collects nodes by passing their ids.
+The key is the name of the package which contains that function.
+The first package which is installed will be used.  The
+associated function must accept two arguments: A collection name
+and a list of node ids."
+  :group 'org-roam-ui
+  :type 'alist)
+
 ;;Hooks
 
 (defcustom org-roam-ui-before-open-node-functions nil
@@ -216,15 +226,28 @@ Takes _WS and FRAME as arguments."
                (websocket-frame-text frame) :object-type 'alist))
          (command (alist-get 'command msg))
          (data (alist-get 'data msg)))
-    (cond ((string= command "open")
-           (org-roam-ui--on-msg-open-node data))
-          ((string= command "delete")
-           (org-roam-ui--on-msg-delete-node data))
-          ((string= command "create")
-           (org-roam-ui--on-msg-create-node data))
-          (t
-           (message
+    (pcase command
+      ("open"     (org-roam-ui--on-msg-open-node data))
+      ("delete"   (org-roam-ui--on-msg-delete-node data))
+      ("create"   (org-roam-ui--on-msg-create-node data))
+      ("collect"  (org-roam-ui--on-msg-collect-node))
+      (_   (message
             "Something went wrong when receiving a message from org-roam-ui")))))
+
+(defun org-roam-ui--on-msg-collect-node (data)
+  "Add a node or nodes specified in DATA to a collection.
+Assumes DATA to be an alist with the following keys: `id',
+`collection'.  ID is a node ID or a list of IDs; COLLECTION is
+the name of the collection (a string).  Pass both arguments to
+the first available function found in
+`org-roam-ui-collect-function'."
+  (let* ((collection (alist-get 'collection data))
+         (ids        (alist-get 'id data)))
+    (or (pcase-dolist (`(,package-name . ,fn) org-roam-ui-collect-function)
+          (when (featurep package-name)
+            (funcall fn collection (if (listp ids) ids (list ids)))
+            (cl-return t)))
+        (error "No function defined for collecting nodes, see `org-roam-ui-collect-function'"))))
 
 (defun org-roam-ui--on-msg-open-node (data)
   "Open a node when receiving DATA from the websocket."
