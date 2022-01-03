@@ -1,34 +1,38 @@
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { ThemeContext } from '../../util/themecontext'
 import { initialFilter } from '../config'
 
-export interface TagPanelProps {
-  tags: string[]
+export interface OptionPanelProps {
+  options: string[]
   filter: typeof initialFilter
   setFilter: any
-  highlightColor: string
-  mode: string
+  listName: 'tagsBlacklist' | 'tagsWhitelist' | 'dirsAllowlist' | 'dirsBlocklist'
+  displayName: string
+  labelFilter?: string
 }
 
-export const TagPanel = (props: TagPanelProps) => {
-  const { filter, setFilter, tags, highlightColor, mode } = props
-  const tagArray = tags.map((tag) => {
-    return { value: tag, label: tag }
+export const OptionPanel = (props: OptionPanelProps) => {
+  const { filter, listName, labelFilter, displayName, setFilter, options = [] } = props
+  const { highlightColor } = useContext(ThemeContext)
+  const optionArray = options.map((option) => {
+    return { value: option, label: labelFilter ? option.replace(labelFilter, '') : option }
   })
 
-  const currentTags = mode === 'blacklist' ? 'tagsBlacklist' : 'tagsWhitelist'
-  const name = mode === 'blacklist' ? 'blocklist' : 'allowlist'
-  const [selectedItems, setSelectedItems] = useState<typeof tagArray>(
-    filter[currentTags].map((tag) => {
-      return { value: tag, label: tag }
+  const [selectedItems, setSelectedItems] = useState<typeof optionArray>(
+    filter[listName].map((option) => {
+      return {
+        value: option,
+        label: labelFilter ? (option as string)?.replace(labelFilter, '') : option,
+      }
     }),
   )
 
   return (
     <CUIAutoComplete
       labelStyleProps={{ fontWeight: 300, fontSize: 14 }}
-      items={tagArray}
-      label={`Add tag to ${name}`}
+      items={optionArray}
+      label={`Add tag to ${displayName}`}
       placeholder=" "
       onCreateItem={(item) => null}
       disableCreateItem={true}
@@ -36,7 +40,7 @@ export const TagPanel = (props: TagPanelProps) => {
       onSelectedItemsChange={(changes) => {
         if (changes.selectedItems) {
           setSelectedItems(changes.selectedItems)
-          setFilter({ ...filter, [currentTags]: changes.selectedItems.map((item) => item.value) })
+          setFilter({ ...filter, [listName]: changes.selectedItems.map((item) => item.value) })
         }
       }}
       listItemStyleProps={{ overflow: 'hidden' }}

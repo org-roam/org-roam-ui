@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { ColorMenu } from './ColorMenu'
-import { colorList, initialVisuals } from '../config'
-import { SliderWithInfo } from './SliderWithInfo'
+import { colorList, initialVisuals } from '../../config'
+import { SliderWithInfo } from '../SliderWithInfo'
 
 export interface LabelsPanelProps {
   visuals: typeof initialVisuals

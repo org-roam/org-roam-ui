@@ -18,11 +18,12 @@ import {
   AccordionIcon,
   AccordionPanel,
 } from '@chakra-ui/react'
-import React from 'react'
-import { TagPanel } from './TagPanel'
-import { initialFilter, initialLocal, TagColors } from '../config'
+import React, { useContext } from 'react'
+import { OptionPanel } from '../OptionPanel'
+import { initialFilter, initialLocal, TagColors } from '../../config'
 import { TagColorPanel } from './TagColorPanel'
-import { SliderWithInfo } from './SliderWithInfo'
+import { SliderWithInfo } from '../SliderWithInfo'
+import { VariablesContext } from '../../../util/variablesContext'
 
 export interface FilterPanelProps {
   filter: typeof initialFilter
@@ -48,6 +49,7 @@ const FilterPanel = (props: FilterPanelProps) => {
     colorList,
     tags,
   } = props
+  const { roamDir, subDirs } = useContext(VariablesContext)
   return (
     <Box>
       <VStack
@@ -80,7 +82,6 @@ const FilterPanel = (props: FilterPanelProps) => {
               })()}
             </MenuButton>
             <Portal>
-              {' '}
               <MenuList bgColor="gray.200" zIndex="popover">
                 <MenuItem
                   onClick={() =>
@@ -177,23 +178,47 @@ const FilterPanel = (props: FilterPanelProps) => {
       <Accordion padding={0} allowToggle allowMultiple paddingLeft={3}>
         <AccordionItem>
           <AccordionButton>
+            Directory filters
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pr={0} mr={0}>
+            <OptionPanel
+              filter={filter}
+              setFilter={setFilter}
+              options={subDirs}
+              displayName="directory blocklist"
+              listName="dirsBlocklist"
+              labelFilter={roamDir}
+            />
+            <OptionPanel
+              filter={filter}
+              setFilter={setFilter}
+              options={subDirs}
+              displayName="directory allowlist"
+              listName="dirsAllowlist"
+              labelFilter={roamDir}
+            />
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
             Tag filters
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pr={0} mr={0}>
-            <TagPanel
-              highlightColor={highlightColor}
+            <OptionPanel
               filter={filter}
               setFilter={setFilter}
-              tags={tags}
-              mode="blacklist"
+              options={tags}
+              displayName="tag blocklist"
+              listName="tagsBlacklist"
             />
-            <TagPanel
-              highlightColor={highlightColor}
+            <OptionPanel
               filter={filter}
               setFilter={setFilter}
-              tags={tags}
-              mode="whitelist"
+              options={tags}
+              displayName="tag allowlist"
+              listName="tagsWhitelist"
             />
           </AccordionPanel>
         </AccordionItem>

@@ -1,9 +1,9 @@
 import { Box, StackDivider, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { ColorMenu } from './ColorMenu'
-import { colorList, initialVisuals } from '../config'
-import { EnableSection } from './EnableSection'
-import { SliderWithInfo } from './SliderWithInfo'
+import { colorList, initialVisuals } from '../../config'
+import { EnableSection } from '../EnableSection'
+import { SliderWithInfo } from '../SliderWithInfo'
 
 export interface NodesNLinksPanelProps {
   visuals: typeof initialVisuals

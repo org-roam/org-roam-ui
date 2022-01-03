@@ -56,6 +56,7 @@ import { usePersistantState } from '../util/persistant-state'
 import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import { openNodeInEmacs } from '../util/webSocketFunctions'
 import { drawLabels } from '../components/Graph/drawLabels'
+import { VariablesContext } from '../util/variablesContext'
 
 const d3promise = import('d3-force-3d')
 
@@ -78,6 +79,7 @@ export interface EmacsVariables {
   dailyDir?: string
   katexMacros?: { [key: string]: string }
   attachDir?: string
+  subDirs: string[]
 }
 export type Tags = string[]
 export type Scope = {
@@ -144,7 +146,7 @@ export function GraphPage() {
   const nodeByCiteRef = useRef<NodeByCite>({})
   const tagsRef = useRef<Tags>([])
   const graphRef = useRef<any>(null)
-  const variablesRef = useRef<EmacsVariables>({})
+  const [emacsVariables, setEmacsVariables] = useState<EmacsVariables>({} as EmacsVariables)
   const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
@@ -433,8 +435,8 @@ export function GraphPage() {
         case 'graphdata':
           return updateGraphData(message.data)
         case 'variables':
-          variablesRef.current = message.data
-          console.log(message.data)
+          setEmacsVariables(message.data)
+          console.log(message)
           return
         case 'theme':
           return setEmacsTheme(['custom', message.data])
@@ -545,160 +547,169 @@ export function GraphPage() {
     windowWidth,
   )
 
+  console.log(emacsVariables)
   return (
-    <Box display="flex" alignItems="flex-start" flexDirection="row" height="100vh" overflow="clip">
-      <Tweaks
-        {...{
-          physics,
-          setPhysics,
-          threeDim,
-          setThreeDim,
-          filter,
-          setFilter,
-          visuals,
-          setVisuals,
-          mouse,
-          setMouse,
-          behavior,
-          setBehavior,
-          tagColors,
-          setTagColors,
-          coloring,
-          setColoring,
-          local,
-          setLocal,
-        }}
-        tags={tagsRef.current}
-      />
-      <Box position="absolute">
-        {graphData && (
-          <Graph
-            //ref={graphRef}
-            nodeById={nodeByIdRef.current!}
-            linksByNodeId={linksByNodeIdRef.current!}
-            webSocket={WebSocketRef.current}
-            variables={variablesRef.current}
-            {...{
-              physics,
-              graphData,
-              threeDim,
-              emacsNodeId,
-              filter,
-              visuals,
-              behavior,
-              mouse,
-              scope,
-              setScope,
-              tagColors,
-              setPreviewNode,
-              sidebarHighlightedNode,
-              windowWidth,
-              windowHeight,
-              openContextMenu,
-              contextMenu,
-              handleLocal,
-              mainWindowWidth,
-              setMainWindowWidth,
-              setContextMenuTarget,
-              graphRef,
-              clusterRef,
-              coloring,
-              local,
-            }}
-          />
-        )}
-      </Box>
-      <Box position="relative" zIndex={4} width="100%">
-        <Flex className="headerBar" h={10} flexDir="column">
-          <Flex alignItems="center" h={10} justifyContent="flex-end">
-            {/* <Flex flexDir="row" alignItems="center">
-             *   <Box color="blue.500" bgColor="alt.100" h="100%" p={3} mr={4}>
-             *     {mainItem.icon}
-             *   </Box>
-             *   <Heading size="sm">{mainItem.title}</Heading>
-             * </Flex> */}
-            <Flex height="100%" flexDirection="row">
-              {scope.nodeIds.length > 0 && (
-                <Tooltip label="Return to main graph">
-                  <IconButton
-                    m={1}
-                    icon={<BiNetworkChart />}
-                    aria-label="Exit local mode"
-                    onClick={() =>
-                      setScope((currentScope: Scope) => ({
-                        ...currentScope,
-                        nodeIds: [],
-                      }))
-                    }
-                    variant="subtle"
-                  />
-                </Tooltip>
-              )}
-              <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
-                <IconButton
-                  m={1}
-                  // eslint-disable-next-line react/jsx-no-undef
-                  icon={<BsReverseLayoutSidebarInsetReverse />}
-                  aria-label="Close file-viewer"
-                  variant="subtle"
-                  onClick={isOpen ? onClose : onOpen}
-                />
-              </Tooltip>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Box>
-
-      <Box position="relative" zIndex={4}>
-        <Sidebar
+    <VariablesContext.Provider value={{ ...emacsVariables }}>
+      <Box
+        display="flex"
+        alignItems="flex-start"
+        flexDirection="row"
+        height="100vh"
+        overflow="clip"
+      >
+        <Tweaks
           {...{
-            isOpen,
-            onOpen,
-            onClose,
-            previewNode,
-            setPreviewNode,
-            canUndo,
-            canRedo,
-            previousPreviewNode,
-            nextPreviewNode,
-            resetPreviewNode,
-            setSidebarHighlightedNode,
-            openContextMenu,
-            scope,
-            setScope,
-            windowWidth,
-            tagColors,
-            setTagColors,
+            physics,
+            setPhysics,
+            threeDim,
+            setThreeDim,
             filter,
             setFilter,
+            visuals,
+            setVisuals,
+            mouse,
+            setMouse,
+            behavior,
+            setBehavior,
+            tagColors,
+            setTagColors,
+            coloring,
+            setColoring,
+            local,
+            setLocal,
           }}
-          macros={variablesRef.current.katexMacros}
-          attachDir={variablesRef.current.attachDir || ''}
-          nodeById={nodeByIdRef.current!}
-          linksByNodeId={linksByNodeIdRef.current!}
-          nodeByCite={nodeByCiteRef.current!}
+          tags={tagsRef.current}
         />
-      </Box>
-      {contextMenu.isOpen && (
-        <div ref={contextMenuRef}>
-          <ContextMenu
-            //contextMenuRef={contextMenuRef}
-            scope={scope}
-            target={contextMenuTarget}
-            background={false}
-            coordinates={contextPos}
-            handleLocal={handleLocal}
-            menuClose={contextMenu.onClose.bind(contextMenu)}
-            webSocket={WebSocketRef.current}
-            setPreviewNode={setPreviewNode}
-            setFilter={setFilter}
-            filter={filter}
-            setTagColors={setTagColors}
-            tagColors={tagColors}
+        <Box position="absolute">
+          {graphData && (
+            <Graph
+              //ref={graphRef}
+              nodeById={nodeByIdRef.current!}
+              linksByNodeId={linksByNodeIdRef.current!}
+              webSocket={WebSocketRef.current}
+              variables={emacsVariables}
+              {...{
+                physics,
+                graphData,
+                threeDim,
+                emacsNodeId,
+                filter,
+                visuals,
+                behavior,
+                mouse,
+                scope,
+                setScope,
+                tagColors,
+                setPreviewNode,
+                sidebarHighlightedNode,
+                windowWidth,
+                windowHeight,
+                openContextMenu,
+                contextMenu,
+                handleLocal,
+                mainWindowWidth,
+                setMainWindowWidth,
+                setContextMenuTarget,
+                graphRef,
+                clusterRef,
+                coloring,
+                local,
+              }}
+            />
+          )}
+        </Box>
+        <Box position="relative" zIndex={4} width="100%">
+          <Flex className="headerBar" h={10} flexDir="column">
+            <Flex alignItems="center" h={10} justifyContent="flex-end">
+              {/* <Flex flexDir="row" alignItems="center">
+               *   <Box color="blue.500" bgColor="alt.100" h="100%" p={3} mr={4}>
+               *     {mainItem.icon}
+               *   </Box>
+               *   <Heading size="sm">{mainItem.title}</Heading>
+               * </Flex> */}
+              <Flex height="100%" flexDirection="row">
+                {scope.nodeIds.length > 0 && (
+                  <Tooltip label="Return to main graph">
+                    <IconButton
+                      m={1}
+                      icon={<BiNetworkChart />}
+                      aria-label="Exit local mode"
+                      onClick={() =>
+                        setScope((currentScope: Scope) => ({
+                          ...currentScope,
+                          nodeIds: [],
+                        }))
+                      }
+                      variant="subtle"
+                    />
+                  </Tooltip>
+                )}
+                <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
+                  <IconButton
+                    m={1}
+                    // eslint-disable-next-line react/jsx-no-undef
+                    icon={<BsReverseLayoutSidebarInsetReverse />}
+                    aria-label="Close file-viewer"
+                    variant="subtle"
+                    onClick={isOpen ? onClose : onOpen}
+                  />
+                </Tooltip>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Box>
+
+        <Box position="relative" zIndex={4}>
+          <Sidebar
+            {...{
+              isOpen,
+              onOpen,
+              onClose,
+              previewNode,
+              setPreviewNode,
+              canUndo,
+              canRedo,
+              previousPreviewNode,
+              nextPreviewNode,
+              resetPreviewNode,
+              setSidebarHighlightedNode,
+              openContextMenu,
+              scope,
+              setScope,
+              windowWidth,
+              tagColors,
+              setTagColors,
+              filter,
+              setFilter,
+            }}
+            macros={emacsVariables.katexMacros}
+            attachDir={emacsVariables.attachDir || ''}
+            nodeById={nodeByIdRef.current!}
+            linksByNodeId={linksByNodeIdRef.current!}
+            nodeByCite={nodeByCiteRef.current!}
           />
-        </div>
-      )}
-    </Box>
+        </Box>
+        {contextMenu.isOpen && (
+          <div ref={contextMenuRef}>
+            <ContextMenu
+              //contextMenuRef={contextMenuRef}
+              scope={scope}
+              target={contextMenuTarget}
+              background={false}
+              coordinates={contextPos}
+              handleLocal={handleLocal}
+              menuClose={contextMenu.onClose.bind(contextMenu)}
+              webSocket={WebSocketRef.current}
+              setPreviewNode={setPreviewNode}
+              setFilter={setFilter}
+              filter={filter}
+              setTagColors={setTagColors}
+              tagColors={tagColors}
+            />
+          </div>
+        )}
+      </Box>
+    </VariablesContext.Provider>
   )
 }
 
@@ -842,6 +853,22 @@ export const Graph = function (props: GraphProps) {
     const filteredNodes = graphData?.nodes
       ?.filter((nodeArg) => {
         const node = nodeArg as OrgRoamNode
+        //dirs
+        if (
+          filter.dirsBlocklist.length &&
+          filter.dirsBlocklist.some((dir) => node?.file?.includes(dir))
+        ) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+        if (
+          filter.dirsAllowlist.length > 0 &&
+          !filter.dirsAllowlist.some((dir) => node?.file?.includes(dir))
+        ) {
+          hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
+          return false
+        }
+
         if (
           filter.tagsBlacklist.length &&
           filter.tagsBlacklist.some((tag) => node?.tags?.indexOf(tag) > -1)

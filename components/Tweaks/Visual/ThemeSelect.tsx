@@ -11,9 +11,9 @@ import {
   Text,
 } from '@chakra-ui/react'
 
-import { themes } from '../themes'
+import { themes } from '../../themes'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { ThemeContext } from '../../util/themecontext'
+import { ThemeContext } from '../../../util/themecontext'
 
 export const ThemeSelect = () => {
   type Theme = { [key: string]: string }

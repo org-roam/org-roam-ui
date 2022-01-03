@@ -36,6 +36,7 @@
 (require 'simple-httpd)
 (require 'org-roam)
 (require 'websocket)
+(require 'org-roam-dailies)
 
 (defgroup org-roam-ui nil
   "UI in Org-roam."
@@ -312,6 +313,7 @@ node, as it's much faster to do that on the UI side."
 
 TODO: Make this only send the changes to the graph data, not the complete graph."
   (when (org-roam-buffer-p)
+    (org-roam-ui--send-variables org-roam-ui-ws-socket)
     (org-roam-ui--send-graphdata)))
 
 (defun org-roam-ui--check-orb-keywords ()
@@ -571,23 +573,30 @@ from all other links."
 
 (defun org-roam-ui--send-variables (ws)
   "Send miscellaneous org-roam variables through the websocket WS."
-  (when (boundp 'org-roam-dailies-directory)
-    (let ((daily-dir (if (file-name-absolute-p org-roam-dailies-directory)
-                         (expand-file-name org-roam-dailies-directory)
-                       (expand-file-name
-                          org-roam-dailies-directory
-                          org-roam-directory)))
-          (attach-dir (if (boundp 'org-attach-id-dir) org-attach-id-dir (expand-file-name ".attach/" org-directory))))
-      (websocket-send-text ws
+    (let ((daily-dir (if (boundp 'org-roam-dailies-dir)
+                         (if (file-name-absolute-p org-roam-dailies-directory)
+                             (expand-file-name org-roam-dailies-directory)
+                           (expand-file-name
+                            org-roam-dailies-directory
+                            org-roam-directory))
+                       "/dailies"))
+          (attach-dir (if (boundp 'org-attach-id-dir)
+                          org-attach-id-dir
+                        (expand-file-name ".attach/" org-directory)))
+          (sub-dirs (org-roam-ui-find-subdirectories)))
+      (message "im doing something")
+      (websocket-send-text org-roam-ui-ws-socket
                            (json-encode
                             `((type . "variables")
                               (data .
-                                    (("dailyDir" .
+                                    (("subDirs".
+                                      ,sub-dirs)
+                                     ("dailyDir" .
                                       ,daily-dir)
                                      ("attachDir" .
                                       ,attach-dir)
                                      ("roamDir" . ,org-roam-directory)
-                                     ("katexMacros" . ,org-roam-ui-latex-macros)))))))))
+                                     ("katexMacros" . ,org-roam-ui-latex-macros))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.
@@ -620,6 +629,18 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
         `(violet . ,(face-foreground font-lock-constant-face))
         `(magenta . ,(face-foreground font-lock-preprocessor-face))))
 
+(defun org-roam-ui-find-subdirectories ()
+  "Find all the subdirectories in the org-roam directory.
+TODO: Exclude org-attach dirs."
+   (seq-filter
+    (lambda (file) (and (file-directory-p file) (org-roam-ui-allowed-directory-p file)))
+    (directory-files-recursively org-roam-directory
+                                 ".*" t #'org-roam-ui-allowed-directory-p)))
+
+(defun org-roam-ui-allowed-directory-p (dir)
+  "Check whether a DIR should be listed as a filterable dir.
+Hides . directories."
+  (not (string-match-p "\\(\/\\|\\\\\\)\\..*?"  dir)))
 
 ;;;; interactive commands
 
