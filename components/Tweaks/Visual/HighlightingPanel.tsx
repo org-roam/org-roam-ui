@@ -1,8 +1,8 @@
 import { Box, Select, StackDivider, VStack } from '@chakra-ui/react'
 import React from 'react'
-import { initialVisuals } from '../config'
-import { EnableSection } from './EnableSection'
-import { SliderWithInfo } from './SliderWithInfo'
+import { initialVisuals } from '../../config'
+import { EnableSection } from '../EnableSection'
+import { SliderWithInfo } from '../SliderWithInfo'
 
 export interface HighlightingPanelProps {
   visuals: typeof initialVisuals

@@ -18,12 +18,11 @@ import {
 import React, { useCallback } from 'react'
 import { HighlightingPanel } from './HighlightingPanel'
 import { ColorsPanel } from './ColorsPanel'
-import { initialColoring, initialVisuals } from '../config'
+import { initialColoring, initialVisuals } from '../../config'
 import { NodesNLinksPanel } from './NodesNLinksPanel'
 import { LabelsPanel } from './LabelsPanel'
-import { CitationsPanel } from './CitationsPanel'
-import { ColorMenu } from './ColorMenu'
 import { ThemeSelect } from './ThemeSelect'
+import { CitationsPanel } from '../NodesNLinks/CitationsPanel'
 import { GraphColorSelect } from './GraphColorSelect'
 
 export interface VisualsPanelProps {

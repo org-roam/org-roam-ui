@@ -14,9 +14,9 @@ import {
   Switch,
 } from '@chakra-ui/react'
 import React from 'react'
-import { initialBehavior, initialMouse } from '../config'
-import { InfoTooltip } from './InfoTooltip'
-import { SliderWithInfo } from './SliderWithInfo'
+import { initialBehavior, initialMouse } from '../../config'
+import { InfoTooltip } from '../InfoTooltip'
+import { SliderWithInfo } from '../SliderWithInfo'
 
 export interface BehaviorPanelProps {
   behavior: typeof initialBehavior

@@ -577,12 +577,17 @@ from all other links."
                        (expand-file-name
                           org-roam-dailies-directory
                           org-roam-directory)))
-          (attach-dir (if (boundp 'org-attach-id-dir) org-attach-id-dir (expand-file-name ".attach/" org-directory))))
+          (attach-dir (if (boundp 'org-attach-id-dir)
+                          org-attach-id-dir
+                        (expand-file-name ".attach/" org-directory)))
+          (sub-dirs (org-roam-ui-find-subdirectories)))
       (websocket-send-text ws
                            (json-encode
                             `((type . "variables")
                               (data .
-                                    (("dailyDir" .
+                                    (("subDirs".
+                                      ,sub-dirs)
+                                     ("dailyDir" .
                                       ,daily-dir)
                                      ("attachDir" .
                                       ,attach-dir)
@@ -620,6 +625,12 @@ ROWS is the sql result, while COLUMN-NAMES is the columns to use."
         `(violet . ,(face-foreground font-lock-constant-face))
         `(magenta . ,(face-foreground font-lock-preprocessor-face))))
 
+(defun org-roam-ui-find-subdirectories ()
+  "Find all the subdirectories in the org-roam directory.
+TODO: Exclude org-attach dirs."
+   (seq-filter
+    (lambda (file) (file-directory-p file))
+    (directory-files-recursively org-roam-directory ".*" t)))
 
 ;;;; interactive commands
 

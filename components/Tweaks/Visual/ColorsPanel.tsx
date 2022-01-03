@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { ColorMenu } from './ColorMenu'
-import { colorList, initialVisuals } from '../config'
+import { colorList, initialVisuals } from '../../config'
 
 export interface ColorsPanelProps {
   visuals: typeof initialVisuals

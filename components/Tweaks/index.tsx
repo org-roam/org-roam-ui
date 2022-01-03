@@ -26,13 +26,13 @@ import {
   initialColoring,
 } from '../config'
 
-import FilterPanel from './FilterPanel'
+import FilterPanel from './Filter/FilterPanel'
 
 import { ThemeContext } from '../../util/themecontext'
 import { usePersistantState } from '../../util/persistant-state'
-import { PhysicsPanel } from './PhysicsPanel'
-import { VisualsPanel } from './VisualsPanel'
-import { BehaviorPanel } from './BehaviorPanel'
+import { PhysicsPanel } from './Physics/PhysicsPanel'
+import { BehaviorPanel } from './Behavior/BehaviorPanel'
+import { VisualsPanel } from './Visual/VisualsPanel'
 
 export interface TweakProps {
   physics: typeof initialPhysics

@@ -19,10 +19,10 @@ import {
   AccordionPanel,
 } from '@chakra-ui/react'
 import React from 'react'
-import { TagPanel } from './TagPanel'
-import { initialFilter, initialLocal, TagColors } from '../config'
+import { TagPanel } from '../TagPanel'
+import { initialFilter, initialLocal, TagColors } from '../../config'
 import { TagColorPanel } from './TagColorPanel'
-import { SliderWithInfo } from './SliderWithInfo'
+import { SliderWithInfo } from '../SliderWithInfo'
 
 export interface FilterPanelProps {
   filter: typeof initialFilter
@@ -80,7 +80,6 @@ const FilterPanel = (props: FilterPanelProps) => {
               })()}
             </MenuButton>
             <Portal>
-              {' '}
               <MenuList bgColor="gray.200" zIndex="popover">
                 <MenuItem
                   onClick={() =>
@@ -175,6 +174,28 @@ const FilterPanel = (props: FilterPanelProps) => {
         />
       </VStack>
       <Accordion padding={0} allowToggle allowMultiple paddingLeft={3}>
+        <AccordionItem>
+          <AccordionButton>
+            Directory filter
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pr={0} mr={0}>
+            <TagPanel
+              highlightColor={highlightColor}
+              filter={filter}
+              setFilter={setFilter}
+              tags={tags}
+              mode="blacklist"
+            />
+            <TagPanel
+              highlightColor={highlightColor}
+              filter={filter}
+              setFilter={setFilter}
+              tags={tags}
+              mode="whitelist"
+            />
+          </AccordionPanel>
+        </AccordionItem>
         <AccordionItem>
           <AccordionButton>
             Tag filters

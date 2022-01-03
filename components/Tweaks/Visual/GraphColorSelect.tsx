@@ -11,7 +11,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { initialColoring } from '../config'
+import { initialColoring } from '../../config'
 
 export interface GraphColorSelectProps {
   coloring: typeof initialColoring

@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 import React, { useState } from 'react'
-import { TagColors } from '../config'
+import { TagColors } from '../../config'
 
 export interface TagColorPanelProps {
   tags: string[]
@@ -95,7 +95,6 @@ export const TagColorPanel = (props: TagColorPanelProps) => {
                   {<Box bgColor={tagColors[tag]} borderRadius="sm" height={6} width={6}></Box>}
                 </MenuButton>
                 <Portal>
-                  {' '}
                   <MenuList minW={10} zIndex="popover" bgColor="gray.200">
                     {colorList.map((color: string) => (
                       <MenuItem
