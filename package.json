@@ -11,7 +11,6 @@
     "lint": "tsc --noEmit && next lint && eslint \"./**/*.{ts,tsx,js}\" \"./**/.*.{ts,tsx,js}\" --fix"
   },
   "dependencies": {
-    "@agentofuser/rehype-section": "^1.0.5",
     "@chakra-ui/icons": "^1.0.14",
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11",
@@ -26,11 +25,11 @@
     "d3-interpolate": "^3.0.1",
     "date-fns-tz": "^1.1.6",
     "es6-tween": "^5.5.11",
-    "framer-motion": "^4",
+    "framer-motion": "^5.5.5",
     "hast-to-hyperscript": "^9.0.1",
     "hastscript": "^6.0.0",
     "jlouvain.js": "^1.0.0",
-    "next": "^11.1.0",
+    "next": "^12.0.7",
     "orgast-util-to-string": "^0.4.5",
     "orgast-util-visit-ids": "^0.4.5",
     "path": "^0.12.7",
@@ -55,8 +54,8 @@
     "remark-rehype": "^8.1.0",
     "remark-sectionize": "^1.1.1",
     "remark-wiki-link": "^1.0.4",
-    "slate": "^0.66.5",
-    "slate-react": "^0.66.7",
+    "slate": "^0.72.3",
+    "slate-react": "^0.72.1",
     "styled-jsx": "^4.0.1",
     "three-spritetext": "^1.6.2",
     "through": "^2.3.8",
@@ -78,12 +77,12 @@
   },
   "devDependencies": {
     "@types/d3-interpolate": "^3.0.1",
-    "@types/react": "17.0.14",
-    "eslint": "7.31.0",
-    "eslint-config-next": "11.0.1",
+    "@types/react": "17.0.38",
+    "eslint": "8.6.0",
+    "eslint-config-next": "12.0.7",
     "next-compose-plugins": "^2.2.1",
-    "next-transpile-modules": "^8.0.0",
+    "next-transpile-modules": "^9.0.0",
     "prettier": "^2.3.2",
-    "typescript": "4.3.5"
+    "typescript": "4.5.4"
   }
 }
