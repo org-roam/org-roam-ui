@@ -15,17 +15,18 @@ export interface OptionPanelProps {
 export const OptionPanel = (props: OptionPanelProps) => {
   const { filter, listName, labelFilter, displayName, setFilter, options = [] } = props
   const { highlightColor } = useContext(ThemeContext)
-  const optionArray = options.map((option) => {
-    return { value: option, label: labelFilter ? option.replace(labelFilter, '') : option }
-  })
+  const optionArray =
+    options?.map((option) => {
+      return { value: option, label: labelFilter ? option.replace(labelFilter, '') : option }
+    }) || []
 
   const [selectedItems, setSelectedItems] = useState<typeof optionArray>(
-    filter[listName].map((option) => {
+    filter[listName]?.map((option) => {
       return {
         value: option,
         label: labelFilter ? (option as string)?.replace(labelFilter, '') : option,
       }
-    }),
+    }) || [],
   )
 
   return (
