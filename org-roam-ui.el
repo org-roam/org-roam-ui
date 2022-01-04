@@ -573,7 +573,7 @@ from all other links."
 
 (defun org-roam-ui--send-variables (ws)
   "Send miscellaneous org-roam variables through the websocket WS."
-    (let ((daily-dir (if (boundp 'org-roam-dailies-dir)
+    (let ((daily-dir (if (boundp 'org-roam-dailies-directory)
                          (if (file-name-absolute-p org-roam-dailies-directory)
                              (expand-file-name org-roam-dailies-directory)
                            (expand-file-name
