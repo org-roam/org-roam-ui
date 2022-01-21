@@ -584,7 +584,6 @@ from all other links."
                           org-attach-id-dir
                         (expand-file-name ".attach/" org-directory)))
           (sub-dirs (org-roam-ui-find-subdirectories)))
-      (message "im doing something")
       (websocket-send-text org-roam-ui-ws-socket
                            (json-encode
                             `((type . "variables")
