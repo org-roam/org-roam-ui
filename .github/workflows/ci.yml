@@ -7,6 +7,7 @@ on:
     branches:
       - '**'
       - '!main'
+  workflow_dispatch:
 defaults:
   run:
     shell: 'bash'
@@ -51,8 +52,8 @@ jobs:
           git config --global url."https://github.com/".insteadOf ssh://git@github.com/
           git config --global url."https://".insteadOf git://
           git config --global url."https://".insteadOf ssh://
-          npm install
-          npm run build
-          npm run export
+          yarn install
+          yarn run build
+          yarn run export
 ...
 # End of ci.yml
