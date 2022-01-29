@@ -178,7 +178,10 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
               <chakra.blockquote
                 color="gray.800"
                 bgColor="gray.300"
-                pt={2}
+                pt={4}
+                pb={2}
+                mb={4}
+                mt={3}
                 pl={4}
                 borderLeftWidth={4}
                 borderLeftColor="gray.700"
