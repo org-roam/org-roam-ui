@@ -28,6 +28,7 @@
     "es6-tween": "^5.5.11",
     "framer-motion": "^4",
     "hast-to-hyperscript": "^9.0.1",
+    "hast-util-to-string": "1",
     "hastscript": "^6.0.0",
     "jlouvain.js": "^1.0.0",
     "next": "^11.1.0",

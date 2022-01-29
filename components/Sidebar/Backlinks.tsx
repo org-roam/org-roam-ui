@@ -8,7 +8,7 @@ import React from 'react'
 import { ProcessedOrg } from '../../util/processOrg'
 
 export interface BacklinksProps {
-  previewNode: any
+  previewNode: OrgRoamNode
   setPreviewNode: any
   nodeById: NodeById
   linksByNodeId: LinksByNodeId

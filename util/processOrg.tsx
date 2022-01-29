@@ -33,6 +33,10 @@ import { Section } from '../components/Sidebar/Section'
 import { NoteContext } from './NoteContext'
 import { OrgRoamLink, OrgRoamNode } from '../api'
 
+// @ts-expect-error non-ESM unified means no types
+import { toString } from 'hast-util-to-string'
+import { Box } from '@chakra-ui/react'
+
 export interface ProcessedOrgProps {
   nodeById: NodeById
   previewNode: OrgRoamNode
@@ -63,6 +67,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     macros,
     attachDir,
   } = props
+
   if (!previewNode || !linksByNodeId) {
     return null
   }
@@ -96,7 +101,6 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
   }
 
   const wikiLinkProcessor = (wikiLink: string): string => {
-    console.log(wikiLink)
     return `id:${wikiLink}`
   }
 
@@ -160,11 +164,18 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
             img: ({ src }) => {
               return <OrgImage src={src as string} file={previewNode?.file} />
             },
-            section: ({ children, className }) => (
-              <Section {...{ outline, collapse }} className={className as string}>
-                {children}
-              </Section>
-            ),
+            section: ({ children, className }) => {
+              console.log(className)
+              console.log(previewNode.level)
+              if (className && (className as string).slice(-1) === `${previewNode.level}`) {
+                return <Box>{(children as React.ReactElement[]).slice(1)}</Box>
+              }
+              return (
+                <Section {...{ outline, collapse }} className={className as string}>
+                  {children}
+                </Section>
+              )
+            },
             p: ({ children }) => {
               return <p lang="en">{children as ReactNode}</p>
             },
@@ -177,7 +188,4 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
   return (
     <NoteContext.Provider value={{ collapse, outline }}>{text as ReactNode}</NoteContext.Provider>
   )
-}
-function useCallBack(arg0: () => unified.Processor<unified.Settings>) {
-  throw new Error('Function not implemented.')
 }
