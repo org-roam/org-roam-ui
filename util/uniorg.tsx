@@ -34,9 +34,9 @@ export const UniOrg = (props: UniOrgProps) => {
 
   const [previewText, setPreviewText] = useState('')
 
-  const file = encodeURIComponent(encodeURIComponent(previewNode.file))
+  const id = encodeURIComponent(encodeURIComponent(previewNode.id))
   useEffect(() => {
-    fetch(`http://localhost:35901/file/${file}`)
+    fetch(`http://localhost:35901/node/${id}`)
       .then((res) => {
         return res.text()
       })

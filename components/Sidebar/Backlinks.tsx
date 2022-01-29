@@ -8,7 +8,7 @@ import React from 'react'
 import { ProcessedOrg } from '../../util/processOrg'
 
 export interface BacklinksProps {
-  previewNode: any
+  previewNode: NodeObject | OrgRoamNode
   setPreviewNode: any
   nodeById: NodeById
   linksByNodeId: LinksByNodeId
@@ -37,7 +37,7 @@ export const Backlinks = (props: BacklinksProps) => {
     macros,
     attachDir,
   } = props
-  const links = linksByNodeId[previewNode?.id] ?? []
+  const links = linksByNodeId[(previewNode as OrgRoamNode)?.id] ?? []
 
   const backLinks = links
     .filter((link: LinkObject) => {
