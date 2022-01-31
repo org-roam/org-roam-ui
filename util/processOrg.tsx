@@ -35,7 +35,7 @@ import { OrgRoamLink, OrgRoamNode } from '../api'
 
 // @ts-expect-error non-ESM unified means no types
 import { toString } from 'hast-util-to-string'
-import { Box } from '@chakra-ui/react'
+import { Box, chakra } from '@chakra-ui/react'
 
 export interface ProcessedOrgProps {
   nodeById: NodeById
@@ -165,8 +165,6 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
               return <OrgImage src={src as string} file={previewNode?.file} />
             },
             section: ({ children, className }) => {
-              console.log(className)
-              console.log(previewNode.level)
               if (className && (className as string).slice(-1) === `${previewNode.level}`) {
                 return <Box>{(children as React.ReactElement[]).slice(1)}</Box>
               }
@@ -176,6 +174,21 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
                 </Section>
               )
             },
+            blockquote: ({ children }) => (
+              <chakra.blockquote
+                color="gray.800"
+                bgColor="gray.300"
+                pt={4}
+                pb={2}
+                mb={4}
+                mt={3}
+                pl={4}
+                borderLeftWidth={4}
+                borderLeftColor="gray.700"
+              >
+                {children as React.ReactElement[]}
+              </chakra.blockquote>
+            ),
             p: ({ children }) => {
               return <p lang="en">{children as ReactNode}</p>
             },
