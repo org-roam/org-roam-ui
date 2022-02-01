@@ -42,12 +42,7 @@ org-roam-ui requires `org-roam`, `websocket`, `simple-httpd`, `f` and Emacs >= 2
 M-x package-install org-roam-ui
 ```
 
-Load in Emacs (add to config):
-
-```lisp
-(add-to-list 'load-path "~/.emacs.d/private/org-roam-ui")
-(load-library "org-roam-ui")
-```
+No configuration is necessary when you use `packge.el` to install ORUI.
 
 ### Doom
 
