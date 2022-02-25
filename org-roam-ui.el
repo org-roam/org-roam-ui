@@ -229,10 +229,10 @@ Takes _WS and FRAME as arguments."
 
 (defun org-roam-ui--on-msg-open-node (data)
   "Open a node when receiving DATA from the websocket."
-  (let* ((node (org-roam-node-from-id (alist-get'id data)))
-         (pos (org-roam-node-point node))
-         (buf (org-roam-node-find-noselect node))
-         (id (alist-get 'id data)))
+  (let* ((id (alist-get 'id data))
+          (node (org-roam-node-from-id id))
+          (pos (org-roam-node-point node))
+          (buf (find-file-noselect (org-roam-node-file node))))
     (run-hook-with-args 'org-roam-ui-before-open-node-functions id)
     (unless (window-live-p org-roam-ui--window)
       (if-let ((windows (window-list))
