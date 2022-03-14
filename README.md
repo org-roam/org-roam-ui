@@ -339,6 +339,11 @@ tbd
 
 # Supporting org-roam-ui
 
+## Chat
+
+We have a small telegram group for discussing org-roam-ui, you can join if you're cool.
+https://t.me/+sEuL2qi37yw1NzQy
+
 ## Feedback
 
 For feature suggestions, please make an issue or check out the discussions for [major](https://github.com/org-roam/org-roam-ui/discussions/66) and [minor features](https://github.com/org-roam/org-roam-ui/discussions/6).
