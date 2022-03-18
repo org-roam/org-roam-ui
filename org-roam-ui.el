@@ -184,6 +184,9 @@ This serves the web-build and API over HTTP."
     (setq httpd-root org-roam-ui-app-build-dir)
     (httpd-start)
     (setq org-roam-ui-ws-server
+          ; BUG this breaks when the theme is changed during a session,
+          ; then a new frame is created. Results in the frames crashing & the
+          ; default theme loading.
           (websocket-server
            35903
            :host 'local
