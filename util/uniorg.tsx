@@ -15,6 +15,7 @@ export interface UniOrgProps {
   linksByNodeId: LinksByNodeId
   macros?: { [key: string]: string }
   attachDir: string
+  attachUseInheritance: boolean
 }
 
 export const UniOrg = (props: UniOrgProps) => {
@@ -30,6 +31,7 @@ export const UniOrg = (props: UniOrgProps) => {
     linksByNodeId,
     macros,
     attachDir,
+    attachUseInheritance,
   } = props
 
   const [previewText, setPreviewText] = useState('')
@@ -72,6 +74,7 @@ export const UniOrg = (props: UniOrgProps) => {
             collapse,
             linksByNodeId,
             attachDir,
+            attachUseInheritance,
           }}
           macros={macros || {}}
         />

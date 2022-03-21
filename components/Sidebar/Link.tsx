@@ -42,6 +42,7 @@ export interface LinkProps {
   isWiki?: boolean
   noUnderline?: boolean
   attachDir: string
+  attachUseInheritance: boolean
   macros: { [key: string]: string }
 }
 
@@ -142,6 +143,7 @@ export const PreviewLink = (props: LinkProps) => {
     isWiki,
     macros,
     attachDir,
+    attachUseInheritance,
   } = props
   // TODO figure out how to properly type this
   // see https://github.com/rehypejs/rehype-react/issues/25
@@ -296,6 +298,7 @@ export const PreviewLink = (props: LinkProps) => {
                         linksByNodeId,
                         macros,
                         attachDir,
+                        attachUseInheritance,
                       }}
                       previewNode={nodeById[id]!}
                       collapse={false}
