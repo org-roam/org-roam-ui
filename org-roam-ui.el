@@ -61,10 +61,8 @@
   35901
   "Port to serve the org-roam-ui interface.")
 
-(defcustom org-roam-ui-server-running nil
-  "If t, server is running. Used to prevent websockets collisions."
-  :group 'org-roam-ui
-  :type 'boolean)
+(defvar org-roam-ui-server-running nil
+  "If t, server is running. Used to prevent websockets collisions.")
 
 (defcustom org-roam-ui-sync-theme t
   "If true, sync your current Emacs theme with `org-roam-ui'.
