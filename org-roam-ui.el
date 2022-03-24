@@ -183,7 +183,7 @@ This serves the web-build and API over HTTP."
   :init-value nil
   (cond
     ((and org-roam-ui-mode (not org-roam-ui-server-running))
-      (debug "org-roam-ui server :: starting up...")
+      (message "org-roam-ui server :: starting up...")
    ;;; check if the default keywords actually exist on `orb-preformat-keywords'
    ;;; else add them
       (setq-local httpd-port org-roam-ui-port)
@@ -202,7 +202,7 @@ This serves the web-build and API over HTTP."
       (message (format "org-roam-ui server already runnning.")))
     (t
       (progn
-        (debug "org-roam-ui server :: shutting down...")
+        (message "org-roam-ui server :: shutting down...")
         (websocket-server-close org-roam-ui-ws-server)
         (httpd-stop)
         (setq org-roam-ui-server-running nil)
