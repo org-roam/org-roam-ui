@@ -188,12 +188,12 @@ This serves the web-build and API over HTTP."
       (setq httpd-root org-roam-ui-app-build-dir)
       (httpd-start)
       (setq org-roam-ui-ws-server
-        (ignore-errors (websocket-server
-                         35903
-                         :host 'local
-                         :on-open #'org-roam-ui--ws-on-open
-                         :on-message #'org-roam-ui--ws-on-message
-                         :on-close #'org-roam-ui--ws-on-close)))
+        (websocket-server
+          35903
+          :host 'local
+          :on-open #'org-roam-ui--ws-on-open
+          :on-message #'org-roam-ui--ws-on-message
+          :on-close #'org-roam-ui--ws-on-close))
       (setq org-roam-ui-server-running t)
       (when org-roam-ui-open-on-start (org-roam-ui-open)))
     (org-roam-ui-mode
