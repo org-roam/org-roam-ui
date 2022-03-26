@@ -61,9 +61,6 @@
   35901
   "Port to serve the org-roam-ui interface.")
 
-(defvar org-roam-ui-server-running nil
-  "If t, server is running. Used to prevent websockets collisions.")
-
 (defcustom org-roam-ui-sync-theme t
   "If true, sync your current Emacs theme with `org-roam-ui'.
 Works best with doom-themes.
@@ -180,7 +177,7 @@ This serves the web-build and API over HTTP."
   :group 'org-roam-ui
   :init-value nil
   (cond
-    ((and org-roam-ui-mode (not org-roam-ui-server-running))
+    ((and org-roam-ui-mode (not (org-roam-ui-server-runningp)))
       (message "org-roam-ui server :: starting up...")
    ;;; check if the default keywords actually exist on `orb-preformat-keywords'
    ;;; else add them
@@ -194,7 +191,6 @@ This serves the web-build and API over HTTP."
           :on-open #'org-roam-ui--ws-on-open
           :on-message #'org-roam-ui--ws-on-message
           :on-close #'org-roam-ui--ws-on-close))
-      (setq org-roam-ui-server-running t)
       (when org-roam-ui-open-on-start (org-roam-ui-open)))
     (org-roam-ui-mode
       (message (format "org-roam-ui server already runnning.")))
@@ -203,10 +199,12 @@ This serves the web-build and API over HTTP."
         (message "org-roam-ui server :: shutting down...")
         (websocket-server-close org-roam-ui-ws-server)
         (httpd-stop)
-        (setq org-roam-ui-server-running nil)
         (remove-hook 'after-save-hook #'org-roam-ui--on-save)
         (org-roam-ui-follow-mode -1)))))
 
+(defun org-roam-ui-server-runningp ()
+  "True if the server is running or listening, otherwise false."
+  (if (member (process-status org-roam-ui-ws-server) '(listen run)) t))
 
 (defun org-roam-ui--ws-on-open (ws)
   "Open the websocket WS to org-roam-ui and send initial data."
