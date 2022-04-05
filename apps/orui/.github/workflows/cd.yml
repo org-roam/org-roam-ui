@@ -1,0 +1,74 @@
+---
+# File : cd.yml
+
+name: 'cd'
+on:
+  push:
+    branches: [main]
+defaults:
+  run:
+    shell: 'bash'
+jobs:
+  changes:
+    runs-on: 'ubuntu-latest'
+    outputs:
+      ts: ${{ steps.filter.outputs.ts }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: '[check if build necessary]'
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            ts:
+              - '**.ts'
+              - '**.tsx'
+              - '**.json'
+  build-deploy:
+    name: '[cd|build-deploy]'
+    runs-on: 'ubuntu-latest'
+    needs: changes
+    if: ${{ needs.changes.outputs.ts == 'true' }}
+    steps:
+      - name: '[checkout] ${{ github.repository }} project'
+        uses: 'actions/checkout@v2'
+        with:
+          repository: '${{ github.repository }}'
+      - name: '[setup node]'
+        uses: 'actions/setup-node@v2'
+        with:
+          node-version: '16'
+      - name: '[lint]'
+        run: |
+          echo TBA some linting
+      - name: '[test]'
+        run: |
+          echo TBA some testing
+      - name: '[build]'
+        run: |
+          git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+          git config --global url."https://".insteadOf git://
+          git config --global url."https://".insteadOf ssh://
+          yarn install
+          yarn run build
+          yarn run export
+      - name: '[Add GitHub Sponsors to Readme]'
+        uses: JamesIves/github-sponsors-readme-action@1.0.5
+        with:
+          token: ${{secrets.PAT}}
+          file: 'README.md'
+          minimum: 500
+
+      - name: '[commit changes]'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "chore: build" -a
+      - name: '[push changes]'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+---
+# End of cd.yml

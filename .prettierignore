@@ -1,4 +1,4 @@
-#Ignore artifacts:
-build
-out
-.github
+# Add files here to ignore them from prettier formatting
+
+/dist
+/coverage

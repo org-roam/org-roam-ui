@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "projects": {
+    "orui": "apps/orui",
+    "orui-e2e": "apps/orui-e2e"
+  }
+}
