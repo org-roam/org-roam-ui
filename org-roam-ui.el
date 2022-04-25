@@ -197,14 +197,15 @@ This serves the web-build and API over HTTP."
     (t
       (progn
         (message "org-roam-ui server :: shutting down...")
-        (websocket-server-close org-roam-ui-ws-server)
+        (if org-roam-ui-ws-server
+          (websocket-server-close org-roam-ui-ws-server))
         (httpd-stop)
         (remove-hook 'after-save-hook #'org-roam-ui--on-save)
         (org-roam-ui-follow-mode -1)))))
 
 (defun org-roam-ui-server-runningp ()
   "True if the server is running or listening, otherwise false."
-  (if (member (process-status org-roam-ui-ws-server) '(listen run)) t))
+  (and org-roam-ui-ws-server (member (process-status org-roam-ui-ws-server) '(listen run)) t))
 
 (defun org-roam-ui--ws-on-open (ws)
   "Open the websocket WS to org-roam-ui and send initial data."
