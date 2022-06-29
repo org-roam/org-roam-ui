@@ -77,6 +77,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     .use(extractKeywords)
     .use(attachments, {
       idDir: attachDir || undefined,
+      useInheritance: true,
     })
     .use(uniorgSlug)
     .use(uniorg2rehype, { useSections: true })
