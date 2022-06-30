@@ -50,6 +50,7 @@ export interface ProcessedOrgProps {
   linksByNodeId: LinksByNodeId
   macros: { [key: string]: string } | {}
   attachDir: string
+  useInheritance: boolean
 }
 
 export const ProcessedOrg = (props: ProcessedOrgProps) => {
@@ -66,6 +67,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     linksByNodeId,
     macros,
     attachDir,
+    useInheritance,
   } = props
 
   if (!previewNode || !linksByNodeId) {
@@ -77,7 +79,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     .use(extractKeywords)
     .use(attachments, {
       idDir: attachDir || undefined,
-      useInheritance: true,
+      useInheritance,
     })
     .use(uniorgSlug)
     .use(uniorg2rehype, { useSections: true })
@@ -157,6 +159,7 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
                   isWiki={isMarkdown}
                   macros={macros}
                   attachDir={attachDir}
+                  useInheritance={useInheritance}
                 >
                   {children}
                 </PreviewLink>

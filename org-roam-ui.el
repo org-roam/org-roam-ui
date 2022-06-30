@@ -584,6 +584,9 @@ from all other links."
           (attach-dir (if (boundp 'org-attach-id-dir)
                           org-attach-id-dir
                         (expand-file-name ".attach/" org-directory)))
+          (use-inheritance (if (boundp 'org-attach-use-inheritance)
+                            org-attach-use-inheritance
+                            nil))
           (sub-dirs (org-roam-ui-find-subdirectories)))
       (websocket-send-text org-roam-ui-ws-socket
                            (json-encode
@@ -595,6 +598,8 @@ from all other links."
                                       ,daily-dir)
                                      ("attachDir" .
                                       ,attach-dir)
+                                     ("useInheritance" .
+                                      ,use-inheritance)
                                      ("roamDir" . ,org-roam-directory)
                                      ("katexMacros" . ,org-roam-ui-latex-macros))))))))
 

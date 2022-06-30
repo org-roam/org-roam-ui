@@ -17,6 +17,7 @@ export interface BacklinksProps {
   openContextMenu: any
   outline: boolean
   attachDir: string
+  useInheritance: boolean
   macros: { [key: string]: string }
 }
 
@@ -36,6 +37,7 @@ export const Backlinks = (props: BacklinksProps) => {
     outline,
     macros,
     attachDir,
+    useInheritance,
   } = props
   const links = linksByNodeId[(previewNode as OrgRoamNode)?.id] ?? []
 
@@ -73,7 +75,7 @@ export const Backlinks = (props: BacklinksProps) => {
                   openContextMenu={openContextMenu}
                   outline={outline}
                   noUnderline
-                  {...{ attachDir, macros }}
+                  {...{ attachDir, useInheritance, macros }}
                 >
                   {nodeById[link as string]?.title}
                 </PreviewLink>
