@@ -51,6 +51,7 @@ export interface SidebarProps {
   setTagColors: any
   macros?: { [key: string]: string }
   attachDir: string
+  useInheritance: boolean
 }
 
 const Sidebar = (props: SidebarProps) => {
@@ -79,6 +80,7 @@ const Sidebar = (props: SidebarProps) => {
     setTagColors,
     macros,
     attachDir,
+    useInheritance,
   } = props
 
   const { highlightColor } = useContext(ThemeContext)
@@ -231,6 +233,7 @@ const Sidebar = (props: SidebarProps) => {
                     collapse,
                     macros,
                     attachDir,
+                    useInheritance,
                   }}
                 />
               </VStack>

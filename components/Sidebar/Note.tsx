@@ -22,6 +22,7 @@ export interface NoteProps {
   collapse: boolean
   macros?: { [key: string]: string }
   attachDir: string
+  useInheritance: boolean
 }
 
 export const Note = (props: NoteProps) => {
@@ -39,6 +40,7 @@ export const Note = (props: NoteProps) => {
     collapse,
     macros,
     attachDir,
+    useInheritance,
   } = props
 
   const extraStyle = outline ? outlineNoteStyle : viewerNoteStyle
@@ -74,6 +76,7 @@ export const Note = (props: NoteProps) => {
               linksByNodeId,
               macros,
               attachDir,
+              useInheritance,
             }}
           />
           <Backlinks
@@ -87,6 +90,7 @@ export const Note = (props: NoteProps) => {
               openContextMenu,
               outline,
               attachDir,
+              useInheritance,
             }}
             macros={macros || {}}
           />

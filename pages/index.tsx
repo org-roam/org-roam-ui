@@ -79,6 +79,7 @@ export interface EmacsVariables {
   dailyDir?: string
   katexMacros?: { [key: string]: string }
   attachDir?: string
+  useInheritance?: boolean,
   subDirs: string[]
 }
 export type Tags = string[]
@@ -684,6 +685,7 @@ export function GraphPage() {
             }}
             macros={emacsVariables.katexMacros}
             attachDir={emacsVariables.attachDir || ''}
+            useInheritance={emacsVariables.useInheritance || false}
             nodeById={nodeByIdRef.current!}
             linksByNodeId={linksByNodeIdRef.current!}
             nodeByCite={nodeByCiteRef.current!}
