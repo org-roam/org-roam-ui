@@ -568,7 +568,7 @@ from all other links."
               (setq ui-theme doom-theme))
           (setq ui-theme (org-roam-ui-get-theme)))
       (when org-roam-ui-custom-theme
-        org-roam-ui-custom-theme))
+		(setq ui-theme org-roam-ui-custom-theme)))
     ui-theme))
 
 
