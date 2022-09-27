@@ -466,7 +466,10 @@ export function GraphPage() {
               setEmacsNodeId(message.data.id)
               break
             }
-            case 'add-node-local': {
+            case 'change-local-graph': {
+              console.log(message)
+              handleLocal(nodeByIdRef.current[message.data.id as string], message.data.manipulation)
+              break
             }
             default:
               return console.error('unknown message type', message.type)
@@ -525,7 +528,7 @@ export function GraphPage() {
   const handleLocal = (node: OrgRoamNode, command: string) => {
     if (command === 'remove') {
       setScope((currentScope: Scope) => ({
-        ...currentScope,
+        nodeIds: currentScope.nodeIds.filter((id: string) => id !== node.id),
         excludedNodeIds: [...currentScope.excludedNodeIds, node.id as string],
       }))
       return
@@ -538,7 +541,7 @@ export function GraphPage() {
       return
     }
     setScope((currentScope: Scope) => ({
-      ...currentScope,
+      excludedNodeIds: currentScope.excludedNodeIds.filter((id: string) => id !== node.id),
       nodeIds: [...currentScope.nodeIds, node.id as string],
     }))
     return
@@ -974,7 +977,11 @@ export const Graph = function (props: GraphProps) {
           const links = filteredLinksByNodeIdRef.current[node.id as string] ?? []
           return links.some((link) => {
             const [source, target] = normalizeLinkEnds(link)
-            return scope.nodeIds.includes(source) || scope.nodeIds.includes(target)
+            return (
+              !scope.excludedNodeIds.includes(source) &&
+              !scope.excludedNodeIds.includes(target) &&
+              (scope.nodeIds.includes(source) || scope.nodeIds.includes(target))
+            )
           })
         }
         return neighbs.includes(node.id as string)
@@ -1018,8 +1025,10 @@ export const Graph = function (props: GraphProps) {
   }, [
     local.neighbors,
     filter,
-    JSON.stringify(scope),
-    JSON.stringify(graphData),
+    scope,
+    scope.excludedNodeIds,
+    scope.nodeIds,
+    graphData,
     filteredGraphData.links,
     filteredGraphData.nodes,
   ])
