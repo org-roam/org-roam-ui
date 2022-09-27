@@ -1,17 +1,9 @@
 import React from 'react'
-import { Text, Flex, IconButton, ButtonGroup, Tooltip } from '@chakra-ui/react'
-import {
-  BiAlignJustify,
-  BiAlignLeft,
-  BiAlignMiddle,
-  BiAlignRight,
-  BiFont,
-  BiRightIndent,
-} from 'react-icons/bi'
+import { Flex, IconButton, ButtonGroup, Tooltip } from '@chakra-ui/react'
+import { BiAlignJustify, BiAlignLeft, BiAlignMiddle, BiAlignRight } from 'react-icons/bi'
 import { MdOutlineExpand, MdOutlineCompress } from 'react-icons/md'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { IoIosListBox, IoMdListBox } from 'react-icons/io'
-import { NodeObject } from 'force-graph'
 
 export interface ToolbarProps {
   setJustification: any
