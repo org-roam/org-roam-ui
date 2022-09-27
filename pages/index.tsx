@@ -79,7 +79,7 @@ export interface EmacsVariables {
   dailyDir?: string
   katexMacros?: { [key: string]: string }
   attachDir?: string
-  useInheritance?: boolean,
+  useInheritance?: boolean
   subDirs: string[]
 }
 export type Tags = string[]
@@ -461,6 +461,8 @@ export function GraphPage() {
               setEmacsNodeId(message.data.id)
               break
             }
+            case 'add-node-local': {
+            }
             default:
               return console.error('unknown message type', message.type)
           }
@@ -537,18 +539,17 @@ export function GraphPage() {
     return
   }
 
-  const [mainItem, setMainItem] = useState({
-    type: 'Graph',
-    title: 'Graph',
-    icon: <BiNetworkChart />,
-  })
+  // const [mainItem, setMainItem] = useState({
+  //   type: 'Graph',
+  //   title: 'Graph',
+  //   icon: <BiNetworkChart />,
+  // })
 
   const [mainWindowWidth, setMainWindowWidth] = usePersistantState<number>(
     'mainWindowWidth',
     windowWidth,
   )
 
-  console.log(emacsVariables)
   return (
     <VariablesContext.Provider value={{ ...emacsVariables }}>
       <Box
