@@ -17,7 +17,6 @@ import { GraphData, LinkObject, NodeObject } from 'force-graph'
 import Head from 'next/head'
 import React, {
   ComponentPropsWithoutRef,
-  forwardRef,
   useContext,
   useEffect,
   useMemo,
@@ -30,12 +29,11 @@ import type {
   ForceGraph2D as TForceGraph2D,
   ForceGraph3D as TForceGraph3D,
 } from 'react-force-graph'
-import { BiChart, BiNetworkChart } from 'react-icons/bi'
+import { BiNetworkChart } from 'react-icons/bi'
 import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import SpriteText from 'three-spritetext'
 import useUndo from 'use-undo'
-import wrap from 'word-wrap'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import {
   algos,
@@ -57,6 +55,13 @@ import { ThemeContext, ThemeContextProps } from '../util/themecontext'
 import { openNodeInEmacs } from '../util/webSocketFunctions'
 import { drawLabels } from '../components/Graph/drawLabels'
 import { VariablesContext } from '../util/variablesContext'
+import { findNthNeighbors } from '../util/findNthNeighbour'
+import { getThemeColor } from '../util/getThemeColor'
+import { normalizeLinkEnds } from '../util/normalizeLinkEnds'
+import { nodeSize } from '../util/nodeSize'
+import { getNodeColor } from '../util/getNodeColor'
+import { isLinkRelatedToNode } from '../util/isLinkRelatedToNode'
+import { getLinkColor } from '../util/getLinkColor'
 
 const d3promise = import('d3-force-3d')
 
@@ -809,36 +814,6 @@ export const Graph = function (props: GraphProps) {
     }
   }
 
-  const findNthNeighbors = (ids: string[], excludedIds: string[], n: number) => {
-    let queue = [ids[0]]
-    let todo: string[] = []
-    const completed = [ids[0]]
-    Array.from({ length: n }, () => {
-      queue.forEach((node) => {
-        const links = filteredLinksByNodeIdRef.current[node as string] ?? []
-        links.forEach((link) => {
-          const [sourceId, targetId] = normalizeLinkEnds(link)
-          if (excludedIds.some((id) => [sourceId, targetId].includes(id))) {
-            return
-          }
-          if (!completed.includes(sourceId)) {
-            todo.push(sourceId)
-            return
-          }
-          if (!completed.includes(targetId)) {
-            todo.push(targetId)
-            return
-          }
-          return
-        })
-      })
-      queue = todo
-      todo.forEach((neighbor) => neighbor && completed.push(neighbor))
-      todo = []
-    })
-    return completed
-  }
-
   const centralHighlightedNode = useRef<NodeObject | null>(null)
 
   useEffect(() => {
@@ -984,7 +959,12 @@ export const Graph = function (props: GraphProps) {
         ? scopedGraphData.nodes.filter((n) => !scope.excludedNodeIds.includes(n.id as string))
         : []
     const oldScopedNodeIds = oldScopedNodes.map((node) => node.id as string)
-    const neighbs = findNthNeighbors(scope.nodeIds, scope.excludedNodeIds, local.neighbors)
+    const neighbs = findNthNeighbors({
+      ids: scope.nodeIds,
+      excludedIds: scope.excludedNodeIds,
+      n: local.neighbors,
+      linksByNodeId: filteredLinksByNodeIdRef.current,
+    })
     const newScopedNodes = filteredGraphData.nodes
       .filter((node) => {
         if (oldScopedNodes.length) {
@@ -1079,6 +1059,7 @@ export const Graph = function (props: GraphProps) {
   // shitty handler to check for doubleClicks
   const lastNodeClickRef = useRef(0)
 
+  // this is for animations, it's a bit hacky and can definitely be optimized
   const [opacity, setOpacity] = useState(1)
   const [fadeIn, cancel] = useAnimation((x) => setOpacity(x), {
     duration: visuals.animationSpeed,
@@ -1107,10 +1088,7 @@ export const Graph = function (props: GraphProps) {
         ...links.flatMap((link) => [link.source, link.target]),
       ].map((nodeId) => [nodeId, {}]),
     )
-  }, [
-    JSON.stringify(centralHighlightedNode.current),
-    JSON.stringify(filteredLinksByNodeIdRef.current),
-  ])
+  }, [centralHighlightedNode.current, filteredLinksByNodeIdRef.current])
 
   useEffect(() => {
     if (sidebarHighlightedNode?.id) {
@@ -1121,6 +1099,7 @@ export const Graph = function (props: GraphProps) {
   }, [sidebarHighlightedNode])
 
   const lastHoverNode = useRef<OrgRoamNode | null>(null)
+
   useEffect(() => {
     centralHighlightedNode.current = hoverNode
     if (hoverNode) {
@@ -1163,102 +1142,6 @@ export const Graph = function (props: GraphProps) {
     )
   }, [JSON.stringify(hoverNode), lastHoverNode.current, filteredLinksByNodeIdRef.current])
 
-  const getNodeColorById = (id: string) => {
-    const linklen = filteredLinksByNodeIdRef.current[id!]?.length ?? 0
-    if (coloring.method === 'degree') {
-      return visuals.nodeColorScheme[
-        numberWithinRange(linklen, 0, visuals.nodeColorScheme.length - 1)
-      ]
-    }
-    return visuals.nodeColorScheme[
-      linklen && clusterRef.current[id] % visuals.nodeColorScheme.length
-    ]
-  }
-
-  const getLinkNodeColor = (sourceId: string, targetId: string) => {
-    return filteredLinksByNodeIdRef.current[sourceId]!.length >
-      filteredLinksByNodeIdRef.current[targetId]!.length
-      ? getNodeColorById(sourceId)
-      : getNodeColorById(targetId)
-  }
-
-  const getLinkColor = (
-    sourceId: string,
-    targetId: string,
-    needsHighlighting: boolean,
-    theme: any,
-  ) => {
-    if (!visuals.linkHighlight && !visuals.linkColorScheme && !needsHighlighting) {
-      const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor, theme)
-    }
-
-    if (!needsHighlighting && !visuals.linkColorScheme) {
-      const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return highlightColors[nodeColor][visuals.backgroundColor](visuals.highlightFade * opacity)
-    }
-
-    if (!needsHighlighting) {
-      return highlightColors[visuals.linkColorScheme][visuals.backgroundColor](
-        visuals.highlightFade * opacity,
-      )
-    }
-
-    if (!visuals.linkHighlight && !visuals.linkColorScheme) {
-      const nodeColor = getLinkNodeColor(sourceId, targetId)
-      return getThemeColor(nodeColor, theme)
-    }
-
-    if (!visuals.linkHighlight) {
-      return getThemeColor(visuals.linkColorScheme, theme)
-    }
-
-    if (!visuals.linkColorScheme) {
-      return highlightColors[getLinkNodeColor(sourceId, targetId)][visuals.linkHighlight](opacity)
-    }
-
-    return highlightColors[visuals.linkColorScheme][visuals.linkHighlight](opacity)
-  }
-
-  const getNodeColor = (node: OrgRoamNode, theme: any) => {
-    const needsHighlighting = highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-    //const needsHighlighting = hoverNode?.id === node.id! || lastHoverNode?.current?.id === node.id
-    // if we are matching the node color and don't have a highlight color
-    // or we don't have our own scheme and we're not being highlighted
-    if (visuals.emacsNodeColor && node.id === emacsNodeId) {
-      return getThemeColor(visuals.emacsNodeColor, theme)
-    }
-    if (tagColors && node?.tags.some((tag) => tagColors[tag])) {
-      const tagColor = tagColors[node?.tags.filter((tag) => tagColors[tag])[0]]
-      return needsHighlighting
-        ? highlightColors[tagColor][tagColor](visuals.highlightFade * opacity)
-        : highlightColors[tagColor][visuals.backgroundColor](visuals.highlightFade * opacity)
-    }
-    if (visuals.citeNodeColor && node?.properties?.ROAM_REFS && node?.properties?.FILELESS) {
-      return needsHighlighting
-        ? getThemeColor(visuals.citeNodeColor, theme)
-        : highlightColors[visuals.citeNodeColor][visuals.backgroundColor](
-            visuals.highlightFade * opacity,
-          )
-    }
-    if (visuals.refNodeColor && node.properties.ROAM_REFS) {
-      return needsHighlighting
-        ? getThemeColor(visuals.refNodeColor, theme)
-        : highlightColors[visuals.refNodeColor][visuals.backgroundColor](
-            visuals.highlightFade * opacity,
-          )
-    }
-    if (!needsHighlighting) {
-      return highlightColors[getNodeColorById(node.id as string)][visuals.backgroundColor](
-        visuals.highlightFade * opacity,
-      )
-    }
-    if (!visuals.nodeHighlight) {
-      return getThemeColor(getNodeColorById(node.id as string), theme)
-    }
-    return highlightColors[getNodeColorById(node.id as string)][visuals.nodeHighlight](opacity)
-  }
-
   const labelTextColor = useMemo(
     () => getThemeColor(visuals.labelTextColor, theme),
     [visuals.labelTextColor, emacsTheme],
@@ -1268,21 +1151,6 @@ export const Graph = function (props: GraphProps) {
     () => getThemeColor(visuals.labelBackgroundColor, theme),
     [visuals.labelBackgroundColor, emacsTheme],
   )
-
-  const nodeSize = (node: NodeObject) => {
-    const links = filteredLinksByNodeIdRef.current[node.id!] ?? []
-    const parentNeighbors = links.length ? links.filter((link) => link.type === 'parent').length : 0
-    const basicSize =
-      3 + links.length * visuals.nodeSizeLinks - (!filter.parent ? parentNeighbors : 0)
-    if (visuals.highlightNodeSize === 1) {
-      return basicSize
-    }
-    const highlightSize =
-      highlightedNodes[node.id!] || previouslyHighlightedNodes[node.id!]
-        ? 1 + opacity * (visuals.highlightNodeSize - 1)
-        : 1
-    return basicSize * highlightSize
-  }
 
   const [dragging, setDragging] = useState(false)
 
@@ -1295,11 +1163,33 @@ export const Graph = function (props: GraphProps) {
     warmupTicks: scope.nodeIds.length === 1 ? 100 : scope.nodeIds.length > 1 ? 20 : 0,
     onZoom: ({ k, x, y }) => (scaleRef.current = k),
     nodeColor: (node) => {
-      return getNodeColor(node as OrgRoamNode, theme)
+      return getNodeColor({
+        node: node as OrgRoamNode,
+        theme,
+        visuals,
+        cluster: clusterRef.current,
+        coloring,
+        emacsNodeId,
+        highlightColors,
+        highlightedNodes,
+        previouslyHighlightedNodes,
+        linksByNodeId: filteredLinksByNodeIdRef.current,
+        opacity,
+        tagColors,
+      })
     },
     nodeRelSize: visuals.nodeRel,
     nodeVal: (node) => {
-      return nodeSize(node) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
+      return (
+        nodeSize({
+          node,
+          highlightedNodes,
+          linksByNodeId: filteredLinksByNodeIdRef.current,
+          opacity,
+          previouslyHighlightedNodes,
+          visuals,
+        }) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
+      )
     },
     nodeCanvasObject: (node, ctx, globalScale) => {
       drawLabels({
@@ -1314,7 +1204,6 @@ export const Graph = function (props: GraphProps) {
           previouslyHighlightedNodes,
           visuals,
           opacity,
-          nodeSize,
           labelTextColor,
           labelBackgroundColor,
           hoverNode,
@@ -1356,7 +1245,18 @@ export const Graph = function (props: GraphProps) {
             )
       }
 
-      return getLinkColor(sourceId as string, targetId as string, needsHighlighting, theme)
+      return getLinkColor({
+        sourceId: sourceId as string,
+        targetId: targetId as string,
+        needsHighlighting,
+        theme,
+        cluster: clusterRef.current,
+        coloring,
+        highlightColors,
+        linksByNodeId: filteredLinksByNodeIdRef.current,
+        opacity,
+        visuals,
+      })
     },
     linkWidth: (link) => {
       if (visuals.highlightLinkSize === 1) {
@@ -1479,41 +1379,5 @@ export const Graph = function (props: GraphProps) {
         />
       )}
     </Box>
-  )
-}
-
-function isLinkRelatedToNode(link: LinkObject, node: NodeObject | null) {
-  return (
-    (link.source as NodeObject)?.id! === node?.id! || (link.target as NodeObject)?.id! === node?.id!
-  )
-}
-
-function numberWithinRange(num: number, min: number, max: number) {
-  return Math.min(Math.max(num, min), max)
-}
-
-export function normalizeLinkEnds(link: OrgRoamLink | LinkObject): [string, string] {
-  // we need to cover both because force-graph modifies the original data
-  // but if we supply the original data on each render, the graph will re-render sporadically
-  const sourceId =
-    typeof link.source === 'object' ? (link.source.id! as string) : (link.source as string)
-  const targetId =
-    typeof link.target === 'object' ? (link.target.id! as string) : (link.target as string)
-  return [sourceId, targetId]
-}
-
-export function getThemeColor(name: string, theme: any) {
-  return name.split('.').reduce((o, i) => o[i], theme.colors)
-}
-
-export function hexToRGBA(hex: string, opacity: number) {
-  return (
-    'rgba(' +
-    (hex = hex.replace('#', ''))
-      .match(new RegExp('(.{' + hex.length / 3 + '})', 'g'))!
-      .map((l) => parseInt(hex.length % 2 ? l + l : l, 16))
-      .concat(isFinite(opacity) ? opacity : 1)
-      .join(',') +
-    ')'
   )
 }
