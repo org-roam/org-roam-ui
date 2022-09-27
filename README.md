@@ -18,7 +18,7 @@
 - [Supporting org-roam-ui](#supporting-org-roam-ui)
   - [Feedback](#feedback)
   - [Contribute 💪](#contribute-)
-     - [Hacktoberfest](#hacktoberfest)
+    - [Hacktoberfest](#hacktoberfest)
   - [Donate](#donate)
     - [Sponsors](#sponsors)
 
@@ -110,13 +110,13 @@ NOTE: This is quite janky at the moment and will change in the future. Consider 
 #### Moving around
 
 ```emacs-lisp
-(orui-node-zoom)
+(org-roam-ui-node-zoom)
 ```
 
 Zooms to the current node in the global view _ignoring local mode_.
 
 ```emacs-lisp
-(orui-node-local)
+(org-roam-ui-node-local)
 ```
 
 Opens the current node in local view.
@@ -128,6 +128,21 @@ You can optionally give these command three parameters:
 3. The padding of the zoom in px.
 
 These options might not work at the moment, please configure them in the UI for the time being.
+
+#### Manipulating graph
+
+```emacs-lisp
+(org-roam-ui-add-to-local-graph &optional id)
+```
+
+Adds the node with the given id to the local graph. If no id is given, the current node is used.
+If the local graph is not open, it will be opened.
+
+```emacs-lisp
+(org-roam-ui-remove-from-local-graph &optional id)
+```
+
+Removes the node with the given id from the local graph. If no id is given, the current node is used.
 
 ### Configuration
 
@@ -368,7 +383,6 @@ and a development server will be lauched on `localhost:3000`.
 If you are interested in being more closely involved with the project, go [here](https://github.com/org-roam/org-roam-ui/discussions/4) to have an onboarding call with a member of the core team.
 
 We would ❤️ to have you on board!
-
 
 ## Donate
 

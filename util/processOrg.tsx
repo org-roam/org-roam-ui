@@ -26,7 +26,7 @@ import remarkSectionize from 'remark-sectionize'
 import remarkRehype from 'remark-rehype'
 
 import { PreviewLink } from '../components/Sidebar/Link'
-import { LinksByNodeId, NodeByCite, NodeById, normalizeLinkEnds } from '../pages'
+import { LinksByNodeId, NodeByCite, NodeById } from '../pages'
 import React, { createContext, ReactNode, useMemo } from 'react'
 import { OrgImage } from '../components/Sidebar/OrgImage'
 import { Section } from '../components/Sidebar/Section'
@@ -36,6 +36,7 @@ import { OrgRoamLink, OrgRoamNode } from '../api'
 // @ts-expect-error non-ESM unified means no types
 import { toString } from 'hast-util-to-string'
 import { Box, chakra } from '@chakra-ui/react'
+import { normalizeLinkEnds } from './normalizeLinkEnds'
 
 export interface ProcessedOrgProps {
   nodeById: NodeById
@@ -126,7 +127,6 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
   const isMarkdown = previewNode?.file?.slice(-3) === '.md'
   const baseProcessor = isMarkdown ? mdProcessor : orgProcessor
 
-  console.log(macros)
   const processor = useMemo(
     () =>
       baseProcessor

@@ -1,8 +1,10 @@
 import { OrgRoamNode } from '../../api'
 import { NodeObject } from 'force-graph'
 import { initialVisuals } from '../config'
-import { hexToRGBA, LinksByNodeId } from '../../pages'
+import { LinksByNodeId } from '../../pages'
 import wrap from 'word-wrap'
+import { nodeSize } from '../../util/nodeSize'
+import { hexToRGBA } from '../../util/hexToRGBA'
 
 export interface drawLabelsProps {
   labelBackgroundColor: string
@@ -14,7 +16,6 @@ export interface drawLabelsProps {
   previouslyHighlightedNodes: { [id: string]: {} }
   visuals: typeof initialVisuals
   opacity: number
-  nodeSize: (node: NodeObject) => number
   filteredLinksByNodeId: LinksByNodeId
   nodeRel: number
   hoverNode: NodeObject | null
@@ -44,7 +45,6 @@ export function drawLabels(props: drawLabelsProps) {
     previouslyHighlightedNodes,
     visuals,
     opacity,
-    nodeSize,
     filteredLinksByNodeId,
     nodeRel,
     hoverNode,
@@ -78,7 +78,16 @@ export function drawLabels(props: drawLabelsProps) {
   const label = nodeTitle.substring(0, visuals.labelLength)
 
   const nodeS = Math.cbrt(
-    (visuals.nodeRel * nodeSize(node)) / Math.pow(globalScale, visuals.nodeZoomSize),
+    (visuals.nodeRel *
+      nodeSize({
+        node,
+        highlightedNodes,
+        linksByNodeId: filteredLinksByNodeId,
+        opacity,
+        previouslyHighlightedNodes,
+        visuals,
+      })) /
+      Math.pow(globalScale, visuals.nodeZoomSize),
   )
   const fontSize = visuals.labelFontSize / Math.cbrt(Math.pow(globalScale, visuals.nodeZoomSize))
   //   ? Math.max((visuals.labelFontSize * nodeS) / 2, (visuals.labelFontSize * nodeS) / 3)

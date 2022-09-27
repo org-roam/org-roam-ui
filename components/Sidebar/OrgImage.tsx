@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import path from 'path'
 import { Container } from '@chakra-ui/react'
@@ -13,7 +13,7 @@ export interface OrgImageProps {
 export const OrgImage = (props: OrgImageProps) => {
   const { src, file } = props
 
-  const [image, setImage] = useState<any>(null)
+  // const [image, setImage] = useState<any>(null)
 
   /* )
 *   .then((res) => res.blob())

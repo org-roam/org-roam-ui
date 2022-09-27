@@ -1,6 +1,5 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import React from 'react'
-import { BiFile } from 'react-icons/bi'
 
 import { OrgRoamNode } from '../../api'
 export interface TitleProps {

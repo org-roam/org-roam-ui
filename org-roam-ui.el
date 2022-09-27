@@ -690,6 +690,30 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
                                                    (padding . ,padding))))))
     (message "No node found.")))
 
+
+(defun org-roam-ui-change-local-graph (&optional id manipulation)
+  "Add or remove current node to the local graph. If not in local mode, open local-graph for this node."  
+  (interactive)
+  (if-let ((node (or id (org-roam-id-at-point))))
+      (websocket-send-text org-roam-ui-ws-socket
+                           (json-encode `((type . "command")
+                                          (data . ((commandName . "change-local-graph")
+                                                   (id . ,node)
+                                                   (manipulation . ,(or manipulation "add")))))))
+    (message "No node found.")))
+
+;;;###autoload
+(defun org-roam-ui-add-to-local-graph (&optional id)
+  "Add current node to the local graph. If not in local mode, open local-graph for this node."
+  (interactive)
+  (org-roam-ui-change-local-graph id "add"))
+
+;;;###autoload
+(defun org-roam-ui-remove-from-local-graph (&optional id)
+  "Remove current node from the local graph. If not in local mode, open local-graph for this node."
+  (interactive)
+  (org-roam-ui-change-local-graph id "remove"))
+
 ;;;###autoload
 (defun org-roam-ui-sync-theme ()
   "Sync your current Emacs theme with org-roam-ui."

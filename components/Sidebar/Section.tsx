@@ -1,17 +1,7 @@
-import { Box, Collapse, Flex, IconButton } from '@chakra-ui/react'
-import React, {
-  JSXElementConstructor,
-  ReactChild,
-  ReactElement,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
-import { BiCaretDownCircle, BiChevronDownCircle, BiCircle } from 'react-icons/bi'
-import { ComponentLike, ComponentPropsWithoutNode } from 'rehype-react'
+import { Box, Flex, IconButton } from '@chakra-ui/react'
+import React, { ReactChild, useContext, useEffect, useState } from 'react'
 import { VscCircleFilled, VscCircleOutline } from 'react-icons/vsc'
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { NoteContext } from '../../util/NoteContext'
 
 export interface SectionProps {
