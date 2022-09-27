@@ -467,8 +467,10 @@ export function GraphPage() {
               break
             }
             case 'change-local-graph': {
+              const node = nodeByIdRef.current[message.data.id as string]
+              if (!node) break
               console.log(message)
-              handleLocal(nodeByIdRef.current[message.data.id as string], message.data.manipulation)
+              handleLocal(node, message.data.manipulation)
               break
             }
             default:
