@@ -199,4 +199,8 @@ export const defaultNoteStyle = {
   '.footdef': { marginBottom: '1em' },
   '.figure': { padding: '1em' },
   '.figure p': { textAlign: 'center' },
+  '.math.math-display .katex': {
+    overflow: 'auto',
+    minHeight: '1.5em'
+  }
 }
