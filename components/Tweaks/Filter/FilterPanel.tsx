@@ -137,6 +137,17 @@ const FilterPanel = (props: FilterPanelProps) => {
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
+          <Text>Render Dailies as Links</Text>
+          <Switch
+            onChange={() => {
+              setFilter((curr: typeof initialFilter) => {
+                return { ...curr, dailiesAsPassthrough: !curr.dailiesAsPassthrough }
+              })
+            }}
+            isChecked={filter.dailiesAsPassthrough}
+          ></Switch>
+        </Flex>
+        <Flex justifyContent="space-between">
           <Text>Org-noter pages</Text>
           <Switch
             onChange={() => {
