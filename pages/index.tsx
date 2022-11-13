@@ -950,6 +950,7 @@ export const Graph = function (props: GraphProps) {
     if (filter.dailiesAsPassthrough) {
       let additionalLinksFromDailies: LinksByNodeId = {};
       const allLinks = graphData.links.reduce<LinksByNodeId>(linkMapReducer, {})
+      debugger;
       const seenLinks: {[key: string]: boolean} = {}
       filteredNodeIds.forEach((n) => {
         allLinks[n]?.forEach((l) => {
