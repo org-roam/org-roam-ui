@@ -950,6 +950,7 @@ export const Graph = function (props: GraphProps) {
     if (filter.dailiesAsPassthrough) {
       let additionalLinksFromDailies: LinksByNodeId = {};
       const allLinks = graphData.links.reduce<LinksByNodeId>(linkMapReducer, {})
+      const seenLinks: {[key: string]: boolean} = {}
       filteredNodeIds.forEach((n) => {
         allLinks[n]?.forEach((l) => {
           const [sourceId, targetId] = normalizeLinkEnds(l)
@@ -964,15 +965,20 @@ export const Graph = function (props: GraphProps) {
               ) {
                 return 
               }
+              const newLink = {
+                source: targetId,
+                target: skipTargetId,
+                type: 'id'
+              }
+              if (seenLinks[newLink.source + '_' + newLink.target]) {
+                return
+              }
+              seenLinks[newLink.source + '_' + newLink.target] = true
               additionalLinksFromDailies = {
                 ...additionalLinksFromDailies,
                 [n]: [
                   ...(additionalLinksFromDailies[n] ?? []),
-                  {
-                    source: targetId,
-                    target: skipTargetId,
-                    type: 'id'
-                  }
+                  newLink
                 ]
               }
             }) 
@@ -981,9 +987,6 @@ export const Graph = function (props: GraphProps) {
       })
       // Why isn't this overlyaying?
       Object.keys(additionalLinksFromDailies).forEach((n) => {
-        if (n == 'FB12CE1E-E72F-4054-ABE7-1A4FED393F84') {
-          debugger;
-        }
         filteredLinksByNodeIdRef.current = {
           ...filteredLinksByNodeIdRef.current,
           [n] : [
