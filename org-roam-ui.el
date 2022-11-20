@@ -131,6 +131,12 @@ Defaults to #'browse-url."
   :group 'org-roam-ui
   :type 'function)
 
+(defcustom org-roam-ui-readonly-mode nil
+  "If true, 'org-roam-ui' will open in readonly mode, which currently
+disables the ability to permanently delete nodes"
+  :group 'org-roam-ui
+  :type 'boolean)
+
 ;;Hooks
 
 (defcustom org-roam-ui-before-open-node-functions nil
@@ -601,6 +607,8 @@ from all other links."
                                      ("useInheritance" .
                                       ,use-inheritance)
                                      ("roamDir" . ,org-roam-directory)
+                                     ("readonlyMode" .
+                                      ,org-roam-ui-readonly-mode)
                                      ("katexMacros" . ,org-roam-ui-latex-macros))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
