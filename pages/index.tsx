@@ -85,6 +85,7 @@ export interface EmacsVariables {
   katexMacros?: { [key: string]: string }
   attachDir?: string
   useInheritance?: boolean
+  readonlyMode?: boolean
   subDirs: string[]
 }
 export type Tags = string[]
@@ -710,6 +711,7 @@ export function GraphPage() {
               target={contextMenuTarget}
               background={false}
               coordinates={contextPos}
+              readonlyMode={emacsVariables.readonlyMode || false}
               handleLocal={handleLocal}
               menuClose={contextMenu.onClose.bind(contextMenu)}
               webSocket={WebSocketRef.current}

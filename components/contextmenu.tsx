@@ -54,6 +54,7 @@ export default interface ContextMenuProps {
   target: OrgRoamNode | string | null
   nodeType?: string
   coordinates: { [direction: string]: number | undefined }
+  readonlyMode: boolean
   handleLocal: (node: OrgRoamNode, add: string) => void
   menuClose: () => void
   scope: { nodeIds: string[] }
@@ -71,6 +72,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     target,
     nodeType,
     coordinates,
+    readonlyMode,
     handleLocal,
     menuClose,
     scope,
@@ -132,7 +134,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 >
                   Open in Emacs
                 </MenuItem>
-              ) : (
+              ) : !readonlyMode && (
                 <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(target, webSocket)}>
                   Create node
                 </MenuItem>
@@ -183,7 +185,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
               >
                 Preview
               </MenuItem>
-              {target?.level === 0 && (
+              {!readonlyMode && target?.level === 0 && (
                 <MenuItem
                   closeOnSelect={false}
                   icon={<DeleteIcon color="red.500" />}

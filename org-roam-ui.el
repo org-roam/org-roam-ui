@@ -131,6 +131,11 @@ Defaults to #'browse-url."
   :group 'org-roam-ui
   :type 'function)
 
+(defcustom org-roam-ui-readonly-mode nil
+  "If true, 'org-roam-ui' will open in readonly mode."
+  :group 'org-roam-ui
+  :type 'boolean)
+
 ;;Hooks
 
 (defcustom org-roam-ui-before-open-node-functions nil
@@ -255,20 +260,22 @@ Takes _WS and FRAME as arguments."
   "Delete a node when receiving DATA from the websocket.
 
 TODO: Be able to delete individual nodes."
-  (progn
-    (message "Deleted %s" (alist-get 'file data))
-    (delete-file (alist-get 'file data))
-    (org-roam-db-sync)
-    (org-roam-ui--send-graphdata)))
+  (if (not org-roam-ui-readonly-mode)
+    (progn
+      (message "Deleted %s" (alist-get 'file data))
+      (delete-file (alist-get 'file data))
+      (org-roam-db-sync)
+      (org-roam-ui--send-graphdata))))
 
 (defun org-roam-ui--on-msg-create-node (data)
   "Create a node when receiving DATA from the websocket."
-  (progn
-    (if (and (fboundp #'orb-edit-note) (alist-get 'ROAM_REFS data))
+  (if (not org-roam-ui-readonly-mode)
+    (progn
+      (if (and (fboundp #'orb-edit-note) (alist-get 'ROAM_REFS data))
         (orb-edit-note (alist-get 'id data)))
-    (org-roam-capture-
-     :node (org-roam-node-create :title (alist-get 'title data))
-     :props '(:finalize find-file))))
+      (org-roam-capture-
+        :node (org-roam-node-create :title (alist-get 'title data))
+        :props '(:finalize find-file)))))
 
 (defun org-roam-ui--ws-on-close (_websocket)
   "What to do when _WEBSOCKET to org-roam-ui is closed."
@@ -601,6 +608,8 @@ from all other links."
                                      ("useInheritance" .
                                       ,use-inheritance)
                                      ("roamDir" . ,org-roam-directory)
+                                     ("readonlyMode" .
+                                      ,org-roam-ui-readonly-mode)
                                      ("katexMacros" . ,org-roam-ui-latex-macros))))))))
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
