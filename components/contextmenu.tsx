@@ -134,7 +134,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 >
                   Open in Emacs
                 </MenuItem>
-              ) : (
+              ) : !readonlyMode && (
                 <MenuItem icon={<AddIcon />} onClick={() => createNodeInEmacs(target, webSocket)}>
                   Create node
                 </MenuItem>
