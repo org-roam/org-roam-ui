@@ -86,5 +86,6 @@
     "next-transpile-modules": "^8.0.0",
     "prettier": "^2.3.2",
     "typescript": "4.3.5"
-  }
+  },
+  "repository": "git@github.com:CaryWill/org-roam-ui.nvim.git"
 }
