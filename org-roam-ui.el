@@ -1,31 +1,4 @@
-;;; org-roam-ui.el --- User Interface for Org-roam -*- coding: utf-8; lexical-binding: t; -*-
-
-;; Copyright © 2021 Kirill Rogovoy, Thomas F. K. Jorna
-
-;; author: Kirill Rogovoy, Thomas Jorna
-;; URL: https://github.com/org-roam/org-roam-ui
-;; Keywords: files outlines
-;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (org-roam "2.0.0") (simple-httpd "20191103.1446") (websocket "1.13"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3, or (at your option)
-;; any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
-
-;;; Commentary:
+;; Commentary:
 ;;
 ;;  Org-roam-ui provides a web interface for navigating around notes created
 ;;  within Org-roam.
