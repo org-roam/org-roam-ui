@@ -113,6 +113,51 @@ export default function Home() {
   )
 }
 
+const orgRoamGraphData  = {
+  nodes: [
+    {
+      id: 'DECE55A6-D4C9-40ED-BF9A-D7AA86D9AA3B',
+      file: '/Users/cary/Library/Mobile Documents/com~apple~CloudDocs/Plain Org/zettelkasten/fleeting/How_to_learn_English_20240107210714.org',
+      title: 'How to learn English',
+      level: 0,
+      pos: 0,
+      properties: {},
+      tags: [],
+      olp: null
+    },
+    {
+      id: '2BFBA6D5-5D41-481C-BC75-C81F23291505',
+      file: '/Users/cary/Library/Mobile Documents/com~apple~CloudDocs/Plain Org/zettelkasten/fleeting/Go_to_canada_20240107210453.org',
+      title: 'How to learn English 2',
+      level: 0,
+      pos: 0,
+      properties: {},
+      tags: [],
+      olp: null
+    },
+    {
+      id: '2BFBA6D5-5D41-481C-BC75-C81F23291506',
+      file: '/Users/cary/Library/Mobile Documents/com~apple~CloudDocs/Plain Org/zettelkasten/fleeting/Go_to_canada_20240107210453.org',
+      title: 'How to learn English 3',
+      level: 0,
+      pos: 0,
+      properties: {},
+      tags: [],
+      olp: null
+    }
+  ],
+  links: [{
+    source: '2BFBA6D5-5D41-481C-BC75-C81F23291505',
+    target: 'DECE55A6-D4C9-40ED-BF9A-D7AA86D9AA3B',
+    type: 'bad'
+  },{
+    source: '2BFBA6D5-5D41-481C-BC75-C81F23291505',
+    target: '2BFBA6D5-5D41-481C-BC75-C81F23291506',
+    type: 'bad'
+  }],
+  tags: []
+}
+
 export function GraphPage() {
   const [threeDim, setThreeDim] = usePersistantState('3d', false)
   const [tagColors, setTagColors] = usePersistantState<TagColors>('tagCols', {})
@@ -156,6 +201,7 @@ export function GraphPage() {
   const clusterRef = useRef<{ [id: string]: number }>({})
 
   const currentGraphDataRef = useRef<GraphData>({ nodes: [], links: [] })
+
 
   const updateGraphData = (orgRoamGraphData: OrgRoamGraphReponse) => {
     const oldNodeById = nodeByIdRef.current
@@ -344,6 +390,11 @@ export function GraphPage() {
 
     setGraphData({ nodes: newNodes as NodeObject[], links: newerLinks })
   }
+
+  useEffect(() => {
+    updateGraphData(orgRoamGraphData);
+  }, [])
+
   useEffect(() => {
     if (!graphData) {
       return
@@ -438,6 +489,15 @@ export function GraphPage() {
       const bh = behaviorRef.current
       const message = JSON.parse(event.data)
       switch (message.type) {
+        // NOTE: this would be the most important thing here
+        // I guess I can just mock some data?
+        // Since it's also writting with typescript
+        // if the type is intact maybe I can use 
+        // mock the data based on the type
+        // TODO: I think there's a neovim plugin
+        // that can generate fake data directly 
+        // based on typescript typing system
+        // Now let's see where the data is consumed
         case 'graphdata':
           return updateGraphData(message.data)
         case 'variables':
