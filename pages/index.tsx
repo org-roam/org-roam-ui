@@ -391,9 +391,9 @@ export function GraphPage() {
     setGraphData({ nodes: newNodes as NodeObject[], links: newerLinks })
   }
 
-  useEffect(() => {
-    updateGraphData(orgRoamGraphData);
-  }, [])
+  // useEffect(() => {
+  //   updateGraphData(orgRoamGraphData);
+  // }, [])
 
   useEffect(() => {
     if (!graphData) {
@@ -487,6 +487,7 @@ export function GraphPage() {
     })
     WebSocketRef.current.addEventListener('message', (event: any) => {
       const bh = behaviorRef.current
+      console.log(event, 'message')
       const message = JSON.parse(event.data)
       switch (message.type) {
         // NOTE: this would be the most important thing here
