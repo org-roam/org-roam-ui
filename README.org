@@ -2,6 +2,8 @@
 
 [[file:./sc.png]]
 
+[[file:./demo.mp4]]
+
 This is a fork of org-roam-ui, thanks to the great work of the org-roam-ui author,
 what I only need to do, is feed the data to the frontend webpage. which means, I only
 need to develop a plugin for neovim istead of emacs, like the org-roam-ui.el file do.
