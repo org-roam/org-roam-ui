@@ -1,0 +1,22 @@
+** Usage
+   0. =npm install -g neovim=
+   1. Start org-roam-ui project first.
+   2. Connect Websocket. Run =:InitWs= in vim command line.
+
+** Related Repos
+
+1. org-roam-ui-neovim-server
+2. org-roam-ui
+3. org-roam
+4. dotfile plugin path
+
+** TODO Supported features
+   - [X] org-roam-ui ws support and when connected the graph view will be inited.
+   - [X] Http server to view file content
+   - [ ] doc, like recommand plugin keymapping to init ws
+   - [ ] move org-roam-ui-server nodejs neovim plugin to org-roam-ui repo
+   - [X] file change watch and update org-roam-ui
+   - [ ] how to open org-roam-ui effectively, write a vim command
+
+** BUG
+   - [ ] I found some notes are not shown, like W54, maybe it is not created with org roam, thus no org id property?
