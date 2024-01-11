@@ -6,11 +6,14 @@ This is a fork of org-roam-ui, thanks to the great work of the org-roam-ui autho
 what I only need to do, is feed the data to the frontend webpage. which means, I only
 need to develop a plugin for neovim istead of emacs, like the org-roam-ui.el file do.
 
+And *CaryWill/org-roam.nvim* is also a forked project.
+
 ** Installation
 
 1. install this neovim plugin.
 
 Plug 'CaryWill/org-roam-ui.nvim'
+Plug 'CaryWill/org-roam.nvim'
 
 2. globally install neovim npm package.
 I tried to use lua websocket module, but it's so hard to install, so I quit,
@@ -25,18 +28,17 @@ Mine is in: ~/.local/share/nvim/plugged
 
 4. make org-roam websocket connect to your org-roam-ui
 
-run in vim command line: InitWs
+run in vim command line: =:InitWs=
+
+** What is Supported?
+   It only support the graph view and note view for now, because it's the only
+   thing I needed for now, PR are welcome.
+
+  1. You can view notes in the web browser.(image also)
 
 ** Changelog
 
 For major new features/bugfixes we will update [changelog](https://github.com/org-roam/org-roam-ui/discussions/30).
-
-Notes about rplugin.
-
-** Usage
-   0. =npm install -g neovim=
-   1. Start org-roam-ui project first.
-   2. Connect Websocket. Run =:InitWs= in vim command line.
 
 ** Related Repos
 
