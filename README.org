@@ -1,3 +1,36 @@
+** Note
+
+[[file:./sc.png]]
+
+This is a fork of org-roam-ui, thanks to the great work of the org-roam-ui author,
+what I only need to do, is feed the data to the frontend webpage. which means, I only
+need to develop a plugin for neovim istead of emacs, like the org-roam-ui.el file do.
+
+** Installation
+
+1. install this neovim plugin.
+
+Plug 'CaryWill/org-roam-ui.nvim'
+
+2. globally install neovim npm package.
+I tried to use lua websocket module, but it's so hard to install, so I quit,
+I used nodejs to develop neovim org-roam-ui server.
+
+so please run to install neovim node host: `npm install -g neovim`
+
+3. start up the frontend page.
+
+Go to your neovim plugin directory and cd into `org-roam-ui.nvim` then run `npm install --force` then `npm run dev` to start the frontend page.
+Mine is in: ~/.local/share/nvim/plugged
+
+4. make org-roam websocket connect to your org-roam-ui
+
+run in vim command line: InitWs
+
+** Changelog
+
+For major new features/bugfixes we will update [changelog](https://github.com/org-roam/org-roam-ui/discussions/30).
+
 Notes about rplugin.
 
 ** Usage
@@ -22,3 +55,4 @@ Notes about rplugin.
 
 ** BUG
    - [X] I found some notes are not shown, like W54, maybe it is not created with org roam, thus no org id property?
+
