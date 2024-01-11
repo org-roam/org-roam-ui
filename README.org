@@ -1,3 +1,5 @@
+Notes about rplugin.
+
 ** Usage
    0. =npm install -g neovim=
    1. Start org-roam-ui project first.
@@ -14,9 +16,9 @@
    - [X] org-roam-ui ws support and when connected the graph view will be inited.
    - [X] Http server to view file content
    - [ ] doc, like recommand plugin keymapping to init ws
-   - [ ] move org-roam-ui-server nodejs neovim plugin to org-roam-ui repo
+   - [X] move org-roam-ui-server nodejs neovim plugin to org-roam-ui repo
    - [X] file change watch and update org-roam-ui
-   - [ ] how to open org-roam-ui effectively, write a vim command
+   - [ ] how to open org-roam-ui effectively, write a vim command, write a command to start up this page and call =:InitWs=
 
 ** BUG
-   - [ ] I found some notes are not shown, like W54, maybe it is not created with org roam, thus no org id property?
+   - [X] I found some notes are not shown, like W54, maybe it is not created with org roam, thus no org id property?
