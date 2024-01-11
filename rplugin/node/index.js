@@ -145,7 +145,6 @@ module.exports = (plugin) => {
       const filePath = decodeURIComponent(
         decodeURIComponent(req.params.filePath),
       );
-      plugin.nvim.outWrite(`${filePath} \n`);
 
       // Send the file to the client
       res.sendFile(filePath, (err) => {
