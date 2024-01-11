@@ -1,0 +1,16 @@
+{
+  "name": "nvim-example",
+  "version": "1.0.0",
+  "description": "An example node plugin",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neovim/node-client.git"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "ws": "^8.16.0"
+  }
+}
