@@ -419,7 +419,8 @@ unchanged."
                            'list
                            (org-roam-ui--separate-ref-links
                             (org-roam-ui--get-cites))
-                           (org-roam-ui--get-links))))
+                           (org-roam-ui--separate-ref-links
+                            (org-roam-ui--get-links)))))
          (links-with-empty-refs (org-roam-ui--filter-citations links-db-rows))
          (empty-refs (delete-dups (seq-map
                                    (lambda (link)
@@ -489,9 +490,14 @@ were in the same table as the links)."
     (org-roam-db-query
      `[:select  [links:source
                  links:dest
-                 links:type]
+                 links:type
+                 refs:node-id]
        :from links
-       :where (= links:type "id")])
+       :left :outer :join refs :on (= links:dest refs:ref)
+       :where (or
+               (= links:type "id")
+               (= links:type "http")
+               (= links:type "https"))])
   ;; Left outer join on refs means any id link (or cite link without a
   ;; corresponding node) will have 'nil for the `refs:node-id' value. Any
   ;; cite link where a node has that `:ROAM_REFS:' will have a value.
@@ -509,33 +515,24 @@ were in the same table as the links)."
 (defun org-roam-ui--get-cites ()
   "Get the citations when using the new db-model."
   (org-roam-db-query
-   `[:select [citations:node-id citations:cite-key refs:node-id]
+   `[:select [citations:node-id citations:cite-key "cite" refs:node-id]
      :from citations
      :left :outer :join refs :on (= citations:cite-key refs:ref)]))
 
-(defun org-roam-ui--separate-ref-links (links &optional old)
+(defun org-roam-ui--separate-ref-links (links)
   "Create separate entries for LINKS with existing reference nodes.
-Optionally set OLD to t to support old citations db-model.
 
-Convert any cite links that have nodes with associated refs to an
+Convert any non-id links that have nodes with associated refs to an
 id based link of type `ref' while removing the 'nil `refs:node-id'
 from all other links."
 
- (if (not old)
-    (seq-map
-     (lambda (link)
-       (pcase-let ((`(,source ,dest ,node-id) link))
-         (if node-id
-             (list source node-id "ref")
-           (list source dest "cite"))))
-     links)
-   (seq-map
-    (lambda (link)
-      (pcase-let ((`(,source ,dest ,type ,node-id) link))
-        (if node-id
-            (list source node-id "ref")
-          (list source dest type))))
-    links)))
+  (seq-map
+   (lambda (link)
+     (pcase-let ((`(,source ,dest ,type ,node-id) link))
+       (if node-id
+           (list source node-id "ref")
+         (list source dest type))))
+   links))
 
 (defun org-roam-ui--update-current-node ()
   "Send the current node data to the web-socket."
