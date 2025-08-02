@@ -122,7 +122,7 @@ const FilterPanel = (props: FilterPanelProps) => {
                 return { ...curr, orphans: !curr.orphans }
               })
             }}
-            isChecked={filter.orphans}
+            isChecked={!filter.orphans}
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
@@ -133,7 +133,7 @@ const FilterPanel = (props: FilterPanelProps) => {
                 return { ...curr, dailies: !curr.dailies }
               })
             }}
-            isChecked={filter.dailies}
+            isChecked={!filter.dailies}
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
@@ -144,7 +144,7 @@ const FilterPanel = (props: FilterPanelProps) => {
                 return { ...curr, noter: !curr.noter }
               })
             }}
-            isChecked={filter.noter}
+            isChecked={!filter.noter}
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
@@ -153,7 +153,7 @@ const FilterPanel = (props: FilterPanelProps) => {
             onChange={() => {
               setFilter({ ...filter, filelessCites: !filter.filelessCites })
             }}
-            isChecked={filter.filelessCites}
+            isChecked={!filter.filelessCites}
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
@@ -163,7 +163,7 @@ const FilterPanel = (props: FilterPanelProps) => {
               setTagColors({ ...tagColors, bad: 'white' })
               setFilter({ ...filter, bad: !filter.bad })
             }}
-            isChecked={filter.bad}
+            isChecked={!filter.bad}
           ></Switch>
         </Flex>
         <SliderWithInfo
