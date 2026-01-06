@@ -386,7 +386,7 @@ We would ❤️ to have you on board!
 
 ## Donate
 
-If you really really like org-roam-ui, you can make a [one-time donation or sponsor one of us monthly!](https://github.com/sponsors/ThomasFKJorna/)
+If you really really like org-roam-ui, you can make a [one-time donation or sponsor one of us monthly!](https://github.com/sponsors/tefkah/)
 
 ### Sponsors
 
