@@ -31,7 +31,7 @@
     "hast-util-to-string": "1",
     "hastscript": "^6.0.0",
     "jlouvain.js": "^1.0.0",
-    "next": "^11.1.0",
+    "next": "^11.1.3",
     "orgast-util-to-string": "^0.4.5",
     "orgast-util-visit-ids": "^0.4.5",
     "path": "^0.12.7",
