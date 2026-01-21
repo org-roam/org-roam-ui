@@ -443,7 +443,7 @@ unchanged."
                      (links . ,(mapcar
                                 (apply-partially
                                  #'org-roam-ui-sql-to-alist
-                                 '(source target type))
+                                 '(source target type properties))
                                 links-db-rows))
                      (tags . ,(seq-mapcat
                                #'seq-reverse
@@ -487,8 +487,14 @@ Optionally set OLD to t to use the old db model (where the cites
 were in the same table as the links)."
 (if (not old)
     (org-roam-db-query
+    ;; I'd like to get links:outline (assuming that's a thing)
+    ;; so I could more specifically scope the links. But I'm not sure
+    ;; that's really what I want anyway. Ideally, I could say "only link nodes in the
+    ;; same org header together, instead of linking nodes in the whole daily"
+    ;; I think just grabbing the properties might do the trick? But not clear.
      `[:select  [links:source
                  links:dest
+                 links:properties
                  links:type]
        :from links
        :where (= links:type "id")])

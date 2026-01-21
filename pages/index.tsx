@@ -790,6 +790,9 @@ export const Graph = function (props: GraphProps) {
   } = props
 
   const { dailyDir, roamDir } = variables
+  const isDaily = (node: OrgRoamNode) => {
+    return dailyDir && node.file?.includes(dailyDir);
+  }
 
   const [hoverNode, setHoverNode] = useState<NodeObject | null>(null)
 
@@ -831,6 +834,7 @@ export const Graph = function (props: GraphProps) {
   const filteredLinksByNodeIdRef = useRef<LinksByNodeId>({})
 
   const hiddenNodeIdsRef = useRef<NodeById>({})
+  const dailiesNodeIdsRef = useRef<NodeById>({})
   const filteredGraphData = useMemo(() => {
     hiddenNodeIdsRef.current = {}
     const filteredNodes = graphData?.nodes
@@ -875,7 +879,8 @@ export const Graph = function (props: GraphProps) {
           return false
         }
 
-        if (filter.dailies && dailyDir && node.file?.includes(dailyDir)) {
+        if ((filter.dailies || filter.dailiesAsPassthrough) && isDaily(node)) {
+          dailiesNodeIdsRef.current = {...dailiesNodeIdsRef.current, [node.id]: node }
           hiddenNodeIdsRef.current = { ...hiddenNodeIdsRef.current, [node.id]: node }
           return false
         }
@@ -910,6 +915,12 @@ export const Graph = function (props: GraphProps) {
     const filteredNodeIds = filteredNodes.map((node) => node.id as string)
     const filteredLinks = graphData.links.filter((link) => {
       const [sourceId, targetId] = normalizeLinkEnds(link)
+      // if we point to a daily and the config is set, check everything else that daily links to
+      // probably also make this a map? or just do it separately? 
+      // after this function we'll only have links that are to nodes visible, 
+      // which would have already filtered out dailies
+      // so we can just go through those, and recreate links based on what's in the dailies
+      // and what the dailies point to
       if (
         !filteredNodeIds.includes(sourceId as string) ||
         !filteredNodeIds.includes(targetId as string)
@@ -926,7 +937,7 @@ export const Graph = function (props: GraphProps) {
       return linkRoam.type !== 'heading'
     })
 
-    filteredLinksByNodeIdRef.current = filteredLinks.reduce<LinksByNodeId>((acc, linkArg) => {
+    const linkMapReducer = (acc: LinksByNodeId, linkArg: LinkObject) => {
       const link = linkArg as OrgRoamLink
       const [sourceId, targetId] = normalizeLinkEnds(link)
       return {
@@ -934,8 +945,61 @@ export const Graph = function (props: GraphProps) {
         [sourceId]: [...(acc[sourceId] ?? []), link],
         [targetId]: [...(acc[targetId] ?? []), link],
       }
-    }, {})
+    }
+    filteredLinksByNodeIdRef.current = filteredLinks.reduce<LinksByNodeId>(linkMapReducer, {})
+    if (filter.dailiesAsPassthrough) {
+      let additionalLinksFromDailies: LinksByNodeId = {};
+      const allLinks = graphData.links.reduce<LinksByNodeId>(linkMapReducer, {})
+      debugger;
+      const seenLinks: {[key: string]: boolean} = {}
+      filteredNodeIds.forEach((n) => {
+        allLinks[n]?.forEach((l) => {
+          const [sourceId, targetId] = normalizeLinkEnds(l)
+          const daily = dailiesNodeIdsRef.current[sourceId]
+          if (daily) {
+            allLinks[sourceId]?.forEach((l) => {
+              const [skipSourceId, skipTargetId] = normalizeLinkEnds(l)
+              // bit of a hack, for some reason this is getting stuff not in the list
+              if (
+                !filteredNodeIds.includes(targetId as string) ||
+                !filteredNodeIds.includes(skipTargetId as string)
+              ) {
+                return 
+              }
+              const newLink = {
+                source: targetId,
+                target: skipTargetId,
+                type: 'id'
+              }
+              if (seenLinks[newLink.source + '_' + newLink.target]) {
+                return
+              }
+              seenLinks[newLink.source + '_' + newLink.target] = true
+              additionalLinksFromDailies = {
+                ...additionalLinksFromDailies,
+                [n]: [
+                  ...(additionalLinksFromDailies[n] ?? []),
+                  newLink
+                ]
+              }
+            }) 
+          }
+        })
+      })
+      // Why isn't this overlyaying?
+      Object.keys(additionalLinksFromDailies).forEach((n) => {
+        filteredLinksByNodeIdRef.current = {
+          ...filteredLinksByNodeIdRef.current,
+          [n] : [
+            ...(filteredLinksByNodeIdRef.current[n] ?? []),
+            ...(additionalLinksFromDailies[n] ?? [])
+          ]
+        };
+        filteredLinks.push(...(additionalLinksFromDailies[n] ?? []))
+       })
+    }
 
+    // todo somewhere in here? transform a daiy to a link between all things in that daily? 
     const weightedLinks = filteredLinks.map((l) => {
       const [target, source] = normalizeLinkEnds(l)
       const link = l as OrgRoamLink
