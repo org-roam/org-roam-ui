@@ -24,6 +24,7 @@ import remarkExtractFrontMatter from 'remark-extract-frontmatter'
 //@ts-expect-error
 import remarkSectionize from 'remark-sectionize'
 import remarkRehype from 'remark-rehype'
+import rehypeRaw from 'rehype-raw'
 
 import { PreviewLink } from '../components/Sidebar/Link'
 import { LinksByNodeId, NodeByCite, NodeById } from '../pages'
@@ -120,7 +121,8 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
     .use(remarkSectionize)
     .use(remarkMath)
     .use(remarkGFM)
-    .use(remarkRehype)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
   //.data('settings', { fragment: true })
   // .use(highlight)
 
