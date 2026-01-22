@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "export": "next export",
-    "start": "next start",
+    "dev": "NODE_OPTIONS='--openssl-legacy-provider' next dev",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' next build",
+    "export": "NODE_OPTIONS='--openssl-legacy-provider' next export",
+    "start": "NODE_OPTIONS='--openssl-legacy-provider' next start",
     "prettier": "prettier -w .",
     "lint": "tsc --noEmit && next lint && eslint \"./**/*.{ts,tsx,js}\" \"./**/.*.{ts,tsx,js}\" --fix"
   },
