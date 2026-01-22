@@ -153,6 +153,8 @@ Format as, i.e. with double backslashes for a single backslash:
   :type 'alist)
 
 ;; Internal vars
+(defvar org-roam-ui--roam-directory nil
+  "Var to keep track of the current org-roam-directory, used in servlet")
 
 (defvar org-roam-ui--ws-current-node nil
   "Var to keep track of which node you are looking at.")
@@ -182,6 +184,7 @@ This serves the web-build and API over HTTP."
    ;;; else add them
     (setq-local httpd-port org-roam-ui-port)
     (setq httpd-root org-roam-ui-app-build-dir)
+    (setq org-roam-ui--roam-directory org-roam-directory)
     (httpd-start)
     (setq org-roam-ui-ws-server
           (websocket-server
@@ -300,11 +303,13 @@ TODO: Be able to delete individual nodes."
 
 (defservlet* node/:id text/plain ()
   "Servlet for accessing node content."
+  (setq org-roam-directory org-roam-ui--roam-directory)
   (insert (org-roam-ui--get-text (org-link-decode id)))
   (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*"))
 
 (defservlet* img/:file text/plain ()
   "Servlet for accessing images found in org-roam files."
+  (setq org-roam-directory org-roam-ui--roam-directory)
   (progn
     (httpd-send-file t (org-link-decode file))
     (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
