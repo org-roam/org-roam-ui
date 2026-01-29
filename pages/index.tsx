@@ -570,6 +570,7 @@ export function GraphPage() {
         overflow="clip"
       >
         <Tweaks
+          webSocket={WebSocketRef.current}
           {...{
             physics,
             setPhysics,

@@ -5,6 +5,10 @@ export function sendMessageToEmacs(command: string, data: {}, webSocket: Reconne
     webSocket.send(JSON.stringify({ command: command, data: data }))
 }
 
+export function saveStorage(data: {}, webSocket: ReconnectingWebSocket) {
+    sendMessageToEmacs("saveSettings", data, webSocket)
+}
+
 export function getOrgText(node: OrgRoamNode, webSocket: ReconnectingWebSocket) {
     sendMessageToEmacs('getText', { id: node.id }, webSocket)
 }

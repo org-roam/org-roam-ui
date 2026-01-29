@@ -61,6 +61,10 @@
   35901
   "Port to serve the org-roam-ui interface.")
 
+(defvar org-roam-ui-web-settings-file-name
+  "./.org-roam-ui-web-settings"
+  "Filename for storing the settings from the browser.")
+
 (defcustom org-roam-ui-sync-theme t
   "If true, sync your current Emacs theme with `org-roam-ui'.
 Works best with doom-themes.
@@ -223,6 +227,8 @@ Takes _WS and FRAME as arguments."
            (org-roam-ui--on-msg-delete-node data))
           ((string= command "create")
            (org-roam-ui--on-msg-create-node data))
+          ((string= command "saveSettings")
+           (org-roam-ui--on-msg-save-settings data))
           (t
            (message
             "Something went wrong when receiving a message from org-roam-ui")))))
@@ -270,6 +276,13 @@ TODO: Be able to delete individual nodes."
      :node (org-roam-node-create :title (alist-get 'title data))
      :props '(:finalize find-file))))
 
+(defun org-roam-ui--on-msg-save-settings (data)
+  "Save settings from web ui to org-roam directory."
+  (with-temp-file
+      (expand-file-name org-roam-ui-web-settings-file-name org-roam-directory)
+    (insert data)))
+   
+
 (defun org-roam-ui--ws-on-close (_websocket)
   "What to do when _WEBSOCKET to org-roam-ui is closed."
   (remove-hook 'after-save-hook #'org-roam-ui--on-save)
@@ -308,6 +321,11 @@ TODO: Be able to delete individual nodes."
   (progn
     (httpd-send-file t (org-link-decode file))
     (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+
+(defservlet* settings application/json ()
+  "Servlet for accessing the locally stored settings."
+  (insert-file-contents (expand-file-name org-roam-ui-web-settings-file-name org-roam-directory))
+  (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*"))
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer.

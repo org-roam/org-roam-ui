@@ -33,6 +33,7 @@ import { usePersistantState } from '../../util/persistant-state'
 import { PhysicsPanel } from './Physics/PhysicsPanel'
 import { BehaviorPanel } from './Behavior/BehaviorPanel'
 import { VisualsPanel } from './Visual/VisualsPanel'
+import { StoragePanel } from './Storage/StoragePanel'
 
 export interface TweakProps {
   physics: typeof initialPhysics
@@ -54,6 +55,7 @@ export interface TweakProps {
   setColoring: any
   local: typeof initialLocal
   setLocal: any
+  webSocket: any
 }
 
 export const Tweaks = (props: TweakProps) => {
@@ -77,6 +79,7 @@ export const Tweaks = (props: TweakProps) => {
     setColoring,
     local,
     setLocal,
+    webSocket,
   } = props
 
   const [showTweaks, setShowTweaks] = usePersistantState('showTweaks', false)
@@ -226,6 +229,17 @@ export const Tweaks = (props: TweakProps) => {
                 setBehavior={setBehavior}
                 mouse={mouse}
                 setMouse={setMouse}
+              />
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <AccordionIcon marginRight={2} />
+              <Heading size="sm">Storage</Heading>
+            </AccordionButton>
+            <AccordionPanel>
+              <StoragePanel 
+                webSocket={webSocket}
               />
             </AccordionPanel>
           </AccordionItem>
