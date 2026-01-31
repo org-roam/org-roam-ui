@@ -61,6 +61,13 @@
   35901
   "Port to serve the org-roam-ui interface.")
 
+(defvar org-roam-ui-web-settings-file-name
+  "./.org-roam-ui-web-settings"
+  "Filename for storing the settings from the browser.")
+
+(defvar org-roam-ui-autoload-settings t
+  "Automatically sends the settings to the ui when it is opened for the first time")
+
 (defcustom org-roam-ui-sync-theme t
   "If true, sync your current Emacs theme with `org-roam-ui'.
 Works best with doom-themes.
@@ -208,7 +215,9 @@ This serves the web-build and API over HTTP."
       (add-hook 'after-save-hook #'org-roam-ui--on-save))
     (message "Connection established with org-roam-ui")
     (when org-roam-ui-follow
-      (org-roam-ui-follow-mode 1))))
+      (org-roam-ui-follow-mode 1))
+    (when org-roam-ui-autoload-settings
+      (org-roam-ui--send-settings org-roam-ui-ws-socket))))
 
 (defun org-roam-ui--ws-on-message (_ws frame)
   "Functions to run when the org-roam-ui server receives a message.
@@ -223,6 +232,8 @@ Takes _WS and FRAME as arguments."
            (org-roam-ui--on-msg-delete-node data))
           ((string= command "create")
            (org-roam-ui--on-msg-create-node data))
+          ((string= command "saveSettings")
+           (org-roam-ui--on-msg-save-settings data))
           (t
            (message
             "Something went wrong when receiving a message from org-roam-ui")))))
@@ -270,6 +281,13 @@ TODO: Be able to delete individual nodes."
      :node (org-roam-node-create :title (alist-get 'title data))
      :props '(:finalize find-file))))
 
+(defun org-roam-ui--on-msg-save-settings (data)
+  "Save settings from web ui to org-roam directory."
+  (with-temp-file
+      (expand-file-name org-roam-ui-web-settings-file-name org-roam-directory)
+    (insert data)))
+   
+
 (defun org-roam-ui--ws-on-close (_websocket)
   "What to do when _WEBSOCKET to org-roam-ui is closed."
   (remove-hook 'after-save-hook #'org-roam-ui--on-save)
@@ -308,6 +326,11 @@ TODO: Be able to delete individual nodes."
   (progn
     (httpd-send-file t (org-link-decode file))
     (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+
+(defservlet settings application/json ()
+  "Servlet for accessing the locally stored settings."
+  (insert-file-contents (expand-file-name org-roam-ui-web-settings-file-name org-roam-directory))
+  (httpd-send-header t "application/json" 200 :Access-Control-Allow-Origin "*"))
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer.
@@ -602,6 +625,19 @@ from all other links."
                                       ,use-inheritance)
                                      ("roamDir" . ,org-roam-directory)
                                      ("katexMacros" . ,org-roam-ui-latex-macros))))))))
+
+(defun org-roam-ui--send-settings (ws)
+  "Send the web-ui settings to the frontend through the websocket WS."
+  (let ((settings-file (expand-file-name org-roam-ui-web-settings-file-name org-roam-directory)))
+    (if (file-exists-p settings-file)
+        (websocket-send-text org-roam-ui-ws-socket
+                             (json-encode
+                              `((type . "settings")
+                                (data . ,(with-temp-buffer
+                                           (insert-file-contents settings-file)
+                                           (buffer-string)))))))))
+
+
 
 (defun org-roam-ui-sql-to-alist (column-names rows)
   "Convert sql result to alist for json encoding.

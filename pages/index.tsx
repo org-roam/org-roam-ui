@@ -476,6 +476,31 @@ export function GraphPage() {
             default:
               return console.error('unknown message type', message.type)
           }
+        case 'settings': {
+          try {
+            const settings = JSON.parse(message.data)
+            if (settings['3d']) setThreeDim(JSON.parse(settings['3d'])); else setThreeDim(false);
+            if (settings.tagCols) setTagColors(JSON.parse(settings.tagCols)); else setTagColors({});
+            if (settings.physics) setPhysics(JSON.parse(settings.physics)); else setPhysics(initialPhysics);
+            if (settings.filter) setFilter(JSON.parse(settings.filter)); else setFilter(initialFilter);
+            if (settings.visuals) setVisuals(JSON.parse(settings.visuals)); else setVisuals(initialVisuals);
+            if (settings.behavior) setBehavior(JSON.parse(settings.behavior)); else setBehavior(initialBehavior);
+            if (settings.mouse) setMouse(JSON.parse(settings.mouse)); else setMouse(initialMouse);
+            if (settings.coloring) setColoring(JSON.parse(settings.coloring)); else setColoring(initialColoring);
+            if (settings.local) setLocal(JSON.parse(settings.local)); else setLocal(initialLocal);
+          } catch {
+            console.error("Error reading settings data. Reverting to default values.")
+            setThreeDim(false);
+            setTagColors({});
+            setPhysics(initialPhysics);
+            setFilter(initialFilter);
+            setVisuals(initialVisuals);
+            setBehavior(initialBehavior);
+            setMouse(initialMouse);
+            setColoring(initialColoring);
+            setLocal(initialLocal);
+          }
+        }
       }
     })
   }, [])
@@ -570,6 +595,7 @@ export function GraphPage() {
         overflow="clip"
       >
         <Tweaks
+          webSocket={WebSocketRef.current}
           {...{
             physics,
             setPhysics,
