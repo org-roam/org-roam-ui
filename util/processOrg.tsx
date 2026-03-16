@@ -30,6 +30,7 @@ import { LinksByNodeId, NodeByCite, NodeById } from '../pages'
 import React, { createContext, ReactNode, useMemo } from 'react'
 import { OrgImage } from '../components/Sidebar/OrgImage'
 import { Section } from '../components/Sidebar/Section'
+import { MermaidDiagram } from '../components/Sidebar/MermaidDiagram'
 import { NoteContext } from './NoteContext'
 import { OrgRoamLink, OrgRoamNode } from '../api'
 
@@ -167,6 +168,40 @@ export const ProcessedOrg = (props: ProcessedOrgProps) => {
             },
             img: ({ src }) => {
               return <OrgImage src={src as string} file={previewNode?.file} />
+            },
+            pre: ({ children, className }) => {
+              // Detect mermaid code blocks: uniorg emits <pre class="src src-mermaid">
+              // and remark emits <pre><code class="language-mermaid">
+              const classStr = String(className || '')
+
+              // Extract text content from React children recursively
+              const extractText = (node: any): string => {
+                if (!node) return ''
+                if (typeof node === 'string') return node
+                if (typeof node === 'number') return String(node)
+                if (Array.isArray(node)) return node.map(extractText).join('')
+                if (node?.props?.children) return extractText(node.props.children)
+                return ''
+              }
+
+              // Check for org-mode: <pre class="src src-mermaid">
+              if (classStr.includes('src-mermaid')) {
+                const code = extractText(children).trim()
+                if (code) return <MermaidDiagram code={code} />
+              }
+
+              // Check for markdown: <pre><code class="language-mermaid">
+              const childArray = children ? React.Children.toArray(children as ReactNode) : []
+              if (childArray.length === 1 && React.isValidElement(childArray[0])) {
+                const codeEl = childArray[0] as React.ReactElement<any>
+                const codeClass = String(codeEl.props?.className || '')
+                if (codeClass.includes('language-mermaid')) {
+                  const code = extractText(codeEl).trim()
+                  if (code) return <MermaidDiagram code={code} />
+                }
+              }
+
+              return <pre className={classStr || undefined}>{children as ReactNode}</pre>
             },
             section: ({ children, className }) => {
               if (className && (className as string).slice(-1) === `${previewNode.level}`) {
