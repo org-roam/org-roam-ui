@@ -6,7 +6,7 @@
 ;; URL: https://github.com/org-roam/org-roam-ui
 ;; Keywords: files outlines
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (org-roam "2.0.0") (simple-httpd "20191103.1446") (websocket "1.13"))
+;; Package-Requires: ((emacs "27.1") (org-roam "2.0.0") (simple-httpd "1.6.0") (websocket "1.13"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -692,7 +692,7 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
 
 
 (defun org-roam-ui-change-local-graph (&optional id manipulation)
-  "Add or remove current node to the local graph. If not in local mode, open local-graph for this node."  
+  "Add or remove current node to the local graph. If not in local mode, open local-graph for this node."
   (interactive)
   (if-let ((node (or id (org-roam-id-at-point))))
       (websocket-send-text org-roam-ui-ws-socket
