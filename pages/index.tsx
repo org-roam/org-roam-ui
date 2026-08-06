@@ -1069,6 +1069,22 @@ export const Graph = function (props: GraphProps) {
 
   // shitty handler to check for doubleClicks
   const lastNodeClickRef = useRef(0)
+  const handleNodeClick = (node: OrgRoamNode, event: any) => {
+    const doubleClickTimeBuffer = 200
+    const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
+    lastNodeClickRef.current = event.timeStamp
+    if (isDoubleClick) {
+      return handleClick('double', node, event)
+    }
+
+    const prevNodeClickTime = lastNodeClickRef.current
+    return setTimeout(() => {
+      if (lastNodeClickRef.current !== prevNodeClickTime) {
+        return
+      }
+      return handleClick('click', node, event)
+    }, doubleClickTimeBuffer)
+  }
 
   // this is for animations, it's a bit hacky and can definitely be optimized
   const [opacity, setOpacity] = useState(1)
@@ -1164,8 +1180,81 @@ export const Graph = function (props: GraphProps) {
   )
 
   const [dragging, setDragging] = useState(false)
-
   const scaleRef = useRef(1)
+  const pointerDownRef = useRef<{ x: number; y: number } | null>(null)
+  const pointerHoverNodeRef = useRef<NodeObject | null>(null)
+
+  // force-graph's off-screen pointer canvas can fail to identify a rendered
+  // node. Resolve the closest rendered node directly from graph coordinates
+  // instead, which also keeps hover and click behavior consistent.
+  const nodeAtPointer = (event: any) => {
+    const fg = graphRef.current
+    if (!fg) {
+      return null
+    }
+    const pointer = { x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY }
+    const nodes = (scope.nodeIds.length ? scopedGraphData : filteredGraphData).nodes
+    const closest = nodes.reduce<{ node: NodeObject; distance: number } | null>((result, node) => {
+      if (typeof node.x !== 'number' || typeof node.y !== 'number') {
+        return result
+      }
+      const nodeValue =
+        nodeSize({
+          node,
+          highlightedNodes,
+          linksByNodeId: filteredLinksByNodeIdRef.current,
+          opacity,
+          previouslyHighlightedNodes,
+          visuals,
+        }) / Math.pow(scaleRef.current, visuals.nodeZoomSize)
+      const graphRadius = Math.pow(nodeValue, threeDim ? 1 / 3 : 1 / 2) * visuals.nodeRel
+      const z = (node as NodeObject & { z?: number }).z ?? 0
+      const screen = fg.graph2ScreenCoords(node.x, node.y, z)
+      const edge = fg.graph2ScreenCoords(node.x + graphRadius, node.y, z)
+      const radius = Math.hypot(screen.x - edge.x, screen.y - edge.y)
+      const distance = Math.hypot(pointer.x - screen.x, pointer.y - screen.y)
+      return !result || distance - radius < result.distance
+        ? { node, distance: distance - radius }
+        : result
+    }, null)
+    return closest && closest.distance <= 0 ? closest.node : null
+  }
+
+  const handlePointerMove = (event: any) => {
+    if (!visuals.highlight || dragging) {
+      return
+    }
+    const node = nodeAtPointer(event)
+    if (pointerHoverNodeRef.current === node) {
+      return
+    }
+    pointerHoverNodeRef.current = node
+    setHoverNode(node)
+  }
+
+  const handlePointerDown = (event: any) => {
+    pointerDownRef.current = { x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY }
+  }
+
+  const handlePointerUp = (event: any) => {
+    const pointerDown = pointerDownRef.current
+    pointerDownRef.current = null
+    if (!pointerDown || event.nativeEvent.button !== 0) {
+      return
+    }
+    const moved = Math.hypot(
+      event.nativeEvent.offsetX - pointerDown.x,
+      event.nativeEvent.offsetY - pointerDown.y,
+    )
+    if (moved > 5) {
+      return
+    }
+    const node = nodeAtPointer(event)
+    if (node) {
+      handleNodeClick(node as OrgRoamNode, event.nativeEvent)
+    }
+  }
+
   const graphCommonProps: ComponentPropsWithoutRef<typeof TForceGraph2D> = {
     graphData: scope.nodeIds.length ? scopedGraphData : filteredGraphData,
     width: windowWidth,
@@ -1286,24 +1375,6 @@ export const Graph = function (props: GraphProps) {
     d3AlphaMin: physics.alphaMin,
     d3VelocityDecay: physics.velocityDecay,
 
-    onNodeClick: (nodeArg: NodeObject, event: any) => {
-      const node = nodeArg as OrgRoamNode
-      //contextMenu.onClose()
-      const doubleClickTimeBuffer = 200
-      const isDoubleClick = event.timeStamp - lastNodeClickRef.current < doubleClickTimeBuffer
-      lastNodeClickRef.current = event.timeStamp
-      if (isDoubleClick) {
-        return handleClick('double', node, event)
-      }
-
-      const prevNodeClickTime = lastNodeClickRef.current
-      return setTimeout(() => {
-        if (lastNodeClickRef.current !== prevNodeClickTime) {
-          return
-        }
-        return handleClick('click', node, event)
-      }, doubleClickTimeBuffer)
-    },
     /* onBackgroundClick: () => {
      *   contextMenu.onClose()
      *   setHoverNode(null)
@@ -1317,20 +1388,6 @@ export const Graph = function (props: GraphProps) {
      *     }))
      *   }
      * }, */
-    onNodeHover: (node) => {
-      if (!visuals.highlight) {
-        return
-      }
-      if (dragging) {
-        return
-      }
-
-      if (!hoverNode) {
-        fadeOutCancel()
-        setOpacity(0)
-      }
-      setHoverNode(node)
-    },
     onNodeRightClick: (nodeArg, event) => {
       const node = nodeArg as OrgRoamNode
 
@@ -1348,7 +1405,13 @@ export const Graph = function (props: GraphProps) {
   }
 
   return (
-    <Box overflow="hidden" onClick={contextMenu.onClose}>
+    <Box
+      overflow="hidden"
+      onClick={contextMenu.onClose}
+      onPointerMove={handlePointerMove}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+    >
       {threeDim ? (
         <ForceGraph3D
           ref={graphRef}
