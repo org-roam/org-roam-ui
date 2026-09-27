@@ -34,6 +34,7 @@ import { BsReverseLayoutSidebarInsetReverse } from 'react-icons/bs'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import SpriteText from 'three-spritetext'
 import useUndo from 'use-undo'
+import { Search } from '../components/Search'
 import { OrgRoamGraphReponse, OrgRoamLink, OrgRoamNode } from '../api'
 import {
   algos,
@@ -656,6 +657,13 @@ export function GraphPage() {
                     />
                   </Tooltip>
                 )}
+                <Search
+                  nodeById={nodeByIdRef.current!}
+                  setPreviewNode={setPreviewNode}
+                  onClickResultItem={(id) => {
+                    setEmacsNodeId(id)
+                  }}
+                />
                 <Tooltip label={isOpen ? 'Close sidebar' : 'Open sidebar'}>
                   <IconButton
                     m={1}
