@@ -176,8 +176,14 @@ This serves the web-build and API over HTTP."
   :global t
   :group 'org-roam-ui
   :init-value nil
+  (if org-roam-ui-mode
+      (add-hook 'enable-theme-functions #'org-roam-ui--on-theme-change)
+    (remove-hook 'enable-theme-functions #'org-roam-ui--on-theme-change))
   (cond
-   (org-roam-ui-mode
+   ;; Theme changes can re-enable an already enabled global mode.
+   ((and org-roam-ui-mode
+         (not (and (processp org-roam-ui-ws-server)
+                   (process-live-p org-roam-ui-ws-server))))
    ;;; check if the default keywords actually exist on `orb-preformat-keywords'
    ;;; else add them
     (setq-local httpd-port org-roam-ui-port)
@@ -191,7 +197,7 @@ This serves the web-build and API over HTTP."
            :on-message #'org-roam-ui--ws-on-message
            :on-close #'org-roam-ui--ws-on-close))
     (when org-roam-ui-open-on-start (org-roam-ui-open)))
-   (t
+   ((not org-roam-ui-mode)
     (progn
       (websocket-server-close org-roam-ui-ws-server)
       (httpd-stop)
@@ -713,6 +719,13 @@ Optionally with ID (string), SPEED (number, ms) and PADDING (number, px)."
   "Remove current node from the local graph. If not in local mode, open local-graph for this node."
   (interactive)
   (org-roam-ui-change-local-graph id "remove"))
+
+(defun org-roam-ui--on-theme-change (&rest _)
+  "Sync theme changes while org-roam-ui has a connected browser."
+  (when (and org-roam-ui-mode org-roam-ui-sync-theme
+             org-roam-ui-ws-socket
+             (websocket-openp org-roam-ui-ws-socket))
+    (org-roam-ui-sync-theme)))
 
 ;;;###autoload
 (defun org-roam-ui-sync-theme ()
