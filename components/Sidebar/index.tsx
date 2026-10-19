@@ -86,6 +86,7 @@ const Sidebar = (props: SidebarProps) => {
   const { highlightColor } = useContext(ThemeContext)
   const [previewRoamNode, setPreviewRoamNode] = useState<OrgRoamNode | undefined>()
   const [sidebarWidth, setSidebarWidth] = usePersistantState<number>('sidebarWidth', 400)
+  const scrollbarsRef = useRef<Scrollbars>(null)
 
   useEffect(() => {
     if (!previewNode?.id) {
@@ -94,6 +95,8 @@ const Sidebar = (props: SidebarProps) => {
     }
     onOpen()
     setPreviewRoamNode(previewNode as OrgRoamNode)
+    // The scroll container stays mounted across notes, so start each note at the top.
+    scrollbarsRef.current?.scrollToTop()
   }, [previewNode?.id])
 
   const [justification, setJustification] = usePersistantState('justification', 1)
@@ -190,6 +193,7 @@ const Sidebar = (props: SidebarProps) => {
             </Flex>
           </Flex>
           <Scrollbars
+            ref={scrollbarsRef}
             //autoHeight
             //autoHeightMax={600}
             autoHide
