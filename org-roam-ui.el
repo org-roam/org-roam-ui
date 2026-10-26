@@ -305,9 +305,12 @@ TODO: Be able to delete individual nodes."
 
 (defservlet* img/:file text/plain ()
   "Servlet for accessing images found in org-roam files."
-  (progn
-    (httpd-send-file t (org-link-decode file))
-    (httpd-send-header t "text/plain" 200 :Access-Control-Allow-Origin "*")))
+  ;; `httpd-send-file' sends the header itself; sending a second one
+  ;; fails with "Header already sent" in simple-httpd 1.6 and later.
+  (let ((path (org-link-decode file)))
+    (if (file-regular-p path)
+        (httpd-send-file t path httpd-request)
+      (httpd-error t 404))))
 
 (defun org-roam-ui--on-save ()
   "Send graphdata on saving an org-roam buffer.
